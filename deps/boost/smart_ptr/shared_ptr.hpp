@@ -612,7 +612,11 @@ template<class D, class T> D * get_deleter(shared_ptr<T> const & p)
 
 template<class D, class T> D * get_deleter(shared_ptr<T> const & p)
 {
+#ifdef LIBJ_DISABLE_BOOST_SP_GET_DELETER
+    return 0;
+#else
     return static_cast<D *>(p._internal_get_deleter(BOOST_SP_TYPEID(D)));
+#endif
 }
 
 #endif
