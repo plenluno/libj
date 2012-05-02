@@ -91,4 +91,20 @@ TEST(GTestArrayList, TestError) {
     ASSERT_EQ(e->code(), Error::INDEX_OUT_OF_BOUNDS);
 }
 
+TEST(GTestArrayList, TestIterator) {
+    Type<ArrayList>::Ptr a = ArrayList::create();
+    a->add(123);
+    a->add(456);
+    
+    int v;
+    Type<Iterator>::Ptr itr = a->iterator();
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_TRUE(to<int>(itr->next(), &v));
+    ASSERT_EQ(v, 123);
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_TRUE(to<int>(itr->next(), &v));
+    ASSERT_EQ(v, 456);
+    ASSERT_FALSE(itr->hasNext());
+}
+
 }  // namespace libj

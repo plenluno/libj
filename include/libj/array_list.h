@@ -8,7 +8,6 @@
 namespace libj {
 
 class ArrayList : LIBJ_LIST(ArrayList)
- public:
 };
 
 }  // namespace libj
