@@ -9,7 +9,7 @@ namespace libj {
 
 class Function : LIBJ_MUTABLE(Function)
  public:
-    virtual Value operator()(Value) = 0;
+    virtual Value operator()(Type<ArrayList>::Ptr args) = 0;
 };
 
 #define LIBJ_FUNCTION(T) public libj::Function { \
