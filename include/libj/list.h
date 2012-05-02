@@ -3,19 +3,17 @@
 #ifndef LIBJ_LIST_H_
 #define LIBJ_LIST_H_
 
-#include "libj/mutable.h"
+#include "libj/collection.h"
 
 namespace libj {
 
-class List : LIBJ_MUTABLE(List)
+class List : LIBJ_COLLECTION(List)
  public:
-    virtual Size size() const = 0;
     virtual bool add(Value) = 0;
     virtual bool add(Size, Value) = 0;
     virtual bool set(Size, Value) = 0;
     virtual Value get(Size) = 0;
     virtual Value remove(Size) = 0;
-    virtual void clear() = 0;
     // and so on
 };
 
