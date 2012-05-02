@@ -59,6 +59,22 @@ class Type<T, PRIMITIVE> {
     LIBJ_TYPE_ID();
 };
 
+template<class T>
+class IsObjectPtr
+{
+private:
+    typedef char Yes;
+    typedef struct { char v[2]; } No;
+
+    static Yes check(Type<Object>::Cptr);
+    static No  check(...);
+
+    static T t;
+
+public:
+    static const bool value = (sizeof(check(t)) == sizeof(Yes));
+};
+
 }  // namespace libj
 
 #endif  // LIBJ_TYPE_H_

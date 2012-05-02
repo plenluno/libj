@@ -58,6 +58,10 @@ class Value {
     TypeId type() const {
         return content ? content->type() : Type<void>::id();
     }
+    
+    bool instanceOf(TypeId id) const {
+        return content ? content->instanceOf(id) : false;
+    }
 
  private:  // types
     class placeholder {
@@ -67,11 +71,13 @@ class Value {
 
      public:  // queries
         virtual TypeId type() const = 0;
+        
+        virtual bool instanceOf(TypeId id) const = 0;
 
         virtual placeholder * clone() const = 0;
     };
 
-    template<typename ValueType>
+    template<typename ValueType, bool = IsObjectPtr<ValueType>::value>
     class holder : public placeholder {
      public:  // structors
         holder(const ValueType & value)
@@ -81,6 +87,37 @@ class Value {
      public:  // queries
         virtual TypeId type() const {
             return Type<ValueType>::id();
+        }
+
+        virtual bool instanceOf(TypeId id) const {
+            return false;
+        }
+
+        virtual placeholder * clone() const {
+            return new holder(held);
+        }
+
+     public:  // representation
+        ValueType held;
+
+     private:  // intentionally left unimplemented
+        holder & operator=(const holder &);
+    };
+    
+    template<typename ValueType>
+    class holder<ValueType, true> : public placeholder {
+     public:  // structors
+        holder(const ValueType & value)
+          : held(value) {
+        }
+
+     public:  // queries
+        virtual TypeId type() const {
+            return Type<ValueType>::id();
+        }
+        
+        virtual bool instanceOf(TypeId id) const {
+            return held->instanceOf(id);
         }
 
         virtual placeholder * clone() const {

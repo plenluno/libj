@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <libj/value.h>
+#include <libj/string.h>
 #include <boost/any.hpp>
 
 namespace libj {
@@ -283,6 +284,20 @@ TEST(GTestAny, Test9) {
     a = 5;
     ip = boost::any_cast<const int>(ap);
     ASSERT_EQ(*ip, 5);
+}
+
+TEST(GTestValue, TestInstanceOf) {
+    Type<String>::Cptr s = String::create("abc");
+    Value v = s;
+    ASSERT_TRUE(v.instanceOf(Type<String>::id()));
+    ASSERT_FALSE(v.instanceOf(Type<Mutable>::id()));
+    ASSERT_TRUE(v.instanceOf(Type<Immutable>::id()));
+    ASSERT_TRUE(v.instanceOf(Type<Object>::id()));
+    ASSERT_FALSE(v.instanceOf(Type<int>::id()));
+    
+    v = 1;
+    ASSERT_FALSE(v.instanceOf(Type<Object>::id()));
+    ASSERT_FALSE(v.instanceOf(Type<int>::id()));
 }
 
 }  // namespace libj
