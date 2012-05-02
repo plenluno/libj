@@ -11,7 +11,9 @@ namespace libj {
 
 class String;
 
-class ObjectBase : private boost::noncopyable {
+class Object
+    : public ObjectBase
+    , private boost::noncopyable {
  public:
     virtual TypeId type() const = 0;
 

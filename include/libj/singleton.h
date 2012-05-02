@@ -9,10 +9,13 @@
 
 namespace libj {
 
+class Singleton
+    : public Object
+    , public SingletonBase {};
+
 template<typename T>
-class SingletonBase
-    : public Singleton
-    , public ObjectBase {
+class SingletonTmpl
+    : public Singleton {
  private:
     struct NullDeleter {
         void operator()(void const *) const {}
@@ -35,18 +38,18 @@ class SingletonBase
 
     bool instanceOf(TypeId id) const {
         return id == Type<Singleton>::id()
-            || ObjectBase::instanceOf(id);
+            || Object::instanceOf(id);
     }
 
  protected:
-    SingletonBase() {}
-    virtual ~SingletonBase() {}
+    SingletonTmpl() {}
+    virtual ~SingletonTmpl() {}
 };
 
-#define LIBJ_SINGLETON(T) public libj::SingletonBase<T> { \
+#define LIBJ_SINGLETON(T) public libj::SingletonTmpl<T> { \
 private: \
-    friend class libj::SingletonBase<T>; \
-    T() : libj::SingletonBase<T>() {} \
+    friend class libj::SingletonTmpl<T>; \
+    T() : libj::SingletonTmpl<T>() {} \
     ~T() {} \
 public: \
     typedef T* Ptr; \
@@ -56,7 +59,7 @@ public: \
     } \
     bool instanceOf(libj::TypeId id) const { \
         return id == type() \
-            || libj::SingletonBase<T>::instanceOf(id); \
+            || libj::SingletonTmpl<T>::instanceOf(id); \
     }
 
 }  // namespace libj

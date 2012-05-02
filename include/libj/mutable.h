@@ -9,14 +9,14 @@
 
 namespace libj {
 
-class MutableBase
-    : public Mutable
+class Mutable
+    : public Object
     , public GCBase
-    , public ObjectBase {
+    , public MutableBase {
  public:
     bool instanceOf(TypeId id) const {
         return id == Type<Mutable>::id()
-            || ObjectBase::instanceOf(id);
+            || Object::instanceOf(id);
     }
 };
 
@@ -33,8 +33,8 @@ class MutableBase
             || B::instanceOf(id); \
     }
 
-#define LIBJ_MUTABLE(T) public libj::MutableBase { \
-    LIBJ_MUTABLE_DECLS(T, libj::MutableBase)
+#define LIBJ_MUTABLE(T) public libj::Mutable { \
+    LIBJ_MUTABLE_DECLS(T, libj::Mutable)
 
 }  // namespace libj
 

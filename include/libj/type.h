@@ -19,10 +19,10 @@ enum Category {
     UNDEFINED,
 };
 
-class Object {};
-class Mutable   : public Object {};
-class Immutable : public Object {};
-class Singleton : public Object {};
+class ObjectBase {};
+class MutableBase {};
+class ImmutableBase {};
+class SingletonBase {};
 
 #define LIBJ_TYPE_ID() static TypeId id() { \
     static char c; \
@@ -30,12 +30,12 @@ class Singleton : public Object {};
 }
 
 template <typename T, Category =
-    boost::is_base_of<Object, T>::value
-        ? boost::is_base_of<Mutable, T>::value
+    boost::is_base_of<ObjectBase, T>::value
+        ? boost::is_base_of<MutableBase, T>::value
             ? MUTABLE
-            : boost::is_base_of<Immutable, T>::value
+            : boost::is_base_of<ImmutableBase, T>::value
                 ? IMMUTABLE
-                : boost::is_base_of<Singleton, T>::value
+                : boost::is_base_of<SingletonBase, T>::value
                     ? SINGLETON
                     : OBJECT
         : PRIMITIVE>
@@ -66,7 +66,7 @@ private:
     typedef char Yes;
     typedef struct { char v[2]; } No;
 
-    static Yes check(Type<Object>::Cptr);
+    static Yes check(Type<ObjectBase>::Cptr);
     static No  check(...);
 
     static T t;

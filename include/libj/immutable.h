@@ -9,14 +9,14 @@
 
 namespace libj {
 
-class ImmutableBase
-    : public Immutable
+class Immutable
+    : public Object
     , public GCBase
-    , public ObjectBase {
+    , public ImmutableBase {
  public:
     bool instanceOf(TypeId id) const {
         return id == Type<Immutable>::id()
-            || ObjectBase::instanceOf(id);
+            || Object::instanceOf(id);
     }
 };
 
@@ -31,8 +31,8 @@ class ImmutableBase
             || B::instanceOf(id); \
     }
 
-#define LIBJ_IMMUTABLE(T) public libj::ImmutableBase { \
-    LIBJ_IMMUTABLE_DECLS(T, libj::ImmutableBase)
+#define LIBJ_IMMUTABLE(T) public libj::Immutable { \
+    LIBJ_IMMUTABLE_DECLS(T, libj::Immutable)
 
 }  // namespace libj
 

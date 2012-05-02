@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <libj/value.h>
+#include <libj/mutable.h>
 #include <libj/string.h>
 #include <boost/any.hpp>
 

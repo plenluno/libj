@@ -36,7 +36,7 @@ TEST(GTestSingleton, Test3) {
 }
 
 #ifdef LIBJ_USE_SP
-class GTestSingleton2 : public SingletonBase<GTestSingleton2> {
+class GTestSingleton2 : public SingletonTmpl<GTestSingleton2> {
  public:
     TypeId type() const {
         return Type<GTestSingleton2>::id();
@@ -45,8 +45,8 @@ class GTestSingleton2 : public SingletonBase<GTestSingleton2> {
     static int count;
 
  private:
-    friend class SingletonBase<GTestSingleton2>;
-    GTestSingleton2() : SingletonBase<GTestSingleton2>() { count++; }
+    friend class SingletonTmpl<GTestSingleton2>;
+    GTestSingleton2() : SingletonTmpl<GTestSingleton2>() { count++; }
     ~GTestSingleton2() { count--; }
 };
 
