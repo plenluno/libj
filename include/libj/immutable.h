@@ -27,7 +27,7 @@ class ImmutableBase
         return libj::Type<T>::id(); \
     } \
     bool instanceOf(libj::TypeId id) const { \
-        return id == type() \
+        return id == libj::Type<T>::id() \
             || B::instanceOf(id); \
     }
 
