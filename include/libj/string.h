@@ -19,7 +19,7 @@ class String : LIBJ_IMMUTABLE(String)
         UTF32,
     };
 
-    static Cptr create(const void*, Encoding, Size = NO_POS);
+    static Cptr create(const void*, Encoding = ASCII, Size = NO_POS);
 
     virtual Size length() const = 0;
     virtual Char charAt(Size) const = 0;
