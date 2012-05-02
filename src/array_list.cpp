@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "libj/array_list.h"
+#include "libj/error.h"
 #include "libj/string.h"
 
 namespace libj {
@@ -37,8 +38,7 @@ class ArrayListImpl : public ArrayList {
 
     Value get(Size i) {
         if (i >= vec_.size()) {
-            // TODO(PL): return Error
-            return 0;
+            return Error::create(Error::INDEX_OUT_OF_BOUNDS);
         } else {
             return vec_[i];
         }
@@ -46,8 +46,7 @@ class ArrayListImpl : public ArrayList {
 
     Value remove(Size i) {
         if (i >= vec_.size()) {
-            // TODO(PL): return Error
-            return 0;
+            return Error::create(Error::INDEX_OUT_OF_BOUNDS);
         } else {
             return *vec_.erase(vec_.begin() + i);
         }
