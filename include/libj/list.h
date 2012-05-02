@@ -12,7 +12,7 @@ class List : LIBJ_COLLECTION(List)
     virtual bool add(Value) = 0;
     virtual bool add(Size, Value) = 0;
     virtual bool set(Size, Value) = 0;
-    virtual Value get(Size) = 0;
+    virtual Value get(Size) const = 0;
     virtual Value remove(Size) = 0;
     // and so on
 };

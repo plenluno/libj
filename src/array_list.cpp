@@ -36,7 +36,7 @@ class ArrayListImpl : public ArrayList {
         }
     }
 
-    Value get(Size i) {
+    Value get(Size i) const {
         if (i >= vec_.size()) {
             return Error::create(Error::INDEX_OUT_OF_BOUNDS);
         } else {
