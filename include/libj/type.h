@@ -41,20 +41,6 @@ template <typename T, Category =
         : PRIMITIVE>
 class Type {
  public:
-    LIBJ_TYPE_ID();
-};
-
-template<typename T>
-class Type<T, OBJECT> {
- public:
-    typedef LIBJ_PTR_TYPE(T) Ptr;
-    typedef LIBJ_CPTR_TYPE(T) Cptr;
-    LIBJ_TYPE_ID();
-};
-
-template<typename T>
-class Type<T, MUTABLE> {
- public:
     typedef LIBJ_PTR_TYPE(T) Ptr;
     typedef LIBJ_CPTR_TYPE(T) Cptr;
     LIBJ_TYPE_ID();
@@ -68,10 +54,8 @@ class Type<T, IMMUTABLE> {
 };
 
 template<typename T>
-class Type<T, SINGLETON> {
+class Type<T, PRIMITIVE> {
  public:
-    typedef LIBJ_PTR_TYPE(T) Ptr;
-    typedef LIBJ_CPTR_TYPE(T) Cptr;
     LIBJ_TYPE_ID();
 };
 
