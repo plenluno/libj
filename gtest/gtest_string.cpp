@@ -11,6 +11,13 @@ TEST(GTestString, TestCreate) {
     ASSERT_EQ(s1->compareTo(s2), 0);
 }
 
+TEST(GTestString, TestInstanceOf) {
+    Type<String>::Cptr s = String::create();
+    ASSERT_TRUE(s->instanceOf(Type<String>::id()));
+    ASSERT_TRUE(s->instanceOf(Type<Immutable>::id()));
+    ASSERT_TRUE(s->instanceOf(Type<Object>::id()));
+}
+
 TEST(GTestString, TestLength) {
     Type<String>::Cptr s = String::create();
     ASSERT_EQ(s->length(), 0);
