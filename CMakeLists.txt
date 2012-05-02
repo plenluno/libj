@@ -54,6 +54,7 @@ add_executable(libj-gtest
     gtest/gtest_immutable.cpp
     gtest/gtest_main.cpp
     gtest/gtest_mutable.cpp
+    gtest/gtest_null.cpp
     gtest/gtest_singleton.cpp
     gtest/gtest_string.cpp
     gtest/gtest_value.cpp
