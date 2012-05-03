@@ -11,9 +11,9 @@ namespace libj {
 class Map : LIBJ_MUTABLE(Map)
  public:
     virtual Size size() const = 0;
-    virtual Value get(Type<Object>::Cptr obj) const;
-    virtual Value put(Type<Object>::Cptr obj, Value val);
-    virtual Value remove(Type<Object>::Cptr obj);
+    virtual Value get(Value key) const;
+    virtual Value put(Value key, Value val);
+    virtual Value remove(Value key);
     virtual Type<Set>::Cptr keySet() const;
     virtual void clear() = 0;
     // and so on

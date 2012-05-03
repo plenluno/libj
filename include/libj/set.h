@@ -9,8 +9,8 @@ namespace libj {
 
 class Set : LIBJ_COLLECTION(Set)
  public:
-     virtual bool add(Type<Object>::Ptr obj) = 0;
-     virtual bool remove(Type<Object>::Ptr obj) = 0;
+     virtual bool add(Value val) = 0;
+     virtual bool remove(Value val) = 0;
 };
 
 }  // namespace libj

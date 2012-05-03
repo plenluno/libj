@@ -36,6 +36,7 @@ set(libj-src
     src/array_list.cpp
     src/error.cpp
     src/no_exceptions.cpp
+    src/set.cpp
     src/string.cpp
 )
 
@@ -55,6 +56,7 @@ add_executable(libj-gtest
     gtest/gtest_main.cpp
     gtest/gtest_mutable.cpp
     gtest/gtest_null.cpp
+    gtest/gtest_set.cpp
     gtest/gtest_singleton.cpp
     gtest/gtest_string.cpp
     gtest/gtest_value.cpp
