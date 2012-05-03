@@ -133,7 +133,7 @@ class Value {
 
  private:  // representation
     template<typename ValueType>
-    friend bool to(Value * operand, ValueType** out);
+    friend bool to(Value * operand, ValueType** out, bool instanceof = false);
 
     placeholder * content;
 };
@@ -160,8 +160,8 @@ class remove_reference_and_const {
 };
 
 template<typename ValueType>
-bool to(Value* operand, ValueType** out) {
-    if (operand && operand->type() == Type<ValueType>::id()) {
+bool to(Value* operand, ValueType** out, bool instanceof) {
+    if (operand && (operand->type() == Type<ValueType>::id() || instanceof)) {
         Value::holder<ValueType>* content =
             static_cast<Value::holder<ValueType>*>(operand->content);
         *out = &content->held;
@@ -172,23 +172,46 @@ bool to(Value* operand, ValueType** out) {
 }
 
 template<typename ValueType>
-inline bool to(const Value* operand, const ValueType** out) {
+inline bool to(
+    const Value* operand,
+    const ValueType** out,
+    bool instanceof = false) {
     typedef typename remove_const<ValueType>::type NonConst;
     return to<NonConst>(
         const_cast<Value*>(operand),
-        const_cast<ValueType**>(out));
+        const_cast<ValueType**>(out),
+        instanceof);
 }
 
 template<typename ValueType>
 bool to(
     const Value & operand,
-    typename remove_reference_and_const<ValueType>::type* out) {
+    typename remove_reference_and_const<ValueType>::type* out,
+    bool instanceof = false) {
     typedef typename remove_reference_and_const<ValueType>::type NonRefConst;
     NonRefConst* result;
-    if (to<NonRefConst>(&const_cast<Value&>(operand), &result)) {
+    if (to<NonRefConst>(&const_cast<Value&>(operand), &result, instanceof)) {
         NonRefConst* o = const_cast<NonRefConst*>(out);
         *o = *result;
         return true;
+    } else {
+        return false;
+    }
+}
+
+template<typename T>
+bool toPtr(const Value& v, typename Type<T>::Ptr* out) {
+    if (v.instanceOf(Type<T>::id())) {
+        return to<typename Type<T>::Ptr>(v, out, true);
+    } else {
+        return false;
+    }
+}
+
+template<typename T>
+bool toCptr(const Value& v, typename Type<T>::Cptr* out) {
+    if (v.instanceOf(Type<T>::id())) {
+        return to<typename Type<T>::Cptr>(v, out, true);
     } else {
         return false;
     }

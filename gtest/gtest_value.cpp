@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <libj/value.h>
 #include <libj/mutable.h>
+#include <libj/null.h>
 #include <libj/string.h>
 #include <boost/any.hpp>
 
@@ -299,6 +300,47 @@ TEST(GTestValue, TestInstanceOf) {
     v = 1;
     ASSERT_FALSE(v.instanceOf(Type<Object>::id()));
     ASSERT_FALSE(v.instanceOf(Type<int>::id()));
+}
+
+TEST(GTestValue, TestToPtrAndCptr) {
+    Type<Null>::Ptr n = Null::instance();
+    Value v = n;
+    
+    Type<String>::Cptr s = String::create("null");
+    Type<Null>::Ptr x;
+    ASSERT_TRUE(toPtr<Null>(v, &x));
+    ASSERT_EQ(x->toString()->compareTo(s), 0);
+    
+    Type<Object>::Ptr y;
+    ASSERT_TRUE(toPtr<Object>(v, &y));
+    ASSERT_EQ(y->toString()->compareTo(s), 0);
+    
+    Type<Object>::Cptr z;
+    ASSERT_TRUE(toCptr<Object>(v, &z));
+    ASSERT_EQ(z->toString()->compareTo(s), 0);
+    
+    Type<Mutable>::Ptr m;
+    ASSERT_FALSE(toPtr<Mutable>(v, &m));
+}
+
+TEST(GTestValue, TestToCptr) {
+    Type<String>::Cptr s = String::create("abc");
+    Value v = s;
+    
+    Type<String>::Cptr x;
+    ASSERT_TRUE(toCptr<String>(v, &x));
+    ASSERT_EQ(s->compareTo(x), 0);
+    
+    Type<Object>::Cptr y;
+    ASSERT_TRUE(toCptr<Object>(v, &y));
+    ASSERT_EQ(y->toString()->compareTo(s), 0);
+    
+    Type<Mutable>::Cptr m;
+    ASSERT_FALSE(toCptr<Mutable>(v, &m));
+    
+    //Type<Object>::Ptr z;
+    //ASSERT_TRUE(toPtr<Object>(v, &z));
+    //ASSERT_EQ(z->toString()->compareTo(s), 0);
 }
 
 }  // namespace libj
