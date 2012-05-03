@@ -11,10 +11,10 @@ namespace libj {
 class Map : LIBJ_MUTABLE(Map)
  public:
     virtual Size size() const = 0;
-    virtual Value get(Value key) const;
-    virtual Value put(Value key, Value val);
-    virtual Value remove(Value key);
-    virtual Type<Set>::Cptr keySet() const;
+    virtual Value get(Value key) const = 0;
+    virtual Value put(Value key, Value val) = 0;
+    virtual Value remove(Value key) = 0;
+    virtual Type<Set>::Cptr keySet() const = 0;
     virtual void clear() = 0;
     // and so on
 };

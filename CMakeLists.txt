@@ -35,6 +35,7 @@ link_directories(
 set(libj-src
     src/array_list.cpp
     src/error.cpp
+    src/map.cpp
     src/no_exceptions.cpp
     src/set.cpp
     src/string.cpp
@@ -54,6 +55,7 @@ add_executable(libj-gtest
     gtest/gtest_array_list.cpp
     gtest/gtest_immutable.cpp
     gtest/gtest_main.cpp
+    gtest/gtest_map.cpp
     gtest/gtest_mutable.cpp
     gtest/gtest_null.cpp
     gtest/gtest_set.cpp
