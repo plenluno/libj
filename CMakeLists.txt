@@ -34,7 +34,9 @@ link_directories(
 
 set(libj-src
     src/array_list.cpp
+    src/console.cpp
     src/error.cpp
+    src/json.cpp
     src/map.cpp
     src/no_exceptions.cpp
     src/set.cpp
@@ -54,6 +56,7 @@ add_library(cvtutf STATIC
 add_executable(libj-gtest
     gtest/gtest_array_list.cpp
     gtest/gtest_immutable.cpp
+    gtest/gtest_json.cpp
     gtest/gtest_main.cpp
     gtest/gtest_map.cpp
     gtest/gtest_mutable.cpp
