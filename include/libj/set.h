@@ -9,7 +9,6 @@ namespace libj {
 
 class Set : LIBJ_COLLECTION(Set)
  public:
-     virtual bool add(Value val) = 0;
      virtual bool remove(Value val) = 0;
 };
 
