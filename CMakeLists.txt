@@ -55,6 +55,7 @@ add_library(cvtutf STATIC
 # gtest
 add_executable(libj-gtest
     gtest/gtest_array_list.cpp
+    gtest/gtest_function.cpp
     gtest/gtest_immutable.cpp
     gtest/gtest_json.cpp
     gtest/gtest_main.cpp

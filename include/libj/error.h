@@ -12,6 +12,7 @@ class Error : LIBJ_IMMUTABLE(Error)
  public:
     enum Code {
         ANY,
+        ILLEGAL_ARGUMENT,
         INDEX_OUT_OF_BOUNDS,
     };
 
