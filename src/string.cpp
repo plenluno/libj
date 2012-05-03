@@ -194,7 +194,7 @@ class StringImpl : public String {
     }
 
     Cptr toString() const {
-        Cptr p(this);
+        Cptr p(new StringImpl(this));
         return p;
     }
 
@@ -272,6 +272,11 @@ class StringImpl : public String {
             }
         }
         str32_ = new Str32(data, count);
+    }
+    
+    StringImpl(const StringImpl* s)
+        : str8_(s->str8_)
+        , str32_(s->str32_) {
     }
 };
 

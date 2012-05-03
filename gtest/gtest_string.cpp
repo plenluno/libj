@@ -111,4 +111,12 @@ TEST(GTestString, TestLastIndexOf2) {
     ASSERT_EQ(s->lastIndexOf(s2), NO_POS);
 }
 
+TEST(GTestString, TestToString) {
+    Type<String>::Cptr s = String::create("abcabc", String::ASCII);
+    ASSERT_EQ(s->toString()->compareTo(s), 0);
+    
+    Type<Object>::Cptr o = s;
+    ASSERT_EQ(o->toString()->compareTo(s), 0);
+}
+
 }  // namespace libj
