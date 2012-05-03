@@ -26,7 +26,6 @@ class String : LIBJ_IMMUTABLE(String)
     virtual Cptr substring(Size) const = 0;
     virtual Cptr substring(Size, Size) const = 0;
     virtual Cptr concat(Cptr) const = 0;
-    virtual Int compareTo(Cptr) const = 0;
     virtual bool startsWith(Cptr, Size = 0) const = 0;
     virtual bool endsWith(Cptr) const = 0;
     virtual Size indexOf(Char, Size = 0) const = 0;

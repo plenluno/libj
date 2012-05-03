@@ -98,7 +98,11 @@ class StringImpl : public String {
         }
     }
 
-    Int compareTo(Cptr other) const {
+    Int compareTo(Type<Object>::Cptr that) const {
+        Int result = Object::compareTo(that);
+        if (result)
+            return result;
+        Type<String>::Cptr other = STATIC_CPTR_CAST(String)(that);
         Size len1 = this->length();
         Size len2 = other->length();
         Size len = len1 < len2 ? len1 : len2;

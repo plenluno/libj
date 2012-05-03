@@ -62,6 +62,17 @@ class Value {
     bool instanceOf(TypeId id) const {
         return content ? content->instanceOf(id) : false;
     }
+    
+    int compareTo(Value val) const {
+        if (content) {
+            if (val.content)
+                return content->compareTo(val.content);
+            else
+                return 1;
+        } else {
+            return val.content ? -1 : 0;
+        }
+    }
 
  private:  // types
     class placeholder {
@@ -73,6 +84,8 @@ class Value {
         virtual TypeId type() const = 0;
         
         virtual bool instanceOf(TypeId id) const = 0;
+
+        virtual int compareTo(placeholder * other) const = 0;
 
         virtual placeholder * clone() const = 0;
     };
@@ -91,6 +104,22 @@ class Value {
 
         virtual bool instanceOf(TypeId id) const {
             return false;
+        }
+
+        virtual int compareTo(placeholder * that) const {
+            TypeId thisId = this->type();
+            TypeId thatId = that->type();
+            if (thisId == thatId) {
+                ValueType thatHeld =
+                    static_cast<holder<ValueType>*>(that)->held;
+                return this->held < thatHeld
+                        ? -1
+                        : this->held > thatHeld
+                            ? 1
+                            : 0;
+            } else {
+                return thisId < thatId ? -1 : 1;
+            }
         }
 
         virtual placeholder * clone() const {
@@ -118,6 +147,22 @@ class Value {
         
         virtual bool instanceOf(TypeId id) const {
             return held->instanceOf(id);
+        }
+        
+        virtual int compareTo(placeholder * that) const {
+            TypeId thisId = this->type();
+            TypeId thatId = that->type();
+            if (thisId == thatId) {
+                ValueType thatHeld =
+                    static_cast<holder<ValueType>*>(that)->held;
+                return this->held->compareTo(thatHeld);
+            } else if (this->instanceOf(thatId)) {
+                return 1;
+            } else if (that->instanceOf(thisId)) {
+                return -1;
+            } else {
+                return thisId < thatId ? -1 : 1;
+            }
         }
 
         virtual placeholder * clone() const {

@@ -343,4 +343,16 @@ TEST(GTestValue, TestToCptr) {
     //ASSERT_EQ(z->toString()->compareTo(s), 0);
 }
 
+TEST(GTestValue, TestCompareTo) {
+    Value v1 = 5;
+    Value v2 = 10;
+    Value v3 = 5;
+    Value v4 = (Long)5;
+    
+    ASSERT_TRUE(v1.compareTo(v2) < 0);
+    ASSERT_TRUE(v2.compareTo(v1) > 0);
+    ASSERT_TRUE(v1.compareTo(v3) == 0);
+    ASSERT_TRUE(v1.compareTo(v4) != 0);
+}
+
 }  // namespace libj

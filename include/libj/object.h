@@ -20,6 +20,21 @@ class Object
     virtual bool instanceOf(TypeId id) const {
         return id == Type<Object>::id();
     }
+    
+    virtual Int compareTo(LIBJ_CPTR(Object) that) const {
+        if (!that)
+            return 1;
+        TypeId thisId = this->type();
+        TypeId thatId = that->type();
+        if (thisId == thatId)
+            return 0;
+        else if (this->instanceOf(thatId))
+            return 1;
+        else if (that->instanceOf(thisId))
+            return -1;
+        else
+            return thisId < thatId ? -1 : 1;
+    }
 
     virtual LIBJ_CPTR(String) toString() const = 0;
 };
