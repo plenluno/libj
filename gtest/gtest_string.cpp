@@ -119,4 +119,12 @@ TEST(GTestString, TestToString) {
     ASSERT_EQ(o->toString()->compareTo(s), 0);
 }
 
+TEST(GTestString, TestData) {
+    Type<String>::Cptr s = String::create("abcabc", String::ASCII);
+    TypeId tid;
+    Type<String>::Cptr s2 = String::create(s->data(&tid));
+    ASSERT_EQ(tid, Type<char>::id());
+    ASSERT_EQ(s->compareTo(s2), 0);
+}
+
 }  // namespace libj

@@ -201,6 +201,14 @@ class StringImpl : public String {
         Cptr p(new StringImpl(this));
         return p;
     }
+    
+    const void* data(TypeId* id) const {
+        if (id)
+            *id = isAscii() ? Type<char>::id() : Type<Char>::id();
+        return isAscii()
+            ? static_cast<const void*>(str8_->c_str())
+            : static_cast<const void*>(str32_->c_str());
+    }
 
  public:
     static Cptr create() {
@@ -211,7 +219,7 @@ class StringImpl : public String {
     static Cptr create(const void* data, Encoding enc, Size max) {
         // TODO(PL): temp
         if (enc == ASCII) {
-            Cptr p(new StringImpl(static_cast<const int8_t*>(data), max));
+            Cptr p(new StringImpl(static_cast<const char*>(data), max));
             return p;
         } else if (enc == UTF8) {
             // TODO(PL): use ConvertUTF8toUTF32
@@ -224,8 +232,8 @@ class StringImpl : public String {
     }
 
  private:
-    typedef std::basic_string<int8_t> Str8;
-    typedef std::basic_string<int32_t> Str32;
+    typedef std::basic_string<char> Str8;
+    typedef std::basic_string<Char> Str32;
 
     Str8* str8_;
     Str32* str32_;
@@ -250,7 +258,7 @@ class StringImpl : public String {
         : str8_(0)
         , str32_(s ? new Str32(*s, pos, count) : 0) {}
 
-    StringImpl(const int8_t* data, Size count = NO_POS)
+    StringImpl(const char* data, Size count = NO_POS)
         : str8_(0)
         , str32_(0) {
         if (!data)
@@ -264,7 +272,7 @@ class StringImpl : public String {
         str8_ = new Str8(data, count);
     }
 
-    StringImpl(const int32_t* data, Size count = NO_POS)
+    StringImpl(const Char* data, Size count = NO_POS)
         : str8_(0)
         , str32_(0) {
         if (!data)
