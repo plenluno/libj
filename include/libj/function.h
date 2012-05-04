@@ -10,7 +10,7 @@ namespace libj {
 
 class Function : LIBJ_MUTABLE(Function)
  public:
-    virtual Value operator()(Type<ArrayList>::Ptr args) = 0;
+    virtual Value operator()(Type<ArrayList>::Cptr args) = 0;
     
     virtual Type<String>::Cptr toString() const {
         // TODO: implement Function.toString

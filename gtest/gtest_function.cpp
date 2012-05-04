@@ -11,7 +11,7 @@ class Add : LIBJ_FUNCTION(Add)
 
 class AddImpl : public Add {
  public:
-    Value operator()(Type<ArrayList>::Ptr args) {
+    Value operator()(Type<ArrayList>::Cptr args) {
         if (args->size() == 2 &&
             args->get(0).type() == Type<Int>::id() &&
             args->get(1).type() == Type<Int>::id()) {
