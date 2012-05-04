@@ -19,6 +19,27 @@ class Map : LIBJ_MUTABLE(Map)
     // and so on
 };
 
+#define LIBJ_MAP_IMPL(M) \
+ public: \
+    Size size() const { \
+        return M->size(); \
+    } \
+    Value get(Value key) const { \
+        return M->get(key); \
+    } \
+    Value put(Value key, Value val) { \
+        return M->put(key, val); \
+    } \
+    Value remove(Value key) { \
+        return M->remove(key); \
+    } \
+    Type<Set>::Cptr keySet() const { \
+        return M->keySet(); \
+    } \
+    void clear() { \
+        M->clear(); \
+    }
+
 }  // namespace libj
 
 #endif  // LIBJ_MAP_H_
