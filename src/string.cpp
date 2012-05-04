@@ -279,8 +279,14 @@ class StringImpl : public String {
     }
     
     StringImpl(const StringImpl* s)
-        : str8_(s->str8_)
-        , str32_(s->str32_) {
+        : str8_(s->str8_ ? new Str8(*(s->str8_)) : 0)
+        , str32_(s->str32_ ? new Str32(*(s->str32_)) : 0) {
+    }
+
+ public:
+    ~StringImpl() {
+        delete str8_;
+        delete str32_;
     }
 };
 
