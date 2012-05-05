@@ -8,8 +8,6 @@
 namespace libj {
 
 class Set : LIBJ_COLLECTION(Set)
- public:
-     virtual bool remove(Value val) = 0;
 };
 
 }  // namespace libj

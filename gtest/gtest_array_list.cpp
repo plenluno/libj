@@ -70,6 +70,20 @@ TEST(GTestArrayList, TestRemove) {
     ASSERT_EQ(a->size(), 1);
 }
 
+TEST(GTestArrayList, TestRemove2) {
+    Type<ArrayList>::Ptr a = ArrayList::create();
+    a->add(123);
+    a->add(456);
+    a->add(789);
+    a->remove(static_cast<Value>(456));
+    
+    int v;
+    to<int>(a->get(1), &v);
+    ASSERT_EQ(v, 789);
+    ASSERT_EQ(a->size(), 2);
+}
+
+
 TEST(GTestArrayList, TestClear) {
     Type<ArrayList>::Ptr a = ArrayList::create();
     a->add(123);

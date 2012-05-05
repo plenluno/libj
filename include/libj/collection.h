@@ -13,6 +13,7 @@ class Collection : LIBJ_MUTABLE(Collection)
     virtual Size size() const = 0;
     virtual void clear() = 0;
     virtual bool add(Value val) = 0;
+    virtual bool remove(Value val) = 0;
     virtual Type<Iterator>::Ptr iterator() const = 0;
     // and so on
 };
