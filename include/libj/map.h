@@ -19,6 +19,9 @@ class Map : LIBJ_MUTABLE(Map)
     // and so on
 };
 
+#define LIBJ_MAP(T) public libj::Map { \
+    LIBJ_MUTABLE_DECLS(T, libj::Map)
+
 #define LIBJ_MAP_IMPL(M) \
  public: \
     Size size() const { \
