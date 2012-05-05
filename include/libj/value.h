@@ -58,11 +58,15 @@ class Value {
     TypeId type() const {
         return content ? content->type() : Type<void>::id();
     }
-    
+
     bool instanceOf(TypeId id) const {
         return content ? content->instanceOf(id) : false;
     }
-    
+
+    bool isCptr() const {
+        return content ? content->isCptr() : false;
+    }
+
     int compareTo(Value val) const {
         if (content) {
             if (val.content)
@@ -82,15 +86,20 @@ class Value {
 
      public:  // queries
         virtual TypeId type() const = 0;
-        
+
         virtual bool instanceOf(TypeId id) const = 0;
+
+        virtual bool isCptr() const = 0;
 
         virtual int compareTo(placeholder * other) const = 0;
 
         virtual placeholder * clone() const = 0;
     };
 
-    template<typename ValueType, bool = IsObjectPtr<ValueType>::value>
+    template<
+        typename ValueType,
+        bool IsObject = Classify<ValueType>::isObject,
+        bool IsCptr   = Classify<ValueType>::isCptr>
     class holder : public placeholder {
      public:  // structors
         holder(const ValueType & value)
@@ -103,7 +112,11 @@ class Value {
         }
 
         virtual bool instanceOf(TypeId id) const {
-            return false;
+            return held->instanceOf(id);
+        }
+
+        virtual bool isCptr() const {
+            return IsCptr;
         }
 
         virtual int compareTo(placeholder * that) const {
@@ -112,11 +125,11 @@ class Value {
             if (thisId == thatId) {
                 ValueType thatHeld =
                     static_cast<holder<ValueType>*>(that)->held;
-                return this->held < thatHeld
-                        ? -1
-                        : this->held > thatHeld
-                            ? 1
-                            : 0;
+                return this->held->compareTo(thatHeld);
+            } else if (this->instanceOf(thatId)) {
+                return 1;
+            } else if (that->instanceOf(thisId)) {
+                return -1;
             } else {
                 return thisId < thatId ? -1 : 1;
             }
@@ -132,9 +145,9 @@ class Value {
      private:  // intentionally left unimplemented
         holder & operator=(const holder &);
     };
-    
+
     template<typename ValueType>
-    class holder<ValueType, true> : public placeholder {
+    class holder<ValueType, false, false> : public placeholder {
      public:  // structors
         holder(const ValueType & value)
           : held(value) {
@@ -144,22 +157,26 @@ class Value {
         virtual TypeId type() const {
             return Type<ValueType>::id();
         }
-        
+
         virtual bool instanceOf(TypeId id) const {
-            return held->instanceOf(id);
+            return false;
         }
-        
+
+        virtual bool isCptr() const {
+            return true;
+        }
+
         virtual int compareTo(placeholder * that) const {
             TypeId thisId = this->type();
             TypeId thatId = that->type();
             if (thisId == thatId) {
                 ValueType thatHeld =
                     static_cast<holder<ValueType>*>(that)->held;
-                return this->held->compareTo(thatHeld);
-            } else if (this->instanceOf(thatId)) {
-                return 1;
-            } else if (that->instanceOf(thisId)) {
-                return -1;
+                return this->held < thatHeld
+                        ? -1
+                        : this->held > thatHeld
+                            ? 1
+                            : 0;
             } else {
                 return thisId < thatId ? -1 : 1;
             }
@@ -245,20 +262,33 @@ bool to(
 }
 
 template<typename T>
-bool toPtr(const Value& v, typename Type<T>::Ptr* out) {
-    if (v.instanceOf(Type<T>::id())) {
-        return to<typename Type<T>::Ptr>(v, out, true);
+typename Type<T>::Ptr toPtr(const Value& v) {
+    if (v.instanceOf(Type<T>::id()) && !v.isCptr()) {
+        LIBJ_PTR_TYPE(T) p;
+        if (to<typename Type<T>::Ptr>(v, &p, true)) {
+            return p;
+        } else {
+            LIBJ_NULL_PTR_TYPE(T, nullp);
+            return nullp;
+        }
     } else {
-        return false;
+        LIBJ_NULL_PTR_TYPE(T, nullp);
+        return nullp;
     }
 }
 
 template<typename T>
-bool toCptr(const Value& v, typename Type<T>::Cptr* out) {
+typename Type<T>::Cptr toCptr(const Value& v) {
     if (v.instanceOf(Type<T>::id())) {
-        return to<typename Type<T>::Cptr>(v, out, true);
+        LIBJ_CPTR_TYPE(T) p;
+        if (to<typename Type<T>::Cptr>(v, &p, true)) {
+            return p;
+        } else {
+            LIBJ_NULL_CPTR_TYPE(T, nullp);
+        }
     } else {
-        return false;
+        LIBJ_NULL_CPTR_TYPE(T, nullp);
+        return nullp;
     }
 }
 

@@ -12,7 +12,7 @@ namespace console {
 void log(Value val) {
     Type<String>::Cptr s;
     if (val.instanceOf(Type<String>::id())) {
-        toCptr<String>(val, &s);
+        s = toCptr<String>(val);
     } else {
         s = json::stringify(val);
     }

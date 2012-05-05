@@ -79,9 +79,9 @@ TEST(GTestMutable, Test2) {
     Type<Mutable>::Cptr p3 = p;
     Type<Object>::Ptr p4 = p;
     Type<Object>::Cptr p5 = p;
-    Type<Mutable>::Ptr p6 = STATIC_PTR_CAST(Mutable)(p4);
-    Type<Mutable>::Cptr p7 = STATIC_CPTR_CAST(Mutable)(p5);
-    //Type<Mutable>::Ptr p8 = STATIC_CPTR_CAST(Mutable)(p4);
+    Type<Mutable>::Ptr p6 = LIBJ_STATIC_PTR_CAST(Mutable)(p4);
+    Type<Mutable>::Cptr p7 = LIBJ_STATIC_CPTR_CAST(Mutable)(p5);
+    //Type<Mutable>::Ptr p8 = LIBJ_STATIC_CPTR_CAST(Mutable)(p4);
 }
 
 TEST(GTestMutable, Test3) {

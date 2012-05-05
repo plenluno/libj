@@ -65,15 +65,13 @@ static Type<String>::Cptr doubleToJson(Value val) {
 }
 
 static Type<String>::Cptr stringToJson(Value val) {
-    Type<String>::Cptr s;
-    toCptr<String>(val, &s);
+    Type<String>::Cptr s = toCptr<String>(val);
     Type<String>::Cptr result = S_DQUOTE->concat(s)->concat(S_DQUOTE);
     return result;
 }
 
 static Type<String>::Cptr mapToJson(Value val) {
-    Type<Map>::Cptr m;
-    toCptr<Map>(val, &m);
+    Type<Map>::Cptr m = toCptr<Map>(val);
     Type<Set>::Cptr ks = m->keySet();
     Type<Iterator>::Ptr itr = ks->iterator();
     Type<String>::Cptr result = String::create("{");
@@ -93,8 +91,7 @@ static Type<String>::Cptr mapToJson(Value val) {
 }
 
 static Type<String>::Cptr arrayToJson(Value val) {
-    Type<ArrayList>::Cptr a;
-    toCptr<ArrayList>(val, &a);
+    Type<ArrayList>::Cptr a = toCptr<ArrayList>(val);
     Type<Iterator>::Ptr itr = a->iterator();
     Type<String>::Cptr result = String::create("[");
     while (itr->hasNext()) {

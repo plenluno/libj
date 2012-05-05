@@ -16,19 +16,10 @@ class Singleton
 template<typename T>
 class SingletonTmpl
     : public Singleton {
- private:
-    struct NullDeleter {
-        void operator()(void const *) const {}
-    };
-
  public:
     static LIBJ_PTR_TYPE(T) instance() {
         static T t;
-#ifdef LIBJ_USE_SP
-        LIBJ_PTR_TYPE(T) p(&t, NullDeleter());
-#else
-        LIBJ_PTR_TYPE(T) p(&t);
-#endif
+        LIBJ_SINGLETON_PTR_TYPE(T,p,&t);
         return p;
     }
 

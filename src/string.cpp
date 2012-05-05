@@ -102,7 +102,7 @@ class StringImpl : public String {
         Int result = Object::compareTo(that);
         if (result)
             return result;
-        Type<String>::Cptr other = STATIC_CPTR_CAST(String)(that);
+        Type<String>::Cptr other = LIBJ_STATIC_CPTR_CAST(String)(that);
         Size len1 = this->length();
         Size len2 = other->length();
         Size len = len1 < len2 ? len1 : len2;
