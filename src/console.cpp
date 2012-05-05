@@ -7,13 +7,14 @@
 #include <iostream>
 
 namespace libj {
+namespace console {
 
-void Console::log(Value val) {
+void log(Value val) {
     Type<String>::Cptr s;
     if (val.instanceOf(Type<String>::id())) {
         toCptr<String>(val, &s);
     } else {
-        s = Json::instance()->stringify(val);
+        s = json::stringify(val);
     }
     for (Size i = 0; i < s->length(); i++) {
         std::cout << static_cast<char>(s->charAt(i));
@@ -21,4 +22,5 @@ void Console::log(Value val) {
     std::cout << std::endl;
 }
 
-}
+}  // namespace console
+}  // namespace libj

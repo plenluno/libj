@@ -3,16 +3,16 @@
 #ifndef LIBJ_JSON_H_
 #define LIBJ_JSON_H_
 
-#include "libj/singleton.h"
+#include "libj/string.h"
 
 namespace libj {
+namespace json {
 
-class Json : LIBJ_SINGLETON(Json)
- public:
-    Value parse(Type<String>::Cptr str);
-    Type<String>::Cptr stringify(Value val);
-};
+Value parse(Type<String>::Cptr str);
+Type<String>::Cptr stringify(Value val);
 
+
+}  // namespace json
 }  // namespace libj
 
 #endif  // LIBJ_JSON_H_

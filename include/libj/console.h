@@ -3,15 +3,14 @@
 #ifndef LIBJ_CONSOLE_H_
 #define LIBJ_CONSOLE_H_
 
-#include "libj/singleton.h"
+#include "libj/value.h"
 
 namespace libj {
+namespace console {
 
-class Console : LIBJ_SINGLETON(Console)
- public:
-    void log(Value val);
-};
+void log(Value val);
 
+}  // namespace console
 }  // namespace libj
 
 #endif  // LIBJ_CONSOLE_H_

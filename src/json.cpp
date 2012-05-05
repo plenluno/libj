@@ -8,8 +8,10 @@
 #include "libj/string.h"
 
 namespace libj {
+namespace json {
 
-Value Json::parse(Type<String>::Cptr str) {
+Value parse(Type<String>::Cptr str) {
+    // TODO: implement
     return 0;
 }
 
@@ -83,7 +85,7 @@ static Type<String>::Cptr mapToJson(Value val) {
             result = result
                 ->concat(stringToJson(v))
                 ->concat(S_COLON)
-                ->concat(Json::instance()->stringify(m->get(v)));
+                ->concat(json::stringify(m->get(v)));
         }
     }
     result = result->concat(String::create("}"));
@@ -99,13 +101,13 @@ static Type<String>::Cptr arrayToJson(Value val) {
         Value v = itr->next();
         if (result->length() > 1)
             result = result->concat(S_COMMA);
-        result = result->concat(Json::instance()->stringify(v));
+        result = result->concat(json::stringify(v));
     }
     result = result->concat(String::create("]"));
     return result;
 }
 
-Type<String>::Cptr Json::stringify(Value val) {
+Type<String>::Cptr stringify(Value val) {
     if (val.type() == Type<Boolean>::id()) {
         return booleanToJson(val);
     } else if (val.type() == Type<Int>::id()) {
@@ -129,4 +131,5 @@ Type<String>::Cptr Json::stringify(Value val) {
     }
 }
 
+}  // namespace json
 }  // namespace libj
