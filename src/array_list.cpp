@@ -54,9 +54,13 @@ class ArrayListImpl : public ArrayList {
     
     bool remove(Value v) {
         Size n = size();
-        for (Size i = 0; i < n; i++)
-            if (!vec_[i].compareTo(v))
+        for (Size i = 0; i < n; i++) {
+            if (!vec_[i].compareTo(v)) {
                 remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     void clear() {

@@ -75,7 +75,8 @@ TEST(GTestArrayList, TestRemove2) {
     a->add(123);
     a->add(456);
     a->add(789);
-    a->remove(static_cast<Value>(456));
+    ASSERT_TRUE(a->remove(static_cast<Value>(456)));
+    ASSERT_FALSE(a->remove(static_cast<Value>(567)));
     
     int v;
     to<int>(a->get(1), &v);
