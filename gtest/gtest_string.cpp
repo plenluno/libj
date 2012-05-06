@@ -47,6 +47,13 @@ TEST(GTestString, TestConcat) {
     Type<String>::Cptr s1 = String::create("abc", String::ASCII);
     Type<String>::Cptr s2 = String::create("de", String::ASCII);
     ASSERT_EQ(s->compareTo(s1->concat(s2)), 0);
+    
+    Type<String>::Cptr e = String::create();
+    ASSERT_EQ(s->compareTo(e->concat(s)), 0);
+    ASSERT_EQ(s->compareTo(s->concat(e)), 0);
+    
+    LIBJ_NULL_CPTR(String, n);
+    ASSERT_EQ(s->compareTo(s->concat(n)), 0);
 }
 
 TEST(GTestString, TestCompareTo) {

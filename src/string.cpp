@@ -56,11 +56,10 @@ class StringImpl : public String {
     }
 
     Cptr concat(Cptr other) const {
-        if (this->isEmpty() || !other) {
-            return other;
-        } else if (other->isEmpty()) {
-            Cptr p(this);
-            return p;
+        if (!other || other->isEmpty()) {
+            return this->toString();
+        } else if (this->isEmpty()) {
+            return other->toString();
         }
 
         if (this->str8_ && other->isAscii()) {
