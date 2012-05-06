@@ -111,6 +111,18 @@ TEST(GTestString, TestLastIndexOf2) {
     ASSERT_EQ(s->lastIndexOf(s2), NO_POS);
 }
 
+TEST(GTestString, TestToLowerCase) {
+    Type<String>::Cptr s = String::create("Ab#");
+    Type<String>::Cptr e = String::create("ab#");
+    ASSERT_EQ(s->toLowerCase()->compareTo(e), 0);
+}
+
+TEST(GTestString, TestToUpperCase) {
+    Type<String>::Cptr s = String::create("Ab#");
+    Type<String>::Cptr e = String::create("AB#");
+    ASSERT_EQ(s->toUpperCase()->compareTo(e), 0);
+}
+
 TEST(GTestString, TestToString) {
     Type<String>::Cptr s = String::create("abcabc", String::ASCII);
     ASSERT_EQ(s->toString()->compareTo(s), 0);

@@ -196,6 +196,56 @@ class StringImpl : public String {
     bool isAscii() const {
         return str8_ ? true : str32_ ? false : true;
     }
+    
+    Cptr toLowerCase() const {
+        Size len = length();
+        if (isAscii()) {
+            Str8* s = new Str8();
+            for (Size i = 0; i < len; i++) {
+                char c = static_cast<char>(charAt(i));
+                if (c >= 'A' && c <= 'Z')
+                    c += 'a' - 'A';
+                *s += c;
+            }
+            Cptr p(new StringImpl(s, 0));
+            return p;
+        } else {
+            Str32* s = new Str32();
+            for (Size i = 0; i < len; i++) {
+                Char c = charAt(i);
+                if (c >= 'A' && c <= 'Z')
+                    c += 'a' - 'A';
+                *s += c;
+            }
+            Cptr p(new StringImpl(0, s));
+            return p;
+        }
+    }
+    
+    Cptr toUpperCase() const {
+        Size len = length();
+        if (isAscii()) {
+            Str8* s = new Str8();
+            for (Size i = 0; i < len; i++) {
+                char c = static_cast<char>(charAt(i));
+                if (c >= 'a' && c <= 'z')
+                    c -= 'a' - 'A';
+                *s += c;
+            }
+            Cptr p(new StringImpl(s, 0));
+            return p;
+        } else {
+            Str32* s = new Str32();
+            for (Size i = 0; i < len; i++) {
+                Char c = charAt(i);
+                if (c >= 'a' && c <= 'z')
+                    c -= 'a' - 'A';
+                *s += c;
+            }
+            Cptr p(new StringImpl(0, s));
+            return p;
+        }
+    }
 
     Cptr toString() const {
         Cptr p(new StringImpl(this));
@@ -284,6 +334,11 @@ class StringImpl : public String {
             }
         }
         str32_ = new Str32(data, count);
+    }
+    
+    StringImpl(Str8* s8, Str32* s32)
+        : str8_(s8)
+        , str32_(s32) {
     }
     
     StringImpl(const StringImpl* s)

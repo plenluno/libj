@@ -34,6 +34,8 @@ class String : LIBJ_IMMUTABLE(String)
     virtual Size lastIndexOf(Cptr, Size = NO_POS) const = 0;
     virtual bool isEmpty() const = 0;
     virtual bool isAscii() const = 0;
+    virtual Cptr toLowerCase() const = 0;
+    virtual Cptr toUpperCase() const = 0;
     virtual const void* data(TypeId*) const = 0;
 };
 
