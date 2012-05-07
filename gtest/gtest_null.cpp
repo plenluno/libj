@@ -18,4 +18,11 @@ TEST(GTestNull, TestInstanceOf) {
     ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
 }
 
+#ifdef LIBJ_USE_SP
+TEST(GTestNull, TestUseCount) {
+    Type<Null>::Cptr p = Null::instance();
+    ASSERT_EQ(p.use_count(), 1);
+}
+#endif
+
 }  // namespace libj

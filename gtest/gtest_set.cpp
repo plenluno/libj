@@ -46,4 +46,11 @@ TEST(GTestSet, TestIterator) {
     ASSERT_FALSE(itr->hasNext());
 }
 
+#ifdef LIBJ_USE_SP
+TEST(GTestSet, TestUseCount) {
+    Type<Set>::Cptr p = Set::create();
+    ASSERT_EQ(p.use_count(), 1);
+}
+#endif
+
 }  // namespace libj

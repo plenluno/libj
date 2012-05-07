@@ -45,4 +45,11 @@ TEST(GTestFunction, TestAdd) {
     ASSERT_EQ(s, 5);
 }
 
+#ifdef LIBJ_USE_SP
+TEST(GTestFunction, TestUseCount) {
+    Type<Function>::Cptr p = Add::create();
+    ASSERT_EQ(p.use_count(), 1);
+}
+#endif
+
 }

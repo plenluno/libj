@@ -122,4 +122,11 @@ TEST(GTestArrayList, TestIterator) {
     ASSERT_FALSE(itr->hasNext());
 }
 
+#ifdef LIBJ_USE_SP
+TEST(GTestArrayList, TestUseCount) {
+    Type<ArrayList>::Cptr p = ArrayList::create();
+    ASSERT_EQ(p.use_count(), 1);
+}
+#endif
+
 }  // namespace libj

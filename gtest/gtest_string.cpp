@@ -146,4 +146,11 @@ TEST(GTestString, TestData) {
     ASSERT_EQ(s->compareTo(s2), 0);
 }
 
+#ifdef LIBJ_USE_SP
+TEST(GTestString, TestUseCount) {
+    Type<String>::Cptr p = String::create();
+    ASSERT_EQ(p.use_count(), 1);
+}
+#endif
+
 }  // namespace libj

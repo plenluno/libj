@@ -49,4 +49,11 @@ TEST(GTestMap, TestIterator) {
     ASSERT_FALSE(itr->hasNext());
 }
 
+#ifdef LIBJ_USE_SP
+TEST(GTestMap, TestUseCount) {
+    Type<Map>::Cptr p = Map::create();
+    ASSERT_EQ(p.use_count(), 1);
+}
+#endif
+
 }  // namespace libj
