@@ -9,8 +9,12 @@
 namespace libj {
 
 TEST(GTestJson, TestStringify) {
-    ASSERT_EQ(json::stringify(3)->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(3.3)->compareTo(String::create("3.300000")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Byte>(3))->compareTo(String::create("3")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Short>(3))->compareTo(String::create("3")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Int>(3))->compareTo(String::create("3")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Long>(3))->compareTo(String::create("3")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Float>(3.3))->compareTo(String::create("3.300000")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Double>(3.3))->compareTo(String::create("3.300000")), 0);
     ASSERT_EQ(json::stringify(true)->compareTo(String::create("true")), 0);
     ASSERT_EQ(json::stringify(false)->compareTo(String::create("false")), 0);
     ASSERT_EQ(json::stringify(Null::instance())->compareTo(String::create("null")), 0);
