@@ -9,13 +9,14 @@
 namespace libj {
 
 typedef bool Boolean;
-typedef size_t Size;
-typedef uint8_t Byte;
-typedef int32_t Char;
+typedef int8_t Byte;
+typedef int16_t Short;
 typedef int32_t Int;
 typedef int64_t Long;
 typedef float Float;
 typedef double Double;
+typedef int32_t Char;
+typedef size_t Size;
 typedef uintptr_t TypeId;
 
 }  // namespace libj
