@@ -1,0 +1,20 @@
+// Copyright (c) 2012 Plenluno All rights reserved.
+
+#ifndef LIBJ_STRING_BUFFER_H_
+#define LIBJ_STRING_BUFFER_H_
+
+#include "libj/mutable.h"
+#include "libj/string.h"
+
+namespace libj {
+
+class StringBuffer : LIBJ_MUTABLE(StringBuffer)
+ public:
+     virtual Size length() const = 0;
+     virtual Char charAt(Size) const = 0;
+     virtual bool append(const Value&) = 0;
+};
+
+}  // namespace libj
+
+#endif  // LIBJ_STRING_BUFFER_H_

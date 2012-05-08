@@ -41,6 +41,7 @@ set(libj-src
     src/no_exceptions.cpp
     src/set.cpp
     src/string.cpp
+    src/string_buffer.cpp
 )
 
 set(libj-deps
@@ -65,6 +66,7 @@ add_executable(libj-gtest
     gtest/gtest_set.cpp
     gtest/gtest_singleton.cpp
     gtest/gtest_string.cpp
+    gtest/gtest_string_buffer.cpp
     gtest/gtest_value.cpp
     ${libj-src}
 )
