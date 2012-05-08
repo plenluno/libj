@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <string>
+#include <stdio.h>
 #include "libj/string.h"
 
 namespace libj {
