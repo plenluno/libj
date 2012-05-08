@@ -250,14 +250,6 @@ class StringImpl : public String {
         Cptr p(new StringImpl(this));
         return p;
     }
-    
-    const void* data(TypeId* id) const {
-        if (id)
-            *id = isAscii() ? Type<char>::id() : Type<Char>::id();
-        return isAscii()
-            ? static_cast<const void*>(str8_->c_str())
-            : static_cast<const void*>(str32_->c_str());
-    }
 
  public:
     static Cptr create() {
@@ -358,6 +350,130 @@ Type<String>::Cptr String::create() {
 
 Type<String>::Cptr String::create(const void* data, Encoding enc, Size max) {
     return StringImpl::create(data, enc, max);
+}
+
+static Type<String>::Cptr LIBJ_STR_TRUE = String::create("true");
+static Type<String>::Cptr LIBJ_STR_FALSE = String::create("false");
+
+static Type<String>::Cptr booleanToString(const Value& val) {
+    Boolean b;
+    to<Boolean>(val, &b);
+    return b ? LIBJ_STR_TRUE : LIBJ_STR_FALSE;
+}
+
+static Type<String>::Cptr byteToString(const Value& val) {
+    Byte b;
+    to<Byte>(val, &b);
+    const Size len = (8 / 3) + 3;
+    char s[len];
+    snprintf(s, len, "%d", b);
+    return String::create(s);
+}
+
+static Type<String>::Cptr shortToString(const Value& val) {
+    Short sh;
+    to<Short>(val, &sh);
+    const Size len = (16 / 3) + 3;
+    char s[len];
+    snprintf(s, len, "%d", sh);
+    return String::create(s);
+}
+
+static Type<String>::Cptr intToString(const Value& val) {
+    Int i;
+    to<Int>(val, &i);
+    const Size len = (32 / 3) + 3;
+    char s[len];
+    snprintf(s, len, "%d", i);
+    Type<String>::Cptr p = String::create(s);
+    return p;
+}
+
+static Type<String>::Cptr longToString(const Value& val) {
+    Long l;
+    to<Long>(val, &l);
+    const Size len = (64 / 3) + 3;
+    char s[len];
+    snprintf(s, len, "%lld", l);
+    return String::create(s);
+}
+
+static Type<String>::Cptr floatToString(const Value& val) {
+    Float f;
+    to<Float>(val, &f);
+    const Size len = (32 / 3) + 5;
+    char s[len];
+    snprintf(s, len, "%f", f);
+    return String::create(s);
+}
+
+static Type<String>::Cptr doubleToString(const Value& val) {
+    Double d;
+    to<Double>(val, &d);
+    const Size len = (64 / 3) + 5;
+    char s[len];
+    snprintf(s, len, "%lf", d);
+    return String::create(s);
+}
+
+static Type<String>::Cptr sizeToString(const Value& val) {
+    Size n;
+    to<Size>(val, &n);
+    const Size len = (sizeof(Size) / 3) + 3;
+    char s[len];
+    snprintf(s, len, "%zd", n);
+    Type<String>::Cptr p = String::create(s);
+    return p;
+}
+
+static Type<String>::Cptr typeIdToString(const Value& val) {
+    TypeId t;
+    to<TypeId>(val, &t);
+    const Size len = (sizeof(TypeId) / 3) + 3;
+    char s[len];
+    snprintf(s, len, "%zd", t);
+    Type<String>::Cptr p = String::create(s);
+    return p;
+}
+
+static Type<String>::Cptr objectToString(const Value& val) {
+    Type<Object>::Cptr o = toCptr<Object>(val);
+    if (o)
+        return o->toString();
+    else {
+        LIBJ_NULL_CPTR(String, nullp);
+        return nullp;
+    }
+}
+
+Type<String>::Cptr String::valueOf(const Value& val) {
+    if (val.empty()) {
+        LIBJ_NULL_CPTR(String, nullp);
+        return nullp;
+    } else if (val.type() == Type<Boolean>::id()) {
+        return booleanToString(val);
+    } else if (val.type() == Type<Byte>::id()) {
+        return byteToString(val);
+    } else if (val.type() == Type<Short>::id()) {
+        return shortToString(val);
+    } else if (val.type() == Type<Int>::id()) {
+        return intToString(val);
+    } else if (val.type() == Type<Long>::id()) {
+        return longToString(val);
+    } else if (val.type() == Type<Float>::id()) {
+        return floatToString(val);
+    } else if (val.type() == Type<Double>::id()) {
+        return doubleToString(val);
+    } else if (val.type() == Type<Size>::id()) {
+        return sizeToString(val);
+    } else if (val.type() == Type<TypeId>::id()) {
+        return typeIdToString(val);
+    } else if (val.instanceOf(Type<Object>::id())) {
+        return objectToString(val);
+    } else {
+        LIBJ_NULL_CPTR(String, nullp);
+        return nullp;
+    }
 }
 
 }  // namespace libj

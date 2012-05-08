@@ -138,12 +138,20 @@ TEST(GTestString, TestToString) {
     ASSERT_EQ(o->toString()->compareTo(s), 0);
 }
 
-TEST(GTestString, TestData) {
-    Type<String>::Cptr s = String::create("abcabc", String::ASCII);
-    TypeId tid;
-    Type<String>::Cptr s2 = String::create(s->data(&tid));
-    ASSERT_EQ(tid, Type<char>::id());
-    ASSERT_EQ(s->compareTo(s2), 0);
+TEST(GTestString, TestValueOf) {
+    Value v;
+    ASSERT_FALSE(String::valueOf(v));
+    
+    LIBJ_NULL_CPTR(String, nullp);
+    v = nullp;
+    ASSERT_FALSE(String::valueOf(v));
+    
+    v = 3;
+    ASSERT_EQ(String::valueOf(v)->compareTo(String::create("3")), 0);
+    
+    Type<String>::Cptr s = String::create("abc");
+    v = s;
+    ASSERT_EQ(String::valueOf(v)->compareTo(s), 0);
 }
 
 #ifdef LIBJ_USE_SP

@@ -20,6 +20,7 @@ class String : LIBJ_IMMUTABLE(String)
     };
 
     static Cptr create(const void*, Encoding = ASCII, Size = NO_POS);
+    static Cptr valueOf(const Value&);
 
     virtual Size length() const = 0;
     virtual Char charAt(Size) const = 0;
@@ -36,7 +37,6 @@ class String : LIBJ_IMMUTABLE(String)
     virtual bool isAscii() const = 0;
     virtual Cptr toLowerCase() const = 0;
     virtual Cptr toUpperCase() const = 0;
-    virtual const void* data(TypeId*) const = 0;
 };
 
 }  // namespace libj
