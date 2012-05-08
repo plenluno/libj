@@ -11,9 +11,9 @@ namespace libj {
 class Map : LIBJ_MUTABLE(Map)
  public:
     virtual Size size() const = 0;
-    virtual Value get(Value key) const = 0;
-    virtual Value put(Value key, Value val) = 0;
-    virtual Value remove(Value key) = 0;
+    virtual Value get(const Value& key) const = 0;
+    virtual Value put(const Value& key, const Value& val) = 0;
+    virtual Value remove(const Value& key) = 0;
     virtual Type<Set>::Cptr keySet() const = 0;
     virtual void clear() = 0;
     // and so on
@@ -27,13 +27,13 @@ class Map : LIBJ_MUTABLE(Map)
     Size size() const { \
         return M->size(); \
     } \
-    Value get(Value key) const { \
+    Value get(const Value& key) const { \
         return M->get(key); \
     } \
-    Value put(Value key, Value val) { \
+    Value put(const Value& key, const Value& val) { \
         return M->put(key, val); \
     } \
-    Value remove(Value key) { \
+    Value remove(const Value& key) { \
         return M->remove(key); \
     } \
     Type<Set>::Cptr keySet() const { \

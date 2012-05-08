@@ -23,7 +23,7 @@ class MapImpl : public Map {
         return map_.size();
     }
     
-    Value get(Value key) const {
+    Value get(const Value& key) const {
         ValueMap::const_iterator itr = map_.find(key);
         if (itr != map_.end())
             return itr->second;
@@ -31,13 +31,13 @@ class MapImpl : public Map {
             return Null::instance();
     }
 
-    Value put(Value key, Value val) {
+    Value put(const Value& key, const Value& val) {
         Value v = get(key);
         map_[key] = val;
         return v;
     }
     
-    Value remove(Value key) {
+    Value remove(const Value& key) {
         Value v = get(key);
         map_.erase(key);
         return v;

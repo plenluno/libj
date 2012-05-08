@@ -9,7 +9,7 @@ namespace libj {
 namespace json {
 
 Value parse(Type<String>::Cptr str);
-Type<String>::Cptr stringify(Value val);
+Type<String>::Cptr stringify(const Value& val);
 
 
 }  // namespace json

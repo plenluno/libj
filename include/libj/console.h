@@ -8,7 +8,7 @@
 namespace libj {
 namespace console {
 
-void log(Value val);
+bool log(const Value& val);
 
 }  // namespace console
 }  // namespace libj

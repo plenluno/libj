@@ -22,12 +22,12 @@ class SetImpl : public Set {
         return set_.size();
     }
 
-    bool add(Value v) {
+    bool add(const Value& v) {
         std::pair<ValueSet::iterator,bool> p = set_.insert(v);
         return p.second;
     }
     
-    bool remove(Value v) {
+    bool remove(const Value& v) {
         return set_.erase(v) > 0;
     }
 

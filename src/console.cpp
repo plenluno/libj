@@ -9,17 +9,15 @@
 namespace libj {
 namespace console {
 
-void log(Value val) {
-    Type<String>::Cptr s;
-    if (val.instanceOf(Type<String>::id())) {
-        s = toCptr<String>(val);
-    } else {
-        s = json::stringify(val);
-    }
+bool log(const Value& val) {
+    Type<String>::Cptr s = String::valueOf(val);
+    if (!s)
+        return false;
     for (Size i = 0; i < s->length(); i++) {
         std::cout << static_cast<char>(s->charAt(i));
     }
     std::cout << std::endl;
+    return true;
 }
 
 }  // namespace console

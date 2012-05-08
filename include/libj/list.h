@@ -9,11 +9,11 @@ namespace libj {
 
 class List : LIBJ_COLLECTION(List)
  public:
-    virtual bool add(Value) = 0;
-    virtual bool add(Size, Value) = 0;
-    virtual bool set(Size, Value) = 0;
+    virtual bool add(const Value&) = 0;
+    virtual bool add(Size, const Value&) = 0;
+    virtual bool set(Size, const Value&) = 0;
     virtual Value get(Size) const = 0;
-    virtual bool remove(Value) = 0;
+    virtual bool remove(const Value&) = 0;
     virtual Value remove(Size) = 0;
     // and so on
 };

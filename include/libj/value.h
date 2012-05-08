@@ -114,7 +114,7 @@ class Value {
         }
 
         virtual bool instanceOf(TypeId id) const {
-            return held->instanceOf(id);
+            return held ? held->instanceOf(id) : false;
         }
 
         virtual bool isCptr() const {

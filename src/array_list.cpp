@@ -13,12 +13,12 @@ class ArrayListImpl : public ArrayList {
         return vec_.size();
     }
 
-    bool add(Value v) {
+    bool add(const Value& v) {
         vec_.push_back(v);
         return true;
     }
 
-    bool add(Size i, Value v) {
+    bool add(Size i, const Value& v) {
         if (i < 0 || i > vec_.size()) {
             return false;
         } else {
@@ -27,7 +27,7 @@ class ArrayListImpl : public ArrayList {
         }
     }
 
-    bool set(Size i, Value v) {
+    bool set(Size i, const Value& v) {
         if (i >= vec_.size()) {
             return false;
         } else {
@@ -52,7 +52,7 @@ class ArrayListImpl : public ArrayList {
         }
     }
     
-    bool remove(Value v) {
+    bool remove(const Value& v) {
         Size n = size();
         for (Size i = 0; i < n; i++) {
             if (!vec_[i].compareTo(v)) {
