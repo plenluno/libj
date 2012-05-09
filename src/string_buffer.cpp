@@ -21,7 +21,7 @@ class StringBufferImpl : public StringBuffer {
     
     // TODO: make it more efficient
     bool append(const Value& val) {
-        Type<String>::Cptr s = String::valueOf(val);
+        String::CPtr s = String::valueOf(val);
         if (s) {
             str_ = str_->concat(s);
             return true;
@@ -30,17 +30,17 @@ class StringBufferImpl : public StringBuffer {
         }
     }
     
-    Type<String>::Cptr toString() const {
+    String::CPtr toString() const {
         return str_->toString();
     }
     
  private:
     StringBufferImpl() : str_(String::create()) {}
     
-    Type<String>::Cptr str_;
+    String::CPtr str_;
 };
 
-Type<StringBuffer>::Ptr StringBuffer::create() {
+StringBuffer::Ptr StringBuffer::create() {
     return StringBufferImpl::create();
 }
 

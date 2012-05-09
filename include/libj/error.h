@@ -16,8 +16,8 @@ class Error : LIBJ_IMMUTABLE(Error)
         INDEX_OUT_OF_BOUNDS,
     };
 
-    static Cptr create(Code code);
-    static Cptr create(Code code, Type<String>::Cptr msg);
+    static CPtr create(Code code);
+    static CPtr create(Code code, String::CPtr msg);
 
     virtual Code code() const = 0;
 };

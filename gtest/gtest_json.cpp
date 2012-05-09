@@ -22,13 +22,13 @@ TEST(GTestJson, TestStringify) {
     ASSERT_EQ(json::stringify(Map::create())->compareTo(String::create("{}")), 0);
     ASSERT_EQ(json::stringify(ArrayList::create())->compareTo(String::create("[]")), 0);
     
-    Type<Map>::Ptr m = Map::create();
+    Map::Ptr m = Map::create();
     m->put(3, false);
     m->put(String::create("x"), 123);
     m->put(String::create("y"), String::create("456"));
     ASSERT_EQ(json::stringify(m)->compareTo(String::create("{\"x\":123,\"y\":\"456\"}")), 0);
     
-    Type<ArrayList>::Ptr a = ArrayList::create();
+    ArrayList::Ptr a = ArrayList::create();
     a->add(3);
     a->add(false);
     ASSERT_EQ(json::stringify(a)->compareTo(String::create("[3,false]")), 0);

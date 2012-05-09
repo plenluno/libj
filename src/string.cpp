@@ -23,40 +23,40 @@ class StringImpl : public String {
                str32_ ? str32_->at(index) : NO_CHAR;
     }
 
-    Cptr substring(Size begin) const {
+    CPtr substring(Size begin) const {
         if (begin > length()) {
-            Cptr p(static_cast<String*>(0));
+            CPtr p(static_cast<String*>(0));
             return p;
         } else if (begin == 0) {
-            Cptr p(this);
+            CPtr p(this);
             return p;
         } else if (str8_) {
-            Cptr p(new StringImpl(str8_, begin));
+            CPtr p(new StringImpl(str8_, begin));
             return p;
         } else {  // if (str32_)
-            Cptr p(new StringImpl(str32_, begin));
+            CPtr p(new StringImpl(str32_, begin));
             return p;
         }
     }
 
-    Cptr substring(Size begin, Size end) const {
+    CPtr substring(Size begin, Size end) const {
         Size len = length();
         if (begin > len || end > len || begin > end) {
-            Cptr p(static_cast<String*>(0));
+            CPtr p(static_cast<String*>(0));
             return p;
         } else if (begin == 0 && end == len) {
-            Cptr p(this);
+            CPtr p(this);
             return p;
         } else if (str8_) {
-            Cptr p(new StringImpl(str8_, begin, end - begin));
+            CPtr p(new StringImpl(str8_, begin, end - begin));
             return p;
         } else {  // if (str32_)
-            Cptr p(new StringImpl(str32_, begin, end - begin));
+            CPtr p(new StringImpl(str32_, begin, end - begin));
             return p;
         }
     }
 
-    Cptr concat(Cptr other) const {
+    CPtr concat(CPtr other) const {
         if (!other || other->isEmpty()) {
             return this->toString();
         } else if (this->isEmpty()) {
@@ -68,7 +68,7 @@ class StringImpl : public String {
             Size len = other->length();
             for (Size i = 0; i < len; i++)
                 s->str8_->push_back(static_cast<int8_t>(other->charAt(i)));
-            Cptr p(s);
+            CPtr p(s);
             return p;
         } else if (this->str8_ && !other->isAscii()) {
             StringImpl* s = new StringImpl();
@@ -79,30 +79,30 @@ class StringImpl : public String {
             len = other->length();
             for (Size i = 0; i < len; i++)
                 s->str32_->push_back(other->charAt(i));
-            Cptr p(s);
+            CPtr p(s);
             return p;
         } else if (this->str32_ && other->isAscii()) {
             StringImpl* s = new StringImpl(str32_);
             Size len = this->length();
             for (Size i = 0; i < len; i++)
                 s->str32_->push_back(other->charAt(i));
-            Cptr p(s);
+            CPtr p(s);
             return p;
         } else {  // if (this->str32_ && !other->isAscii())
             StringImpl* s = new StringImpl(str32_);
             Size len = this->length();
             for (Size i = 0; i < len; i++)
                 s->str32_->push_back(other->charAt(i));
-            Cptr p(s);
+            CPtr p(s);
             return p;
         }
     }
 
-    Int compareTo(Type<Object>::Cptr that) const {
+    Int compareTo(Object::CPtr that) const {
         Int result = Object::compareTo(that);
         if (result)
             return result;
-        Type<String>::Cptr other = LIBJ_STATIC_CPTR_CAST(String)(that);
+        String::CPtr other = LIBJ_STATIC_CPTR_CAST(String)(that);
         Size len1 = this->length();
         Size len2 = other->length();
         Size len = len1 < len2 ? len1 : len2;
@@ -115,7 +115,7 @@ class StringImpl : public String {
         return len1 - len2;
     }
 
-    bool startsWith(Cptr other, Size offset) const {
+    bool startsWith(CPtr other, Size offset) const {
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < offset + len2)
@@ -126,7 +126,7 @@ class StringImpl : public String {
         return true;
     }
 
-    bool endsWith(Cptr other) const {
+    bool endsWith(CPtr other) const {
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < len2)
@@ -146,7 +146,7 @@ class StringImpl : public String {
         return NO_POS;
     }
 
-    Size indexOf(Cptr other, Size offset) const {
+    Size indexOf(CPtr other, Size offset) const {
         // TODO(PL): make it more efficient
         Size len1 = this->length();
         Size len2 = other->length();
@@ -172,7 +172,7 @@ class StringImpl : public String {
         return NO_POS;
     }
 
-    Size lastIndexOf(Cptr other, Size offset) const {
+    Size lastIndexOf(CPtr other, Size offset) const {
         // TODO(PL): make it more efficient
         Size len1 = this->length();
         Size len2 = other->length();
@@ -197,7 +197,7 @@ class StringImpl : public String {
         return str8_ ? true : str32_ ? false : true;
     }
     
-    Cptr toLowerCase() const {
+    CPtr toLowerCase() const {
         Size len = length();
         if (isAscii()) {
             Str8* s = new Str8();
@@ -207,7 +207,7 @@ class StringImpl : public String {
                     c += 'a' - 'A';
                 *s += c;
             }
-            Cptr p(new StringImpl(s, 0));
+            CPtr p(new StringImpl(s, 0));
             return p;
         } else {
             Str32* s = new Str32();
@@ -217,12 +217,12 @@ class StringImpl : public String {
                     c += 'a' - 'A';
                 *s += c;
             }
-            Cptr p(new StringImpl(0, s));
+            CPtr p(new StringImpl(0, s));
             return p;
         }
     }
     
-    Cptr toUpperCase() const {
+    CPtr toUpperCase() const {
         Size len = length();
         if (isAscii()) {
             Str8* s = new Str8();
@@ -232,7 +232,7 @@ class StringImpl : public String {
                     c -= 'a' - 'A';
                 *s += c;
             }
-            Cptr p(new StringImpl(s, 0));
+            CPtr p(new StringImpl(s, 0));
             return p;
         } else {
             Str32* s = new Str32();
@@ -242,33 +242,33 @@ class StringImpl : public String {
                     c -= 'a' - 'A';
                 *s += c;
             }
-            Cptr p(new StringImpl(0, s));
+            CPtr p(new StringImpl(0, s));
             return p;
         }
     }
 
-    Cptr toString() const {
-        Cptr p(new StringImpl(this));
+    CPtr toString() const {
+        CPtr p(new StringImpl(this));
         return p;
     }
 
  public:
-    static Cptr create() {
-        Cptr p(new StringImpl());
+    static CPtr create() {
+        CPtr p(new StringImpl());
         return p;
     }
 
-    static Cptr create(const void* data, Encoding enc, Size max) {
+    static CPtr create(const void* data, Encoding enc, Size max) {
         // TODO(PL): temp
         if (enc == ASCII) {
-            Cptr p(new StringImpl(static_cast<const char*>(data), max));
+            CPtr p(new StringImpl(static_cast<const char*>(data), max));
             return p;
         } else if (enc == UTF8) {
             // TODO(PL): use ConvertUTF8toUTF32
-            Cptr p(new StringImpl());
+            CPtr p(new StringImpl());
             return p;
         } else {
-            Cptr p(new StringImpl());
+            CPtr p(new StringImpl());
             return p;
         }
     }
@@ -345,24 +345,24 @@ class StringImpl : public String {
     }
 };
 
-Type<String>::Cptr String::create() {
+String::CPtr String::create() {
     return StringImpl::create();
 }
 
-Type<String>::Cptr String::create(const void* data, Encoding enc, Size max) {
+String::CPtr String::create(const void* data, Encoding enc, Size max) {
     return StringImpl::create(data, enc, max);
 }
 
-static Type<String>::Cptr LIBJ_STR_TRUE = String::create("true");
-static Type<String>::Cptr LIBJ_STR_FALSE = String::create("false");
+static String::CPtr LIBJ_STR_TRUE = String::create("true");
+static String::CPtr LIBJ_STR_FALSE = String::create("false");
 
-static Type<String>::Cptr booleanToString(const Value& val) {
+static String::CPtr booleanToString(const Value& val) {
     Boolean b;
     to<Boolean>(val, &b);
     return b ? LIBJ_STR_TRUE : LIBJ_STR_FALSE;
 }
 
-static Type<String>::Cptr byteToString(const Value& val) {
+static String::CPtr byteToString(const Value& val) {
     Byte b;
     to<Byte>(val, &b);
     const Size len = (8 / 3) + 3;
@@ -371,7 +371,7 @@ static Type<String>::Cptr byteToString(const Value& val) {
     return String::create(s);
 }
 
-static Type<String>::Cptr shortToString(const Value& val) {
+static String::CPtr shortToString(const Value& val) {
     Short sh;
     to<Short>(val, &sh);
     const Size len = (16 / 3) + 3;
@@ -380,17 +380,17 @@ static Type<String>::Cptr shortToString(const Value& val) {
     return String::create(s);
 }
 
-static Type<String>::Cptr intToString(const Value& val) {
+static String::CPtr intToString(const Value& val) {
     Int i;
     to<Int>(val, &i);
     const Size len = (32 / 3) + 3;
     char s[len];
     snprintf(s, len, "%d", i);
-    Type<String>::Cptr p = String::create(s);
+    String::CPtr p = String::create(s);
     return p;
 }
 
-static Type<String>::Cptr longToString(const Value& val) {
+static String::CPtr longToString(const Value& val) {
     Long l;
     to<Long>(val, &l);
     const Size len = (64 / 3) + 3;
@@ -399,7 +399,7 @@ static Type<String>::Cptr longToString(const Value& val) {
     return String::create(s);
 }
 
-static Type<String>::Cptr floatToString(const Value& val) {
+static String::CPtr floatToString(const Value& val) {
     Float f;
     to<Float>(val, &f);
     const Size len = (32 / 3) + 5;
@@ -408,7 +408,7 @@ static Type<String>::Cptr floatToString(const Value& val) {
     return String::create(s);
 }
 
-static Type<String>::Cptr doubleToString(const Value& val) {
+static String::CPtr doubleToString(const Value& val) {
     Double d;
     to<Double>(val, &d);
     const Size len = (64 / 3) + 5;
@@ -417,28 +417,28 @@ static Type<String>::Cptr doubleToString(const Value& val) {
     return String::create(s);
 }
 
-static Type<String>::Cptr sizeToString(const Value& val) {
+static String::CPtr sizeToString(const Value& val) {
     Size n;
     to<Size>(val, &n);
     const Size len = (sizeof(Size) / 3) + 3;
     char s[len];
     snprintf(s, len, "%zd", n);
-    Type<String>::Cptr p = String::create(s);
+    String::CPtr p = String::create(s);
     return p;
 }
 
-static Type<String>::Cptr typeIdToString(const Value& val) {
+static String::CPtr typeIdToString(const Value& val) {
     TypeId t;
     to<TypeId>(val, &t);
     const Size len = (sizeof(TypeId) / 3) + 3;
     char s[len];
     snprintf(s, len, "%zd", t);
-    Type<String>::Cptr p = String::create(s);
+    String::CPtr p = String::create(s);
     return p;
 }
 
-static Type<String>::Cptr objectToString(const Value& val) {
-    Type<Object>::Cptr o = toCptr<Object>(val);
+static String::CPtr objectToString(const Value& val) {
+    Object::CPtr o = toCPtr<Object>(val);
     if (o)
         return o->toString();
     else {
@@ -447,7 +447,7 @@ static Type<String>::Cptr objectToString(const Value& val) {
     }
 }
 
-Type<String>::Cptr String::valueOf(const Value& val) {
+String::CPtr String::valueOf(const Value& val) {
     if (val.empty()) {
         LIBJ_NULL_CPTR(String, nullp);
         return nullp;

@@ -14,6 +14,8 @@ class Immutable
     , public GCBase
     , public ImmutableBase {
  public:
+    typedef LIBJ_CPTR(Immutable) CPtr;
+    
     bool instanceOf(TypeId id) const {
         return id == Type<Immutable>::id()
             || Object::instanceOf(id);
@@ -21,8 +23,8 @@ class Immutable
 };
 
 #define LIBJ_IMMUTABLE_DECLS(T, B) public: \
-    typedef LIBJ_CPTR(T) Cptr; \
-    static Cptr create(); \
+    typedef LIBJ_CPTR(T) CPtr; \
+    static CPtr create(); \
     libj::TypeId type() const { \
         return libj::Type<T>::id(); \
     } \

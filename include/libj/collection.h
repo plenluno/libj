@@ -14,7 +14,7 @@ class Collection : LIBJ_MUTABLE(Collection)
     virtual void clear() = 0;
     virtual bool add(const Value& val) = 0;
     virtual bool remove(const Value& val) = 0;
-    virtual Type<Iterator>::Ptr iterator() const = 0;
+    virtual Iterator::Ptr iterator() const = 0;
     // and so on
 };
 

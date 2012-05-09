@@ -11,8 +11,8 @@ class GTestImmutable : LIBJ_IMMUTABLE(GTestImmutable)
 
 class GTestImmutableImpl : public GTestImmutable {
  public:
-    Type<String>::Cptr toString() const {
-        Type<String>::Cptr p;
+    String::CPtr toString() const {
+        String::CPtr p;
         return p;
     }
 
@@ -24,8 +24,8 @@ class GTestImmutableImpl : public GTestImmutable {
 
 int GTestImmutableImpl::count = 0;
 
-Type<GTestImmutable>::Cptr GTestImmutable::create() {
-    Type<GTestImmutable>::Cptr p(new GTestImmutableImpl);
+GTestImmutable::CPtr GTestImmutable::create() {
+    GTestImmutable::CPtr p(new GTestImmutableImpl);
     return p;
 }
 
@@ -35,27 +35,22 @@ Type<GTestImmutable>::Cptr GTestImmutable::create() {
 
 #ifdef LIBJ_GTEST_IMMUTABLE_BUILD_ERRORS
 TEST(GTestImmutalbe, Error) {
-    Type<GTestImmutable>::Ptr p;
+    GTestImmutable::Ptr p;
 }
 
 TEST(GTestImmutable, Error2) {
-    Type<GTestImmutable>::Cptr p = GTestImmutable::create();
-    Type<Object>::Ptr p2 = p;
+    GTestImmutable::CPtr p = GTestImmutable::create();
+    Mutable::CPtr p2 = p;
 }
 
 TEST(GTestImmutable, Error3) {
-    Type<GTestImmutable>::Cptr p = GTestImmutable::create();
-    Type<Mutable>::Cptr p2 = p;
-}
-
-TEST(GTestImmutable, Error4) {
     // noncopyable
     GTestImmutableImpl x, y = x;
 }
 
-TEST(GTestMutable, Error5) {
+TEST(GTestMutable, Error4) {
     // noncopyable
-    GTestMutableImpl x, y;
+    GTestImmutableImpl x, y;
     x = y;
 }
 #endif
@@ -75,13 +70,13 @@ TEST(GTestImmutable, Test) {
 
 TEST(GTestImmutable, Test2) {
     // no build errors
-    Type<GTestImmutable>::Cptr p = GTestImmutable::create();
-    Type<Immutable>::Cptr p2 = p;
-    Type<Object>::Cptr p3 = p;
+    GTestImmutable::CPtr p = GTestImmutable::create();
+    Immutable::CPtr p2 = p;
+    Object::CPtr p3 = p;
 }
 
 TEST(GTestImmutable, Test3) {
-    Type<GTestImmutable>::Cptr p = GTestImmutable::create();
+    GTestImmutable::CPtr p = GTestImmutable::create();
     ASSERT_TRUE(p->instanceOf(Type<GTestImmutable>::id()));
     ASSERT_TRUE(p->instanceOf(Type<Immutable>::id()));
     ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
@@ -90,11 +85,11 @@ TEST(GTestImmutable, Test3) {
 #ifdef LIBJ_USE_SP
 TEST(GTestImmutable, Test4) {
     {
-        Type<GTestImmutable>::Cptr p = GTestImmutable::create();
+        GTestImmutable::CPtr p = GTestImmutable::create();
         ASSERT_EQ(p.use_count(), 1);
         ASSERT_EQ(GTestImmutableImpl::count, 1);
 
-        Type<GTestImmutable>::Cptr p2 = GTestImmutable::create();
+        GTestImmutable::CPtr p2 = GTestImmutable::create();
         ASSERT_EQ(p2.use_count(), 1);
         ASSERT_EQ(GTestImmutableImpl::count, 2);
 

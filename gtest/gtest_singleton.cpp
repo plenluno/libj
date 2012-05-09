@@ -21,15 +21,14 @@ TEST(GTestSingleton, Test) {
 
 TEST(GTestSingleton, Test2) {
     // no build errors
-    Type<GTestSingleton>::Ptr p = GTestSingleton::instance();
-    Type<Singleton>::Ptr p2 = p;
-    Type<Singleton>::Cptr p3 = p;
-    Type<Object>::Ptr p4(p);
-    Type<Object>::Cptr p5(p);
+    GTestSingleton::Ptr p = GTestSingleton::instance();
+    Singleton::Ptr p2 = p;
+    Singleton::CPtr p3 = p;
+    Object::CPtr p5(p);
 }
 
 TEST(GTestSingleton, Test3) {
-    Type<GTestSingleton>::Ptr p = GTestSingleton::instance();
+    GTestSingleton::Ptr p = GTestSingleton::instance();
     ASSERT_TRUE(p->instanceOf(Type<GTestSingleton>::id()));
     ASSERT_TRUE(p->instanceOf(Type<Singleton>::id()));
     ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
@@ -54,11 +53,11 @@ int GTestSingleton2::count = 0;
 
 TEST(GTestSingleton, Test4) {
     {
-        Type<GTestSingleton2>::Ptr p = GTestSingleton2::instance();
+        GTestSingleton2::Ptr p = GTestSingleton2::instance();
         ASSERT_EQ(p.use_count(), 1);
         ASSERT_EQ(GTestSingleton2::count, 1);
 
-        Type<GTestSingleton2>::Ptr p2 = GTestSingleton2::instance();
+        GTestSingleton2::Ptr p2 = GTestSingleton2::instance();
         ASSERT_EQ(p.use_count(), 1);
         ASSERT_EQ(GTestSingleton2::count, 1);
 

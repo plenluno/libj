@@ -13,7 +13,7 @@ class Iterator : LIBJ_MUTABLE(Iterator)
     virtual bool hasNext() const = 0;
     virtual Value next() = 0;
     
-    Type<String>::Cptr toString() const {
+    String::CPtr toString() const {
         return String::create();
     }
 };

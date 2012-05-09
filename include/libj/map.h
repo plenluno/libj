@@ -14,7 +14,7 @@ class Map : LIBJ_MUTABLE(Map)
     virtual Value get(const Value& key) const = 0;
     virtual Value put(const Value& key, const Value& val) = 0;
     virtual Value remove(const Value& key) = 0;
-    virtual Type<Set>::Cptr keySet() const = 0;
+    virtual Set::CPtr keySet() const = 0;
     virtual void clear() = 0;
     // and so on
 };
@@ -36,7 +36,7 @@ class Map : LIBJ_MUTABLE(Map)
     Value remove(const Value& key) { \
         return M->remove(key); \
     } \
-    Type<Set>::Cptr keySet() const { \
+    Set::CPtr keySet() const { \
         return M->keySet(); \
     } \
     void clear() { \

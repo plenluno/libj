@@ -65,8 +65,8 @@ class Value {
         return content ? content->instanceOf(id) : false;
     }
 
-    bool isCptr() const {
-        return content ? content->isCptr() : false;
+    bool isCPtr() const {
+        return content ? content->isCPtr() : false;
     }
 
     int compareTo(Value val) const {
@@ -91,7 +91,7 @@ class Value {
 
         virtual bool instanceOf(TypeId id) const = 0;
 
-        virtual bool isCptr() const = 0;
+        virtual bool isCPtr() const = 0;
 
         virtual int compareTo(placeholder * other) const = 0;
 
@@ -101,7 +101,7 @@ class Value {
     template<
         typename ValueType,
         bool IsObject = Classify<ValueType>::isObject,
-        bool IsCptr   = Classify<ValueType>::isCptr>
+        bool IsCPtr   = Classify<ValueType>::isCPtr>
     class holder : public placeholder {
      public:  // structors
         holder(const ValueType & value)
@@ -117,8 +117,8 @@ class Value {
             return held ? held->instanceOf(id) : false;
         }
 
-        virtual bool isCptr() const {
-            return IsCptr;
+        virtual bool isCPtr() const {
+            return IsCPtr;
         }
 
         virtual int compareTo(placeholder * that) const {
@@ -164,7 +164,7 @@ class Value {
             return false;
         }
 
-        virtual bool isCptr() const {
+        virtual bool isCPtr() const {
             return true;
         }
 
@@ -265,7 +265,7 @@ bool to(
 
 template<typename T>
 typename Type<T>::Ptr toPtr(const Value& v) {
-    if (v.instanceOf(Type<T>::id()) && !v.isCptr()) {
+    if (v.instanceOf(Type<T>::id()) && !v.isCPtr()) {
         LIBJ_PTR_TYPE(T) p;
         if (to<typename Type<T>::Ptr>(v, &p, true)) {
             return p;
@@ -280,10 +280,10 @@ typename Type<T>::Ptr toPtr(const Value& v) {
 }
 
 template<typename T>
-typename Type<T>::Cptr toCptr(const Value& v) {
+typename Type<T>::CPtr toCPtr(const Value& v) {
     if (v.instanceOf(Type<T>::id())) {
         LIBJ_CPTR_TYPE(T) p;
-        if (to<typename Type<T>::Cptr>(v, &p, true)) {
+        if (to<typename Type<T>::CPtr>(v, &p, true)) {
             return p;
         } else {
             LIBJ_NULL_CPTR_TYPE(T, nullp);

@@ -42,14 +42,14 @@ template <typename T, Category =
 class Type {
  public:
     typedef LIBJ_PTR_TYPE(T) Ptr;
-    typedef LIBJ_CPTR_TYPE(T) Cptr;
+    typedef LIBJ_CPTR_TYPE(T) CPtr;
     LIBJ_TYPE_ID();
 };
 
 template<typename T>
 class Type<T, IMMUTABLE> {
  public:
-    typedef LIBJ_CPTR_TYPE(T) Cptr;
+    typedef LIBJ_CPTR_TYPE(T) CPtr;
     LIBJ_TYPE_ID();
 };
 
@@ -66,13 +66,13 @@ private:
     typedef char Yes;
     typedef struct { char v[2]; } No;
 
-    static Yes object_(Type<ObjectBase>::Cptr);
+    static Yes object_(Type<ObjectBase>::CPtr);
     static No  object_(...);
-    static Yes mutable_(Type<MutableBase>::Cptr);
+    static Yes mutable_(Type<MutableBase>::CPtr);
     static No  mutable_(...);
-    static Yes immutable_(Type<ImmutableBase>::Cptr);
+    static Yes immutable_(Type<ImmutableBase>::CPtr);
     static No  immutable_(...);
-    static Yes singleton_(Type<SingletonBase>::Cptr);
+    static Yes singleton_(Type<SingletonBase>::CPtr);
     static No  singleton_(...);
     static Yes cptr_(...);
     static No  cptr_(Type<ObjectBase>::Ptr);
@@ -84,7 +84,7 @@ public:
     static const bool isMutable = (sizeof(mutable_(t)) == sizeof(Yes));
     static const bool isImmutable = (sizeof(immutable_(t)) == sizeof(Yes));
     static const bool isSingleton = (sizeof(singleton_(t)) == sizeof(Yes));
-    static const bool isCptr = (sizeof(cptr_(t)) == sizeof(Yes) &&
+    static const bool isCPtr = (sizeof(cptr_(t)) == sizeof(Yes) &&
                                 sizeof(object_(t)) == sizeof(Yes));
 };
 

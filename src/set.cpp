@@ -35,13 +35,13 @@ class SetImpl : public Set {
         set_.clear();
     }
 
-    Type<Set>::Ptr clone() const {
+    Set::Ptr clone() const {
         // TODO(PL): implement
-        Type<Set>::Ptr p(new SetImpl());
+        Set::Ptr p(new SetImpl());
         return p;
     }
 
-    Type<String>::Cptr toString() const {
+    String::CPtr toString() const {
         // TODO(PL): implement
         return String::create();
     }
@@ -71,8 +71,8 @@ class SetImpl : public Set {
     };
 
  public:
-    Type<Iterator>::Ptr iterator() const {
-        Type<Iterator>::Ptr p(new IteratorImpl(&set_));
+    Iterator::Ptr iterator() const {
+        Iterator::Ptr p(new IteratorImpl(&set_));
         return p;
     }
 
@@ -80,8 +80,8 @@ class SetImpl : public Set {
     ValueSet set_;
 };
 
-Type<Set>::Ptr Set::create() {
-    Type<Set>::Ptr p(new SetImpl());
+Set::Ptr Set::create() {
+    Set::Ptr p(new SetImpl());
     return p;
 }
 

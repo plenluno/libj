@@ -8,31 +8,31 @@
 namespace libj {
 namespace json {
 
-Value parse(Type<String>::Cptr str) {
+Value parse(String::CPtr str) {
     // TODO: implement
     return 0;
 }
 
-static Type<String>::Cptr JSON_NULL = String::create("null");
-static Type<String>::Cptr JSON_COLON = String::create(":");
-static Type<String>::Cptr JSON_COMMA = String::create(",");
-static Type<String>::Cptr JSON_DQUOTE = String::create("\"");
-static Type<String>::Cptr JSON_LBRACKET = String::create("[");
-static Type<String>::Cptr JSON_RBRACKET = String::create("]");
-static Type<String>::Cptr JSON_LBRACE = String::create("{");
-static Type<String>::Cptr JSON_RBRACE = String::create("}");
+static String::CPtr JSON_NULL = String::create("null");
+static String::CPtr JSON_COLON = String::create(":");
+static String::CPtr JSON_COMMA = String::create(",");
+static String::CPtr JSON_DQUOTE = String::create("\"");
+static String::CPtr JSON_LBRACKET = String::create("[");
+static String::CPtr JSON_RBRACKET = String::create("]");
+static String::CPtr JSON_LBRACE = String::create("{");
+static String::CPtr JSON_RBRACE = String::create("}");
 
-static Type<String>::Cptr stringToJson(const Value& val) {
-    Type<String>::Cptr s = toCptr<String>(val);
-    Type<String>::Cptr result = JSON_DQUOTE->concat(s)->concat(JSON_DQUOTE);
+static String::CPtr stringToJson(const Value& val) {
+    String::CPtr s = toCPtr<String>(val);
+    String::CPtr result = JSON_DQUOTE->concat(s)->concat(JSON_DQUOTE);
     return result;
 }
 
-static Type<String>::Cptr mapToJson(const Value& val) {
-    Type<Map>::Cptr m = toCptr<Map>(val);
-    Type<Set>::Cptr ks = m->keySet();
-    Type<Iterator>::Ptr itr = ks->iterator();
-    Type<StringBuffer>::Ptr result = StringBuffer::create();
+static String::CPtr mapToJson(const Value& val) {
+    Map::CPtr m = toCPtr<Map>(val);
+    Set::CPtr ks = m->keySet();
+    Iterator::Ptr itr = ks->iterator();
+    StringBuffer::Ptr result = StringBuffer::create();
     result->append(JSON_LBRACE);
     while (itr->hasNext()) {
         Value v = itr->next();
@@ -48,10 +48,10 @@ static Type<String>::Cptr mapToJson(const Value& val) {
     return result->toString();
 }
 
-static Type<String>::Cptr collectionToJson(const Value& val) {
-    Type<Collection>::Cptr a = toCptr<Collection>(val);
-    Type<Iterator>::Ptr itr = a->iterator();
-    Type<StringBuffer>::Ptr result = StringBuffer::create();
+static String::CPtr collectionToJson(const Value& val) {
+    Collection::CPtr a = toCPtr<Collection>(val);
+    Iterator::Ptr itr = a->iterator();
+    StringBuffer::Ptr result = StringBuffer::create();
     result->append(JSON_LBRACKET);
     while (itr->hasNext()) {
         Value v = itr->next();
@@ -63,7 +63,7 @@ static Type<String>::Cptr collectionToJson(const Value& val) {
     return result->toString();
 }
 
-Type<String>::Cptr stringify(const Value& val) {
+String::CPtr stringify(const Value& val) {
     if (val.instanceOf(Type<String>::id())) {
         return stringToJson(val);
     } else if (val.instanceOf(Type<Map>::id())) {
