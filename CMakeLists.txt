@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 
 project(libj)
 
-option (LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
-option (LIBJ_USE_GTEST "Use googletest" ON)
+option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
+option(LIBJ_USE_GTEST "Use googletest" OFF)
 
-message (STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
-message (STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
+message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
+message(STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
 
 find_package(Boost)
 if(NOT Boost_FOUND)
@@ -58,10 +58,34 @@ set(libj-deps
     cvtutf
 )
 
+# cvtutf
 add_library(cvtutf STATIC
     deps/cvtutf/ConvertUTF.c
 )
 
+# libj
+if(LIBJ_USE_BDW_GC)
+    add_library(j STATIC
+        ${libj-src}
+    )
+    target_link_libraries(j
+        gc
+        ${libj-deps}
+    )
+    set_target_properties(j
+        PROPERTIES COMPILE_FLAGS "-fno-rtti -fno-exceptions -DLIBJ_USE_BDW_GC")
+else(LIBJ_USE_BDW_GC)
+    add_library(j STATIC
+        ${libj-src}
+    )
+    target_link_libraries(j
+        ${libj-deps}
+    )
+    set_target_properties(j
+        PROPERTIES COMPILE_FLAGS "-fno-rtti -fno-exceptions")
+endif(LIBJ_USE_BDW_GC)
+
+# gtest
 if(LIBJ_USE_GTEST)
     add_executable(libj-gtest
         gtest/gtest_array_list.cpp
@@ -87,24 +111,3 @@ if(LIBJ_USE_GTEST)
     set_target_properties(libj-gtest
         PROPERTIES COMPILE_FLAGS "-DLIBJ_GTEST_BUILD_ERRORS")
 endif(LIBJ_USE_GTEST)
-
-if(LIBJ_USE_BDW_GC)
-    add_library(j STATIC
-        ${libj-src}
-    )
-    target_link_libraries(j
-        gc
-        ${libj-deps}
-    )
-    set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-fno-rtti -fno-exceptions -DLIBJ_USE_BDW_GC")
-else(LIBJ_USE_BDW_GC)
-    add_library(j STATIC
-        ${libj-src}
-    )
-    target_link_libraries(j
-        ${libj-deps}
-    )
-    set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-fno-rtti -fno-exceptions")
-endif(LIBJ_USE_BDW_GC)
