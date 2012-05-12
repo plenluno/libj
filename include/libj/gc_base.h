@@ -7,7 +7,7 @@
 
 namespace libj {
 
-#ifdef LIBJ_USE_BOEHM_GC
+#ifdef LIBJ_USE_BDW_GC
 class GCBase : public gc_cleanup {
 };
 #else

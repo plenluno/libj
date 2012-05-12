@@ -3,7 +3,7 @@
 #ifndef LIBJ_CONFIG_H_
 #define LIBJ_CONFIG_H_
 
-#ifdef LIBJ_USE_BOEHM_GC
+#ifdef LIBJ_USE_BDW_GC
 #include <gc_cpp.h>
 #else
 #define LIBJ_USE_SP
