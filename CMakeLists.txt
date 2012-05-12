@@ -8,10 +8,7 @@ option(LIBJ_USE_GTEST "Use googletest" OFF)
 message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
 message(STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
 
-find_package(Boost)
-if(NOT Boost_FOUND)
-    message(FATAL_ERROR "boost not found.")
-endif()
+find_package(Boost 1.48.0 EXACT REQUIRED)
 
 find_library(PTHREAD pthread REQUIRED)
 if(NOT EXISTS ${PTHREAD})
