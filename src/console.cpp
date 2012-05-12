@@ -10,7 +10,7 @@ namespace libj {
 namespace console {
 
 bool log(const Value& val) {
-    Type<String>::Cptr s = String::valueOf(val);
+    String::CPtr s = String::valueOf(val);
     if (!s)
         return false;
     for (Size i = 0; i < s->length(); i++) {

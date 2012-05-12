@@ -11,7 +11,11 @@ namespace libj {
 
 class Singleton
     : public Object
-    , public SingletonBase {};
+    , public SingletonBase {
+ public:
+    typedef LIBJ_PTR(Singleton) Ptr;
+    typedef LIBJ_CPTR(Singleton) CPtr;    
+};
 
 template<typename T>
 class SingletonTmpl
@@ -23,7 +27,7 @@ class SingletonTmpl
         return p;
     }
 
-    Type<String>::Cptr toString() const {
+    String::CPtr toString() const {
         return String::create();
     }
 
@@ -43,8 +47,8 @@ private: \
     T() : libj::SingletonTmpl<T>() {} \
     ~T() {} \
 public: \
-    typedef T* Ptr; \
-    typedef const T* Cptr; \
+    typedef LIBJ_PTR(T) Ptr; \
+    typedef LIBJ_CPTR(T) CPtr; \
     libj::TypeId type() const { \
         return libj::Type<T>::id(); \
     } \

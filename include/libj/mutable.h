@@ -14,6 +14,9 @@ class Mutable
     , public GCBase
     , public MutableBase {
  public:
+    typedef LIBJ_PTR(Mutable) Ptr;
+    typedef LIBJ_CPTR(Mutable) CPtr;
+    
     bool instanceOf(TypeId id) const {
         return id == Type<Mutable>::id()
             || Object::instanceOf(id);
@@ -22,7 +25,7 @@ class Mutable
 
 #define LIBJ_MUTABLE_DECLS(T, B) public: \
     typedef LIBJ_PTR(T) Ptr; \
-    typedef LIBJ_CPTR(T) Cptr; \
+    typedef LIBJ_CPTR(T) CPtr; \
     static Ptr create(); \
     Ptr clone() const; \
     libj::TypeId type() const { \

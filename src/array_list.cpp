@@ -67,13 +67,13 @@ class ArrayListImpl : public ArrayList {
         vec_.clear();
     }
 
-    Type<ArrayList>::Ptr clone() const {
+    ArrayList::Ptr clone() const {
         // TODO(PL): implement
-        Type<ArrayList>::Ptr p(new ArrayListImpl());
+        ArrayList::Ptr p(new ArrayListImpl());
         return p;
     }
 
-    Type<String>::Cptr toString() const {
+    String::CPtr toString() const {
         // TODO(PL): implement
         return String::create();
     }
@@ -103,8 +103,8 @@ class ArrayListImpl : public ArrayList {
     };
 
  public:
-    Type<Iterator>::Ptr iterator() const {
-        Type<Iterator>::Ptr p(new IteratorImpl(&vec_));
+    Iterator::Ptr iterator() const {
+        Iterator::Ptr p(new IteratorImpl(&vec_));
         return p;
     }
 
@@ -112,8 +112,8 @@ class ArrayListImpl : public ArrayList {
     std::vector<Value> vec_;
 };
 
-Type<ArrayList>::Ptr ArrayList::create() {
-    Type<ArrayList>::Ptr p(new ArrayListImpl());
+ArrayList::Ptr ArrayList::create() {
+    ArrayList::Ptr p(new ArrayListImpl());
     return p;
 }
 

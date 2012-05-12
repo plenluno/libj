@@ -290,7 +290,7 @@ TEST(GTestAny, Test9) {
 }
 
 TEST(GTestValue, TestInstanceOf) {
-    Type<String>::Cptr s = String::create("abc");
+    String::CPtr s = String::create("abc");
     Value v = s;
     ASSERT_TRUE(v.instanceOf(Type<String>::id()));
     ASSERT_FALSE(v.instanceOf(Type<Mutable>::id()));
@@ -303,123 +303,113 @@ TEST(GTestValue, TestInstanceOf) {
     ASSERT_FALSE(v.instanceOf(Type<int>::id()));
 }
 
-TEST(GTestValue, TestSingletonToPtrAndCptr) {
-    Type<Null>::Ptr null = Null::instance();
-    Type<Null>::Cptr cnull = Null::instance();
-    Type<String>::Cptr str = String::create("null");
+TEST(GTestValue, TestSingletonToPtrAndCPtr) {
+    Null::Ptr null = Null::instance();
+    Null::CPtr cnull = Null::instance();
+    String::CPtr str = String::create("null");
     
     Value v = null;
     
-    Type<Null>::Ptr n = toPtr<Null>(v);
+    Null::Ptr n = toPtr<Null>(v);
     ASSERT_EQ(n->toString()->compareTo(str), 0);
-    Type<Null>::Cptr cn = toCptr<Null>(v);
+    Null::CPtr cn = toCPtr<Null>(v);
     ASSERT_EQ(cn->toString()->compareTo(str), 0);
-    Type<Object>::Ptr o = toPtr<Object>(v);
-    ASSERT_EQ(o->toString()->compareTo(str), 0);
-    Type<Object>::Cptr co = toCptr<Object>(v);
+    Object::CPtr co = toCPtr<Object>(v);
     ASSERT_EQ(co->toString()->compareTo(str), 0);
-    Type<Mutable>::Ptr m = toPtr<Mutable>(v);
+    Mutable::Ptr m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
-    Type<Mutable>::Cptr cm = toCptr<Mutable>(v);
+    Mutable::CPtr cm = toCPtr<Mutable>(v);
     ASSERT_FALSE(cm);
-    Type<Immutable>::Cptr ci = toCptr<Immutable>(v);
+    Immutable::CPtr ci = toCPtr<Immutable>(v);
     ASSERT_FALSE(ci);
-    Type<Singleton>::Ptr s = toPtr<Singleton>(v);
+    Singleton::Ptr s = toPtr<Singleton>(v);
     ASSERT_EQ(s->toString()->compareTo(str), 0);
-    Type<Singleton>::Cptr cs = toCptr<Singleton>(v);
+    Singleton::CPtr cs = toCPtr<Singleton>(v);
     ASSERT_EQ(cs->toString()->compareTo(str), 0);
     
     v = cnull;
     
     n = toPtr<Null>(v);
     ASSERT_FALSE(n);
-    cn = toCptr<Null>(v);
+    cn = toCPtr<Null>(v);
     ASSERT_EQ(cn->toString()->compareTo(str), 0);
-    o = toPtr<Object>(v);
-    ASSERT_FALSE(o);
-    co = toCptr<Object>(v);
+    co = toCPtr<Object>(v);
     ASSERT_EQ(co->toString()->compareTo(str), 0);
     m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
-    cm = toCptr<Mutable>(v);
+    cm = toCPtr<Mutable>(v);
     ASSERT_FALSE(cm);
-    ci = toCptr<Immutable>(v);
+    ci = toCPtr<Immutable>(v);
     ASSERT_FALSE(ci);
     s = toPtr<Singleton>(v);
     ASSERT_FALSE(s);
-    cs = toCptr<Singleton>(v);
+    cs = toCPtr<Singleton>(v);
     ASSERT_EQ(cs->toString()->compareTo(str), 0);
 }
 
-TEST(GTestValue, TestMutableToPtrAndCptr) {
-    Type<ArrayList>::Ptr arr = ArrayList::create();
-    Type<ArrayList>::Cptr carr = arr;
+TEST(GTestValue, TestMutableToPtrAndCPtr) {
+    ArrayList::Ptr arr = ArrayList::create();
+    ArrayList::CPtr carr = arr;
     arr->add(1);
     arr->add(2);
     
     Value v = arr;
     
-    Type<ArrayList>::Ptr a = toPtr<ArrayList>(v);
+    ArrayList::Ptr a = toPtr<ArrayList>(v);
     ASSERT_EQ(a->size(), 2);
-    Type<ArrayList>::Cptr ca = toCptr<ArrayList>(v);
+    ArrayList::CPtr ca = toCPtr<ArrayList>(v);
     ASSERT_EQ(ca->size(), 2);
-    Type<Object>::Ptr o = toPtr<Object>(v);
-    ASSERT_EQ(o->type(), Type<ArrayList>::id());
-    Type<Object>::Cptr co = toCptr<Object>(v);
+    Object::CPtr co = toCPtr<Object>(v);
     ASSERT_EQ(co->type(), Type<ArrayList>::id());
-    Type<Mutable>::Ptr m = toPtr<Mutable>(v);
+    Mutable::Ptr m = toPtr<Mutable>(v);
     ASSERT_EQ(m->type(), Type<ArrayList>::id());
-    Type<Mutable>::Cptr cm = toCptr<Mutable>(v);
+    Mutable::CPtr cm = toCPtr<Mutable>(v);
     ASSERT_EQ(cm->type(), Type<ArrayList>::id());
-    Type<Immutable>::Cptr ci = toCptr<Immutable>(v);
+    Immutable::CPtr ci = toCPtr<Immutable>(v);
     ASSERT_FALSE(ci);
-    Type<Singleton>::Ptr s = toPtr<Singleton>(v);
+    Singleton::Ptr s = toPtr<Singleton>(v);
     ASSERT_FALSE(s);
-    Type<Singleton>::Cptr cs = toCptr<Singleton>(v);
+    Singleton::CPtr cs = toCPtr<Singleton>(v);
     ASSERT_FALSE(cs);
     
     v = carr;
     
     a = toPtr<ArrayList>(v);
     ASSERT_FALSE(a);
-    ca = toCptr<ArrayList>(v);
+    ca = toCPtr<ArrayList>(v);
     ASSERT_EQ(ca->type(), Type<ArrayList>::id());
-    o = toPtr<Object>(v);
-    ASSERT_FALSE(o);
-    co = toCptr<Object>(v);
+    co = toCPtr<Object>(v);
     ASSERT_EQ(co->type(), Type<ArrayList>::id());
     m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
-    cm = toCptr<Mutable>(v);
+    cm = toCPtr<Mutable>(v);
     ASSERT_EQ(cm->type(), Type<ArrayList>::id());
-    ci = toCptr<Immutable>(v);
+    ci = toCPtr<Immutable>(v);
     ASSERT_FALSE(ci);
     s = toPtr<Singleton>(v);
     ASSERT_FALSE(s);
-    cs = toCptr<Singleton>(v);
+    cs = toCPtr<Singleton>(v);
     ASSERT_FALSE(cs);
 }
 
 
-TEST(GTestValue, TestImmutableToCptr) {
-    Type<String>::Cptr str = String::create("abc");
+TEST(GTestValue, TestImmutableToCPtr) {
+    String::CPtr str = String::create("abc");
     Value v = str;
     
-    Type<String>::Cptr x = toCptr<String>(v);
+    String::CPtr x = toCPtr<String>(v);
     ASSERT_EQ(x->compareTo(str), 0);
-    Type<Object>::Ptr o = toPtr<Object>(v);
-    ASSERT_FALSE(o);
-    Type<Object>::Cptr co = toCptr<Object>(v);
+    Object::CPtr co = toCPtr<Object>(v);
     ASSERT_EQ(co->toString()->compareTo(str), 0);
-    Type<Mutable>::Ptr m = toPtr<Mutable>(v);
+    Mutable::Ptr m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
-    Type<Mutable>::Cptr cm = toCptr<Mutable>(v);
+    Mutable::CPtr cm = toCPtr<Mutable>(v);
     ASSERT_FALSE(cm);
-    Type<Immutable>::Cptr ci = toCptr<Immutable>(v);
+    Immutable::CPtr ci = toCPtr<Immutable>(v);
     ASSERT_EQ(ci->toString()->compareTo(str), 0);
-    Type<Singleton>::Ptr s = toPtr<Singleton>(v);
+    Singleton::Ptr s = toPtr<Singleton>(v);
     ASSERT_FALSE(s);
-    Type<Singleton>::Cptr cs = toCptr<Singleton>(v);
+    Singleton::CPtr cs = toCPtr<Singleton>(v);
     ASSERT_FALSE(cs);
 }
 

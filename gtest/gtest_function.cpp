@@ -11,7 +11,7 @@ class Add : LIBJ_FUNCTION(Add)
 
 class AddImpl : public Add {
  public:
-    Value operator()(Type<ArrayList>::Cptr args) {
+    Value operator()(ArrayList::CPtr args) {
         if (args->size() == 2 &&
             args->get(0).type() == Type<Int>::id() &&
             args->get(1).type() == Type<Int>::id()) {
@@ -24,19 +24,19 @@ class AddImpl : public Add {
         }
     }
     
-    static Type<Add>::Ptr create() {
-        Type<Add>::Ptr p(new AddImpl());
+    static Add::Ptr create() {
+        Add::Ptr p(new AddImpl());
         return p;
     }
 };
 
-Type<Add>::Ptr Add::create() {
+Add::Ptr Add::create() {
     return AddImpl::create();
 }
 
 TEST(GTestFunction, TestAdd) {
-    Type<Function>::Ptr add = Add::create();
-    Type<ArrayList>::Ptr args = ArrayList::create();
+    Function::Ptr add = Add::create();
+    ArrayList::Ptr args = ArrayList::create();
     args->add(2);
     args->add(3);
     Value sum = (*add)(args);
@@ -47,7 +47,7 @@ TEST(GTestFunction, TestAdd) {
 
 #ifdef LIBJ_USE_SP
 TEST(GTestFunction, TestUseCount) {
-    Type<Function>::Cptr p = Add::create();
+    Function::CPtr p = Add::create();
     ASSERT_EQ(p.use_count(), 1);
 }
 #endif

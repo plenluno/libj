@@ -43,8 +43,8 @@ class MapImpl : public Map {
         return v;
     }
     
-    Type<Set>::Cptr keySet() const {
-        Type<Set>::Ptr s = Set::create();
+    Set::CPtr keySet() const {
+        Set::Ptr s = Set::create();
         for (ValueMap::const_iterator itr = map_.begin();
              itr != map_.end();
              itr++) {
@@ -57,13 +57,13 @@ class MapImpl : public Map {
         map_.clear();
     }
 
-    Type<Map>::Ptr clone() const {
+    Map::Ptr clone() const {
         // TODO(PL): implement
-        Type<Map>::Ptr p(new MapImpl());
+        Map::Ptr p(new MapImpl());
         return p;
     }
 
-    Type<String>::Cptr toString() const {
+    String::CPtr toString() const {
         // TODO(PL): implement
         return String::create();
     }
@@ -72,8 +72,8 @@ class MapImpl : public Map {
     ValueMap map_;
 };
 
-Type<Map>::Ptr Map::create() {
-    Type<Map>::Ptr p(new MapImpl());
+Map::Ptr Map::create() {
+    Map::Ptr p(new MapImpl());
     return p;
 }
 

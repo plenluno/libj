@@ -6,13 +6,13 @@
 namespace libj {
 
 TEST(GTestNull, TestToString) {
-    Type<Null>::Ptr p = Null::instance();
-    Type<String>::Cptr s = String::create("null");
+    Null::Ptr p = Null::instance();
+    String::CPtr s = String::create("null");
     ASSERT_EQ(s->compareTo(p->toString()), 0);
 }
 
 TEST(GTestNull, TestInstanceOf) {
-    Type<Null>::Cptr p = Null::instance();
+    Null::CPtr p = Null::instance();
     ASSERT_TRUE(p->instanceOf(Type<Null>::id()));
     ASSERT_TRUE(p->instanceOf(Type<Singleton>::id()));
     ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
@@ -20,7 +20,7 @@ TEST(GTestNull, TestInstanceOf) {
 
 #ifdef LIBJ_USE_SP
 TEST(GTestNull, TestUseCount) {
-    Type<Null>::Cptr p = Null::instance();
+    Null::CPtr p = Null::instance();
     ASSERT_EQ(p.use_count(), 1);
 }
 #endif

@@ -11,12 +11,12 @@ class GTestMutable : LIBJ_MUTABLE(GTestMutable)
 
 class GTestMutableImpl : public GTestMutable {
  public:
-    Type<GTestMutable>::Ptr clone() const {
+    GTestMutable::Ptr clone() const {
         return GTestMutable::create();
     }
 
-    Type<String>::Cptr toString() const {
-        Type<String>::Cptr p;
+    String::CPtr toString() const {
+        String::CPtr p;
         return p;
     }
 
@@ -28,8 +28,8 @@ class GTestMutableImpl : public GTestMutable {
 
 int GTestMutableImpl::count = 0;
 
-Type<GTestMutable>::Ptr GTestMutable::create() {
-    Type<GTestMutable>::Ptr p(new GTestMutableImpl);
+GTestMutable::Ptr GTestMutable::create() {
+    GTestMutable::Ptr p(new GTestMutableImpl);
     return p;
 }
 
@@ -39,8 +39,8 @@ Type<GTestMutable>::Ptr GTestMutable::create() {
 
 #ifdef LIBJ_GTEST_MUTABLE_BUILD_ERRORS
 TEST(GTestMutalbe, Error) {
-    Type<GTestMutable>::Ptr p = GTestMutable::create();
-    Type<Immutable>::Cptr p2 = p;
+    GTestMutable::Ptr p = GTestMutable::create();
+    Immutable::CPtr p2 = p;
 }
 
 TEST(GTestMutable, Error2) {
@@ -74,18 +74,16 @@ TEST(GTestMutable, Test) {
 
 TEST(GTestMutable, Test2) {
     // no build errors
-    Type<GTestMutable>::Ptr p = GTestMutable::create();
-    Type<Mutable>::Ptr p2 = p;
-    Type<Mutable>::Cptr p3 = p;
-    Type<Object>::Ptr p4 = p;
-    Type<Object>::Cptr p5 = p;
-    Type<Mutable>::Ptr p6 = LIBJ_STATIC_PTR_CAST(Mutable)(p4);
-    Type<Mutable>::Cptr p7 = LIBJ_STATIC_CPTR_CAST(Mutable)(p5);
-    //Type<Mutable>::Ptr p8 = LIBJ_STATIC_CPTR_CAST(Mutable)(p4);
+    GTestMutable::Ptr p = GTestMutable::create();
+    Mutable::Ptr p2 = p;
+    Mutable::CPtr p3 = p;
+    Object::CPtr p4 = p;
+    Mutable::CPtr p5 = LIBJ_STATIC_CPTR_CAST(Mutable)(p4);
+    GTestMutable::Ptr p7 = LIBJ_STATIC_PTR_CAST(GTestMutable)(p2);
 }
 
 TEST(GTestMutable, Test3) {
-    Type<GTestMutable>::Ptr p = GTestMutable::create();
+    GTestMutable::Ptr p = GTestMutable::create();
     ASSERT_TRUE(p->instanceOf(Type<GTestMutable>::id()));
     ASSERT_TRUE(p->instanceOf(Type<Mutable>::id()));
     ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
@@ -94,11 +92,11 @@ TEST(GTestMutable, Test3) {
 #ifdef LIBJ_USE_SP
 TEST(GTestMutable, Test4) {
     {
-        Type<GTestMutable>::Ptr p = GTestMutable::create();
+        GTestMutable::Ptr p = GTestMutable::create();
         ASSERT_EQ(p.use_count(), 1);
         ASSERT_EQ(GTestMutableImpl::count, 1);
 
-        Type<GTestMutable>::Ptr p2 = GTestMutable::create();
+        GTestMutable::Ptr p2 = GTestMutable::create();
         ASSERT_EQ(p2.use_count(), 1);
         ASSERT_EQ(GTestMutableImpl::count, 2);
 

@@ -6,10 +6,10 @@
 namespace libj {
 
 TEST(GTestStringBuffer, TestToString) {
-    Type<StringBuffer>::Ptr sb = StringBuffer::create();
-    Type<String>::Cptr s1 = String::create("abc");
-    Type<String>::Cptr s2 = String::create("def");
-    Type<String>::Cptr s3 = String::create("abcdef");
+    StringBuffer::Ptr sb = StringBuffer::create();
+    String::CPtr s1 = String::create("abc");
+    String::CPtr s2 = String::create("def");
+    String::CPtr s3 = String::create("abcdef");
     sb->append(s1);
     sb->append(s2);
     ASSERT_EQ(sb->toString()->compareTo(s3), 0);
@@ -17,7 +17,7 @@ TEST(GTestStringBuffer, TestToString) {
 
 #ifdef LIBJ_USE_SP
 TEST(GTestStringBuffer, TestUseCount) {
-    Type<StringBuffer>::Cptr p = StringBuffer::create();
+    StringBuffer::CPtr p = StringBuffer::create();
     ASSERT_EQ(p.use_count(), 1);
 }
 #endif

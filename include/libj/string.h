@@ -19,24 +19,24 @@ class String : LIBJ_IMMUTABLE(String)
         UTF32,
     };
 
-    static Cptr create(const void*, Encoding = ASCII, Size = NO_POS);
-    static Cptr valueOf(const Value&);
+    static CPtr create(const void*, Encoding = ASCII, Size = NO_POS);
+    static CPtr valueOf(const Value&);
 
     virtual Size length() const = 0;
     virtual Char charAt(Size) const = 0;
-    virtual Cptr substring(Size) const = 0;
-    virtual Cptr substring(Size, Size) const = 0;
-    virtual Cptr concat(Cptr) const = 0;
-    virtual bool startsWith(Cptr, Size = 0) const = 0;
-    virtual bool endsWith(Cptr) const = 0;
+    virtual CPtr substring(Size) const = 0;
+    virtual CPtr substring(Size, Size) const = 0;
+    virtual CPtr concat(CPtr) const = 0;
+    virtual bool startsWith(CPtr, Size = 0) const = 0;
+    virtual bool endsWith(CPtr) const = 0;
     virtual Size indexOf(Char, Size = 0) const = 0;
-    virtual Size indexOf(Cptr, Size = 0) const = 0;
+    virtual Size indexOf(CPtr, Size = 0) const = 0;
     virtual Size lastIndexOf(Char, Size = NO_POS) const = 0;
-    virtual Size lastIndexOf(Cptr, Size = NO_POS) const = 0;
+    virtual Size lastIndexOf(CPtr, Size = NO_POS) const = 0;
     virtual bool isEmpty() const = 0;
     virtual bool isAscii() const = 0;
-    virtual Cptr toLowerCase() const = 0;
-    virtual Cptr toUpperCase() const = 0;
+    virtual CPtr toLowerCase() const = 0;
+    virtual CPtr toUpperCase() const = 0;
 };
 
 }  // namespace libj

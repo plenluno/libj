@@ -9,7 +9,7 @@ namespace libj {
 
 class Null : LIBJ_SINGLETON(Null)
  public:
-    Type<String>::Cptr toString() const {
+    String::CPtr toString() const {
         return String::create("null");
     }
 };

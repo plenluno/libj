@@ -15,6 +15,8 @@ class Object
     : public ObjectBase
     , private boost::noncopyable {
  public:
+    typedef LIBJ_CPTR(Object) CPtr;
+    
     virtual TypeId type() const = 0;
 
     virtual bool instanceOf(TypeId id) const {

@@ -11,29 +11,29 @@ class ErrorImpl : public Error {
         return code_;
     }
     
-    Type<String>::Cptr toString() const {
+    String::CPtr toString() const {
         return String::create();
     }
     
  public:
-    static Cptr create() {
-        Cptr p(new ErrorImpl());
+    static CPtr create() {
+        CPtr p(new ErrorImpl());
         return p;
     }
 
-    static Cptr create(Code code) {
-        Cptr p(new ErrorImpl(code));
+    static CPtr create(Code code) {
+        CPtr p(new ErrorImpl(code));
         return p;
     }
     
-    static Cptr create(Code code, Type<String>::Cptr msg) {
-        Type<Error>::Cptr p(new ErrorImpl(code, msg));
+    static CPtr create(Code code, String::CPtr msg) {
+        Error::CPtr p(new ErrorImpl(code, msg));
         return p;
     }
     
  private:
     Code code_;
-    Type<String>::Cptr message_;
+    String::CPtr message_;
     
     ErrorImpl()
         : code_(Error::ANY)
@@ -43,20 +43,20 @@ class ErrorImpl : public Error {
         : code_(code)
         , message_(static_cast<String*>(0)) {}
     
-    ErrorImpl(Code code, Type<String>::Cptr msg)
+    ErrorImpl(Code code, String::CPtr msg)
         : code_(code)
         , message_(msg) {}
 };
 
-Type<Error>::Cptr Error::create() {
+Error::CPtr Error::create() {
     return ErrorImpl::create();
 }
 
-Type<Error>::Cptr Error::create(Code code) {
+Error::CPtr Error::create(Code code) {
     return ErrorImpl::create(code);
 }
 
-Type<Error>::Cptr Error::create(Code code, Type<String>::Cptr msg) {
+Error::CPtr Error::create(Code code, String::CPtr msg) {
     return ErrorImpl::create(code, msg);
 }
 
