@@ -23,10 +23,9 @@ class Mutable
     }
 };
 
-#define LIBJ_MUTABLE_DECLS(T, B) public: \
+#define LIBJ_MUTABLE_DECLS_WITHOUT_CREATE(T, B) public: \
     typedef LIBJ_PTR(T) Ptr; \
     typedef LIBJ_CPTR(T) CPtr; \
-    static Ptr create(); \
     Ptr clone() const; \
     libj::TypeId type() const { \
         return libj::Type<T>::id(); \
@@ -35,6 +34,10 @@ class Mutable
         return id == libj::Type<T>::id() \
             || B::instanceOf(id); \
     }
+
+#define LIBJ_MUTABLE_DECLS(T, B) \
+    LIBJ_MUTABLE_DECLS_WITHOUT_CREATE(T, B) \
+    static Ptr create();
 
 #define LIBJ_MUTABLE(T) public libj::Mutable { \
     LIBJ_MUTABLE_DECLS(T, libj::Mutable)
