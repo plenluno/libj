@@ -34,7 +34,7 @@ Add::Ptr Add::create() {
     return AddImpl::create();
 }
 
-TEST(GTestFunction, TestAdd) {
+TEST(GTestFunction, TestFunctor) {
     Function::Ptr add = Add::create();
     ArrayList::Ptr args = ArrayList::create();
     args->add(2);
@@ -43,6 +43,14 @@ TEST(GTestFunction, TestAdd) {
     Int s;
     to<Int>(sum, &s);
     ASSERT_EQ(s, 5);
+}
+
+TEST(GTestFunction, TestCall) {
+    Function::Ptr add = Add::create();
+    Value sum = add->call(4, 5);
+    Int s;
+    to<Int>(sum, &s);
+    ASSERT_EQ(s, 9);
 }
 
 #ifdef LIBJ_USE_SP
