@@ -33,6 +33,7 @@ include_directories(
     include
     deps
     deps/cvtutf
+    deps/jsoncpp/include
 )
 
 link_directories(
@@ -53,11 +54,19 @@ set(libj-src
 
 set(libj-deps
     cvtutf
+    jsoncpp
 )
 
 # cvtutf
 add_library(cvtutf STATIC
     deps/cvtutf/ConvertUTF.c
+)
+
+# jsoncpp
+add_library(jsoncpp STATIC
+    deps/jsoncpp/src/lib_json/json_reader.cpp
+    deps/jsoncpp/src/lib_json/json_value.cpp
+    deps/jsoncpp/src/lib_json/json_writer.cpp
 )
 
 # libj
