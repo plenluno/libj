@@ -3,6 +3,7 @@
 #include <string>
 #include <stdio.h>
 #include "libj/string.h"
+#include "cvtutf/ConvertUTF.h"
 
 namespace libj {
 
@@ -259,13 +260,20 @@ class StringImpl : public String {
     }
 
     static CPtr create(const void* data, Encoding enc, Size max) {
-        // TODO(PL): temp
         if (enc == ASCII) {
             CPtr p(new StringImpl(static_cast<const char*>(data), max));
             return p;
         } else if (enc == UTF8) {
-            // TODO(PL): use ConvertUTF8toUTF32
-            CPtr p(new StringImpl());
+            Str32* s = convertUtf8To32(static_cast<const UTF8*>(data));
+            CPtr p(new StringImpl(0, s));
+            return p;
+        } else if (enc == UTF16) {
+            Str32* s = convertUtf16To32(static_cast<const UTF16*>(data));
+            CPtr p(new StringImpl(0, s));
+            return p;
+        } else if (enc == UTF32) {
+            Str32* s = new Str32(staatic_cast<const UTF32*>(data));
+            CPtr p(new StringImpl(0, s));
             return p;
         } else {
             CPtr p(new StringImpl());
@@ -336,6 +344,31 @@ class StringImpl : public String {
     StringImpl(const StringImpl* s)
         : str8_(s->str8_ ? new Str8(*(s->str8_)) : 0)
         , str32_(s->str32_ ? new Str32(*(s->str32_)) : 0) {
+    }
+
+    static const Size ConvertBufferSize = 32;
+    static const ConversionFlags ConvertFlag = strictConversion;
+
+    static Str32* convertUtf8To32(const UTF8 *src) {
+        // TODO: test
+        UTF32 buf[ConvertBufferSize];
+        Str32 *dst = new Str32();
+        const UTF8 *end = src;
+        while (*end) end++;
+        for (;;) {
+            UTF32 *cur32 = buf;
+            UTF32 *end32 = buf + ConvertBufferSize;
+            ConversionResult r = ConvertUTF8toUTF32(&src, end, &cur32, end32, ConvertFlag);
+            if (r == sourceIllegal) break;
+            *dst += Str32(buf, cur32 - buf);
+            if (r == conversionsOK || r == sourceExhausted) break;
+        }
+        return dst;
+    }
+
+    static Str32* convertUtf16To32(const UTF16 *src) {
+        // TODO
+        return new Str32();
     }
 
  public:
