@@ -13,10 +13,7 @@ bool log(const Value& val) {
     String::CPtr s = String::valueOf(val);
     if (!s)
         return false;
-    for (Size i = 0; i < s->length(); i++) {
-        std::cout << static_cast<char>(s->charAt(i));
-    }
-    std::cout << std::endl;
+    std::cout << s->toStdString() << std::endl;
     return true;
 }
 

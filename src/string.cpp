@@ -246,6 +246,15 @@ class StringImpl : public String {
             return p;
         }
     }
+    
+    std::string toStdString() const {
+        if (isAscii()) {
+            return *str8_;
+        } else {
+            // TODO: implement
+            return std::string();
+        }
+    }
 
     CPtr toString() const {
         CPtr p(new StringImpl(this));
