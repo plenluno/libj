@@ -37,6 +37,8 @@ class String : LIBJ_IMMUTABLE(String)
     virtual bool isAscii() const = 0;
     virtual CPtr toLowerCase() const = 0;
     virtual CPtr toUpperCase() const = 0;
+    // TODO: implement
+    // virtual std::string toStdString() const = 0;
 };
 
 }  // namespace libj
