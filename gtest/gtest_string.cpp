@@ -154,6 +154,11 @@ TEST(GTestString, TestValueOf) {
     ASSERT_EQ(String::valueOf(v)->compareTo(s), 0);
 }
 
+TEST(GTestString, TestToStdString) {
+    String::CPtr s = String::create("abc123");
+    ASSERT_EQ(s->toStdString().compare("abc123"), 0);
+}
+
 #ifdef LIBJ_USE_SP
 TEST(GTestString, TestUseCount) {
     String::CPtr p = String::create();

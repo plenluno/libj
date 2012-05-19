@@ -3,6 +3,7 @@
 #ifndef LIBJ_STRING_H_
 #define LIBJ_STRING_H_
 
+#include <string>
 #include "libj/immutable.h"
 
 namespace libj {
@@ -37,6 +38,7 @@ class String : LIBJ_IMMUTABLE(String)
     virtual bool isAscii() const = 0;
     virtual CPtr toLowerCase() const = 0;
     virtual CPtr toUpperCase() const = 0;
+    virtual std::string toStdString() const = 0;
 };
 
 }  // namespace libj
