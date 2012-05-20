@@ -45,6 +45,7 @@ set(libj-src
     src/console.cpp
     src/error.cpp
     src/json.cpp
+    src/js_object.cpp
     src/map.cpp
     src/no_exceptions.cpp
     src/set.cpp
@@ -100,6 +101,7 @@ if(LIBJ_USE_GTEST)
         gtest/gtest_immutable.cpp
         gtest/gtest_json.cpp
         gtest/gtest_jsoncpp.cpp
+        gtest/gtest_js_object.cpp
         gtest/gtest_main.cpp
         gtest/gtest_map.cpp
         gtest/gtest_mutable.cpp
