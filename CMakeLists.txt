@@ -10,11 +10,6 @@ message(STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
 
 find_package(Boost 1.48.0 EXACT REQUIRED)
 
-find_library(PTHREAD pthread REQUIRED)
-if(NOT EXISTS ${PTHREAD})
-    message(FATAL_ERROR "libpthread not found.")
-endif()
-
 if(LIBJ_USE_BDW_GC)
     find_library(GC gc REQUIRED)
     if(NOT EXISTS ${GC})
@@ -26,6 +21,11 @@ if(LIBJ_USE_GTEST)
     find_library(GTEST gtest REQUIRED)
     if(NOT EXISTS ${GTEST})
         message(FATAL_ERROR "libgtest not found.")
+    endif()
+    
+    find_library(PTHREAD pthread REQUIRED)
+    if(NOT EXISTS ${PTHREAD})
+        message(FATAL_ERROR "libpthread not found.")
     endif()
 endif(LIBJ_USE_GTEST)
 
@@ -45,9 +45,11 @@ set(libj-src
     src/console.cpp
     src/error.cpp
     src/json.cpp
+    src/js_object.cpp
     src/map.cpp
     src/no_exceptions.cpp
     src/set.cpp
+    src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
 )
@@ -98,6 +100,8 @@ if(LIBJ_USE_GTEST)
         gtest/gtest_function.cpp
         gtest/gtest_immutable.cpp
         gtest/gtest_json.cpp
+        gtest/gtest_jsoncpp.cpp
+        gtest/gtest_js_object.cpp
         gtest/gtest_main.cpp
         gtest/gtest_map.cpp
         gtest/gtest_mutable.cpp

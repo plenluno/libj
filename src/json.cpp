@@ -1,16 +1,63 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include "libj/json.h"
-#include "libj/array_list.h"
-#include "libj/map.h"
+#include "libj/js_array.h"
+#include "libj/js_function.h"
+#include "libj/js_object.h"
+#include "libj/error.h"
+#include "libj/null.h"
 #include "libj/string_buffer.h"
+#include "json/json.h"
+#include <sstream>
 
 namespace libj {
 namespace json {
 
+static Json::Reader jsonReader;
+
+static Value toLibjValue(const Json::Value& val) {
+    if (val.isNull()) {
+        return Null::instance();
+    } else if (val.isBool()) {
+        return val.asBool();
+    } else if (val.isInt()) {
+        Long i = val.asInt();
+        return i;
+    } else if (val.isUInt()) {
+        Long u = val.asUInt();
+        return u;
+    } else if (val.isDouble()) {
+        return val.asDouble();
+    } else if (val.isString()) {
+        // TODO: UTF8 encoding
+        return String::create(val.asCString());
+    } else if (val.isArray()) {
+        JsArray::Ptr a = JsArray::create();
+        Size len = val.size();
+        for (Size i = 0; i < len; i++) {
+            a->add(toLibjValue(val[static_cast<Json::UInt>(i)]));
+        }
+        return a;
+    } else if (val.isObject()) {
+        JsObject::Ptr jo = JsObject::create();
+        Json::Value::Members ms = val.getMemberNames();
+        Size len = ms.size();
+        for (Size i = 0; i < len; i++) {
+            String::CPtr k = String::create(ms[i].c_str());
+            Value v = toLibjValue(val[ms[i]]);
+            jo->put(k, v);
+        }
+        return jo;
+    }
+}
+
 Value parse(String::CPtr str) {
-    // TODO: implement
-    return 0;
+    Json::Value root;
+    std::istringstream is(str->toStdString());
+    if (jsonReader.parse(is, root))
+        return toLibjValue(root);
+    else
+        return Error::create(Error::ILLEGAL_ARGUMENT);
 }
 
 static String::CPtr JSON_NULL = String::create("null");

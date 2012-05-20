@@ -22,9 +22,8 @@ class Immutable
     }
 };
 
-#define LIBJ_IMMUTABLE_DECLS(T, B) public: \
+#define LIBJ_IMMUTABLE_DECLS_WITHOUT_CREATE(T, B) public: \
     typedef LIBJ_CPTR(T) CPtr; \
-    static CPtr create(); \
     libj::TypeId type() const { \
         return libj::Type<T>::id(); \
     } \
@@ -32,6 +31,13 @@ class Immutable
         return id == libj::Type<T>::id() \
             || B::instanceOf(id); \
     }
+
+#define LIBJ_IMMUTABLE_WITHOUT_CREATE(T) public libj::Immutable { \
+    LIBJ_IMMUTABLE_DECLS_WITHOUT_CREATE(T, libj::Immutable)
+
+#define LIBJ_IMMUTABLE_DECLS(T, B) \
+    LIBJ_IMMUTABLE_DECLS_WITHOUT_CREATE(T, B) \
+    static CPtr create();
 
 #define LIBJ_IMMUTABLE(T) public libj::Immutable { \
     LIBJ_IMMUTABLE_DECLS(T, libj::Immutable)
