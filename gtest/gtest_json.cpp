@@ -34,4 +34,30 @@ TEST(GTestJson, TestStringify) {
     ASSERT_EQ(json::stringify(a)->compareTo(String::create("[3,false]")), 0);
 }
 
+TEST(GTestJson, TestParse) {
+    String::CPtr json = String::create("{\"x\":123,\"y\":[3.0,false]}");
+    Value v = json::parse(json);
+    ASSERT_TRUE(v.instanceOf(Type<Map>::id()));
+    Map::CPtr m = toCPtr<Map>(v);
+    ASSERT_EQ(m->size(), 2);
+    Value xv = m->get(String::create("x"));
+    Value yv = m->get(String::create("y"));
+    ASSERT_TRUE(xv.type() == Type<Long>::id());
+    Long l;
+    to<Long>(xv, &l);
+    ASSERT_EQ(l, 123);
+    ASSERT_TRUE(yv.instanceOf(Type<ArrayList>::id()));
+    ArrayList::CPtr a = toCPtr<ArrayList>(yv);
+    Value a0 = a->get(0);
+    Value a1 = a->get(1);
+    ASSERT_TRUE(a0.type() == Type<Double>::id());
+    Double d;
+    to<Double>(a0, &d);
+    ASSERT_EQ(d, 3.0);
+    ASSERT_TRUE(a1.type() == Type<Boolean>::id());
+    Boolean b;
+    to<Boolean>(a1, &b);
+    ASSERT_EQ(b, false);
+}
+
 }  // namespace libj
