@@ -44,6 +44,10 @@
 #include <stdio.h>
 #endif
 
+#ifdef __cplusplus
+using namespace cvtutf;
+#endif
+
 static const int halfShift  = 10; /* used for shifting by 10 bits */
 
 static const UTF32 halfBase = 0x0010000UL;
