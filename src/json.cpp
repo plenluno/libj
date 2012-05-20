@@ -1,9 +1,10 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include "libj/json.h"
-#include "libj/array_list.h"
+#include "libj/js_array.h"
+#include "libj/js_function.h"
+#include "libj/js_object.h"
 #include "libj/error.h"
-#include "libj/map.h"
 #include "libj/null.h"
 #include "libj/string_buffer.h"
 #include "json/json.h"
@@ -31,22 +32,22 @@ static Value toLibjValue(const Json::Value& val) {
         // TODO: UTF8 encoding
         return String::create(val.asCString());
     } else if (val.isArray()) {
-        ArrayList::Ptr a = ArrayList::create();
+        JsArray::Ptr a = JsArray::create();
         Size len = val.size();
         for (Size i = 0; i < len; i++) {
             a->add(toLibjValue(val[static_cast<Json::UInt>(i)]));
         }
         return a;
     } else if (val.isObject()) {
-        Map::Ptr m = Map::create();
+        JsObject::Ptr jo = JsObject::create();
         Json::Value::Members ms = val.getMemberNames();
         Size len = ms.size();
         for (Size i = 0; i < len; i++) {
             String::CPtr k = String::create(ms[i].c_str());
             Value v = toLibjValue(val[ms[i]]);
-            m->put(k, v);
+            jo->put(k, v);
         }
-        return m;
+        return jo;
     }
 }
 
