@@ -86,6 +86,7 @@
     All should be unsigned values to avoid sign extension during
     bit mask & shift operations.
 ------------------------------------------------------------------------ */
+#ifndef _CONVERTUTF_H_
 
 typedef unsigned long	UTF32;	/* at least 32 bits */
 typedef unsigned short	UTF16;	/* at least 16 bits */
@@ -146,4 +147,5 @@ Boolean isLegalUTF8Sequence(const UTF8 *source, const UTF8 *sourceEnd);
 }
 #endif
 
+#endif // _CONVERTUTF_H_
 /* --------------------------------------------------------------------- */
