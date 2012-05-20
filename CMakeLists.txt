@@ -10,11 +10,6 @@ message(STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
 
 find_package(Boost 1.48.0 EXACT REQUIRED)
 
-find_library(PTHREAD pthread REQUIRED)
-if(NOT EXISTS ${PTHREAD})
-    message(FATAL_ERROR "libpthread not found.")
-endif()
-
 if(LIBJ_USE_BDW_GC)
     find_library(GC gc REQUIRED)
     if(NOT EXISTS ${GC})
@@ -26,6 +21,11 @@ if(LIBJ_USE_GTEST)
     find_library(GTEST gtest REQUIRED)
     if(NOT EXISTS ${GTEST})
         message(FATAL_ERROR "libgtest not found.")
+    endif()
+    
+    find_library(PTHREAD pthread REQUIRED)
+    if(NOT EXISTS ${PTHREAD})
+        message(FATAL_ERROR "libpthread not found.")
     endif()
 endif(LIBJ_USE_GTEST)
 
