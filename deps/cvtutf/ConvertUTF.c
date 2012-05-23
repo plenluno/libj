@@ -44,9 +44,10 @@
 #include <stdio.h>
 #endif
 
-#ifdef __cplusplus
-using namespace cvtutf;
-#endif
+/* resolve conflicts */
+typedef UChar32 UTF32;
+typedef UChar16 UTF16;
+typedef UChar8 UTF8;
 
 static const int halfShift  = 10; /* used for shifting by 10 bits */
 
@@ -520,6 +521,120 @@ ConversionResult ConvertUTF8toUTF32 (
     }
     *sourceStart = source;
     *targetStart = target;
+    return result;
+}
+
+/* --------------------------------------------------------------------- */
+
+ConversionResult nConvertUTF8toUTF32 (
+	const UTF8** sourceStart, size_t* nChar, 
+	UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags) {
+    ConversionResult result = conversionOK;
+    const UTF8* source = *sourceStart;
+    UTF32* target = *targetStart;
+    size_t count;
+    for (count = *nChar; count && *source; count--) {
+	UTF32 ch = 0;
+	unsigned short extraBytesToRead = trailingBytesForUTF8[*source];
+	/* Do this check whether lenient or strict */
+	if (! isLegalUTF8(source, extraBytesToRead+1)) {    /* invalid '\0' is detected here */
+	    result = sourceIllegal;
+	    break;
+	}
+	/*
+	 * The cases all fall through. See "Note A" below.
+	 */
+	switch (extraBytesToRead) {
+	    case 5: ch += *source++; ch <<= 6;
+	    case 4: ch += *source++; ch <<= 6;
+	    case 3: ch += *source++; ch <<= 6;
+	    case 2: ch += *source++; ch <<= 6;
+	    case 1: ch += *source++; ch <<= 6;
+	    case 0: ch += *source++;
+	}
+	ch -= offsetsFromUTF8[extraBytesToRead];
+
+	if (target >= targetEnd) {
+	    source -= (extraBytesToRead+1); /* Back up the source pointer! */
+	    result = targetExhausted; break;
+	}
+	if (ch <= UNI_MAX_LEGAL_UTF32) {
+	    /*
+	     * UTF-16 surrogate values are illegal in UTF-32, and anything
+	     * over Plane 17 (> 0x10FFFF) is illegal.
+	     */
+	    if (ch >= UNI_SUR_HIGH_START && ch <= UNI_SUR_LOW_END) {
+		if (flags == strictConversion) {
+		    source -= (extraBytesToRead+1); /* return to the illegal value itself */
+		    result = sourceIllegal;
+		    break;
+		} else {
+		    *target++ = UNI_REPLACEMENT_CHAR;
+		}
+	    } else {
+		*target++ = ch;
+	    }
+	} else { /* i.e., ch > UNI_MAX_LEGAL_UTF32 */
+	    result = sourceIllegal;
+	    *target++ = UNI_REPLACEMENT_CHAR;
+	}
+    }
+    *sourceStart = source;
+    *targetStart = target;
+    *nChar = count;
+    return result;
+}
+
+/* --------------------------------------------------------------------- */
+
+ConversionResult nConvertUTF16toUTF32 (
+	const UTF16** sourceStart, size_t* nChar, 
+	UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags) {
+    ConversionResult result = conversionOK;
+    const UTF16* source = *sourceStart;
+    UTF32* target = *targetStart;
+    UTF32 ch, ch2;
+    size_t count;
+    for (count = *nChar; count && *source; count--) {
+	const UTF16* oldSource = source; /*  In case we have to back up because of target overflow. */
+	ch = *source++;
+	/* If we have a surrogate pair, convert to UTF32 first. */
+	if (ch >= UNI_SUR_HIGH_START && ch <= UNI_SUR_HIGH_END) {
+	    /* If the 16 bits following the high surrogate are in the source buffer... */
+	    ch2 = *source;
+	    /* If it's a low surrogate, convert to UTF32. */
+	    if (ch2 >= UNI_SUR_LOW_START && ch2 <= UNI_SUR_LOW_END) {
+		ch = ((ch - UNI_SUR_HIGH_START) << halfShift)
+		    + (ch2 - UNI_SUR_LOW_START) + halfBase;
+		++source;
+	    } else if (!ch2 || flags == strictConversion) { /* it's an unpaired high surrogate */
+		--source; /* return to the illegal value itself */
+		result = sourceIllegal;
+		break;
+	    }
+	} else if (flags == strictConversion) {
+	    /* UTF-16 surrogate values are illegal in UTF-32 */
+	    if (ch >= UNI_SUR_LOW_START && ch <= UNI_SUR_LOW_END) {
+		--source; /* return to the illegal value itself */
+		result = sourceIllegal;
+		break;
+	    }
+	}
+	if (target >= targetEnd) {
+	    source = oldSource; /* Back up source pointer! */
+	    result = targetExhausted; break;
+	}
+	*target++ = ch;
+    }
+    *nChar = count;
+    *sourceStart = source;
+    *targetStart = target;
+#ifdef CVTUTF_DEBUG
+if (result == sourceIllegal) {
+    fprintf(stderr, "ConvertUTF16toUTF32 illegal seq 0x%04x,%04x\n", ch, ch2);
+    fflush(stderr);
+}
+#endif
     return result;
 }
 
