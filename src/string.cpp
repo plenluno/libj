@@ -5,36 +5,29 @@
 #include "libj/string.h"
 #include "cvtutf/ConvertUTF.h"
 
-namespace cvtutf {
+namespace {
 
 typedef std::basic_string<libj::Char> Str32;
 const int ConvertBufferSize = 32;
 const ConversionFlags ConvertFlag = lenientConversion;
 template<
     typename T,
-    ConversionResult CONV(const T**, const T*, UTF32**, UTF32*, ConversionFlags)
+    ConversionResult CONV(const T**, size_t*, UChar32**, UChar32*, ConversionFlags)
 >
 Str32* convertToUtf32(const T* src, size_t max) {
-    // TODO: test
-    UTF32 buf[ConvertBufferSize];
+    UChar32 buf[ConvertBufferSize];
     Str32* dst = new Str32();
-    const T* end = src;
-    for (size_t i = 0; i < max && *end; i++) end++;
-    UTF32* end32 = buf + ConvertBufferSize;
-    ConversionResult r = targetExhausted;
-    while (r == targetExhausted) {
-        UTF32* cur32 = buf;
-        r = CONV(&src, end, &cur32, end32, ConvertFlag);
+    UChar32* end32 = buf + ConvertBufferSize;
+    ConversionResult r;
+    do {
+        UChar32* cur32 = buf;
+        r = CONV(&src, &max, &cur32, end32, ConvertFlag);
         *dst += Str32(reinterpret_cast<libj::Char*>(buf), cur32 - buf);
-    }
+    } while (r == targetExhausted);
     return dst;
 }
 
-} // namespace cvtutf
-
-using cvtutf::convertToUtf32;
-using cvtutf::ConvertUTF8toUTF32;
-using cvtutf::ConvertUTF16toUTF32;
+} // anonymous namespace
 
 namespace libj {
 
@@ -304,14 +297,14 @@ class StringImpl : public String {
             CPtr p(new StringImpl(static_cast<const char*>(data), max));
             return p;
         } else if (enc == UTF8) {
-            Str32* s = convertToUtf32<cvtutf::UTF8, ConvertUTF8toUTF32> (
-                static_cast<const cvtutf::UTF8*>(data), max
+            Str32* s = convertToUtf32<UChar8, nConvertUTF8toUTF32> (
+                static_cast<const UChar8*>(data), max
             );
             CPtr p(new StringImpl(0, s));
             return p;
         } else if (enc == UTF16) {
-            Str32* s = convertToUtf32<cvtutf::UTF16, ConvertUTF16toUTF32>(
-                static_cast<const cvtutf::UTF16*>(data), max
+            Str32* s = convertToUtf32<UChar16, nConvertUTF16toUTF32>(
+                static_cast<const UChar16*>(data), max
             );
             CPtr p(new StringImpl(0, s));
             return p;
