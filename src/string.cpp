@@ -22,7 +22,7 @@ Str32* convertToUtf32(const T* src, size_t max) {
     do {
         UChar32* cur32 = buf;
         r = CONV(&src, &max, &cur32, end32, ConvertFlag);
-        *dst += Str32(reinterpret_cast<libj::Char*>(buf), cur32 - buf);
+        dst->append(reinterpret_cast<libj::Char*>(buf), cur32 - buf);
     } while (r == targetExhausted);
     return dst;
 }
