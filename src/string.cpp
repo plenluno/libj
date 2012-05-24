@@ -3,6 +3,31 @@
 #include <string>
 #include <stdio.h>
 #include "libj/string.h"
+#include "cvtutf/ConvertUTF.h"
+
+namespace {
+
+typedef std::basic_string<libj::Char> Str32;
+const int ConvertBufferSize = 32;
+const ConversionFlags ConvertFlag = lenientConversion;
+template<
+    typename T,
+    ConversionResult CONV(const T**, size_t*, UChar32**, UChar32*, ConversionFlags)
+>
+Str32* convertToUtf32(const T* src, size_t max) {
+    UChar32 buf[ConvertBufferSize];
+    Str32* dst = new Str32();
+    UChar32* end32 = buf + ConvertBufferSize;
+    ConversionResult r;
+    do {
+        UChar32* cur32 = buf;
+        r = CONV(&src, &max, &cur32, end32, ConvertFlag);
+        dst->append(reinterpret_cast<libj::Char*>(buf), cur32 - buf);
+    } while (r == targetExhausted);
+    return dst;
+}
+
+} // anonymous namespace
 
 namespace libj {
 
@@ -268,13 +293,23 @@ class StringImpl : public String {
     }
 
     static CPtr create(const void* data, Encoding enc, Size max) {
-        // TODO(PL): temp
         if (enc == ASCII) {
             CPtr p(new StringImpl(static_cast<const char*>(data), max));
             return p;
         } else if (enc == UTF8) {
-            // TODO(PL): use ConvertUTF8toUTF32
-            CPtr p(new StringImpl());
+            Str32* s = convertToUtf32<UChar8, nConvertUTF8toUTF32> (
+                static_cast<const UChar8*>(data), max
+            );
+            CPtr p(new StringImpl(0, s));
+            return p;
+        } else if (enc == UTF16) {
+            Str32* s = convertToUtf32<UChar16, nConvertUTF16toUTF32>(
+                static_cast<const UChar16*>(data), max
+            );
+            CPtr p(new StringImpl(0, s));
+            return p;
+        } else if (enc == UTF32) {
+            CPtr p(new StringImpl(static_cast<const Char*>(data), max));
             return p;
         } else {
             CPtr p(new StringImpl());
