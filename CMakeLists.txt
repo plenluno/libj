@@ -46,12 +46,14 @@ set(libj-src
     src/error.cpp
     src/json.cpp
     src/js_object.cpp
+    src/linked_list.cpp
     src/map.cpp
     src/no_exceptions.cpp
     src/set.cpp
     src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
+    src/typed_array_list.cpp
 )
 
 set(libj-deps
