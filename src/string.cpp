@@ -42,6 +42,21 @@ Str32* convertToUtf32(const T* src, size_t max) {
     return dst;
 }
 
+inline std::string convertStr32ToStr8(const Str32* str32) {
+    UTF8 buf[ConvertBufferSize];
+    const UTF32* cur32 = reinterpret_cast<const UTF32*>(str32->c_str());
+    const UTF32* end32 = cur32 + str32->length();
+    UTF8* end8 = buf + ConvertBufferSize;
+    std::string dst = std::string();
+    ConversionResult r;
+    do {
+        UTF8* cur8 = buf;
+        r = ConvertUTF32toUTF8(&cur32, end32, &cur8, end8, ConvertFlag);
+        dst.append(reinterpret_cast<char*>(buf), cur8 - buf);
+    } while (r == targetExhausted);
+    return dst;
+}
+
 }  // namespace cvtutf
 
 namespace libj {
@@ -289,10 +304,9 @@ class StringImpl : public String {
     
     std::string toStdString() const {
         if (isAscii()) {
-            return *str8_;
+            return (str8_)? *str8_ : std::string();
         } else {
-            // TODO: implement
-            return std::string();
+            return cvtutf::convertStr32ToStr8(str32_);
         }
     }
 
