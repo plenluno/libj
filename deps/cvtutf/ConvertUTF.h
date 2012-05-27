@@ -86,21 +86,25 @@
     All should be unsigned values to avoid sign extension during
     bit mask & shift operations.
 ------------------------------------------------------------------------ */
-#ifndef _CONVERTUTF_H_
+#ifndef CONVERTUTF_H_
+#define CONVERTUTF_H_
 
 #include <stddef.h>
 #include <stdint.h>
-typedef uint32_t		UChar32;	/* at least 32 bits */
-typedef uint16_t		UChar16;	/* at least 16 bits */
-typedef uint8_t			UChar8;		/* typically 8 bits */
-typedef unsigned char	Boolean;	/* 0 or 1 */
+
+namespace cvtutf {
+
+typedef uint32_t UTF32;
+typedef uint16_t UTF16;
+typedef uint8_t UTF8;
+typedef unsigned char Boolean;
 
 /* Some fundamental constants */
-#define UNI_REPLACEMENT_CHAR (UChar32)0x0000FFFD
-#define UNI_MAX_BMP (UChar32)0x0000FFFF
-#define UNI_MAX_UTF16 (UChar32)0x0010FFFF
-#define UNI_MAX_UTF32 (UChar32)0x7FFFFFFF
-#define UNI_MAX_LEGAL_UTF32 (UChar32)0x0010FFFF
+#define UNI_REPLACEMENT_CHAR (UTF32)0x0000FFFD
+#define UNI_MAX_BMP (UTF32)0x0000FFFF
+#define UNI_MAX_UTF16 (UTF32)0x0010FFFF
+#define UNI_MAX_UTF32 (UTF32)0x7FFFFFFF
+#define UNI_MAX_LEGAL_UTF32 (UTF32)0x0010FFFF
 
 typedef enum {
 	conversionOK, 		/* conversion successful */
@@ -114,48 +118,41 @@ typedef enum {
 	lenientConversion
 } ConversionFlags;
 
-/* This is for C++ and does no harm in C */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 ConversionResult ConvertUTF8toUTF16 (
-		const UChar8** sourceStart, const UChar8* sourceEnd, 
-		UChar16** targetStart, UChar16* targetEnd, ConversionFlags flags);
+		const UTF8** sourceStart, const UTF8* sourceEnd, 
+		UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
 
 ConversionResult ConvertUTF16toUTF8 (
-		const UChar16** sourceStart, const UChar16* sourceEnd, 
-		UChar8** targetStart, UChar8* targetEnd, ConversionFlags flags);
+		const UTF16** sourceStart, const UTF16* sourceEnd, 
+		UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags);
 		
 ConversionResult ConvertUTF8toUTF32 (
-		const UChar8** sourceStart, const UChar8* sourceEnd, 
-		UChar32** targetStart, UChar32* targetEnd, ConversionFlags flags);
+		const UTF8** sourceStart, const UTF8* sourceEnd, 
+		UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
 
 ConversionResult ConvertUTF32toUTF8 (
-		const UChar32** sourceStart, const UChar32* sourceEnd, 
-		UChar8** targetStart, UChar8* targetEnd, ConversionFlags flags);
+		const UTF32** sourceStart, const UTF32* sourceEnd, 
+		UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags);
 		
 ConversionResult ConvertUTF16toUTF32 (
-		const UChar16** sourceStart, const UChar16* sourceEnd, 
-		UChar32** targetStart, UChar32* targetEnd, ConversionFlags flags);
+		const UTF16** sourceStart, const UTF16* sourceEnd, 
+		UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
 
 ConversionResult ConvertUTF32toUTF16 (
-		const UChar32** sourceStart, const UChar32* sourceEnd, 
-		UChar16** targetStart, UChar16* targetEnd, ConversionFlags flags);
+		const UTF32** sourceStart, const UTF32* sourceEnd, 
+		UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
 
-Boolean isLegalUTF8Sequence(const UChar8 *source, const UChar8 *sourceEnd);
+Boolean isLegalUTF8Sequence(const UTF8 *source, const UTF8 *sourceEnd);
 
 ConversionResult nConvertUTF8toUTF32 (
-		const UChar8** sourceStart, size_t* nChar, 
-		UChar32** targetStart, UChar32* targetEnd, ConversionFlags flags);
+		const UTF8** sourceStart, size_t* nChar, 
+		UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
 
 ConversionResult nConvertUTF16toUTF32 (
-		const UChar16** sourceStart, size_t* nChar, 
-		UChar32** targetStart, UChar32* targetEnd, ConversionFlags flags);
+		const UTF16** sourceStart, size_t* nChar, 
+		UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
 
-#ifdef __cplusplus
-}
-#endif
+}  // namespace cvtutf
 
-#endif // _CONVERTUTF_H_
+#endif  // CONVERTUTF_H_
 /* --------------------------------------------------------------------- */

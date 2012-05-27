@@ -44,10 +44,7 @@
 #include <stdio.h>
 #endif
 
-/* resolve conflicts */
-typedef UChar32 UTF32;
-typedef UChar16 UTF16;
-typedef UChar8 UTF8;
+namespace cvtutf {
 
 static const int halfShift  = 10; /* used for shifting by 10 bits */
 
@@ -656,3 +653,5 @@ if (result == sourceIllegal) {
     similarly unrolled loops.
 
    --------------------------------------------------------------------- */
+
+}  // namespace cvtutf
