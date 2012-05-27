@@ -61,7 +61,7 @@ set(libj-deps
 
 # cvtutf
 add_library(cvtutf STATIC
-    deps/cvtutf/ConvertUTF.c
+    deps/cvtutf/ConvertUTF.cpp
 )
 
 # jsoncpp
