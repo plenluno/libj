@@ -1,3 +1,6 @@
 [submodule "tools/cpplint"]
 	path = tools/cpplint
 	url = https://github.com/plenluno/cpplint.git
+[submodule "deps/boost-svn"]
+	path = deps/boost-svn
+	url = https://github.com/plenluno/boost-svn.git
