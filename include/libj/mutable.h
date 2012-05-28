@@ -16,7 +16,7 @@ class Mutable
  public:
     typedef LIBJ_PTR(Mutable) Ptr;
     typedef LIBJ_CPTR(Mutable) CPtr;
-    
+
     bool instanceOf(TypeId id) const {
         return id == Type<Mutable>::id()
             || Object::instanceOf(id);

@@ -21,11 +21,11 @@ struct NullDeleter {
 #define LIBJ_CPTR_TYPE(T) typename LIBJ_CPTR(T)
 #define LIBJ_STATIC_PTR_CAST(T) boost::static_pointer_cast<T>
 #define LIBJ_STATIC_CPTR_CAST(T) boost::static_pointer_cast<const T>
-#define LIBJ_NULL_PTR(T,V) LIBJ_PTR(T) V(static_cast<T*>(0), NullDeleter());
-#define LIBJ_NULL_CPTR(T,V) LIBJ_CPTR(T) V(static_cast<T*>(0), NullDeleter());
-#define LIBJ_NULL_PTR_TYPE(T,V) typename LIBJ_NULL_PTR(T,V)
-#define LIBJ_NULL_CPTR_TYPE(T,V) typename LIBJ_NULL_CPTR(T,V)
-#define LIBJ_SINGLETON_PTR_TYPE(T,V,I) LIBJ_PTR_TYPE(T) V(I, NullDeleter());
+#define LIBJ_NULL_PTR(T, V) LIBJ_PTR(T) V(static_cast<T*>(0), NullDeleter());
+#define LIBJ_NULL_CPTR(T, V) LIBJ_CPTR(T) V(static_cast<T*>(0), NullDeleter());
+#define LIBJ_NULL_PTR_TYPE(T, V) typename LIBJ_NULL_PTR(T, V)
+#define LIBJ_NULL_CPTR_TYPE(T, V) typename LIBJ_NULL_CPTR(T, V)
+#define LIBJ_SINGLETON_PTR_TYPE(T, V, I) LIBJ_PTR_TYPE(T) V(I, NullDeleter());
 #else
 #define LIBJ_PTR(T) T*
 #define LIBJ_CPTR(T) const T*
@@ -33,11 +33,11 @@ struct NullDeleter {
 #define LIBJ_CPTR_TYPE(T) const T*
 #define LIBJ_STATIC_PTR_CAST(T) static_cast<T*>
 #define LIBJ_STATIC_CPTR_CAST(T) static_cast<const T*>
-#define LIBJ_NULL_PTR(T,V) LIBJ_PTR(T) V(static_cast<T*>(0));
-#define LIBJ_NULL_CPTR(T,V) LIBJ_CPTR(T) V(static_cast<T*>(0));
-#define LIBJ_NULL_PTR_TYPE(T,V) LIBJ_NULL_PTR(T,V)
-#define LIBJ_NULL_CPTR_TYPE(T,V) LIBJ_NULL_CPTR(T,V)
-#define LIBJ_SINGLETON_PTR_TYPE(T,V,I) LIBJ_PTR_TYPE(T) V(I);
+#define LIBJ_NULL_PTR(T, V) LIBJ_PTR(T) V(static_cast<T*>(0));
+#define LIBJ_NULL_CPTR(T, V) LIBJ_CPTR(T) V(static_cast<T*>(0));
+#define LIBJ_NULL_PTR_TYPE(T, V) LIBJ_NULL_PTR(T, V)
+#define LIBJ_NULL_CPTR_TYPE(T, V) LIBJ_NULL_CPTR(T, V)
+#define LIBJ_SINGLETON_PTR_TYPE(T, V, I) LIBJ_PTR_TYPE(T) V(I);
 #endif
 
 #endif  // LIBJ_POINTER_H_

@@ -15,14 +15,14 @@ class MapImpl : public Map {
             return lv.compareTo(rv) < 0;
         }
     };
-    
-    typedef std::map<Value,Value,ValueComp> ValueMap;
-     
+
+    typedef std::map<Value, Value, ValueComp> ValueMap;
+
  public:
     Size size() const {
         return map_.size();
     }
-    
+
     Value get(const Value& key) const {
         ValueMap::const_iterator itr = map_.find(key);
         if (itr != map_.end())
@@ -36,19 +36,19 @@ class MapImpl : public Map {
         map_[key] = val;
         return v;
     }
-    
+
     Value remove(const Value& key) {
         Value v = get(key);
         map_.erase(key);
         return v;
     }
-    
+
     Set::CPtr keySet() const {
         Set::Ptr s = Set::create();
         for (ValueMap::const_iterator itr = map_.begin();
              itr != map_.end();
-             itr++) {
-            s->add(itr->first);     
+             ++itr) {
+            s->add(itr->first);
         }
         return s;
     }
@@ -58,13 +58,13 @@ class MapImpl : public Map {
     }
 
     Map::Ptr clone() const {
-        // TODO(PL): implement
+        // TODO(plenluno): implement
         Map::Ptr p(new MapImpl());
         return p;
     }
 
     String::CPtr toString() const {
-        // TODO(PL): implement
+        // TODO(plenluno): implement
         return String::create();
     }
 

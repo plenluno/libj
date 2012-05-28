@@ -28,21 +28,21 @@ TEST(GTestString, TestCreateUtf0) {
 TEST(GTestString, TestCreateUtf1) {
     // multi byte characters
     const int8_t u8[] = {
-        0x01,                   // U+0001
-        0x7f,                   // U+007F
-        0xc2, 0x80,             // U+0080
-        0xdf, 0xbf,             // U+07FF
-        0xe0, 0xa0, 0x80,       // U+0800
-        0xef, 0xbf, 0xbf,       // U+FFFF
-        0xf0, 0x90, 0x80, 0x80, // U+10000
-        0xf4, 0x8f, 0xbf, 0xbf, // U+10FFFF
-        0                       // U+0000 (end of string)
+        0x01,                    // U+0001
+        0x7f,                    // U+007F
+        0xc2, 0x80,              // U+0080
+        0xdf, 0xbf,              // U+07FF
+        0xe0, 0xa0, 0x80,        // U+0800
+        0xef, 0xbf, 0xbf,        // U+FFFF
+        0xf0, 0x90, 0x80, 0x80,  // U+10000
+        0xf4, 0x8f, 0xbf, 0xbf,  // U+10FFFF
+        0                        // U+0000 (end of string)
     };
     const int16_t u16[] = {
         0x01, 0x7f, 0x0080, 0x07ff, 0x0800, 0xffff,
-        0xd800, 0xdc00, // U+10000
-        0xdbff, 0xdfff, // U+10FFFF
-        0               // U+0000 (end of string)
+        0xd800, 0xdc00,  // U+10000
+        0xdbff, 0xdfff,  // U+10FFFF
+        0                // U+0000 (end of string)
     };
     const int32_t u32[] = {
         0x01, 0x7f, 0x0080, 0x07ff, 0x0800, 0xffff, 0x10000, 0x10ffff,
@@ -204,11 +204,11 @@ TEST(GTestString, TestConcat) {
     String::CPtr s1 = String::create("abc", String::ASCII);
     String::CPtr s2 = String::create("de", String::ASCII);
     ASSERT_EQ(s->compareTo(s1->concat(s2)), 0);
-    
+
     String::CPtr e = String::create();
     ASSERT_EQ(s->compareTo(e->concat(s)), 0);
     ASSERT_EQ(s->compareTo(s->concat(e)), 0);
-    
+
     LIBJ_NULL_CPTR(String, n);
     ASSERT_EQ(s->compareTo(s->concat(n)), 0);
 }
@@ -290,7 +290,7 @@ TEST(GTestString, TestToUpperCase) {
 TEST(GTestString, TestToString) {
     String::CPtr s = String::create("abcabc", String::ASCII);
     ASSERT_EQ(s->toString()->compareTo(s), 0);
-    
+
     Object::CPtr o = s;
     ASSERT_EQ(o->toString()->compareTo(s), 0);
 }
@@ -298,14 +298,14 @@ TEST(GTestString, TestToString) {
 TEST(GTestString, TestValueOf) {
     Value v;
     ASSERT_FALSE(String::valueOf(v));
-    
+
     LIBJ_NULL_CPTR(String, nullp);
     v = nullp;
     ASSERT_FALSE(String::valueOf(v));
-    
+
     v = 3;
     ASSERT_EQ(String::valueOf(v)->compareTo(String::create("3")), 0);
-    
+
     String::CPtr s = String::create("abc");
     v = s;
     ASSERT_EQ(String::valueOf(v)->compareTo(s), 0);

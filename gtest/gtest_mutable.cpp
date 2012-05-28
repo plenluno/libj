@@ -16,7 +16,7 @@ class GTestMutableImpl : public GTestMutable {
     }
 
     String::CPtr toString() const {
-        String::CPtr p;
+        String::CPtr p(String::create());
         return p;
     }
 
@@ -62,7 +62,7 @@ TEST(GTestMutable, Error4) {
 class GTestMutableX {
  public:
     virtual ~GTestMutableX() {}
-    virtual int x() {}
+    virtual int x() { return 0; }
 };
 
 TEST(GTestMutable, Test) {

@@ -12,12 +12,13 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <algorithm>
+
 #include "libj/type.h"
 
 namespace libj {
 
 class Value {
- public:  // structors
+ public:
     Value()
       : content(0) {
     }
@@ -35,7 +36,7 @@ class Value {
         delete content;
     }
 
- public:  // modifiers
+ public:
     Value & swap(Value & rhs) {
         std::swap(content, rhs.content);
         return *this;
@@ -52,7 +53,7 @@ class Value {
         return *this;
     }
 
- public:  // queries
+ public:
     bool empty() const {
         return !content;
     }
@@ -80,13 +81,13 @@ class Value {
         }
     }
 
- private:  // types
+ private:
     class placeholder {
-     public:  // structors
+     public:
         virtual ~placeholder() {
         }
 
-     public:  // queries
+     public:
         virtual TypeId type() const = 0;
 
         virtual bool instanceOf(TypeId id) const = 0;
@@ -103,12 +104,12 @@ class Value {
         bool IsObject = Classify<ValueType>::isObject,
         bool IsCPtr   = Classify<ValueType>::isCPtr>
     class holder : public placeholder {
-     public:  // structors
+     public:
         holder(const ValueType & value)
           : held(value) {
         }
 
-     public:  // queries
+     public:
         virtual TypeId type() const {
             return Type<ValueType>::id();
         }
@@ -141,21 +142,21 @@ class Value {
             return new holder(held);
         }
 
-     public:  // representation
+     public:
         ValueType held;
 
-     private:  // intentionally left unimplemented
+     private:
         holder & operator=(const holder &);
     };
 
     template<typename ValueType>
     class holder<ValueType, false, false> : public placeholder {
-     public:  // structors
+     public:
         holder(const ValueType & value)
           : held(value) {
         }
 
-     public:  // queries
+     public:
         virtual TypeId type() const {
             return Type<ValueType>::id();
         }
@@ -188,14 +189,14 @@ class Value {
             return new holder(held);
         }
 
-     public:  // representation
+     public:
         ValueType held;
 
-     private:  // intentionally left unimplemented
+     private:
         holder & operator=(const holder &);
     };
 
- private:  // representation
+ private:
     template<typename ValueType>
     friend bool to(Value * operand, ValueType** out, bool instanceof = false);
 
@@ -287,6 +288,7 @@ typename Type<T>::CPtr toCPtr(const Value& v) {
             return p;
         } else {
             LIBJ_NULL_CPTR_TYPE(T, nullp);
+            return nullp;
         }
     } else {
         LIBJ_NULL_CPTR_TYPE(T, nullp);

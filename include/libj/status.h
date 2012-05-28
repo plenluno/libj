@@ -24,7 +24,7 @@ class Status : LIBJ_IMMUTABLE_WITHOUT_CREATE(Status)
     LIBJ_IMMUTABLE_DECLS_WITHOUT_CREATE(T, libj::Status)
 
 #define LIBJ_STATUS_IMPL(S) \
- public: \
+public: \
     Int code() const { \
         return S->code(); \
     } \

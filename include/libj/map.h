@@ -23,7 +23,7 @@ class Map : LIBJ_MUTABLE(Map)
     LIBJ_MUTABLE_DECLS(T, libj::Map)
 
 #define LIBJ_MAP_IMPL(M) \
- public: \
+public: \
     Size size() const { \
         return M->size(); \
     } \

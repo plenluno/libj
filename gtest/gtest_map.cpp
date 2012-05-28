@@ -35,7 +35,7 @@ TEST(GTestMap, TestIterator) {
     String::CPtr y = String::create("y");
     m->put(x, 123);
     m->put(y, 456);
-    
+
     String::CPtr v1, v2;
     Set::CPtr ks = m->keySet();
     Iterator::Ptr itr = ks->iterator();

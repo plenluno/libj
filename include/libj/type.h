@@ -60,11 +60,12 @@ class Type<T, PRIMITIVE> {
 };
 
 template<class T>
-class Classify
-{
-private:
+class Classify {
+ private:
     typedef char Yes;
-    typedef struct { char v[2]; } No;
+    typedef struct {
+        char v[2];
+    } No;
 
     static Yes object_(Type<ObjectBase>::CPtr);
     static No  object_(...);
@@ -79,7 +80,7 @@ private:
 
     static T t;
 
-public:
+ public:
     static const bool isObject = (sizeof(object_(t)) == sizeof(Yes));
     static const bool isMutable = (sizeof(mutable_(t)) == sizeof(Yes));
     static const bool isImmutable = (sizeof(immutable_(t)) == sizeof(Yes));

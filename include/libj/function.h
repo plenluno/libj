@@ -11,25 +11,25 @@ namespace libj {
 class Function : LIBJ_MUTABLE(Function)
  public:
     virtual Value operator()(ArrayList::CPtr args) = 0;
-    
+
     Value call() {
         ArrayList::Ptr args = ArrayList::create();
         return operator()(args);
     }
-    
+
     Value call(const Value& v) {
         ArrayList::Ptr args = ArrayList::create();
         args->add(v);
         return operator()(args);
     }
-    
+
     Value call(const Value& v0, const Value& v1) {
         ArrayList::Ptr args = ArrayList::create();
         args->add(v0);
         args->add(v1);
         return operator()(args);
     }
-    
+
     Value call(const Value& v0, const Value& v1, const Value& v2) {
         ArrayList::Ptr args = ArrayList::create();
         args->add(v0);
@@ -37,7 +37,7 @@ class Function : LIBJ_MUTABLE(Function)
         args->add(v2);
         return operator()(args);
     }
-    
+
     Value call(const Value& v0, const Value& v1, const Value& v2,
                const Value& v3) {
         ArrayList::Ptr args = ArrayList::create();
@@ -47,7 +47,7 @@ class Function : LIBJ_MUTABLE(Function)
         args->add(v3);
         return operator()(args);
     }
-    
+
     Value call(const Value& v0, const Value& v1, const Value& v2,
                const Value& v3, const Value& v4) {
         ArrayList::Ptr args = ArrayList::create();
@@ -58,7 +58,7 @@ class Function : LIBJ_MUTABLE(Function)
         args->add(v4);
         return operator()(args);
     }
-    
+
     Value call(const Value& v0, const Value& v1, const Value& v2,
                const Value& v3, const Value& v4, const Value& v5) {
         ArrayList::Ptr args = ArrayList::create();
@@ -70,7 +70,7 @@ class Function : LIBJ_MUTABLE(Function)
         args->add(v5);
         return operator()(args);
     }
-    
+
     Value call(const Value& v0, const Value& v1, const Value& v2,
                const Value& v3, const Value& v4, const Value& v5,
                const Value& v6) {
@@ -84,7 +84,7 @@ class Function : LIBJ_MUTABLE(Function)
         args->add(v6);
         return operator()(args);
     }
-    
+
     Value call(const Value& v0, const Value& v1, const Value& v2,
                const Value& v3, const Value& v4, const Value& v5,
                const Value& v6, const Value& v7) {
@@ -99,7 +99,7 @@ class Function : LIBJ_MUTABLE(Function)
         args->add(v7);
         return operator()(args);
     }
-    
+
     Value call(const Value& v0, const Value& v1, const Value& v2,
                const Value& v3, const Value& v4, const Value& v5,
                const Value& v6, const Value& v7, const Value& v8) {
@@ -115,9 +115,9 @@ class Function : LIBJ_MUTABLE(Function)
         args->add(v8);
         return operator()(args);
     }
-    
+
     virtual String::CPtr toString() const {
-        // TODO: implement Function.toString
+        // TODO(plenluno): implement Function.toString
         return String::create();
     }
 };

@@ -12,7 +12,7 @@ class Iterator : LIBJ_MUTABLE(Iterator)
  public:
     virtual bool hasNext() const = 0;
     virtual Value next() = 0;
-    
+
     String::CPtr toString() const {
         return String::create();
     }
@@ -20,4 +20,4 @@ class Iterator : LIBJ_MUTABLE(Iterator)
 
 }  // namespace libj
 
-#endif  // LIBJ_STRING_H_
+#endif  // LIBJ_ITERATOR_H_

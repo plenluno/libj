@@ -1,10 +1,10 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#include <iostream>
+
 #include "libj/console.h"
 #include "libj/json.h"
 #include "libj/string.h"
-
-#include <iostream>
 
 namespace libj {
 namespace console {

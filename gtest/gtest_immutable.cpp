@@ -12,7 +12,7 @@ class GTestImmutable : LIBJ_IMMUTABLE(GTestImmutable)
 class GTestImmutableImpl : public GTestImmutable {
  public:
     String::CPtr toString() const {
-        String::CPtr p;
+        String::CPtr p(String::create());
         return p;
     }
 
@@ -58,7 +58,7 @@ TEST(GTestMutable, Error4) {
 class GTestImmutableX {
  public:
     virtual ~GTestImmutableX() {}
-    virtual int x() {}
+    virtual int x() { return 0; }
 };
 
 TEST(GTestImmutable, Test) {

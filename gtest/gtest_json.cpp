@@ -9,29 +9,43 @@
 namespace libj {
 
 TEST(GTestJson, TestStringify) {
-    ASSERT_EQ(json::stringify(static_cast<Byte>(3))->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Short>(3))->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Int>(3))->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Long>(3))->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Float>(3.3))->compareTo(String::create("3.300000")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Double>(3.3))->compareTo(String::create("3.300000")), 0);
-    ASSERT_EQ(json::stringify(true)->compareTo(String::create("true")), 0);
-    ASSERT_EQ(json::stringify(false)->compareTo(String::create("false")), 0);
-    ASSERT_EQ(json::stringify(Null::instance())->compareTo(String::create("null")), 0);
-    ASSERT_EQ(json::stringify(String::create("456"))->compareTo(String::create("\"456\"")), 0);
-    ASSERT_EQ(json::stringify(Map::create())->compareTo(String::create("{}")), 0);
-    ASSERT_EQ(json::stringify(ArrayList::create())->compareTo(String::create("[]")), 0);
-    
+    ASSERT_EQ(json::stringify(static_cast<Byte>(3))
+        ->compareTo(String::create("3")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Short>(3))
+        ->compareTo(String::create("3")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Int>(3))
+        ->compareTo(String::create("3")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Long>(3))
+        ->compareTo(String::create("3")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Float>(3.3))
+        ->compareTo(String::create("3.300000")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Double>(3.3))
+        ->compareTo(String::create("3.300000")), 0);
+    ASSERT_EQ(json::stringify(true)
+        ->compareTo(String::create("true")), 0);
+    ASSERT_EQ(json::stringify(false)
+        ->compareTo(String::create("false")), 0);
+    ASSERT_EQ(json::stringify(Null::instance())
+        ->compareTo(String::create("null")), 0);
+    ASSERT_EQ(json::stringify(String::create("456"))
+        ->compareTo(String::create("\"456\"")), 0);
+    ASSERT_EQ(json::stringify(Map::create())
+        ->compareTo(String::create("{}")), 0);
+    ASSERT_EQ(json::stringify(ArrayList::create())
+        ->compareTo(String::create("[]")), 0);
+
     Map::Ptr m = Map::create();
     m->put(3, false);
     m->put(String::create("x"), 123);
     m->put(String::create("y"), String::create("456"));
-    ASSERT_EQ(json::stringify(m)->compareTo(String::create("{\"x\":123,\"y\":\"456\"}")), 0);
-    
+    ASSERT_EQ(json::stringify(m)
+        ->compareTo(String::create("{\"x\":123,\"y\":\"456\"}")), 0);
+
     ArrayList::Ptr a = ArrayList::create();
     a->add(3);
     a->add(false);
-    ASSERT_EQ(json::stringify(a)->compareTo(String::create("[3,false]")), 0);
+    ASSERT_EQ(json::stringify(a)
+        ->compareTo(String::create("[3,false]")), 0);
 }
 
 TEST(GTestJson, TestParse) {

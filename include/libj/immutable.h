@@ -15,7 +15,7 @@ class Immutable
     , public ImmutableBase {
  public:
     typedef LIBJ_CPTR(Immutable) CPtr;
-    
+
     bool instanceOf(TypeId id) const {
         return id == Type<Immutable>::id()
             || Object::instanceOf(id);

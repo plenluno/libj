@@ -14,7 +14,7 @@ class Singleton
     , public SingletonBase {
  public:
     typedef LIBJ_PTR(Singleton) Ptr;
-    typedef LIBJ_CPTR(Singleton) CPtr;    
+    typedef LIBJ_CPTR(Singleton) CPtr;
 };
 
 template<typename T>
@@ -23,7 +23,7 @@ class SingletonTmpl
  public:
     static LIBJ_PTR_TYPE(T) instance() {
         static T t;
-        LIBJ_SINGLETON_PTR_TYPE(T,p,&t);
+        LIBJ_SINGLETON_PTR_TYPE(T, p, &t);
         return p;
     }
 

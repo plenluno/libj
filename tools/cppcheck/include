@@ -1,0 +1,4 @@
+deps/
+deps/boost-svn/
+deps/jsoncpp/include/
+include/

@@ -10,31 +10,31 @@ class JsObjectImpl : public JsObject {
         Ptr p(new JsObjectImpl());
         return p;
     }
-    
+
     Value put(const Value& key, const Value& val) {
         return map_->put(String::valueOf(key), val);
     }
-    
+
     String::CPtr toString() const {
         return map_->toString();
     }
-    
+
     Size size() const {
         return map_->size();
     }
-    
+
     Value get(const Value& key) const {
         return map_->get(key);
     }
-    
+
     Value remove(const Value& key) {
         return map_->remove(key);
     }
-    
+
     Set::CPtr keySet() const {
         return map_->keySet();
     }
-    
+
     void clear() {
         map_->clear();
     }

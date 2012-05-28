@@ -51,7 +51,7 @@ class ArrayListImpl : public ArrayList {
             return *vec_.erase(vec_.begin() + i);
         }
     }
-    
+
     bool remove(const Value& v) {
         Size n = size();
         for (Size i = 0; i < n; i++) {
@@ -68,35 +68,35 @@ class ArrayListImpl : public ArrayList {
     }
 
     ArrayList::Ptr clone() const {
-        // TODO(PL): implement
+        // TODO(plenluno): implement
         ArrayList::Ptr p(new ArrayListImpl());
         return p;
     }
 
     String::CPtr toString() const {
-        // TODO(PL): implement
+        // TODO(plenluno): implement
         return String::create();
     }
 
  private:
     class IteratorImpl : public Iterator {
         friend class ArrayListImpl;
-        
+
         IteratorImpl(const std::vector<Value>* v)
             : vec_(v)
             , itr_(v->begin()) {}
-    
+
      public:
         bool hasNext() const {
             return itr_ != vec_->end();
         }
-        
+
         Value next() {
             Value v = *itr_;
             ++itr_;
             return v;
         }
-        
+
      private:
         const std::vector<Value>* vec_;
         std::vector<Value>::const_iterator itr_;

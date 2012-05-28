@@ -12,4 +12,4 @@ class Set : LIBJ_COLLECTION(Set)
 
 }  // namespace libj
 
-#endif  // LIBJ_LIST_H_
+#endif  // LIBJ_SET_H_

@@ -34,7 +34,7 @@ TEST(GTestSet, TestIterator) {
     Set::Ptr s = Set::create();
     s->add(123);
     s->add(456);
-    
+
     int v1, v2;
     Iterator::Ptr itr = s->iterator();
     ASSERT_TRUE(itr->hasNext());

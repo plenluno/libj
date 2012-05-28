@@ -15,7 +15,7 @@ class JsObject : LIBJ_MAP(JsObject)
         typename Type<T>::Ptr p = toPtr<T>(v);
         return p;
     }
-    
+
     template<typename T>
     typename Type<T>::CPtr getCPtr(String::CPtr name) const {
         Value v = get(name);
@@ -32,10 +32,10 @@ class JsObject : LIBJ_MAP(JsObject)
 
 #define LIBJ_JS_OBJECT_IMPL(JO) \
     LIBJ_MAP_IMPL(JO) \
- public: \
+public: \
     String::CPtr toString() const { \
         return JO->toString(); \
-    }    
+    }
 
 }  // namespace libj
 

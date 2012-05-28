@@ -16,13 +16,13 @@ class Object
     , private boost::noncopyable {
  public:
     typedef LIBJ_CPTR(Object) CPtr;
-    
+
     virtual TypeId type() const = 0;
 
     virtual bool instanceOf(TypeId id) const {
         return id == Type<Object>::id();
     }
-    
+
     virtual Int compareTo(LIBJ_CPTR(Object) that) const {
         if (!that)
             return 1;

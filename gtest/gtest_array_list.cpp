@@ -33,7 +33,7 @@ TEST(GTestArrayList, TestAddAndGet) {
     a->add(123);
     a->add(456);
     a->add(1, 789);
-    
+
     int v;
     to<int>(a->get(0), &v);
     ASSERT_EQ(v, 123);
@@ -49,7 +49,7 @@ TEST(GTestArrayList, TestSet) {
     a->add(456);
     a->set(0, 234);
     a->set(1, 567);
-    
+
     int v;
     to<int>(a->get(0), &v);
     ASSERT_EQ(v, 234);
@@ -63,7 +63,7 @@ TEST(GTestArrayList, TestRemove) {
     a->add(123);
     a->add(456);
     a->remove(0);
-    
+
     int v;
     to<int>(a->get(0), &v);
     ASSERT_EQ(v, 456);
@@ -77,7 +77,7 @@ TEST(GTestArrayList, TestRemove2) {
     a->add(789);
     ASSERT_TRUE(a->remove(static_cast<Value>(456)));
     ASSERT_FALSE(a->remove(static_cast<Value>(567)));
-    
+
     int v;
     to<int>(a->get(1), &v);
     ASSERT_EQ(v, 789);
@@ -90,7 +90,7 @@ TEST(GTestArrayList, TestClear) {
     a->add(123);
     a->add(456);
     a->clear();
-    
+
     Error::CPtr e;
     to<Error::CPtr>(a->get(0), &e);
     ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
@@ -99,7 +99,7 @@ TEST(GTestArrayList, TestClear) {
 
 TEST(GTestArrayList, TestError) {
     ArrayList::Ptr a = ArrayList::create();
-    
+
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
     ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
@@ -110,7 +110,7 @@ TEST(GTestArrayList, TestIterator) {
     ArrayList::Ptr a = ArrayList::create();
     a->add(123);
     a->add(456);
-    
+
     int v;
     Iterator::Ptr itr = a->iterator();
     ASSERT_TRUE(itr->hasNext());

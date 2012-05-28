@@ -81,7 +81,7 @@ if(LIBJ_USE_BDW_GC)
         ${libj-deps}
     )
     set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-fno-rtti -fno-exceptions -DLIBJ_USE_BDW_GC")
+        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions -DLIBJ_USE_BDW_GC")
 else(LIBJ_USE_BDW_GC)
     add_library(j STATIC
         ${libj-src}
@@ -90,7 +90,7 @@ else(LIBJ_USE_BDW_GC)
         ${libj-deps}
     )
     set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-fno-rtti -fno-exceptions")
+        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
 endif(LIBJ_USE_BDW_GC)
 
 # gtest
@@ -119,5 +119,5 @@ if(LIBJ_USE_GTEST)
         ${libj-deps}
     )
     set_target_properties(libj-gtest
-        PROPERTIES COMPILE_FLAGS "-DLIBJ_GTEST_BUILD_ERRORS")
+        PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS")
 endif(LIBJ_USE_GTEST)

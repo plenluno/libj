@@ -23,7 +23,7 @@ class AddImpl : public Add {
             return Error::create(Error::ILLEGAL_ARGUMENT);
         }
     }
-    
+
     static Add::Ptr create() {
         Add::Ptr p(new AddImpl());
         return p;
@@ -60,4 +60,4 @@ TEST(GTestFunction, TestUseCount) {
 }
 #endif
 
-}
+}  // namespace libj

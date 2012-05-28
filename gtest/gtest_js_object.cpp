@@ -14,13 +14,13 @@ class XObjImpl : public XObj {
         Ptr p(new XObjImpl());
         return p;
     }
-    
+
  private:
     JsObject::Ptr jo_;
-    
+
     XObjImpl()
         : jo_(JsObject::create()) {}
-    
+
     LIBJ_JS_OBJECT_IMPL(jo_);
 };
 
@@ -34,7 +34,7 @@ TEST(GTestObject, TestGetCPtr) {
     String::CPtr abc = String::create("abc");
     obj->put(abc, abc);
     ASSERT_EQ(obj->getCPtr<String>(abc)->compareTo(abc), 0);
-    
+
     XObj::Ptr xobj = XObj::create();
     xobj->put(abc, abc);
     ASSERT_EQ(xobj->getCPtr<String>(abc)->compareTo(abc), 0);

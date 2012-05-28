@@ -95,7 +95,7 @@ TEST(GTestAny, Test) {
     i = boost::any_cast<const int>(a);
     ASSERT_EQ(i, 5);
 
-    ASSERT_ANY_THROW(int64_t l = boost::any_cast<int64_t>(a));
+    ASSERT_ANY_THROW(boost::any_cast<int64_t>(a));
 }
 
 TEST(GTestValue, Test2) {
@@ -134,7 +134,7 @@ TEST(GTestAny, Test3) {
     int* ip = boost::any_cast<int*>(a);
     ASSERT_EQ(ip, &i);
 
-    ASSERT_ANY_THROW(const int* cip = boost::any_cast<const int*>(a));
+    ASSERT_ANY_THROW(boost::any_cast<const int*>(a));
 }
 
 TEST(GTestValue, Test4) {
@@ -153,7 +153,7 @@ TEST(GTestAny, Test4) {
     const int i = 11;
     boost::any a = &i;
 
-    ASSERT_ANY_THROW(int* ip = boost::any_cast<int*>(a));
+    ASSERT_ANY_THROW(boost::any_cast<int*>(a));
 
     const int* cip = boost::any_cast<const int*>(a);
     ASSERT_EQ(cip, &i);
@@ -216,7 +216,7 @@ TEST(GTestAny, Test6) {
     i = boost::any_cast<const int>(a);
     ASSERT_EQ(i, 3);
 
-    ASSERT_ANY_THROW(int64_t l = boost::any_cast<int64_t>(a));
+    ASSERT_ANY_THROW(boost::any_cast<int64_t>(a));
 }
 
 TEST(GTestValue, Test7) {
@@ -297,7 +297,7 @@ TEST(GTestValue, TestInstanceOf) {
     ASSERT_TRUE(v.instanceOf(Type<Immutable>::id()));
     ASSERT_TRUE(v.instanceOf(Type<Object>::id()));
     ASSERT_FALSE(v.instanceOf(Type<int>::id()));
-    
+
     v = 1;
     ASSERT_FALSE(v.instanceOf(Type<Object>::id()));
     ASSERT_FALSE(v.instanceOf(Type<int>::id()));
@@ -307,9 +307,9 @@ TEST(GTestValue, TestSingletonToPtrAndCPtr) {
     Null::Ptr null = Null::instance();
     Null::CPtr cnull = Null::instance();
     String::CPtr str = String::create("null");
-    
+
     Value v = null;
-    
+
     Null::Ptr n = toPtr<Null>(v);
     ASSERT_EQ(n->toString()->compareTo(str), 0);
     Null::CPtr cn = toCPtr<Null>(v);
@@ -326,9 +326,9 @@ TEST(GTestValue, TestSingletonToPtrAndCPtr) {
     ASSERT_EQ(s->toString()->compareTo(str), 0);
     Singleton::CPtr cs = toCPtr<Singleton>(v);
     ASSERT_EQ(cs->toString()->compareTo(str), 0);
-    
+
     v = cnull;
-    
+
     n = toPtr<Null>(v);
     ASSERT_FALSE(n);
     cn = toCPtr<Null>(v);
@@ -352,9 +352,9 @@ TEST(GTestValue, TestMutableToPtrAndCPtr) {
     ArrayList::CPtr carr = arr;
     arr->add(1);
     arr->add(2);
-    
+
     Value v = arr;
-    
+
     ArrayList::Ptr a = toPtr<ArrayList>(v);
     ASSERT_EQ(a->size(), 2);
     ArrayList::CPtr ca = toCPtr<ArrayList>(v);
@@ -371,9 +371,9 @@ TEST(GTestValue, TestMutableToPtrAndCPtr) {
     ASSERT_FALSE(s);
     Singleton::CPtr cs = toCPtr<Singleton>(v);
     ASSERT_FALSE(cs);
-    
+
     v = carr;
-    
+
     a = toPtr<ArrayList>(v);
     ASSERT_FALSE(a);
     ca = toCPtr<ArrayList>(v);
@@ -396,7 +396,7 @@ TEST(GTestValue, TestMutableToPtrAndCPtr) {
 TEST(GTestValue, TestImmutableToCPtr) {
     String::CPtr str = String::create("abc");
     Value v = str;
-    
+
     String::CPtr x = toCPtr<String>(v);
     ASSERT_EQ(x->compareTo(str), 0);
     Object::CPtr co = toCPtr<Object>(v);
@@ -418,11 +418,11 @@ TEST(GTestValue, TestCompareTo) {
     Value v2 = 10;
     Value v3 = 5;
     Value v4 = (Long)5;
-    
-    ASSERT_TRUE(v1.compareTo(v2) < 0);
-    ASSERT_TRUE(v2.compareTo(v1) > 0);
-    ASSERT_TRUE(v1.compareTo(v3) == 0);
-    ASSERT_TRUE(v1.compareTo(v4) != 0);
+
+    ASSERT_LT(v1.compareTo(v2), 0);
+    ASSERT_GT(v2.compareTo(v1), 0);
+    ASSERT_EQ(v1.compareTo(v3), 0);
+    ASSERT_NE(v1.compareTo(v4), 0);
 }
 
 }  // namespace libj

@@ -1,5 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#include <sstream>
+
 #include "libj/json.h"
 #include "libj/js_array.h"
 #include "libj/js_function.h"
@@ -8,7 +10,6 @@
 #include "libj/null.h"
 #include "libj/string_buffer.h"
 #include "json/json.h"
-#include <sstream>
 
 namespace libj {
 namespace json {
@@ -29,7 +30,7 @@ static Value toLibjValue(const Json::Value& val) {
     } else if (val.isDouble()) {
         return val.asDouble();
     } else if (val.isString()) {
-        // TODO: UTF8 encoding
+        // TODO(plenluno): UTF8 encoding
         return String::create(val.asCString());
     } else if (val.isArray()) {
         JsArray::Ptr a = JsArray::create();
@@ -48,6 +49,9 @@ static Value toLibjValue(const Json::Value& val) {
             jo->put(k, v);
         }
         return jo;
+    } else {
+        // TODO(plenluno): return Undefined::instance()
+        return 0;
     }
 }
 

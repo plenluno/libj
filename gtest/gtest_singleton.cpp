@@ -11,7 +11,7 @@ class GTestSingleton : LIBJ_SINGLETON(GTestSingleton)
 class GTestSingletonX {
  public:
     virtual ~GTestSingletonX() {}
-    virtual int x() {}
+    virtual int x() { return 0; }
 };
 
 TEST(GTestSingleton, Test) {

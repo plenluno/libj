@@ -10,16 +10,16 @@ class StringBufferImpl : public StringBuffer {
         Ptr p(new StringBufferImpl());
         return p;
     }
-    
+
     Size length() const {
         return str_->length();
     }
-    
+
     Char charAt(Size n) const {
         return str_->charAt(n);
     }
-    
-    // TODO: make it more efficient
+
+    // TODO(plenluno): make it more efficient
     bool append(const Value& val) {
         String::CPtr s = String::valueOf(val);
         if (s) {
@@ -29,14 +29,14 @@ class StringBufferImpl : public StringBuffer {
             return false;
         }
     }
-    
+
     String::CPtr toString() const {
         return str_->toString();
     }
-    
+
  private:
     StringBufferImpl() : str_(String::create()) {}
-    
+
     String::CPtr str_;
 };
 

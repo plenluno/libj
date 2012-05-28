@@ -1,7 +1,8 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include <string>
 #include <stdio.h>
+#include <string>
+
 #include "libj/string.h"
 #include "cvtutf/ConvertUTF.h"
 
@@ -12,20 +13,23 @@ const int ConvertBufferSize = 32;
 const ConversionFlags ConvertFlag = lenientConversion;
 
 template<typename T>
-ConversionResult convertToUtf32(const T**, size_t*, UTF32**, UTF32*, ConversionFlags);
+ConversionResult convertToUtf32(
+    const T**, size_t*, UTF32**, UTF32*, ConversionFlags);
 
 template<>
 ConversionResult convertToUtf32(
-    const UTF8** sourceStart, size_t* nChar, 
+    const UTF8** sourceStart, size_t* nChar,
     UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags) {
-    return nConvertUTF8toUTF32(sourceStart, nChar, targetStart, targetEnd, flags);
+    return nConvertUTF8toUTF32(
+        sourceStart, nChar, targetStart, targetEnd, flags);
 }
 
 template<>
 ConversionResult convertToUtf32(
-    const UTF16** sourceStart, size_t* nChar, 
+    const UTF16** sourceStart, size_t* nChar,
     UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags) {
-    return nConvertUTF16toUTF32(sourceStart, nChar, targetStart, targetEnd, flags);
+    return nConvertUTF16toUTF32(
+        sourceStart, nChar, targetStart, targetEnd, flags);
 }
 
 template<typename T>
@@ -202,7 +206,7 @@ class StringImpl : public String {
     }
 
     Size indexOf(CPtr other, Size offset) const {
-        // TODO(PL): make it more efficient
+        // TODO(plenluno): make it more efficient
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < offset + len2)
@@ -228,7 +232,7 @@ class StringImpl : public String {
     }
 
     Size lastIndexOf(CPtr other, Size offset) const {
-        // TODO(PL): make it more efficient
+        // TODO(plenluno): make it more efficient
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < offset + len2)
@@ -251,7 +255,7 @@ class StringImpl : public String {
     bool isAscii() const {
         return str8_ ? true : str32_ ? false : true;
     }
-    
+
     CPtr toLowerCase() const {
         Size len = length();
         if (isAscii()) {
@@ -276,7 +280,7 @@ class StringImpl : public String {
             return p;
         }
     }
-    
+
     CPtr toUpperCase() const {
         Size len = length();
         if (isAscii()) {
@@ -301,7 +305,7 @@ class StringImpl : public String {
             return p;
         }
     }
-    
+
     std::string toStdString() const {
         if (isAscii()) {
             return (str8_)? *str8_ : std::string();
@@ -398,12 +402,12 @@ class StringImpl : public String {
         }
         str32_ = new Str32(data, count);
     }
-    
+
     StringImpl(Str8* s8, Str32* s32)
         : str8_(s8)
         , str32_(s32) {
     }
-    
+
     StringImpl(const StringImpl* s)
         : str8_(s->str8_ ? new Str8(*(s->str8_)) : 0)
         , str32_(s->str32_ ? new Str32(*(s->str32_)) : 0) {
@@ -436,27 +440,27 @@ static String::CPtr booleanToString(const Value& val) {
 static String::CPtr byteToString(const Value& val) {
     Byte b;
     to<Byte>(val, &b);
-    const Size len = (8 / 3) + 3;
-    char s[len];
-    snprintf(s, len, "%d", b);
+    const Size kLen = (8 / 3) + 3;
+    char s[kLen];
+    snprintf(s, kLen, "%d", b);
     return String::create(s);
 }
 
 static String::CPtr shortToString(const Value& val) {
     Short sh;
     to<Short>(val, &sh);
-    const Size len = (16 / 3) + 3;
-    char s[len];
-    snprintf(s, len, "%d", sh);
+    const Size kLen = (16 / 3) + 3;
+    char s[kLen];
+    snprintf(s, kLen, "%d", sh);
     return String::create(s);
 }
 
 static String::CPtr intToString(const Value& val) {
     Int i;
     to<Int>(val, &i);
-    const Size len = (32 / 3) + 3;
-    char s[len];
-    snprintf(s, len, "%d", i);
+    const Size kLen = (32 / 3) + 3;
+    char s[kLen];
+    snprintf(s, kLen, "%d", i);
     String::CPtr p = String::create(s);
     return p;
 }
@@ -464,36 +468,36 @@ static String::CPtr intToString(const Value& val) {
 static String::CPtr longToString(const Value& val) {
     Long l;
     to<Long>(val, &l);
-    const Size len = (64 / 3) + 3;
-    char s[len];
-    snprintf(s, len, "%lld", l);
+    const Size kLen = (64 / 3) + 3;
+    char s[kLen];
+    snprintf(s, kLen, "%lld", l);
     return String::create(s);
 }
 
 static String::CPtr floatToString(const Value& val) {
     Float f;
     to<Float>(val, &f);
-    const Size len = (32 / 3) + 5;
-    char s[len];
-    snprintf(s, len, "%f", f);
+    const Size kLen = (32 / 3) + 5;
+    char s[kLen];
+    snprintf(s, kLen, "%f", f);
     return String::create(s);
 }
 
 static String::CPtr doubleToString(const Value& val) {
     Double d;
     to<Double>(val, &d);
-    const Size len = (64 / 3) + 5;
-    char s[len];
-    snprintf(s, len, "%lf", d);
+    const Size kLen = (64 / 3) + 5;
+    char s[kLen];
+    snprintf(s, kLen, "%lf", d);
     return String::create(s);
 }
 
 static String::CPtr sizeToString(const Value& val) {
     Size n;
     to<Size>(val, &n);
-    const Size len = (sizeof(Size) / 3) + 3;
-    char s[len];
-    snprintf(s, len, "%zd", n);
+    const Size kLen = (sizeof(Size) / 3) + 3;
+    char s[kLen];
+    snprintf(s, kLen, "%zd", n);
     String::CPtr p = String::create(s);
     return p;
 }
@@ -501,18 +505,18 @@ static String::CPtr sizeToString(const Value& val) {
 static String::CPtr typeIdToString(const Value& val) {
     TypeId t;
     to<TypeId>(val, &t);
-    const Size len = (sizeof(TypeId) / 3) + 3;
-    char s[len];
-    snprintf(s, len, "%zd", t);
+    const Size kLen = (sizeof(TypeId) / 3) + 3;
+    char s[kLen];
+    snprintf(s, kLen, "%zd", t);
     String::CPtr p = String::create(s);
     return p;
 }
 
 static String::CPtr objectToString(const Value& val) {
     Object::CPtr o = toCPtr<Object>(val);
-    if (o)
+    if (o) {
         return o->toString();
-    else {
+    } else {
         LIBJ_NULL_CPTR(String, nullp);
         return nullp;
     }
