@@ -1,0 +1,3 @@
+[submodule "tools/cpplint"]
+	path = tools/cpplint
+	url = https://github.com/plenluno/cpplint.git
