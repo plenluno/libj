@@ -425,4 +425,24 @@ TEST(GTestValue, TestCompareTo) {
     ASSERT_NE(v1.compareTo(v4), 0);
 }
 
+struct GTestValueStruct {};
+
+TEST(GTestValue, TestType) {
+    int i = 3;
+    Value v1 = i;
+    const Value v2 = v1;
+    Value v3 = v2;
+    ASSERT_EQ(v3.type(), Type<int>::id());
+    
+    GTestValueStruct x;
+    GTestValueStruct* y;
+    
+    Value v4 = &x;
+    const Value& v5 = v4;
+    const Value v6 = v5;
+    ASSERT_EQ(v6.type(), Type<GTestValueStruct*>::id());
+    ASSERT_TRUE(to<GTestValueStruct*>(v6, &y));
+    ASSERT_EQ(y, &x);
+}
+
 }  // namespace libj
