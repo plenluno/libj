@@ -134,7 +134,7 @@ class StringImpl : public String {
             s->str32_ = new Str32();
             Size len = this->length();
             for (Size i = 0; i < len; i++)
-                s->str32_->push_back(other->charAt(i));
+                s->str32_->push_back(this->charAt(i));
             len = other->length();
             for (Size i = 0; i < len; i++)
                 s->str32_->push_back(other->charAt(i));
@@ -142,14 +142,14 @@ class StringImpl : public String {
             return p;
         } else if (this->str32_ && other->isAscii()) {
             StringImpl* s = new StringImpl(str32_);
-            Size len = this->length();
+            Size len = other->length();
             for (Size i = 0; i < len; i++)
                 s->str32_->push_back(other->charAt(i));
             CPtr p(s);
             return p;
         } else {  // if (this->str32_ && !other->isAscii())
             StringImpl* s = new StringImpl(str32_);
-            Size len = this->length();
+            Size len = other->length();
             for (Size i = 0; i < len; i++)
                 s->str32_->push_back(other->charAt(i));
             CPtr p(s);
@@ -418,7 +418,18 @@ class StringImpl : public String {
         delete str8_;
         delete str32_;
     }
+
+    const Str8* getStr8() const;
+    const Str32* getStr32() const;
 };
+
+const StringImpl::Str8* StringImpl::getStr8() const {
+    return str8_;
+}
+
+const StringImpl::Str32* StringImpl::getStr32() const {
+    return str32_;
+}
 
 String::CPtr String::create() {
     return StringImpl::create();
