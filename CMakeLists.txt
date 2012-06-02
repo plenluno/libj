@@ -44,7 +44,6 @@ set(libj-src-common
     src/array_list.cpp
     src/console.cpp
     src/error.cpp
-    src/exception.cpp
     src/json.cpp
     src/js_object.cpp
     src/linked_list.cpp
@@ -59,6 +58,7 @@ set(libj-src-common
 if(LIBJ_USE_EXCEPTION)
 set(libj-src
     ${libj-src-common}
+    src/exception.cpp
 )
 else(LIBJ_USE_EXCEPTION)
 set(libj-src
