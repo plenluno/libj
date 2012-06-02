@@ -46,8 +46,9 @@ class StringBufferImpl : public StringBuffer {
     }
 
     String::CPtr toString() const {
-        if (strs_.size()) {
-            join();
+        if (length_) {
+            if (strs_.size())
+                join();
             if (ascii_)
                 return String::create(buf8_->c_str(), String::ASCII, length_);
             else

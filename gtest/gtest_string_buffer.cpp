@@ -13,6 +13,7 @@ TEST(GTestStringBuffer, TestToString) {
     sb->append(s1);
     sb->append(s2);
     ASSERT_EQ(sb->toString()->compareTo(s3), 0);
+    ASSERT_EQ(sb->toString()->compareTo(s3), 0);
 }
 
 TEST(GTestStringBuffer, TestToString2) {
