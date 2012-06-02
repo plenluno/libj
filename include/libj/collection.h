@@ -3,7 +3,6 @@
 #ifndef LIBJ_COLLECTION_H_
 #define LIBJ_COLLECTION_H_
 
-#include "libj/mutable.h"
 #include "libj/iterator.h"
 
 namespace libj {
@@ -12,10 +11,9 @@ class Collection : LIBJ_MUTABLE(Collection)
  public:
     virtual Size size() const = 0;
     virtual void clear() = 0;
-    virtual bool add(const Value& val) = 0;
-    virtual bool remove(const Value& val) = 0;
+    virtual Boolean add(const Value& val) = 0;
+    virtual Boolean remove(const Value& val) = 0;
     virtual Iterator::Ptr iterator() const = 0;
-    // and so on
 };
 
 #define LIBJ_COLLECTION(T) public libj::Collection { \

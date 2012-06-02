@@ -20,7 +20,7 @@ class StringBufferImpl : public StringBuffer {
     }
 
     // TODO(plenluno): make it more efficient
-    bool append(const Value& val) {
+    Boolean append(const Value& val) {
         String::CPtr s = String::valueOf(val);
         if (s) {
             str_ = str_->concat(s);

@@ -8,6 +8,8 @@
 namespace libj {
 
 class Set : LIBJ_COLLECTION(Set)
+ public:
+    static Ptr create();
 };
 
 }  // namespace libj

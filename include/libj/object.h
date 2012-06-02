@@ -4,8 +4,8 @@
 #define LIBJ_OBJECT_H_
 
 #include <boost/utility.hpp>
+
 #include "libj/type.h"
-#include "libj/pointer.h"
 
 namespace libj {
 
@@ -19,7 +19,7 @@ class Object
 
     virtual TypeId type() const = 0;
 
-    virtual bool instanceOf(TypeId id) const {
+    virtual Boolean instanceOf(TypeId id) const {
         return id == Type<Object>::id();
     }
 

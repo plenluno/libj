@@ -54,7 +54,7 @@ class Value {
     }
 
  public:
-    bool empty() const {
+    Boolean isEmpty() const {
         return !content;
     }
 
@@ -62,15 +62,15 @@ class Value {
         return content ? content->type() : Type<void>::id();
     }
 
-    bool instanceOf(TypeId id) const {
+    Boolean instanceOf(TypeId id) const {
         return content ? content->instanceOf(id) : false;
     }
 
-    bool isCPtr() const {
+    Boolean isCPtr() const {
         return content ? content->isCPtr() : false;
     }
 
-    int compareTo(Value val) const {
+    Int compareTo(Value val) const {
         if (content) {
             if (val.content)
                 return content->compareTo(val.content);
@@ -90,19 +90,19 @@ class Value {
      public:
         virtual TypeId type() const = 0;
 
-        virtual bool instanceOf(TypeId id) const = 0;
+        virtual Boolean instanceOf(TypeId id) const = 0;
 
-        virtual bool isCPtr() const = 0;
+        virtual Boolean isCPtr() const = 0;
 
-        virtual int compareTo(placeholder * other) const = 0;
+        virtual Int compareTo(placeholder * other) const = 0;
 
         virtual placeholder * clone() const = 0;
     };
 
     template<
         typename ValueType,
-        bool IsObject = Classify<ValueType>::isObject,
-        bool IsCPtr   = Classify<ValueType>::isCPtr>
+        Boolean IsObject = Classify<ValueType>::isObject,
+        Boolean IsCPtr   = Classify<ValueType>::isCPtr>
     class holder : public placeholder {
      public:
         holder(const ValueType & value)
@@ -114,15 +114,15 @@ class Value {
             return Type<ValueType>::id();
         }
 
-        virtual bool instanceOf(TypeId id) const {
+        virtual Boolean instanceOf(TypeId id) const {
             return held ? held->instanceOf(id) : false;
         }
 
-        virtual bool isCPtr() const {
+        virtual Boolean isCPtr() const {
             return IsCPtr;
         }
 
-        virtual int compareTo(placeholder * that) const {
+        virtual Int compareTo(placeholder * that) const {
             TypeId thisId = this->type();
             TypeId thatId = that->type();
             if (thisId == thatId) {
@@ -161,15 +161,15 @@ class Value {
             return Type<ValueType>::id();
         }
 
-        virtual bool instanceOf(TypeId id) const {
+        virtual Boolean instanceOf(TypeId id) const {
             return false;
         }
 
-        virtual bool isCPtr() const {
+        virtual Boolean isCPtr() const {
             return true;
         }
 
-        virtual int compareTo(placeholder * that) const {
+        virtual Int compareTo(placeholder * that) const {
             TypeId thisId = this->type();
             TypeId thatId = that->type();
             if (thisId == thatId) {
@@ -198,7 +198,10 @@ class Value {
 
  private:
     template<typename ValueType>
-    friend bool to(Value * operand, ValueType** out, bool instanceof = false);
+    friend Boolean to(
+        Value * operand,
+        ValueType** out,
+        Boolean instanceof = false);
 
     placeholder * content;
 };
@@ -225,7 +228,7 @@ class remove_reference_and_const {
 };
 
 template<typename ValueType>
-bool to(Value* operand, ValueType** out, bool instanceof) {
+Boolean to(Value* operand, ValueType** out, Boolean instanceof) {
     if (operand && (operand->type() == Type<ValueType>::id() || instanceof)) {
         Value::holder<ValueType>* content =
             static_cast<Value::holder<ValueType>*>(operand->content);
@@ -237,10 +240,10 @@ bool to(Value* operand, ValueType** out, bool instanceof) {
 }
 
 template<typename ValueType>
-inline bool to(
+inline Boolean to(
     const Value* operand,
     const ValueType** out,
-    bool instanceof = false) {
+    Boolean instanceof = false) {
     typedef typename remove_const<ValueType>::type NonConst;
     return to<NonConst>(
         const_cast<Value*>(operand),
@@ -249,10 +252,10 @@ inline bool to(
 }
 
 template<typename ValueType>
-bool to(
+Boolean to(
     const Value & operand,
     typename remove_reference_and_const<ValueType>::type* out,
-    bool instanceof = false) {
+    Boolean instanceof = false) {
     typedef typename remove_reference_and_const<ValueType>::type NonRefConst;
     NonRefConst* result;
     if (to<NonRefConst>(&const_cast<Value&>(operand), &result, instanceof)) {

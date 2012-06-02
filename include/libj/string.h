@@ -4,7 +4,9 @@
 #define LIBJ_STRING_H_
 
 #include <string>
+
 #include "libj/immutable.h"
+#include "libj/value.h"
 
 namespace libj {
 
@@ -20,22 +22,22 @@ class String : LIBJ_IMMUTABLE(String)
         UTF32,
     };
 
-    static CPtr create(const void*, Encoding = ASCII, Size = NO_POS);
+    static CPtr create(const void* = 0, Encoding = ASCII, Size = NO_POS);
     static CPtr valueOf(const Value&);
 
     virtual Size length() const = 0;
     virtual Char charAt(Size) const = 0;
+    virtual CPtr concat(CPtr) const = 0;
     virtual CPtr substring(Size) const = 0;
     virtual CPtr substring(Size, Size) const = 0;
-    virtual CPtr concat(CPtr) const = 0;
-    virtual bool startsWith(CPtr, Size = 0) const = 0;
-    virtual bool endsWith(CPtr) const = 0;
     virtual Size indexOf(Char, Size = 0) const = 0;
     virtual Size indexOf(CPtr, Size = 0) const = 0;
     virtual Size lastIndexOf(Char, Size = NO_POS) const = 0;
     virtual Size lastIndexOf(CPtr, Size = NO_POS) const = 0;
-    virtual bool isEmpty() const = 0;
-    virtual bool isAscii() const = 0;
+    virtual Boolean isEmpty() const = 0;
+    virtual Boolean isAscii() const = 0;
+    virtual Boolean startsWith(CPtr, Size = 0) const = 0;
+    virtual Boolean endsWith(CPtr) const = 0;
     virtual CPtr toLowerCase() const = 0;
     virtual CPtr toUpperCase() const = 0;
     virtual std::string toStdString() const = 0;

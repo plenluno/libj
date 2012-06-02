@@ -7,30 +7,31 @@
 namespace libj {
 
 class GTestMutable : LIBJ_MUTABLE(GTestMutable)
-};
-
-class GTestMutableImpl : public GTestMutable {
  public:
-    GTestMutable::Ptr clone() const {
-        return GTestMutable::create();
-    }
-
     String::CPtr toString() const {
         String::CPtr p(String::create());
         return p;
     }
 
     static int count;
+    static Ptr create();
 
-    GTestMutableImpl() : GTestMutable() { count++; }
-    ~GTestMutableImpl() { count--; }
+ private:
+    GTestMutable() { count++; }
+
+ public:
+    ~GTestMutable() { count--; }
 };
 
-int GTestMutableImpl::count = 0;
+int GTestMutable::count = 0;
 
 GTestMutable::Ptr GTestMutable::create() {
-    GTestMutable::Ptr p(new GTestMutableImpl);
+    GTestMutable::Ptr p(new GTestMutable);
     return p;
+}
+
+GTestMutable::Ptr GTestMutable::clone() const {
+    return GTestMutable::create();
 }
 
 #ifdef LIBJ_GTEST_BUILD_ERRORS
@@ -68,7 +69,7 @@ class GTestMutableX {
 TEST(GTestMutable, Test) {
     // check EBCO
     ASSERT_EQ(
-        sizeof(GTestMutableImpl),
+        sizeof(GTestMutable),
         sizeof(GCBase) + sizeof(GTestMutableX));
 }
 
@@ -94,18 +95,18 @@ TEST(GTestMutable, Test4) {
     {
         GTestMutable::Ptr p = GTestMutable::create();
         ASSERT_EQ(p.use_count(), 1);
-        ASSERT_EQ(GTestMutableImpl::count, 1);
+        ASSERT_EQ(GTestMutable::count, 1);
 
         GTestMutable::Ptr p2 = GTestMutable::create();
         ASSERT_EQ(p2.use_count(), 1);
-        ASSERT_EQ(GTestMutableImpl::count, 2);
+        ASSERT_EQ(GTestMutable::count, 2);
 
         p = p2;
         ASSERT_EQ(p.use_count(), 2);
         ASSERT_EQ(p2.use_count(), 2);
-        ASSERT_EQ(GTestMutableImpl::count, 1);
+        ASSERT_EQ(GTestMutable::count, 1);
     }
-    ASSERT_EQ(GTestMutableImpl::count, 0);
+    ASSERT_EQ(GTestMutable::count, 0);
 }
 #endif
 

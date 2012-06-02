@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <libj/set.h>
+#include <libj/string.h>
 
 namespace libj {
 

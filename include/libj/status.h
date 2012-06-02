@@ -3,12 +3,11 @@
 #ifndef LIBJ_STATUS_H_
 #define LIBJ_STATUS_H_
 
-#include "libj/immutable.h"
 #include "libj/string.h"
 
 namespace libj {
 
-class Status : LIBJ_IMMUTABLE_WITHOUT_CREATE(Status)
+class Status : LIBJ_IMMUTABLE(Status)
  public:
     enum Code {
         OK
@@ -21,7 +20,7 @@ class Status : LIBJ_IMMUTABLE_WITHOUT_CREATE(Status)
 };
 
 #define LIBJ_STATUS(T) public libj::Status { \
-    LIBJ_IMMUTABLE_DECLS_WITHOUT_CREATE(T, libj::Status)
+    LIBJ_IMMUTABLE_DECLS(T, libj::Status)
 
 #define LIBJ_STATUS_IMPL(S) \
 public: \

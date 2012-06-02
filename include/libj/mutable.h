@@ -3,9 +3,8 @@
 #ifndef LIBJ_MUTABLE_H_
 #define LIBJ_MUTABLE_H_
 
-#include "libj/value.h"
-#include "libj/object.h"
 #include "libj/gc_base.h"
+#include "libj/object.h"
 
 namespace libj {
 
@@ -17,7 +16,7 @@ class Mutable
     typedef LIBJ_PTR(Mutable) Ptr;
     typedef LIBJ_CPTR(Mutable) CPtr;
 
-    bool instanceOf(TypeId id) const {
+    Boolean instanceOf(TypeId id) const {
         return id == Type<Mutable>::id()
             || Object::instanceOf(id);
     }
@@ -28,25 +27,20 @@ class Mutable
     libj::TypeId type() const { \
         return libj::Type<T>::id(); \
     } \
-    bool instanceOf(libj::TypeId id) const { \
+    Boolean instanceOf(libj::TypeId id) const { \
         return id == libj::Type<T>::id() \
             || B::instanceOf(id); \
     }
 
-#define LIBJ_MUTABLE_DECLS_WITHOUT_CREATE(T, B) public: \
+#define LIBJ_MUTABLE_DECLS(T, B) public: \
     typedef LIBJ_PTR(T) Ptr; \
     typedef LIBJ_CPTR(T) CPtr; \
     LIBJ_MUTABLE_METHODS(T, B)
-    
-#define LIBJ_MUTABLE_DECLS(T, B) \
-    LIBJ_MUTABLE_DECLS_WITHOUT_CREATE(T, B) \
-    static Ptr create();
 
 #define LIBJ_MUTABLE_TEMPLATE_DECLS(T, B) public: \
     typedef LIBJ_PTR_TYPE(T) Ptr; \
     typedef LIBJ_CPTR_TYPE(T) CPtr; \
     LIBJ_MUTABLE_METHODS(T, B) \
-    static Ptr create();
 
 #define LIBJ_MUTABLE(T) public libj::Mutable { \
     LIBJ_MUTABLE_DECLS(T, libj::Mutable)

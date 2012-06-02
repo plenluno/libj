@@ -15,7 +15,6 @@ class List : LIBJ_COLLECTION(List)
     virtual Value get(Size) const = 0;
     virtual Boolean remove(const Value&) = 0;
     virtual Value remove(Size) = 0;
-    // and so on
 };
 
 #define LIBJ_LIST(T) public libj::List { \
@@ -41,7 +40,6 @@ public: \
     Value remove(Size i) { \
         return L->remove(i); \
     }
-
 
 }  // namespace libj
 

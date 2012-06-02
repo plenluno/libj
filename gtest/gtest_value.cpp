@@ -1,12 +1,11 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
+#include <boost/any.hpp>
 #include <libj/value.h>
 #include <libj/array_list.h>
-#include <libj/mutable.h>
 #include <libj/null.h>
 #include <libj/string.h>
-#include <boost/any.hpp>
 
 namespace libj {
 

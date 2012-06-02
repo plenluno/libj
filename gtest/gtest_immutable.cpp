@@ -7,9 +7,6 @@
 namespace libj {
 
 class GTestImmutable : LIBJ_IMMUTABLE(GTestImmutable)
-};
-
-class GTestImmutableImpl : public GTestImmutable {
  public:
     String::CPtr toString() const {
         String::CPtr p(String::create());
@@ -17,15 +14,19 @@ class GTestImmutableImpl : public GTestImmutable {
     }
 
     static int count;
+    static CPtr create();
 
-    GTestImmutableImpl() : GTestImmutable() { count++; }
-    ~GTestImmutableImpl() { count--; }
+ private:
+    GTestImmutable() { count++; }
+
+ public:
+    ~GTestImmutable() { count--; }
 };
 
-int GTestImmutableImpl::count = 0;
+int GTestImmutable::count = 0;
 
 GTestImmutable::CPtr GTestImmutable::create() {
-    GTestImmutable::CPtr p(new GTestImmutableImpl);
+    GTestImmutable::CPtr p(new GTestImmutable);
     return p;
 }
 
@@ -64,7 +65,7 @@ class GTestImmutableX {
 TEST(GTestImmutable, Test) {
     // check EBCO
     ASSERT_EQ(
-        sizeof(GTestImmutableImpl),
+        sizeof(GTestImmutable),
         sizeof(GCBase) + sizeof(GTestImmutableX));
 }
 
@@ -87,18 +88,18 @@ TEST(GTestImmutable, Test4) {
     {
         GTestImmutable::CPtr p = GTestImmutable::create();
         ASSERT_EQ(p.use_count(), 1);
-        ASSERT_EQ(GTestImmutableImpl::count, 1);
+        ASSERT_EQ(GTestImmutable::count, 1);
 
         GTestImmutable::CPtr p2 = GTestImmutable::create();
         ASSERT_EQ(p2.use_count(), 1);
-        ASSERT_EQ(GTestImmutableImpl::count, 2);
+        ASSERT_EQ(GTestImmutable::count, 2);
 
         p = p2;
         ASSERT_EQ(p.use_count(), 2);
         ASSERT_EQ(p2.use_count(), 2);
-        ASSERT_EQ(GTestImmutableImpl::count, 1);
+        ASSERT_EQ(GTestImmutable::count, 1);
     }
-    ASSERT_EQ(GTestImmutableImpl::count, 0);
+    ASSERT_EQ(GTestImmutable::count, 0);
 }
 #endif
 

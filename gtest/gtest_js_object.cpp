@@ -6,27 +6,19 @@
 namespace libj {
 
 class XObj : LIBJ_JS_OBJECT(XObj)
-};
-
-class XObjImpl : public XObj {
  public:
     static Ptr create() {
-        Ptr p(new XObjImpl());
+        Ptr p(new XObj());
         return p;
     }
 
  private:
     JsObject::Ptr jo_;
 
-    XObjImpl()
-        : jo_(JsObject::create()) {}
+    XObj() : jo_(JsObject::create()) {}
 
     LIBJ_JS_OBJECT_IMPL(jo_);
 };
-
-XObj::Ptr XObj::create() {
-    return XObjImpl::create();
-}
 
 
 TEST(GTestObject, TestGetCPtr) {

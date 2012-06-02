@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <map>
+
 #include "libj/map.h"
 #include "libj/null.h"
 #include "libj/string.h"
@@ -11,7 +12,7 @@ class MapImpl : public Map {
  private:
     class ValueComp {
      public:
-        bool operator() (const Value& lv, const Value& rv) const {
+        Boolean operator() (const Value& lv, const Value& rv) const {
             return lv.compareTo(rv) < 0;
         }
     };

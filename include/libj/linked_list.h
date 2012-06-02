@@ -8,6 +8,8 @@
 namespace libj {
 
 class LinkedList : LIBJ_LIST(LinkedList)
+ public:
+    static Ptr create();
 };
 
 #define LIBJ_LINKED_LIST(T) public libj::LinkedList { \

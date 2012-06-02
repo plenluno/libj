@@ -1,5 +1,6 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#include "libj/string.h"
 #include "libj/typed_array_list.h"
 
 namespace libj {
@@ -54,7 +55,7 @@ class TypedArrayListImpl : public TypedArrayList<T> {
         return list_->remove(i);
     }
 
-    bool remove(const Value& v) {
+    Boolean remove(const Value& v) {
         return list_->remove(v);
     }
 

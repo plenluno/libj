@@ -4,11 +4,14 @@
 #define LIBJ_JS_OBJECT_H_
 
 #include "libj/map.h"
+#include "libj/string.h"
 
 namespace libj {
 
 class JsObject : LIBJ_MAP(JsObject)
  public:
+    static Ptr create();
+
     template<typename T>
     typename Type<T>::Ptr getPtr(String::CPtr name) const {
         Value v = get(name);
@@ -26,9 +29,6 @@ class JsObject : LIBJ_MAP(JsObject)
 
 #define LIBJ_JS_OBJECT(T) public libj::JsObject { \
     LIBJ_MUTABLE_DECLS(T, libj::JsObject)
-
-#define LIBJ_JS_OBJECT_WITHOUT_CREATE(T) public libj::JsObject { \
-    LIBJ_MUTABLE_DECLS_WITHOUT_CREATE(T, libj::JsObject)
 
 #define LIBJ_JS_OBJECT_IMPL(JO) \
     LIBJ_MAP_IMPL(JO) \

@@ -13,12 +13,12 @@ class ArrayListImpl : public ArrayList {
         return vec_.size();
     }
 
-    bool add(const Value& v) {
+    Boolean add(const Value& v) {
         vec_.push_back(v);
         return true;
     }
 
-    bool add(Size i, const Value& v) {
+    Boolean add(Size i, const Value& v) {
         if (i > vec_.size()) {
             return false;
         } else {
@@ -27,7 +27,7 @@ class ArrayListImpl : public ArrayList {
         }
     }
 
-    bool set(Size i, const Value& v) {
+    Boolean set(Size i, const Value& v) {
         if (i >= vec_.size()) {
             return false;
         } else {
@@ -52,7 +52,7 @@ class ArrayListImpl : public ArrayList {
         }
     }
 
-    bool remove(const Value& v) {
+    Boolean remove(const Value& v) {
         Size n = size();
         for (Size i = 0; i < n; i++) {
             if (!vec_[i].compareTo(v)) {
@@ -87,7 +87,7 @@ class ArrayListImpl : public ArrayList {
             , itr_(v->begin()) {}
 
      public:
-        bool hasNext() const {
+        Boolean hasNext() const {
             return itr_ != vec_->end();
         }
 
@@ -99,6 +99,10 @@ class ArrayListImpl : public ArrayList {
                 ++itr_;
                 return v;
             }
+        }
+
+        String::CPtr toString() const {
+            return String::create();
         }
 
      private:

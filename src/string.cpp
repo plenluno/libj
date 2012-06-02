@@ -3,8 +3,10 @@
 #include <stdio.h>
 #include <string>
 
-#include "libj/string.h"
 #include "cvtutf/ConvertUTF.h"
+
+#include "libj/string.h"
+#include "libj/value.h"
 
 namespace cvtutf {
 
@@ -174,7 +176,7 @@ class StringImpl : public String {
         return len1 - len2;
     }
 
-    bool startsWith(CPtr other, Size offset) const {
+    Boolean startsWith(CPtr other, Size offset) const {
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < offset + len2)
@@ -185,7 +187,7 @@ class StringImpl : public String {
         return true;
     }
 
-    bool endsWith(CPtr other) const {
+    Boolean endsWith(CPtr other) const {
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < len2)
@@ -248,11 +250,11 @@ class StringImpl : public String {
         return NO_POS;
     }
 
-    bool isEmpty() const {
+    Boolean isEmpty() const {
         return length() == 0;
     }
 
-    bool isAscii() const {
+    Boolean isAscii() const {
         return str8_ ? true : str32_ ? false : true;
     }
 
@@ -320,11 +322,6 @@ class StringImpl : public String {
     }
 
  public:
-    static CPtr create() {
-        CPtr p(new StringImpl());
-        return p;
-    }
-
     static CPtr create(const void* data, Encoding enc, Size max) {
         if (enc == ASCII) {
             CPtr p(new StringImpl(static_cast<const char*>(data), max));
@@ -419,10 +416,6 @@ class StringImpl : public String {
         delete str32_;
     }
 };
-
-String::CPtr String::create() {
-    return StringImpl::create();
-}
 
 String::CPtr String::create(const void* data, Encoding enc, Size max) {
     return StringImpl::create(data, enc, max);
@@ -523,7 +516,7 @@ static String::CPtr objectToString(const Value& val) {
 }
 
 String::CPtr String::valueOf(const Value& val) {
-    if (val.empty()) {
+    if (val.isEmpty()) {
         LIBJ_NULL_CPTR(String, nullp);
         return nullp;
     } else if (val.type() == Type<Boolean>::id()) {

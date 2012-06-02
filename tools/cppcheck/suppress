@@ -1,2 +1,3 @@
+*:deps/boost-svn/boost/type_traits/is_array.hpp
 *:deps/boost-svn/boost/type_traits/is_class.hpp
 *:src/no_exceptions.cpp

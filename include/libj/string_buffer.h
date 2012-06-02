@@ -10,9 +10,11 @@ namespace libj {
 
 class StringBuffer : LIBJ_MUTABLE(StringBuffer)
  public:
-     virtual Size length() const = 0;
-     virtual Char charAt(Size) const = 0;
-     virtual bool append(const Value&) = 0;
+    static Ptr create();
+
+    virtual Size length() const = 0;
+    virtual Char charAt(Size) const = 0;
+    virtual Boolean append(const Value&) = 0;
 };
 
 }  // namespace libj

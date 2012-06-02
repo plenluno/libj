@@ -3,20 +3,20 @@
 #ifndef LIBJ_MAP_H_
 #define LIBJ_MAP_H_
 
-#include "libj/mutable.h"
 #include "libj/set.h"
 
 namespace libj {
 
 class Map : LIBJ_MUTABLE(Map)
  public:
+    static Ptr create();
+
     virtual Size size() const = 0;
     virtual Value get(const Value& key) const = 0;
     virtual Value put(const Value& key, const Value& val) = 0;
     virtual Value remove(const Value& key) = 0;
     virtual Set::CPtr keySet() const = 0;
     virtual void clear() = 0;
-    // and so on
 };
 
 #define LIBJ_MAP(T) public libj::Map { \

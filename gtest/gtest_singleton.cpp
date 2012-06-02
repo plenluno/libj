@@ -2,10 +2,15 @@
 
 #include <gtest/gtest.h>
 #include <libj/singleton.h>
+#include <libj/string.h>
 
 namespace libj {
 
 class GTestSingleton : LIBJ_SINGLETON(GTestSingleton)
+ public:
+    String::CPtr toString() const {
+        return String::create("GTestSingleton");
+    }
 };
 
 class GTestSingletonX {
@@ -39,6 +44,10 @@ class GTestSingleton2 : public SingletonTmpl<GTestSingleton2> {
  public:
     TypeId type() const {
         return Type<GTestSingleton2>::id();
+    }
+
+    String::CPtr toString() const {
+        return String::create("GTestSingleton2");
     }
 
     static int count;

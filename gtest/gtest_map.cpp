@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <libj/map.h>
+#include <libj/string.h>
 
 namespace libj {
 

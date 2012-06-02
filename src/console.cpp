@@ -9,7 +9,7 @@
 namespace libj {
 namespace console {
 
-bool log(const Value& val) {
+Boolean log(const Value& val) {
     String::CPtr s = String::valueOf(val);
     if (!s)
         return false;

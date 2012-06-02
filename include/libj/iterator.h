@@ -4,18 +4,14 @@
 #define LIBJ_ITERATOR_H_
 
 #include "libj/mutable.h"
-#include "libj/string.h"
+#include "libj/value.h"
 
 namespace libj {
 
 class Iterator : LIBJ_MUTABLE(Iterator)
  public:
-    virtual bool hasNext() const = 0;
+    virtual Boolean hasNext() const = 0;
     virtual Value next() = 0;
-
-    String::CPtr toString() const {
-        return String::create();
-    }
 };
 
 }  // namespace libj

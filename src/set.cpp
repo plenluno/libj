@@ -12,7 +12,7 @@ class SetImpl : public Set {
  private:
     class ValueComp {
      public:
-        bool operator() (const Value& lv, const Value& rv) const {
+        Boolean operator() (const Value& lv, const Value& rv) const {
             return lv.compareTo(rv) < 0;
         }
     };
@@ -24,12 +24,12 @@ class SetImpl : public Set {
         return set_.size();
     }
 
-    bool add(const Value& v) {
-        std::pair<ValueSet::iterator, bool> p = set_.insert(v);
+    Boolean add(const Value& v) {
+        std::pair<ValueSet::iterator, Boolean> p = set_.insert(v);
         return p.second;
     }
 
-    bool remove(const Value& v) {
+    Boolean remove(const Value& v) {
         return set_.erase(v) > 0;
     }
 
@@ -57,7 +57,7 @@ class SetImpl : public Set {
             , itr_(s->begin()) {}
 
      public:
-        bool hasNext() const {
+        Boolean hasNext() const {
             return itr_ != set_->end();
         }
 
@@ -65,6 +65,10 @@ class SetImpl : public Set {
             Value v = *itr_;
             ++itr_;
             return v;
+        }
+
+        String::CPtr toString() const {
+            return String::create();
         }
 
      private:

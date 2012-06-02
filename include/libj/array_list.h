@@ -8,6 +8,8 @@
 namespace libj {
 
 class ArrayList : LIBJ_LIST(ArrayList)
+ public:
+    static Ptr create();
 };
 
 #define LIBJ_ARRAY_LIST(T) public libj::ArrayList { \

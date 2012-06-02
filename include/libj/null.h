@@ -4,6 +4,7 @@
 #define LIBJ_NULL_H_
 
 #include "libj/singleton.h"
+#include "libj/string.h"
 
 namespace libj {
 

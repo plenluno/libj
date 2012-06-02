@@ -4,7 +4,7 @@
 #define LIBJ_TYPE_H_
 
 #include <boost/type_traits/is_base_of.hpp>
-#include "libj/gc_base.h"
+
 #include "libj/pointer.h"
 #include "libj/typedef.h"
 
@@ -81,12 +81,12 @@ class Classify {
     static T t;
 
  public:
-    static const bool isObject = (sizeof(object_(t)) == sizeof(Yes));
-    static const bool isMutable = (sizeof(mutable_(t)) == sizeof(Yes));
-    static const bool isImmutable = (sizeof(immutable_(t)) == sizeof(Yes));
-    static const bool isSingleton = (sizeof(singleton_(t)) == sizeof(Yes));
-    static const bool isCPtr = (sizeof(cptr_(t)) == sizeof(Yes) &&
-                                sizeof(object_(t)) == sizeof(Yes));
+    static const Boolean isObject = (sizeof(object_(t)) == sizeof(Yes));
+    static const Boolean isMutable = (sizeof(mutable_(t)) == sizeof(Yes));
+    static const Boolean isImmutable = (sizeof(immutable_(t)) == sizeof(Yes));
+    static const Boolean isSingleton = (sizeof(singleton_(t)) == sizeof(Yes));
+    static const Boolean isCPtr = (sizeof(cptr_(t)) == sizeof(Yes) &&
+                                   sizeof(object_(t)) == sizeof(Yes));
 };
 
 }  // namespace libj

@@ -3,14 +3,13 @@
 #ifndef LIBJ_FUNCTION_H_
 #define LIBJ_FUNCTION_H_
 
-#include "libj/mutable.h"
 #include "libj/array_list.h"
 
 namespace libj {
 
 class Function : LIBJ_MUTABLE(Function)
  public:
-    virtual Value operator()(ArrayList::CPtr args) = 0;
+    virtual Value operator()(ArrayList::Ptr args) = 0;
 
     Value call() {
         ArrayList::Ptr args = ArrayList::create();
@@ -114,11 +113,6 @@ class Function : LIBJ_MUTABLE(Function)
         args->add(v7);
         args->add(v8);
         return operator()(args);
-    }
-
-    virtual String::CPtr toString() const {
-        // TODO(plenluno): implement Function.toString
-        return String::create();
     }
 };
 

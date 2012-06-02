@@ -7,11 +7,8 @@
 namespace libj {
 
 class Add : LIBJ_FUNCTION(Add)
-};
-
-class AddImpl : public Add {
  public:
-    Value operator()(ArrayList::CPtr args) {
+    Value operator()(ArrayList::Ptr args) {
         if (args->size() == 2 &&
             args->get(0).type() == Type<Int>::id() &&
             args->get(1).type() == Type<Int>::id()) {
@@ -24,15 +21,15 @@ class AddImpl : public Add {
         }
     }
 
+    String::CPtr toString() const {
+        return String::create("Add");
+    }
+
     static Add::Ptr create() {
-        Add::Ptr p(new AddImpl());
+        Add::Ptr p(new Add());
         return p;
     }
 };
-
-Add::Ptr Add::create() {
-    return AddImpl::create();
-}
 
 TEST(GTestFunction, TestFunctor) {
     Function::Ptr add = Add::create();
