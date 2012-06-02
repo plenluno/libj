@@ -85,8 +85,8 @@ String::CPtr StringImpl::create(const void* data, Encoding enc, Size max) {
         CPtr p(new StringImpl(static_cast<const Char*>(data), max));
         return p;
     } else {
-        CPtr p(new StringImpl());
-        return p;
+        LIBJ_NULL_CPTR(String, nullp);
+        return nullp;
     }
 }
 
