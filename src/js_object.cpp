@@ -5,6 +5,9 @@
 namespace libj {
 
 class JsObjectImpl : public JsObject {
+ private:
+    static String::CPtr STR_OBJECT;
+
  public:
     static Ptr create() {
         Ptr p(new JsObjectImpl());
@@ -16,7 +19,7 @@ class JsObjectImpl : public JsObject {
     }
 
     String::CPtr toString() const {
-        return map_->toString();
+        return STR_OBJECT;
     }
 
     Size size() const {
@@ -42,9 +45,10 @@ class JsObjectImpl : public JsObject {
  private:
     Map::Ptr map_;
 
-    JsObjectImpl() : map_(Map::create()) {
-    }
+    JsObjectImpl() : map_(Map::create()) {}
 };
+
+String::CPtr JsObjectImpl::STR_OBJECT = String::create("[object Object]");
 
 JsObject::Ptr JsObject::create() {
     return JsObjectImpl::create();
