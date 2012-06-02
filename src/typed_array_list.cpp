@@ -11,7 +11,7 @@ class TypedArrayListImpl : public TypedArrayList<T> {
         TypeId id = Type<T>::id();
         return v.type() == id || v.instanceOf(id);
     }
-    
+
  public:
     Size size() const {
         return list_->size();
@@ -44,7 +44,7 @@ class TypedArrayListImpl : public TypedArrayList<T> {
     Value get(Size i) const {
         return list_->get(i);
     }
-    
+
     /*
     T getTyped(Size i) const {
     }
@@ -83,7 +83,7 @@ class TypedArrayListImpl : public TypedArrayList<T> {
  private:
     TypedArrayListImpl()
         : list_(ArrayList::create()) {}
-    
+
     ArrayList::Ptr list_;
 };
 

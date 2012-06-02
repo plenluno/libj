@@ -433,10 +433,10 @@ TEST(GTestValue, TestType) {
     const Value v2 = v1;
     Value v3 = v2;
     ASSERT_EQ(v3.type(), Type<int>::id());
-    
+
     GTestValueStruct x;
     GTestValueStruct* y;
-    
+
     Value v4 = &x;
     const Value& v5 = v4;
     const Value v6 = v5;
