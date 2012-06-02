@@ -1,5 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#ifndef LIBJ_USE_EXCEPTION
+
 #include <cassert>
 #include <exception>
 
@@ -10,3 +12,5 @@ void throw_exception(const std::exception&) {
 }
 
 }  // namespace boost
+
+#endif  // LIBJ_USE_EXCEPTION

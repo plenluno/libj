@@ -3,10 +3,12 @@ cmake_minimum_required(VERSION 2.8)
 project(libj)
 
 option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
-option(LIBJ_USE_GTEST "Use googletest" OFF)
+option(LIBJ_USE_GTEST "Use Google Test" OFF)
+option(LIBJ_USE_EXCEPTION "Use Exception" OFF)
 
 message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
 message(STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
+message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 
 if(LIBJ_USE_BDW_GC)
     find_library(GC gc REQUIRED)
@@ -38,22 +40,32 @@ link_directories(
     ${CMAKE_BINARY_DIR}
 )
 
-set(libj-src
+set(libj-src-common
     src/array_list.cpp
     src/console.cpp
     src/error.cpp
+    src/exception.cpp
     src/json.cpp
     src/js_object.cpp
     src/linked_list.cpp
     src/map.cpp
-    src/no_exceptions.cpp
     src/set.cpp
     src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
     src/string_impl.cpp
-    src/typed_array_list.cpp
 )
+
+if(LIBJ_USE_EXCEPTION)
+set(libj-src
+    ${libj-src-common}
+)
+else(LIBJ_USE_EXCEPTION)
+set(libj-src
+    ${libj-src-common}
+    src/no_exceptions.cpp
+)
+endif(LIBJ_USE_EXCEPTION)
 
 set(libj-deps
     cvtutf
@@ -81,8 +93,13 @@ if(LIBJ_USE_BDW_GC)
         gc
         ${libj-deps}
     )
-    set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions -DLIBJ_USE_BDW_GC")
+    if(LIBJ_USE_EXCEPTION)
+        set_target_properties(j
+            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -DLIBJ_USE_EXCEPTION -DLIBJ_USE_BDW_GC")
+    else(LIBJ_USE_EXCEPTION)
+        set_target_properties(j
+            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions -DLIBJ_USE_BDW_GC")
+    endif(LIBJ_USE_EXCEPTION)
 else(LIBJ_USE_BDW_GC)
     add_library(j STATIC
         ${libj-src}
@@ -90,8 +107,13 @@ else(LIBJ_USE_BDW_GC)
     target_link_libraries(j
         ${libj-deps}
     )
-    set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
+    if(LIBJ_USE_EXCEPTION)
+        set_target_properties(j
+            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -DLIBJ_USE_EXCEPTION")
+    else(LIBJ_USE_EXCEPTION)
+        set_target_properties(j
+            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
+    endif(LIBJ_USE_EXCEPTION)
 endif(LIBJ_USE_BDW_GC)
 
 # gtest
@@ -111,6 +133,7 @@ if(LIBJ_USE_GTEST)
         gtest/gtest_singleton.cpp
         gtest/gtest_string.cpp
         gtest/gtest_string_buffer.cpp
+        gtest/gtest_typed_array_list.cpp
         gtest/gtest_value.cpp
         ${libj-src}
     )
@@ -119,6 +142,11 @@ if(LIBJ_USE_GTEST)
         pthread
         ${libj-deps}
     )
-    set_target_properties(libj-gtest
-        PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS")
+    if(LIBJ_USE_EXCEPTION)
+        set_target_properties(libj-gtest
+            PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS -DLIBJ_USE_EXCEPTION")
+    else(LIBJ_USE_EXCEPTION)
+        set_target_properties(libj-gtest
+            PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS")
+    endif(LIBJ_USE_EXCEPTION)
 endif(LIBJ_USE_GTEST)
