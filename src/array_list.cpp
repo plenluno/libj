@@ -19,7 +19,7 @@ class ArrayListImpl : public ArrayList {
     }
 
     bool add(Size i, const Value& v) {
-        if (i < 0 || i > vec_.size()) {
+        if (i > vec_.size()) {
             return false;
         } else {
             vec_.insert(vec_.begin() + i, v);
@@ -92,9 +92,13 @@ class ArrayListImpl : public ArrayList {
         }
 
         Value next() {
-            Value v = *itr_;
-            ++itr_;
-            return v;
+            if (itr_ == vec_->end()) {
+                return Error::create(Error::NO_SUCH_ELEMENT);
+            } else {
+                Value v = *itr_;
+                ++itr_;
+                return v;
+            }
         }
 
      private:

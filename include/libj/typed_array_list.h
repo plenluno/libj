@@ -8,8 +8,9 @@
 namespace libj {
 
 template<typename T>
-class TypedArrayList : public libj::ArrayList {
-    virtual T getTyped(Size) const = 0;
+class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
+ public:
+//    virtual T getTyped(Size) const = 0;
 };
 
 }  // namespace libj

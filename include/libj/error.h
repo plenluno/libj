@@ -15,6 +15,7 @@ class Error : LIBJ_STATUS(Error)
         ILLEGAL_ARGUMENT,
         ILLEGAL_STATE,
         INDEX_OUT_OF_BOUNDS,
+        NO_SUCH_ELEMENT,
         UNSUPPORTED_VERSION,
         UNSUPPORTED_OPERATION,
     };
