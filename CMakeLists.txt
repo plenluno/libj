@@ -51,6 +51,7 @@ set(libj-src
     src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
+    src/string_impl.cpp
     src/typed_array_list.cpp
 )
 

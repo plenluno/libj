@@ -95,4 +95,3 @@ typename TypedArrayList<T>::Ptr TypedArrayList<T>::create() {
 }
 
 }  // namespace libj
-
