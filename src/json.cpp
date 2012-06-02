@@ -10,6 +10,7 @@
 #include "libj/js_object.h"
 #include "libj/null.h"
 #include "libj/string_buffer.h"
+#include "libj/undefined.h"
 
 namespace libj {
 namespace json {
@@ -30,8 +31,7 @@ static Value toLibjValue(const Json::Value& val) {
     } else if (val.isDouble()) {
         return val.asDouble();
     } else if (val.isString()) {
-        // TODO(plenluno): UTF8 encoding
-        return String::create(val.asCString());
+        return String::create(val.asCString(), String::UTF8);
     } else if (val.isArray()) {
         JsArray::Ptr a = JsArray::create();
         Size len = val.size();
@@ -50,8 +50,7 @@ static Value toLibjValue(const Json::Value& val) {
         }
         return jo;
     } else {
-        // TODO(plenluno): return Undefined::instance()
-        return 0;
+        return Undefined::instance();
     }
 }
 
