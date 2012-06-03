@@ -47,7 +47,6 @@ TEST(GTestSet, TestIterator) {
     ASSERT_FALSE(itr->hasNext());
 }
 
-
 TEST(GTestSet, TestRemove) {
     Set::Ptr s = Set::create();
     Int i = 5;
@@ -62,7 +61,6 @@ TEST(GTestSet, TestClear) {
     s->clear();
     ASSERT_EQ(s->size(), 0);
 }
-
 
 #ifdef LIBJ_USE_SP
 TEST(GTestSet, TestUseCount) {
