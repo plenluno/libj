@@ -2,10 +2,10 @@
 
 #include <gtest/gtest.h>
 #include <boost/any.hpp>
-#include <libj/value.h>
 #include <libj/array_list.h>
 #include <libj/null.h>
 #include <libj/string.h>
+#include <libj/value.h>
 
 namespace libj {
 

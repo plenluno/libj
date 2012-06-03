@@ -1,8 +1,8 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
-#include <libj/function.h>
 #include <libj/error.h>
+#include <libj/function.h>
 
 namespace libj {
 

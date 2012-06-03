@@ -1,8 +1,8 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
-#include <libj/json.h>
 #include <libj/array_list.h>
+#include <libj/json.h>
 #include <libj/map.h>
 #include <libj/null.h>
 
