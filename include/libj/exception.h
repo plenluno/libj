@@ -13,22 +13,10 @@ namespace libj {
 
 class Exception : public std::exception {
  public:
-    Exception(
-        Int code,
-        String::CPtr message);
-
-    Exception(
-        Int code,
-        const char* file,
-        const char* func,
-        int line);
-
-    Exception(
-        Int code,
-        String::CPtr message,
-        const char* file,
-        const char* func,
-        int line);
+    Exception(Int code);
+    Exception(String::CPtr message);
+    Exception(Int code, String::CPtr message);
+    Exception(Int code, const char* file, const char* func, int line);
 
     virtual ~Exception() throw();
 
