@@ -10,7 +10,10 @@ namespace libj {
 typedef Function JsFunction;
 
 #define LIBJ_JS_FUNCTION(T) public libj::JsFunction { \
-    LIBJ_MUTABLE_DECLS(T, libj::JsFunction)
+    LIBJ_MUTABLE_DECLS(T, libj::JsFunction) \
+    String::CPtr toString() const { \
+        return String::create("function " #T "() {}"); \
+    }
 
 }  // namespace libj
 

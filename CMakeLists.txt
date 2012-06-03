@@ -124,6 +124,7 @@ if(LIBJ_USE_GTEST)
         gtest/gtest_immutable.cpp
         gtest/gtest_json.cpp
         gtest/gtest_jsoncpp.cpp
+        gtest/gtest_js_function.cpp
         gtest/gtest_js_object.cpp
         gtest/gtest_main.cpp
         gtest/gtest_map.cpp

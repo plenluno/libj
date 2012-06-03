@@ -6,7 +6,7 @@
 
 namespace libj {
 
-class Add : LIBJ_FUNCTION(Add)
+class GTestFunctionAdd : LIBJ_FUNCTION(GTestFunctionAdd)
  public:
     Value operator()(ArrayList::Ptr args) {
         if (args->size() == 2 &&
@@ -22,17 +22,17 @@ class Add : LIBJ_FUNCTION(Add)
     }
 
     String::CPtr toString() const {
-        return String::create("Add");
+        return String::create("GTestFunctionAdd");
     }
 
-    static Add::Ptr create() {
-        Add::Ptr p(new Add());
+    static GTestFunctionAdd::Ptr create() {
+        GTestFunctionAdd::Ptr p(new GTestFunctionAdd());
         return p;
     }
 };
 
 TEST(GTestFunction, TestFunctor) {
-    Function::Ptr add = Add::create();
+    Function::Ptr add = GTestFunctionAdd::create();
     ArrayList::Ptr args = ArrayList::create();
     args->add(2);
     args->add(3);
@@ -43,7 +43,7 @@ TEST(GTestFunction, TestFunctor) {
 }
 
 TEST(GTestFunction, TestCall) {
-    Function::Ptr add = Add::create();
+    Function::Ptr add = GTestFunctionAdd::create();
     Value sum = add->call(4, 5);
     Int s;
     to<Int>(sum, &s);
@@ -52,7 +52,7 @@ TEST(GTestFunction, TestCall) {
 
 #ifdef LIBJ_USE_SP
 TEST(GTestFunction, TestUseCount) {
-    Function::CPtr p = Add::create();
+    Function::CPtr p = GTestFunctionAdd::create();
     ASSERT_EQ(p.use_count(), 1);
 }
 #endif
