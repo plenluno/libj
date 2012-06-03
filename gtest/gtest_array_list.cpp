@@ -84,7 +84,6 @@ TEST(GTestArrayList, TestRemove2) {
     ASSERT_EQ(a->size(), 2);
 }
 
-
 TEST(GTestArrayList, TestClear) {
     ArrayList::Ptr a = ArrayList::create();
     a->add(123);
@@ -128,6 +127,17 @@ TEST(GTestArrayList, TestIterator) {
     ASSERT_TRUE(to<int>(itr->next(), &v));
     ASSERT_EQ(v, 456);
     ASSERT_FALSE(itr->hasNext());
+}
+
+TEST(GTestArrayList, TestToString) {
+    ArrayList::Ptr a = ArrayList::create();
+    a->add(1);
+    ArrayList::Ptr a2 = ArrayList::create();
+    a2->add(3);
+    a2->add(5);
+    a->add(a2);
+    a->add(7);
+    ASSERT_EQ(a->toString()->compareTo(String::create("1,3,5,7")), 0);
 }
 
 #ifdef LIBJ_USE_SP

@@ -4,6 +4,7 @@
 #define LIBJ_COLLECTION_H_
 
 #include "libj/iterator.h"
+#include "libj/string_buffer.h"
 
 namespace libj {
 
@@ -14,6 +15,19 @@ class Collection : LIBJ_MUTABLE(Collection)
     virtual Boolean add(const Value& val) = 0;
     virtual Boolean remove(const Value& val) = 0;
     virtual Iterator::Ptr iterator() const = 0;
+
+    String::CPtr toString() const {
+        static String::CPtr comma = String::create(",");
+        StringBuffer::Ptr sb = StringBuffer::create();
+        Iterator::Ptr itr = iterator();
+        while (itr->hasNext()) {
+            Value v = itr->next();
+            if (sb->length())
+                sb->append(comma);
+            sb->append(String::valueOf(v));
+        }
+        return sb->toString();
+    }
 };
 
 #define LIBJ_COLLECTION(T) public libj::Collection { \

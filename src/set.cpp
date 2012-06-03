@@ -43,11 +43,6 @@ class SetImpl : public Set {
         return p;
     }
 
-    String::CPtr toString() const {
-        // TODO(plenluno): implement
-        return String::create();
-    }
-
  private:
     class IteratorImpl : public Iterator {
         friend class SetImpl;
