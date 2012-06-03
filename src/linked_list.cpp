@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <list>
-//#include <forward_list>   // since c++11
+
 #include "libj/linked_list.h"
 #include "libj/error.h"
 #include "libj/exception.h"
@@ -11,7 +11,6 @@ namespace libj {
 
 class LinkedListImpl : public LinkedList {
     typedef std::list<Value> container;
-//  typedef std::forward_list<Value> container;
     typedef container::iterator it;
     typedef container::const_iterator cit;
 
@@ -93,7 +92,7 @@ class LinkedListImpl : public LinkedList {
 
     LinkedList::Ptr clone() const {
         LinkedListImpl* ls = new LinkedListImpl();
-        LinkedList::Ptr p (ls);
+        LinkedList::Ptr p(ls);
         for (cit i = list_.begin(), e = list_.end(); i != e; ++i) {
             ls->add(*i);
         }
@@ -149,7 +148,7 @@ class LinkedListImpl : public LinkedList {
         LinkedList::Ptr p(new LinkedListImpl());
         return p;
     }
-}; // LinkedListImpl
+};
 
 LinkedList::Ptr LinkedList::create() {
     return LinkedListImpl::create();
