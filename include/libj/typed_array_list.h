@@ -92,6 +92,21 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
         return p;
     }
 
+    static Ptr create(ArrayList::CPtr a) {
+        Ptr p(new TypedArrayList());
+        Iterator::Ptr itr = a->iterator();
+        while (itr->hasNext()) {
+            Value v = itr->next();
+            if (p->match(v)) {
+                p->add(v);
+            } else {
+                Ptr nullp(static_cast<TypedArrayList*>(0));
+                return nullp;
+            }
+        }
+        return p;
+    }
+
  private:
     TypedArrayList()
         : list_(ArrayList::create()) {}
