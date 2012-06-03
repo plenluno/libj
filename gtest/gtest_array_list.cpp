@@ -110,7 +110,6 @@ TEST(GTestArrayList, TestError) {
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
     ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
-
     ASSERT_EQ(e->code(), Error::INDEX_OUT_OF_BOUNDS);
 #endif  // LIBJ_USE_EXCEPTION
 }
