@@ -3,6 +3,7 @@
 #include <vector>
 #include "libj/array_list.h"
 #include "libj/error.h"
+#include "libj/exception.h"
 #include "libj/string.h"
 
 namespace libj {
@@ -38,7 +39,11 @@ class ArrayListImpl : public ArrayList {
 
     Value get(Size i) const {
         if (i >= vec_.size()) {
+#ifdef LIBJ_USE_EXCEPTION
+            LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
+#else
             return Error::create(Error::INDEX_OUT_OF_BOUNDS);
+#endif  // LIBJ_USE_EXCEPTION
         } else {
             return vec_[i];
         }
@@ -46,7 +51,11 @@ class ArrayListImpl : public ArrayList {
 
     Value remove(Size i) {
         if (i >= vec_.size()) {
+#ifdef LIBJ_USE_EXCEPTION
+            LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
+#else
             return Error::create(Error::INDEX_OUT_OF_BOUNDS);
+#endif  // LIBJ_USE_EXCEPTION
         } else {
             return *vec_.erase(vec_.begin() + i);
         }
@@ -93,7 +102,11 @@ class ArrayListImpl : public ArrayList {
 
         Value next() {
             if (itr_ == vec_->end()) {
+#ifdef LIBJ_USE_EXCEPTION
+                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+#else
                 return Error::create(Error::NO_SUCH_ELEMENT);
+#endif  // LIBJ_USE_EXCEPTION
             } else {
                 Value v = *itr_;
                 ++itr_;

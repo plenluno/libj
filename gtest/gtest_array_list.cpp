@@ -91,19 +91,28 @@ TEST(GTestArrayList, TestClear) {
     a->add(456);
     a->clear();
 
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(a->get(0));
+#else
     Error::CPtr e;
-    to<Error::CPtr>(a->get(0), &e);
+    ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
     ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
+#endif  // LIBJ_USE_EXCEPTION
     ASSERT_EQ(a->size(), 0);
 }
 
 TEST(GTestArrayList, TestError) {
     ArrayList::Ptr a = ArrayList::create();
 
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(a->get(5));
+#else
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
     ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
+
     ASSERT_EQ(e->code(), Error::INDEX_OUT_OF_BOUNDS);
+#endif  // LIBJ_USE_EXCEPTION
 }
 
 TEST(GTestArrayList, TestIterator) {
