@@ -14,6 +14,9 @@ class Iterator : LIBJ_MUTABLE(Iterator)
     virtual Value next() = 0;
 };
 
+#define LIBJ_ITERATOR_TEMPLATE(T) public libj::Iterator { \
+    LIBJ_MUTABLE_TEMPLATE_DECLS(T, libj::Iterator)
+
 }  // namespace libj
 
 #endif  // LIBJ_ITERATOR_H_

@@ -22,7 +22,7 @@ class Mutable
     }
 };
 
-#define LIBJ_MUTABLE_METHODS(T, B) \
+#define LIBJ_MUTABLE_METHODS(T, B) public: \
     Ptr clone() const; \
     libj::TypeId type() const { \
         return libj::Type<T>::id(); \
@@ -40,7 +40,7 @@ class Mutable
 #define LIBJ_MUTABLE_TEMPLATE_DECLS(T, B) public: \
     typedef LIBJ_PTR_TYPE(T) Ptr; \
     typedef LIBJ_CPTR_TYPE(T) CPtr; \
-    LIBJ_MUTABLE_METHODS(T, B) \
+    LIBJ_MUTABLE_METHODS(T, B)
 
 #define LIBJ_MUTABLE(T) public libj::Mutable { \
     LIBJ_MUTABLE_DECLS(T, libj::Mutable)

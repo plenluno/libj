@@ -7,6 +7,7 @@
 #include "libj/error.h"
 #include "libj/exception.h"
 #include "libj/string.h"
+#include "libj/typed_iterator.h"
 
 namespace libj {
 
@@ -15,7 +16,12 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
  private:
     Boolean match(const Value& v) {
         TypeId id = Type<T>::id();
-        return v.type() == id || v.instanceOf(id);
+        Boolean result = v.type() == id || v.instanceOf(id);
+#ifdef LIBJ_USE_EXCEPTION
+        if (!result)
+            LIBJ_THROW(Error::ILLEGAL_TYPE);
+#endif  // LIBJ_USE_EXCEPTION
+        return result;
     }
 
  public:
@@ -83,6 +89,10 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
             else
                 LIBJ_THROW(Error::ILLEGAL_STATE);
         }
+    }
+
+    typename TypedIterator<T>::Ptr iteratorTyped() const {
+        return TypedIterator<T>::create(iterator());
     }
 #endif  // LIBJ_USE_EXCEPTION
 

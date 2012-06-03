@@ -14,6 +14,7 @@ class Error : LIBJ_STATUS(Error)
         TIMEOUT,
         ILLEGAL_ARGUMENT,
         ILLEGAL_STATE,
+        ILLEGAL_TYPE,
         INDEX_OUT_OF_BOUNDS,
         NO_SUCH_ELEMENT,
         UNSUPPORTED_VERSION,

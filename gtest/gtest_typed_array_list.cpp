@@ -16,14 +16,33 @@ TEST(GTestTypedArrayList, TestCreate2) {
     TypedArrayList<int>::Ptr ta = TypedArrayList<int>::create(a);
     ASSERT_TRUE(ta);
     a->add(7.7);
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(TypedArrayList<int>::create(a));
+#else
     ta = TypedArrayList<int>::create(a);
     ASSERT_FALSE(ta);
+#endif  // LIBJ_USE_EXCEPTION
 }
 
 #ifdef LIBJ_USE_EXCEPTION
 TEST(GTestTypedArrayList, TestGetTyped) {
-    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+    TypedArrayList<int>::Ptr a = TypedArrayList<int>::create();
     ASSERT_ANY_THROW(a->getTyped(1));
+    a->add(5);
+    a->add(7);
+    ASSERT_EQ(a->getTyped(1), 7);
+}
+
+TEST(GTestTypedArrayList, TestIteratorTyped) {
+    TypedArrayList<int>::Ptr a = TypedArrayList<int>::create();
+    a->add(5);
+    a->add(7);
+    TypedIterator<int>::Ptr i = a->iteratorTyped();
+    ASSERT_TRUE(i->hasNext());
+    ASSERT_EQ(i->nextTyped(), 5);
+    ASSERT_TRUE(i->hasNext());
+    ASSERT_EQ(i->nextTyped(), 7);
+    ASSERT_FALSE(i->hasNext());
 }
 #endif  // LIBJ_USE_EXCEPTION
 
