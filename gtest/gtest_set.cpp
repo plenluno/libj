@@ -47,6 +47,23 @@ TEST(GTestSet, TestIterator) {
     ASSERT_FALSE(itr->hasNext());
 }
 
+
+TEST(GTestSet, TestRemove) {
+    Set::Ptr s = Set::create();
+    Int i = 5;
+    s->add(i);
+    s->remove(i);
+    ASSERT_EQ(s->size(), 0);
+}
+
+TEST(GTestSet, TestClear) {
+    Set::Ptr s = Set::create();
+    s->add(5);
+    s->clear();
+    ASSERT_EQ(s->size(), 0);
+}
+
+
 #ifdef LIBJ_USE_SP
 TEST(GTestSet, TestUseCount) {
     Set::CPtr p = Set::create();
