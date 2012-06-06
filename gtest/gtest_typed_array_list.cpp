@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
+#include <libj/typed_array.h>
 #include <libj/typed_array_list.h>
 
 namespace libj {
@@ -45,5 +46,15 @@ TEST(GTestTypedArrayList, TestIteratorTyped) {
     ASSERT_FALSE(i->hasNext());
 }
 #endif  // LIBJ_USE_EXCEPTION
+
+TEST(GTestTypedArrayList, TestInt32Array) {
+    Int32Array::Ptr a = Int32Array::create();
+    a->add(5);
+    a->add(7);
+    Value v = a->get(1);
+    Int i;
+    to<Int>(v, &i);
+    ASSERT_EQ(i, 7);
+}
 
 }  // namespace libj
