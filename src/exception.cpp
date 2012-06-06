@@ -7,28 +7,28 @@ namespace libj {
 
 Exception::Exception(Int code)
     : code_(code)
-    , msg_(static_cast<String*>(0))
-    , file_(static_cast<String*>(0))
-    , func_(static_cast<String*>(0))
+    , msg_(LIBJ_NULL(String))
+    , file_(LIBJ_NULL(String))
+    , func_(LIBJ_NULL(String))
     , line_(0) {}
 
 Exception::Exception(String::CPtr message)
     : code_(Error::ANY)
     , msg_(message)
-    , file_(static_cast<String*>(0))
-    , func_(static_cast<String*>(0))
+    , file_(LIBJ_NULL(String))
+    , func_(LIBJ_NULL(String))
     , line_(0) {}
 
 Exception::Exception(Int code, String::CPtr message)
     : code_(code)
     , msg_(message)
-    , file_(static_cast<String*>(0))
-    , func_(static_cast<String*>(0))
+    , file_(LIBJ_NULL(String))
+    , func_(LIBJ_NULL(String))
     , line_(0) {}
 
 Exception::Exception(Int code, const char* file, const char* func, int line)
     : code_(code)
-    , msg_(static_cast<String*>(0))
+    , msg_(LIBJ_NULL(String))
     , file_(String::create(file))
     , func_(String::create(func))
     , line_(line) {}

@@ -26,7 +26,7 @@ class StringImpl : public String {
 
     CPtr substring(Size begin) const {
         if (begin > length()) {
-            CPtr p(static_cast<String*>(0));
+            LIBJ_NULL_CPTR(String, p);
             return p;
         } else if (begin == 0) {
             CPtr p(this);
@@ -43,7 +43,7 @@ class StringImpl : public String {
     CPtr substring(Size begin, Size end) const {
         Size len = length();
         if (begin > len || end > len || begin > end) {
-            CPtr p(static_cast<String*>(0));
+            LIBJ_NULL_CPTR(String, p);
             return p;
         } else if (begin == 0 && end == len) {
             CPtr p(this);

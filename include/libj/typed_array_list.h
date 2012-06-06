@@ -110,7 +110,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
             if (p->match(v)) {
                 p->add(v);
             } else {
-                Ptr nullp(static_cast<TypedArrayList*>(0));
+                LIBJ_NULL_PTR_TYPE(TypedArrayList, nullp);
                 return nullp;
             }
         }
@@ -118,8 +118,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
     }
 
  private:
-    TypedArrayList()
-        : list_(ArrayList::create()) {}
+    TypedArrayList() : list_(ArrayList::create()) {}
 
     ArrayList::Ptr list_;
 };

@@ -35,7 +35,7 @@ class StatusImpl : public Status {
 
     StatusImpl(Int code)
         : code_(code)
-        , message_(static_cast<String*>(0)) {}
+        , message_(LIBJ_NULL(String)) {}
 
     StatusImpl(Int code, String::CPtr msg)
         : code_(code)
