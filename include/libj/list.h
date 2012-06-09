@@ -20,6 +20,10 @@ class List : LIBJ_COLLECTION(List)
     virtual Boolean set(Size, const Value&) = 0;
     // virtual Ptr subList(Size from) = 0;
     // virtual Ptr subList(Size from, Size to) = 0;
+
+    Size length() const {
+        return size();
+    }
 };
 
 #define LIBJ_LIST(T) public libj::List { \
