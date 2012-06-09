@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
-#include <libj/typed_array.h>
+#include <libj/js_typed_array.h>
 #include <libj/typed_array_list.h>
 
 namespace libj {
@@ -47,8 +47,8 @@ TEST(GTestTypedArrayList, TestIteratorTyped) {
 }
 #endif  // LIBJ_USE_EXCEPTION
 
-TEST(GTestTypedArrayList, TestInt32Array) {
-    Int32Array::Ptr a = Int32Array::create();
+TEST(GTestTypedArrayList, TestJsTypedArray) {
+    JsInt32Array::Ptr a = JsInt32Array::create();
     a->add(5);
     a->add(7);
     Value v = a->get(1);

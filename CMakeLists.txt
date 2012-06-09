@@ -45,6 +45,7 @@ set(libj-src-common
     src/console.cpp
     src/error.cpp
     src/json.cpp
+    src/js_array_buffer.cpp
     src/js_object.cpp
     src/linked_list.cpp
     src/map.cpp

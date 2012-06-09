@@ -10,11 +10,16 @@ namespace libj {
 
 class Collection : LIBJ_MUTABLE(Collection)
  public:
-    virtual Size size() const = 0;
-    virtual void clear() = 0;
     virtual Boolean add(const Value& val) = 0;
+    // TODO(plenluno): implement
+    // virtual Boolean addAll(CPtr collection) = 0;
+    virtual void clear() = 0;
+    // virtual Boolean contains(const Value& val) const = 0;
+    // virtual Boolean containsAll(CPtr collection) const = 0;
     virtual Boolean remove(const Value& val) = 0;
+    // virtual Boolean removeAll(CPtr collection) = 0;
     virtual Iterator::Ptr iterator() const = 0;
+    virtual Size size() const = 0;
 
     String::CPtr toString() const {
         static String::CPtr comma = String::create(",");

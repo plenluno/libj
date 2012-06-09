@@ -117,6 +117,9 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
         return p;
     }
 
+    // TODO(plenluno): implement
+    // static Ptr create(JsArrayBuffer::Ptr buf);
+
  private:
     TypedArrayList() : list_(ArrayList::create()) {}
 
