@@ -10,6 +10,10 @@ message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
 message(STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 
+CONFIGURE_FILE(
+    ${CMAKE_SOURCE_DIR}/include/libj/config.h.in
+    ${CMAKE_SOURCE_DIR}/include/libj/config.h )
+
 if(LIBJ_USE_BDW_GC)
     find_library(GC gc REQUIRED)
     if(NOT EXISTS ${GC})
@@ -96,10 +100,10 @@ if(LIBJ_USE_BDW_GC)
     )
     if(LIBJ_USE_EXCEPTION)
         set_target_properties(j
-            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -DLIBJ_USE_EXCEPTION -DLIBJ_USE_BDW_GC")
+            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti")
     else(LIBJ_USE_EXCEPTION)
         set_target_properties(j
-            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions -DLIBJ_USE_BDW_GC")
+            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
     endif(LIBJ_USE_EXCEPTION)
 else(LIBJ_USE_BDW_GC)
     add_library(j STATIC
@@ -110,7 +114,7 @@ else(LIBJ_USE_BDW_GC)
     )
     if(LIBJ_USE_EXCEPTION)
         set_target_properties(j
-            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -DLIBJ_USE_EXCEPTION")
+            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti")
     else(LIBJ_USE_EXCEPTION)
         set_target_properties(j
             PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
@@ -146,11 +150,6 @@ if(LIBJ_USE_GTEST)
         pthread
         ${libj-deps}
     )
-    if(LIBJ_USE_EXCEPTION)
-        set_target_properties(libj-gtest
-            PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS -DLIBJ_USE_EXCEPTION")
-    else(LIBJ_USE_EXCEPTION)
-        set_target_properties(libj-gtest
-            PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS")
-    endif(LIBJ_USE_EXCEPTION)
+    set_target_properties(libj-gtest
+        PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS")
 endif(LIBJ_USE_GTEST)

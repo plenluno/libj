@@ -3,6 +3,8 @@
 #ifndef LIBJ_EXCEPTION_H_
 #define LIBJ_EXCEPTION_H_
 
+#include <libj/config.h>
+
 #ifdef LIBJ_USE_EXCEPTION
 
 #include <exception>
