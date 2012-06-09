@@ -26,7 +26,6 @@ if(LIBJ_USE_GTEST)
     if(NOT EXISTS ${GTEST})
         message(FATAL_ERROR "libgtest not found.")
     endif()
-    
     find_library(PTHREAD pthread REQUIRED)
     if(NOT EXISTS ${PTHREAD})
         message(FATAL_ERROR "libpthread not found.")
@@ -62,13 +61,13 @@ set(libj-src-common
 
 if(LIBJ_USE_EXCEPTION)
 set(libj-src
-    ${libj-src-common}
     src/exception.cpp
+    ${libj-src-common}
 )
 else(LIBJ_USE_EXCEPTION)
 set(libj-src
-    ${libj-src-common}
     src/no_exceptions.cpp
+    ${libj-src-common}
 )
 endif(LIBJ_USE_EXCEPTION)
 
@@ -79,8 +78,8 @@ set(libj-deps-common
 
 if(LIBJ_USE_BDW_GC)
 set(libj-deps
-    ${libj-deps-common}
     gc
+    ${libj-deps-common}
 )
 else(LIBJ_USE_BDW_GC)
 set(libj-deps
@@ -138,12 +137,11 @@ if(LIBJ_USE_GTEST)
         gtest/gtest_string_buffer.cpp
         gtest/gtest_typed_array_list.cpp
         gtest/gtest_value.cpp
-        ${libj-src}
     )
     target_link_libraries(libj-gtest
         gtest
+        j
         pthread
-        ${libj-deps}
     )
     set_target_properties(libj-gtest
         PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS")
