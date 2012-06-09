@@ -11,8 +11,8 @@ message(STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 
 CONFIGURE_FILE(
-    ${CMAKE_SOURCE_DIR}/include/libj/config.h.in
-    ${CMAKE_SOURCE_DIR}/include/libj/config.h )
+    include/libj/config.h.in
+    include/libj/config.h )
 
 if(LIBJ_USE_BDW_GC)
     find_library(GC gc REQUIRED)
@@ -37,6 +37,7 @@ include_directories(
     deps
     deps/boost-svn
     deps/jsoncpp/include
+    ${CMAKE_BINARY_DIR}/include
 )
 
 link_directories(
