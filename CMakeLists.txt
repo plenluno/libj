@@ -127,6 +127,7 @@ if(LIBJ_USE_GTEST)
         gtest/gtest_jsoncpp.cpp
         gtest/gtest_js_function.cpp
         gtest/gtest_js_object.cpp
+        gtest/gtest_js_typed_array.cpp
         gtest/gtest_linked_list.cpp
         gtest/gtest_main.cpp
         gtest/gtest_map.cpp

@@ -25,10 +25,10 @@ class Mutable
 #define LIBJ_MUTABLE_METHODS(T, B) public: \
     Ptr clone() const; \
     libj::TypeId type() const { \
-        return libj::Type<T>::id(); \
+        return libj::Type<T >::id(); \
     } \
     Boolean instanceOf(libj::TypeId id) const { \
-        return id == libj::Type<T>::id() \
+        return id == libj::Type<T >::id() \
             || B::instanceOf(id); \
     }
 

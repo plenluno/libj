@@ -7,14 +7,19 @@
 
 namespace libj {
 
-typedef TypedArrayList<Byte>    JsInt8Array;
-typedef TypedArrayList<Short>   JsInt16Array;
-typedef TypedArrayList<Int>     JsInt32Array;
-typedef TypedArrayList<UByte>   JsUInt8Array;
-typedef TypedArrayList<UShort>  JsUInt16Array;
-typedef TypedArrayList<UInt>    JsUInt32Array;
-typedef TypedArrayList<Float>   JsFloat32Array;
-typedef TypedArrayList<Double>  JsFloat64Array;
+template<typename T>
+class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
+ public:
+    static Ptr create() {
+        Ptr p(new JsTypedArray());
+        return p;
+    }
+
+     // TODO(plenluno): implement
+     // static Ptr create(JsArrayBuffer::Ptr buf);
+     // Ptr subArray(Size from);
+     // Ptr subArray(Size from, Size to);
+};
 
 }  // namespace libj
 

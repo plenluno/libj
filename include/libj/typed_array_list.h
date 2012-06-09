@@ -117,14 +117,14 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
         return p;
     }
 
-    // TODO(plenluno): implement
-    // static Ptr create(JsArrayBuffer::Ptr buf);
-
- private:
+ protected:
     TypedArrayList() : list_(ArrayList::create()) {}
 
     ArrayList::Ptr list_;
 };
+
+#define LIBJ_TYPED_ARRAY_LIST_TEMPLATE(D, T) public libj::TypedArrayList<T> { \
+    LIBJ_MUTABLE_TEMPLATE_DECLS(D<T>, libj::TypedArrayList<T>)
 
 }  // namespace libj
 
