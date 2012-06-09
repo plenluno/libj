@@ -21,6 +21,10 @@ class Collection : LIBJ_MUTABLE(Collection)
     virtual Iterator::Ptr iterator() const = 0;
     virtual Size size() const = 0;
 
+    Boolean isEmpty() const {
+        return size() == 0;
+    }
+
     String::CPtr toString() const {
         static String::CPtr comma = String::create(",");
         StringBuffer::Ptr sb = StringBuffer::create();
