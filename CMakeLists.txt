@@ -72,10 +72,22 @@ set(libj-src
 )
 endif(LIBJ_USE_EXCEPTION)
 
-set(libj-deps
+set(libj-deps-common
     cvtutf
     jsoncpp
 )
+
+if(LIBJ_USE_BDW_GC)
+set(libj-deps
+    ${libj-deps-common}
+    gc
+)
+else(LIBJ_USE_BDW_GC)
+set(libj-deps
+    ${libj-deps-common}
+)
+endif(LIBJ_USE_BDW_GC)
+
 
 # cvtutf
 add_library(cvtutf STATIC
@@ -90,36 +102,19 @@ add_library(jsoncpp STATIC
 )
 
 # libj
-if(LIBJ_USE_BDW_GC)
-    add_library(j STATIC
-        ${libj-src}
-    )
-    target_link_libraries(j
-        gc
-        ${libj-deps}
-    )
-    if(LIBJ_USE_EXCEPTION)
-        set_target_properties(j
-            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti")
-    else(LIBJ_USE_EXCEPTION)
-        set_target_properties(j
-            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
-    endif(LIBJ_USE_EXCEPTION)
-else(LIBJ_USE_BDW_GC)
-    add_library(j STATIC
-        ${libj-src}
-    )
-    target_link_libraries(j
-        ${libj-deps}
-    )
-    if(LIBJ_USE_EXCEPTION)
-        set_target_properties(j
-            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti")
-    else(LIBJ_USE_EXCEPTION)
-        set_target_properties(j
-            PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
-    endif(LIBJ_USE_EXCEPTION)
-endif(LIBJ_USE_BDW_GC)
+add_library(j STATIC
+    ${libj-src}
+)
+target_link_libraries(j
+    ${libj-deps}
+)
+if(LIBJ_USE_EXCEPTION)
+    set_target_properties(j
+        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti")
+else(LIBJ_USE_EXCEPTION)
+    set_target_properties(j
+        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
+endif(LIBJ_USE_EXCEPTION)
 
 # gtest
 if(LIBJ_USE_GTEST)
