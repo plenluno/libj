@@ -13,7 +13,7 @@ namespace libj {
 
 template<typename T>
 class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
- private:
+ protected:
     Boolean match(const Value& v) {
         TypeId id = Type<T>::id();
         Boolean result = v.type() == id || v.instanceOf(id);
