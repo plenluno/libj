@@ -260,7 +260,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         if (isAscii())
             return String::create(buf64_, String::ASCII, length_);
         else
-            return String::create(buf64_, String::UTF8, length_);
+            return String::create(buf64_, String::UTF8);
     }
 
  private:
@@ -270,10 +270,10 @@ class JsArrayBufferImpl : public JsArrayBuffer {
     JsArrayBufferImpl(Size length = 0)
         : length_(length)
         , buf64_(0) {
-        Size len64 = (length + 7) / 8;
+        Size len64 = length / 8;
         if (len64) {
-            buf64_ = new ULong[len64];
-            buf64_[len64 - 1] = 0;
+            buf64_ = new ULong[len64 + 1];
+            buf64_[len64] = 0;
         }
     }
 
