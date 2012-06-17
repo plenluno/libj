@@ -5,6 +5,15 @@
 
 namespace libj {
 
+TEST(GTestStringBuffer, TestCharAt) {
+    StringBuffer::Ptr sb = StringBuffer::create();
+    String::CPtr empty = String::create();
+    String::CPtr abc = String::create("abc");
+    sb->append(empty);
+    sb->append(abc);
+    ASSERT_EQ(sb->charAt(2), 'c');
+}
+
 TEST(GTestStringBuffer, TestToString) {
     StringBuffer::Ptr sb = StringBuffer::create();
     String::CPtr s1 = String::create("abc");

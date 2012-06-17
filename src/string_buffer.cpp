@@ -87,7 +87,9 @@ class StringBufferImpl : public StringBuffer {
             for (li i = strs_.begin(), e = strs_.end(); i != e; ++i) {
                 String::CPtr s = *i;
                 const StringImpl* si = reinterpret_cast<const StringImpl*>(&*s);
-                buf8_->append(*si->getStr8());
+                const Str8* s8 = si->getStr8();
+                if (s8)
+                    buf8_->append(*s8);
             }
         } else {
             typedef Str8::const_iterator it8;
@@ -106,11 +108,15 @@ class StringBufferImpl : public StringBuffer {
                 const StringImpl* si = reinterpret_cast<const StringImpl*>(&*s);
                 if (si->isAscii()) {
                     const Str8* s8 = si->getStr8();
-                    for (it8 j = s8->begin(), e = s8->end(); j != e; ++j) {
-                        buf32_->push_back(*j);
+                    if (s8) {
+                        for (it8 j = s8->begin(), e = s8->end(); j != e; ++j) {
+                            buf32_->push_back(*j);
+                        }
                     }
                 } else {
-                    buf32_->append(*si->getStr32());
+                    const Str32* s32 = si->getStr32();
+                    if (s32)
+                        buf32_->append(*s32);
                 }
             }
         }
