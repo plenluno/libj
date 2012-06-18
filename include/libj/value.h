@@ -62,8 +62,8 @@ class Value {
         return content ? content->type() : Type<void>::id();
     }
 
-    Boolean instanceOf(TypeId id) const {
-        return content ? content->instanceOf(id) : false;
+    Boolean instanceof(TypeId id) const {
+        return content ? content->instanceof(id) : false;
     }
 
     Boolean isCPtr() const {
@@ -90,7 +90,7 @@ class Value {
      public:
         virtual TypeId type() const = 0;
 
-        virtual Boolean instanceOf(TypeId id) const = 0;
+        virtual Boolean instanceof(TypeId id) const = 0;
 
         virtual Boolean isCPtr() const = 0;
 
@@ -114,8 +114,8 @@ class Value {
             return Type<ValueType>::id();
         }
 
-        virtual Boolean instanceOf(TypeId id) const {
-            return held ? held->instanceOf(id) : false;
+        virtual Boolean instanceof(TypeId id) const {
+            return held ? held->instanceof(id) : false;
         }
 
         virtual Boolean isCPtr() const {
@@ -129,9 +129,9 @@ class Value {
                 ValueType thatHeld =
                     static_cast<holder<ValueType>*>(that)->held;
                 return this->held->compareTo(thatHeld);
-            } else if (this->instanceOf(thatId)) {
+            } else if (this->instanceof(thatId)) {
                 return 1;
-            } else if (that->instanceOf(thisId)) {
+            } else if (that->instanceof(thisId)) {
                 return -1;
             } else {
                 return thisId < thatId ? -1 : 1;
@@ -161,7 +161,7 @@ class Value {
             return Type<ValueType>::id();
         }
 
-        virtual Boolean instanceOf(TypeId id) const {
+        virtual Boolean instanceof(TypeId id) const {
             return false;
         }
 
@@ -269,7 +269,7 @@ Boolean to(
 
 template<typename T>
 typename Type<T>::Ptr toPtr(const Value& v) {
-    if (v.instanceOf(Type<T>::id()) && !v.isCPtr()) {
+    if (v.instanceof(Type<T>::id()) && !v.isCPtr()) {
         LIBJ_PTR_TYPE(T) p;
         if (to<typename Type<T>::Ptr>(v, &p, true)) {
             return p;
@@ -285,7 +285,7 @@ typename Type<T>::Ptr toPtr(const Value& v) {
 
 template<typename T>
 typename Type<T>::CPtr toCPtr(const Value& v) {
-    if (v.instanceOf(Type<T>::id())) {
+    if (v.instanceof(Type<T>::id())) {
         LIBJ_CPTR_TYPE(T) p;
         if (to<typename Type<T>::CPtr>(v, &p, true)) {
             return p;

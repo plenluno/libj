@@ -86,7 +86,7 @@ static String::CPtr mapToJson(const Value& val) {
     result->append(JSON_LBRACE);
     while (itr->hasNext()) {
         Value v = itr->next();
-        if (v.instanceOf(Type<String>::id())) {
+        if (v.instanceof(Type<String>::id())) {
             if (result->length() > 1)
                 result->append(JSON_COMMA);
             result->append(stringToJson(v));
@@ -114,13 +114,13 @@ static String::CPtr collectionToJson(const Value& val) {
 }
 
 String::CPtr stringify(const Value& val) {
-    if (val.instanceOf(Type<String>::id())) {
+    if (val.instanceof(Type<String>::id())) {
         return stringToJson(val);
-    } else if (val.instanceOf(Type<Map>::id())) {
+    } else if (val.instanceof(Type<Map>::id())) {
         return mapToJson(val);
-    } else if (val.instanceOf(Type<Collection>::id())) {
+    } else if (val.instanceof(Type<Collection>::id())) {
         return collectionToJson(val);
-    } else if (val.instanceOf(Type<Object>::id())) {
+    } else if (val.instanceof(Type<Object>::id())) {
         return JSON_NULL;
     } else {
         return String::valueOf(val);

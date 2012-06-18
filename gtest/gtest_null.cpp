@@ -13,9 +13,9 @@ TEST(GTestNull, TestToString) {
 
 TEST(GTestNull, TestInstanceOf) {
     Null::CPtr p = Null::instance();
-    ASSERT_TRUE(p->instanceOf(Type<Null>::id()));
-    ASSERT_TRUE(p->instanceOf(Type<Singleton>::id()));
-    ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Null>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Singleton>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Object>::id()));
 }
 
 #ifdef LIBJ_USE_SP

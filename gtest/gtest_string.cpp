@@ -170,9 +170,9 @@ TEST(GTestString, TestCreateUtf2) {
 
 TEST(GTestString, TestInstanceOf) {
     String::CPtr s = String::create();
-    ASSERT_TRUE(s->instanceOf(Type<String>::id()));
-    ASSERT_TRUE(s->instanceOf(Type<Immutable>::id()));
-    ASSERT_TRUE(s->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(s->instanceof(Type<String>::id()));
+    ASSERT_TRUE(s->instanceof(Type<Immutable>::id()));
+    ASSERT_TRUE(s->instanceof(Type<Object>::id()));
 }
 
 TEST(GTestString, TestLength) {

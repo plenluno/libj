@@ -13,11 +13,11 @@ TEST(GTestArrayList, TestCreate) {
 
 TEST(GTestArrayList, TestInstanceOf) {
     ArrayList::Ptr a = ArrayList::create();
-    ASSERT_TRUE(a->instanceOf(Type<ArrayList>::id()));
-    ASSERT_TRUE(a->instanceOf(Type<List>::id()));
-    ASSERT_TRUE(a->instanceOf(Type<Collection>::id()));
-    ASSERT_TRUE(a->instanceOf(Type<Mutable>::id()));
-    ASSERT_TRUE(a->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(a->instanceof(Type<ArrayList>::id()));
+    ASSERT_TRUE(a->instanceof(Type<List>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Collection>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Object>::id()));
 }
 
 TEST(GTestArrayList, TestSize) {
@@ -95,7 +95,7 @@ TEST(GTestArrayList, TestClear) {
 #else
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
-    ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
+    ASSERT_TRUE(e->instanceof(Type<Error>::id()));
 #endif  // LIBJ_USE_EXCEPTION
     ASSERT_EQ(a->size(), 0);
 }
@@ -108,7 +108,7 @@ TEST(GTestArrayList, TestError) {
 #else
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
-    ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
+    ASSERT_TRUE(e->instanceof(Type<Error>::id()));
     ASSERT_EQ(e->code(), Error::INDEX_OUT_OF_BOUNDS);
 #endif  // LIBJ_USE_EXCEPTION
 }

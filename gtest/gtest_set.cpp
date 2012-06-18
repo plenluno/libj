@@ -13,10 +13,10 @@ TEST(GTestSet, TestCreate) {
 
 TEST(GTestSet, TestInstanceOf) {
     Set::Ptr s = Set::create();
-    ASSERT_TRUE(s->instanceOf(Type<Set>::id()));
-    ASSERT_TRUE(s->instanceOf(Type<Collection>::id()));
-    ASSERT_TRUE(s->instanceOf(Type<Mutable>::id()));
-    ASSERT_TRUE(s->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(s->instanceof(Type<Set>::id()));
+    ASSERT_TRUE(s->instanceof(Type<Collection>::id()));
+    ASSERT_TRUE(s->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(s->instanceof(Type<Object>::id()));
 }
 
 TEST(GTestSet, TestSize) {

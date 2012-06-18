@@ -85,9 +85,9 @@ TEST(GTestMutable, Test2) {
 
 TEST(GTestMutable, Test3) {
     GTestMutable::Ptr p = GTestMutable::create();
-    ASSERT_TRUE(p->instanceOf(Type<GTestMutable>::id()));
-    ASSERT_TRUE(p->instanceOf(Type<Mutable>::id()));
-    ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(p->instanceof(Type<GTestMutable>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Object>::id()));
 }
 
 #ifdef LIBJ_USE_SP

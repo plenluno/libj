@@ -129,7 +129,7 @@ String::CPtr String::valueOf(const Value& val) {
         return sizeToString(val);
     } else if (val.type() == Type<TypeId>::id()) {
         return typeIdToString(val);
-    } else if (val.instanceOf(Type<Object>::id())) {
+    } else if (val.instanceof(Type<Object>::id())) {
         return objectToString(val);
     } else {
         LIBJ_NULL_CPTR(String, nullp);

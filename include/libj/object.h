@@ -19,7 +19,7 @@ class Object
 
     virtual TypeId type() const = 0;
 
-    virtual Boolean instanceOf(TypeId id) const {
+    virtual Boolean instanceof(TypeId id) const {
         return id == Type<Object>::id();
     }
 
@@ -30,9 +30,9 @@ class Object
         TypeId thatId = that->type();
         if (thisId == thatId)
             return 0;
-        else if (this->instanceOf(thatId))
+        else if (this->instanceof(thatId))
             return 1;
-        else if (that->instanceOf(thisId))
+        else if (that->instanceof(thisId))
             return -1;
         else
             return thisId < thatId ? -1 : 1;

@@ -51,7 +51,7 @@ TEST(GTestJson, TestStringify) {
 TEST(GTestJson, TestParse) {
     String::CPtr json = String::create("{\"x\":123,\"y\":[3.0,false]}");
     Value v = json::parse(json);
-    ASSERT_TRUE(v.instanceOf(Type<Map>::id()));
+    ASSERT_TRUE(v.instanceof(Type<Map>::id()));
     Map::CPtr m = toCPtr<Map>(v);
     ASSERT_EQ(m->size(), 2);
     Value xv = m->get(String::create("x"));
@@ -60,7 +60,7 @@ TEST(GTestJson, TestParse) {
     Long l;
     to<Long>(xv, &l);
     ASSERT_EQ(l, 123);
-    ASSERT_TRUE(yv.instanceOf(Type<ArrayList>::id()));
+    ASSERT_TRUE(yv.instanceof(Type<ArrayList>::id()));
     ArrayList::CPtr a = toCPtr<ArrayList>(yv);
     Value a0 = a->get(0);
     Value a1 = a->get(1);

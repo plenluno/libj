@@ -291,15 +291,15 @@ TEST(GTestAny, Test9) {
 TEST(GTestValue, TestInstanceOf) {
     String::CPtr s = String::create("abc");
     Value v = s;
-    ASSERT_TRUE(v.instanceOf(Type<String>::id()));
-    ASSERT_FALSE(v.instanceOf(Type<Mutable>::id()));
-    ASSERT_TRUE(v.instanceOf(Type<Immutable>::id()));
-    ASSERT_TRUE(v.instanceOf(Type<Object>::id()));
-    ASSERT_FALSE(v.instanceOf(Type<int>::id()));
+    ASSERT_TRUE(v.instanceof(Type<String>::id()));
+    ASSERT_FALSE(v.instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(v.instanceof(Type<Immutable>::id()));
+    ASSERT_TRUE(v.instanceof(Type<Object>::id()));
+    ASSERT_FALSE(v.instanceof(Type<int>::id()));
 
     v = 1;
-    ASSERT_FALSE(v.instanceOf(Type<Object>::id()));
-    ASSERT_FALSE(v.instanceOf(Type<int>::id()));
+    ASSERT_FALSE(v.instanceof(Type<Object>::id()));
+    ASSERT_FALSE(v.instanceof(Type<int>::id()));
 }
 
 TEST(GTestValue, TestSingletonToPtrAndCPtr) {

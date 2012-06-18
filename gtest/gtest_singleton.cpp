@@ -34,9 +34,9 @@ TEST(GTestSingleton, Test2) {
 
 TEST(GTestSingleton, Test3) {
     GTestSingleton::Ptr p = GTestSingleton::instance();
-    ASSERT_TRUE(p->instanceOf(Type<GTestSingleton>::id()));
-    ASSERT_TRUE(p->instanceOf(Type<Singleton>::id()));
-    ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(p->instanceof(Type<GTestSingleton>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Singleton>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Object>::id()));
 }
 
 #ifdef LIBJ_USE_SP

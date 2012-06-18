@@ -15,9 +15,9 @@ class Immutable
  public:
     typedef LIBJ_CPTR(Immutable) CPtr;
 
-    Boolean instanceOf(TypeId id) const {
+    Boolean instanceof(TypeId id) const {
         return id == Type<Immutable>::id()
-            || Object::instanceOf(id);
+            || Object::instanceof(id);
     }
 };
 
@@ -25,9 +25,9 @@ class Immutable
     libj::TypeId type() const { \
         return libj::Type<T>::id(); \
     } \
-    Boolean instanceOf(libj::TypeId id) const { \
+    Boolean instanceof(libj::TypeId id) const { \
         return id == libj::Type<T>::id() \
-            || B::instanceOf(id); \
+            || B::instanceof(id); \
     }
 
 #define LIBJ_IMMUTABLE_DECLS(T, B) public: \

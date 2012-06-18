@@ -13,9 +13,9 @@ TEST(GTestMap, TestCreate) {
 
 TEST(GTestMap, TestInstanceOf) {
     Map::Ptr m = Map::create();
-    ASSERT_TRUE(m->instanceOf(Type<Map>::id()));
-    ASSERT_TRUE(m->instanceOf(Type<Mutable>::id()));
-    ASSERT_TRUE(m->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(m->instanceof(Type<Map>::id()));
+    ASSERT_TRUE(m->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(m->instanceof(Type<Object>::id()));
 }
 
 TEST(GTestMap, TestSize) {

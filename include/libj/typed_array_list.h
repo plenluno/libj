@@ -16,7 +16,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
  protected:
     Boolean match(const Value& v) {
         TypeId id = Type<T>::id();
-        Boolean result = v.type() == id || v.instanceOf(id);
+        Boolean result = v.type() == id || v.instanceof(id);
 #ifdef LIBJ_USE_EXCEPTION
         if (!result)
             LIBJ_THROW(Error::ILLEGAL_TYPE);

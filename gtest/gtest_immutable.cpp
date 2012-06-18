@@ -78,9 +78,9 @@ TEST(GTestImmutable, Test2) {
 
 TEST(GTestImmutable, Test3) {
     GTestImmutable::CPtr p = GTestImmutable::create();
-    ASSERT_TRUE(p->instanceOf(Type<GTestImmutable>::id()));
-    ASSERT_TRUE(p->instanceOf(Type<Immutable>::id()));
-    ASSERT_TRUE(p->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(p->instanceof(Type<GTestImmutable>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Immutable>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Object>::id()));
 }
 
 #ifdef LIBJ_USE_SP

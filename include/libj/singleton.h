@@ -25,9 +25,9 @@ class SingletonTmpl
         return p;
     }
 
-    Boolean instanceOf(TypeId id) const {
+    Boolean instanceof(TypeId id) const {
         return id == Type<Singleton>::id()
-            || Object::instanceOf(id);
+            || Object::instanceof(id);
     }
 
  protected:
@@ -46,9 +46,9 @@ public: \
     libj::TypeId type() const { \
         return libj::Type<T>::id(); \
     } \
-    Boolean instanceOf(libj::TypeId id) const { \
+    Boolean instanceof(libj::TypeId id) const { \
         return id == type() \
-            || libj::SingletonTmpl<T>::instanceOf(id); \
+            || libj::SingletonTmpl<T>::instanceof(id); \
     }
 
 }  // namespace libj

@@ -14,11 +14,11 @@ TEST(GTestLinkedList, TestCreate) {
 
 TEST(GTestLinkedList, TestInstanceOf) {
     LinkedList::Ptr l = LinkedList::create();
-    ASSERT_TRUE(l->instanceOf(Type<LinkedList>::id()));
-    ASSERT_TRUE(l->instanceOf(Type<List>::id()));
-    ASSERT_TRUE(l->instanceOf(Type<Collection>::id()));
-    ASSERT_TRUE(l->instanceOf(Type<Mutable>::id()));
-    ASSERT_TRUE(l->instanceOf(Type<Object>::id()));
+    ASSERT_TRUE(l->instanceof(Type<LinkedList>::id()));
+    ASSERT_TRUE(l->instanceof(Type<List>::id()));
+    ASSERT_TRUE(l->instanceof(Type<Collection>::id()));
+    ASSERT_TRUE(l->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(l->instanceof(Type<Object>::id()));
 }
 
 TEST(GTestLinkedList, TestSize) {
@@ -97,7 +97,7 @@ TEST(GTestLinkedList, TestClear) {
 #else
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(l->get(0), &e));
-    ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
+    ASSERT_TRUE(e->instanceof(Type<Error>::id()));
 #endif  // LIBJ_USE_EXCEPTION
     ASSERT_EQ(l->size(), 0);
 }
@@ -110,7 +110,7 @@ TEST(GTestLinkedList, TestError) {
 #else
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(l->get(0), &e));
-    ASSERT_TRUE(e->instanceOf(Type<Error>::id()));
+    ASSERT_TRUE(e->instanceof(Type<Error>::id()));
     ASSERT_EQ(e->code(), Error::INDEX_OUT_OF_BOUNDS);
 #endif  // LIBJ_USE_EXCEPTION
 }
