@@ -25,6 +25,8 @@ class Error : LIBJ_STATUS(Error)
         NULL_POINTER,
         UNSUPPORTED_VERSION,
         UNSUPPORTED_OPERATION,
+
+        END_OF_CODE
     };
 
     static CPtr create(Int code);

@@ -119,6 +119,7 @@ endif(LIBJ_USE_EXCEPTION)
 if(LIBJ_USE_GTEST)
     add_executable(libj-gtest
         gtest/gtest_array_list.cpp
+        gtest/gtest_error.cpp
         gtest/gtest_function.cpp
         gtest/gtest_immutable.cpp
         gtest/gtest_json.cpp
@@ -134,6 +135,7 @@ if(LIBJ_USE_GTEST)
         gtest/gtest_null.cpp
         gtest/gtest_set.cpp
         gtest/gtest_singleton.cpp
+        gtest/gtest_status.cpp
         gtest/gtest_string.cpp
         gtest/gtest_string_buffer.cpp
         gtest/gtest_typed_array_list.cpp

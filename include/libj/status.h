@@ -17,6 +17,7 @@ class Status : LIBJ_IMMUTABLE(Status)
     static CPtr create(Int code, String::CPtr msg);
 
     virtual Int code() const = 0;
+    virtual String::CPtr message() const = 0;
 };
 
 #define LIBJ_STATUS(T) public libj::Status { \
@@ -26,6 +27,9 @@ class Status : LIBJ_IMMUTABLE(Status)
 public: \
     Int code() const { \
         return S->code(); \
+    } \
+    String::CPtr message() const { \
+        return S->message(); \
     } \
     String::CPtr toString() const { \
         return S->toString(); \

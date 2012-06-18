@@ -8,21 +8,30 @@ class ErrorImpl : public Error {
  private:
     Status::CPtr status_;
 
-    ErrorImpl(Int code)
-        : status_(Status::create(code)) {}
-
     ErrorImpl(Int code, String::CPtr msg)
         : status_(Status::create(code, msg)) {}
 
  public:
     static CPtr create(Int code) {
-        CPtr p(new ErrorImpl(code));
-        return p;
+        if (code < ANY || code >= END_OF_CODE) {
+            LIBJ_NULL_CPTR(Error, nullp);
+            return nullp;
+        } else {
+            // TODO(plenluno): default messages
+            LIBJ_NULL_CPTR(String, nullp);
+            CPtr p(new ErrorImpl(code, nullp));
+            return p;
+        }
     }
 
     static CPtr create(Int code, String::CPtr msg) {
-        CPtr p(new ErrorImpl(code, msg));
-        return p;
+        if (code < ANY || code >= END_OF_CODE) {
+            LIBJ_NULL_CPTR(Error, nullp);
+            return nullp;
+        } else {
+            CPtr p(new ErrorImpl(code, msg));
+            return p;
+        }
     }
 
     LIBJ_STATUS_IMPL(status_);

@@ -11,16 +11,27 @@ class StatusImpl : public Status {
         return code_;
     }
 
-    String::CPtr toString() const {
+    String::CPtr message() const {
         if (message_)
             return message_;
         else
             return String::create();
     }
 
+    String::CPtr toString() const {
+        return message();
+    }
+
  public:
     static CPtr create(Int code) {
-        CPtr p(new StatusImpl(code));
+        String::CPtr msg;
+        if (code == OK) {
+            msg = String::create("OK");
+        } else {
+            LIBJ_NULL_CPTR(String, nullp);
+            msg = nullp;
+        }
+        CPtr p(new StatusImpl(code, msg));
         return p;
     }
 
@@ -32,10 +43,6 @@ class StatusImpl : public Status {
  private:
     Int code_;
     String::CPtr message_;
-
-    StatusImpl(Int code)
-        : code_(code)
-        , message_(LIBJ_NULL(String)) {}
 
     StatusImpl(Int code, String::CPtr msg)
         : code_(code)
