@@ -8,19 +8,26 @@
 
 namespace libj {
 
-typedef bool Boolean;
-typedef int8_t Byte;
-typedef int16_t Short;
-typedef int32_t Int;
-typedef int64_t Long;
-typedef uint8_t UByte;
-typedef uint16_t UShort;
-typedef uint32_t UInt;
-typedef uint64_t ULong;
-typedef float Float;
-typedef double Double;
-typedef int32_t Char;
-typedef size_t Size;
+#ifndef LIBJ_USE_CXX11
+typedef uint16_t  char16_t;
+typedef uint32_t  char32_t;
+#endif
+
+typedef bool      Boolean;
+typedef int8_t    Byte;
+typedef int16_t   Short;
+typedef int32_t   Int;
+typedef int64_t   Long;
+typedef uint8_t   UByte;
+typedef uint16_t  UShort;
+typedef uint32_t  UInt;
+typedef uint64_t  ULong;
+typedef float     Float;
+typedef double    Double;
+typedef char16_t  Char16;
+typedef char32_t  Char32;
+typedef Char32    Char;
+typedef size_t    Size;
 typedef uintptr_t TypeId;
 
 }  // namespace libj
