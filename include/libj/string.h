@@ -14,7 +14,7 @@ namespace std {
 typedef basic_string<char16_t> u16string;
 typedef basic_string<char32_t> u32string;
 
-}
+}  // namespace std
 #endif
 
 namespace libj {

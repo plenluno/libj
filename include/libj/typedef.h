@@ -12,7 +12,7 @@ namespace std {
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
 
-}
+}  // namespace std
 #endif
 
 namespace libj {
