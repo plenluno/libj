@@ -52,8 +52,8 @@ class String : LIBJ_IMMUTABLE(String)
     virtual std::string toStdString() const = 0;
 #if 0
     // TODO(plenluno): implement
-    virtual std::u16string toU16String() const = 0;
-    virtual std::u32string toU32String() const = 0;
+    virtual std::u16string toStdU16String() const = 0;
+    virtual std::u32string toStdU32String() const = 0;
 #endif
 };
 
