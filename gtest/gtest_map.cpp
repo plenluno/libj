@@ -50,6 +50,24 @@ TEST(GTestMap, TestIterator) {
     ASSERT_FALSE(itr->hasNext());
 }
 
+TEST(GTestMap, TestContainsKey) {
+    Map::Ptr m = Map::create();
+    String::CPtr x = String::create("x");
+    String::CPtr y = String::create("y");
+    m->put(x, 123);
+    ASSERT_TRUE(m->containsKey(x));
+    ASSERT_FALSE(m->containsKey(y));
+}
+
+TEST(GTestMap, TestContainsValue) {
+    Map::Ptr m = Map::create();
+    String::CPtr x = String::create("x");
+    String::CPtr y = String::create("y");
+    m->put(x, 123);
+    ASSERT_TRUE(m->containsValue(123));
+    ASSERT_FALSE(m->containsKey(456));
+}
+
 #ifdef LIBJ_USE_SP
 TEST(GTestMap, TestUseCount) {
     Map::CPtr p = Map::create();

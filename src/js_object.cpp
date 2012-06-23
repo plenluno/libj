@@ -14,32 +14,41 @@ class JsObjectImpl : public JsObject {
         return p;
     }
 
-    Value put(const Value& key, const Value& val) {
-        return map_->put(String::valueOf(key), val);
+    void clear() {
+        map_->clear();
     }
 
-    String::CPtr toString() const {
-        return STR_OBJECT;
+    Boolean containsKey(const Value& key) const {
+        return map_->containsKey(String::valueOf(key));
     }
 
-    Size size() const {
-        return map_->size();
+    Boolean containsValue(const Value& val) const {
+        return map_->containsValue(val);
     }
 
     Value get(const Value& key) const {
-        return map_->get(key);
-    }
-
-    Value remove(const Value& key) {
-        return map_->remove(key);
+        return map_->get(String::valueOf(key));
     }
 
     Set::CPtr keySet() const {
         return map_->keySet();
     }
 
-    void clear() {
-        map_->clear();
+    Value put(const Value& key, const Value& val) {
+        return map_->put(String::valueOf(key), val);
+    }
+
+    Value remove(const Value& key) {
+        return map_->remove(String::valueOf(key));
+    }
+
+    Size size() const {
+        return map_->size();
+    }
+
+    String::CPtr toString() const {
+        const String::CPtr strObject = String::create("[object Object]");
+        return strObject;
     }
 
  private:
@@ -47,8 +56,6 @@ class JsObjectImpl : public JsObject {
 
     JsObjectImpl() : map_(Map::create()) {}
 };
-
-String::CPtr JsObjectImpl::STR_OBJECT = String::create("[object Object]");
 
 JsObject::Ptr JsObject::create() {
     return JsObjectImpl::create();

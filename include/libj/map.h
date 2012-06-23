@@ -11,12 +11,14 @@ class Map : LIBJ_MUTABLE(Map)
  public:
     static Ptr create();
 
-    virtual Size size() const = 0;
+    virtual void clear() = 0;
+    virtual Boolean containsKey(const Value& key) const = 0;
+    virtual Boolean containsValue(const Value& val) const = 0;
     virtual Value get(const Value& key) const = 0;
+    virtual Set::CPtr keySet() const = 0;
     virtual Value put(const Value& key, const Value& val) = 0;
     virtual Value remove(const Value& key) = 0;
-    virtual Set::CPtr keySet() const = 0;
-    virtual void clear() = 0;
+    virtual Size size() const = 0;
 };
 
 #define LIBJ_MAP(T) public libj::Map { \
@@ -24,11 +26,20 @@ class Map : LIBJ_MUTABLE(Map)
 
 #define LIBJ_MAP_IMPL(M) \
 public: \
-    Size size() const { \
-        return M->size(); \
+    void clear() { \
+        M->clear(); \
+    } \
+    Boolean containsKey(const Value& key) const { \
+        return M->containsKey(key); \
+    } \
+    Boolean containsValue(const Value& val) const { \
+        return M->containsValue(val); \
     } \
     Value get(const Value& key) const { \
         return M->get(key); \
+    } \
+    Set::CPtr keySet() const { \
+        return M->keySet(); \
     } \
     Value put(const Value& key, const Value& val) { \
         return M->put(key, val); \
@@ -36,11 +47,8 @@ public: \
     Value remove(const Value& key) { \
         return M->remove(key); \
     } \
-    Set::CPtr keySet() const { \
-        return M->keySet(); \
-    } \
-    void clear() { \
-        M->clear(); \
+    Size size() const { \
+        return M->size(); \
     }
 
 }  // namespace libj

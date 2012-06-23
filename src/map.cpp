@@ -24,6 +24,20 @@ class MapImpl : public Map {
         return map_.size();
     }
 
+    Boolean containsKey(const Value& key) const {
+        return map_.find(key) != map_.end();
+    }
+
+    Boolean containsValue(const Value& val) const {
+        for (ValueMap::const_iterator itr = map_.begin();
+             itr != map_.end();
+             ++itr) {
+            if (!itr->second.compareTo(val))
+                return true;
+        }
+        return false;
+    }
+
     Value get(const Value& key) const {
         ValueMap::const_iterator itr = map_.find(key);
         if (itr != map_.end())

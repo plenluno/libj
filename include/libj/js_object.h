@@ -12,15 +12,19 @@ class JsObject : LIBJ_MAP(JsObject)
  public:
     static Ptr create();
 
+    Boolean hasOwnProperty(const Value& name) const {
+        return containsKey(name);
+    }
+
     template<typename T>
-    typename Type<T>::Ptr getPtr(String::CPtr name) const {
+    typename Type<T>::Ptr getPtr(const Value& name) const {
         Value v = get(name);
         typename Type<T>::Ptr p = toPtr<T>(v);
         return p;
     }
 
     template<typename T>
-    typename Type<T>::CPtr getCPtr(String::CPtr name) const {
+    typename Type<T>::CPtr getCPtr(const Value& name) const {
         Value v = get(name);
         typename Type<T>::CPtr p = toCPtr<T>(v);
         return p;
