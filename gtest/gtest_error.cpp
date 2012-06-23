@@ -13,6 +13,12 @@ TEST(GTestError, TestCreate) {
 }
 
 TEST(GTestError, TestMessage) {
+    Error::CPtr e = Error::create(Error::TIMEOUT);
+    String::CPtr strTimeout = String::create("Timeout");
+    ASSERT_EQ(e->message()->compareTo(strTimeout), 0);
+}
+
+TEST(GTestError, TestMessage2) {
     String::CPtr foo = String::create("foo");
     Error::CPtr e = Error::create(Error::ANY, foo);
     ASSERT_EQ(e->message()->compareTo(foo), 0);
