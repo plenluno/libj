@@ -67,6 +67,11 @@ Str8 convertStr32ToStr8(const Str32* str32) {
 
 namespace libj {
 
+String::CPtr StringImpl::create(Char c, Size n) {
+    CPtr p(new StringImpl(c, n));
+    return p;
+}
+
 String::CPtr StringImpl::create(const void* data, Encoding enc, Size max) {
     if (enc == ASCII) {
         CPtr p(new StringImpl(static_cast<const char*>(data), max));

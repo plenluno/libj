@@ -3,6 +3,7 @@
 #ifndef SRC_STRING_IMPL_H_
 #define SRC_STRING_IMPL_H_
 
+#include <ctype.h>
 #include <string>
 
 #include "libj/string.h"
@@ -256,6 +257,7 @@ class StringImpl : public String {
     }
 
  public:
+    static CPtr create(Char c, Size n);
     static CPtr create(const void* data, Encoding enc, Size max);
 
     typedef std::basic_string<char> Str8;
@@ -329,6 +331,11 @@ class StringImpl : public String {
     StringImpl(const StringImpl* s)
         : str8_(s->str8_ ? new Str8(*(s->str8_)) : 0)
         , str32_(s->str32_ ? new Str32(*(s->str32_)) : 0) {
+    }
+
+    StringImpl(Char c, Size n)
+        : str8_(isascii(c) ? new Str8(n, static_cast<char>(c)) : 0)
+        , str32_(isascii(c) ? 0 : new Str32(n, c)) {
     }
 
  public:

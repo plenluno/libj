@@ -31,6 +31,7 @@ class String : LIBJ_IMMUTABLE(String)
         UTF32,
     };
 
+    static CPtr create(Char, Size = 1);
     static CPtr create(const void* = 0, Encoding = ASCII, Size = NO_POS);
     static CPtr valueOf(const Value&);
 

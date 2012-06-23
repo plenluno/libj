@@ -9,6 +9,10 @@ namespace libj {
 const Size NO_POS = -1;
 const Char NO_CHAR = -1;
 
+String::CPtr String::create(Char c, Size n) {
+    return StringImpl::create(c, n);
+}
+
 String::CPtr String::create(const void* data, Encoding enc, Size max) {
     return StringImpl::create(data, enc, max);
 }
