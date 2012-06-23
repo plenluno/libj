@@ -74,4 +74,13 @@ TEST(GTestJson, TestParse) {
     ASSERT_EQ(b, false);
 }
 
+TEST(GTestJson, TestEscape) {
+    String::CPtr str = String::create("\b\t\r\n'\"\\");
+    String::CPtr json = String::create("\"\\b\\t\\r\\n'\\\"\\\\\"");
+    String::CPtr s = toCPtr<String>(json::parse(json));
+    ASSERT_EQ(s->compareTo(str), 0);
+    s = json::stringify(str);
+    ASSERT_EQ(s->compareTo(json), 0);
+};
+
 }  // namespace libj

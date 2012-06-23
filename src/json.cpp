@@ -63,19 +63,57 @@ Value parse(String::CPtr str) {
         return Error::create(Error::ILLEGAL_ARGUMENT);
 }
 
-static String::CPtr JSON_NULL = String::create("null");
-static String::CPtr JSON_COLON = String::create(":");
-static String::CPtr JSON_COMMA = String::create(",");
-static String::CPtr JSON_DQUOTE = String::create("\"");
-static String::CPtr JSON_LBRACKET = String::create("[");
-static String::CPtr JSON_RBRACKET = String::create("]");
-static String::CPtr JSON_LBRACE = String::create("{");
-static String::CPtr JSON_RBRACE = String::create("}");
+static const String::CPtr JSON_NULLP(static_cast<String*>(0));
+static const String::CPtr JSON_NULL = String::create("null");
+static const String::CPtr JSON_COLON = String::create(":");
+static const String::CPtr JSON_COMMA = String::create(",");
+static const String::CPtr JSON_DQUOTE = String::create("\"");
+static const String::CPtr JSON_LBRACKET = String::create("[");
+static const String::CPtr JSON_RBRACKET = String::create("]");
+static const String::CPtr JSON_LBRACE = String::create("{");
+static const String::CPtr JSON_RBRACE = String::create("}");
+static const String::CPtr JSON_BSLASH = String::create("\\");
+static const String::CPtr JSON_LF = String::create("\\n");
+static const String::CPtr JSON_CR = String::create("\\r");
+static const String::CPtr JSON_TAB = String::create("\\t");
+static const String::CPtr JSON_BSPACE = String::create("\\b");
 
 static String::CPtr stringToJson(const Value& val) {
     String::CPtr s = toCPtr<String>(val);
-    String::CPtr result = JSON_DQUOTE->concat(s)->concat(JSON_DQUOTE);
-    return result;
+    StringBuffer::Ptr result = StringBuffer::create();
+    result->append(JSON_DQUOTE);
+    for (Size i = 0; i < s->length(); i++) {
+        Char c = s->charAt(i);
+        switch (c) {
+        case '\b':
+            result->append(JSON_BSPACE);
+            break;
+        case '\t':
+            result->append(JSON_TAB);
+            break;
+        case '\n':
+            result->append(JSON_LF);
+            break;
+        case '\r':
+            result->append(JSON_CR);
+            break;
+        case '"':
+            result->append(JSON_BSLASH);
+            result->append(JSON_DQUOTE);
+            break;
+        case '\\':
+            result->append(JSON_BSLASH);
+            result->append(JSON_BSLASH);
+            break;
+        case '\0':
+        case '\v':
+            return JSON_NULLP;
+        default:
+            result->append(String::create(c));
+        }
+    }
+    result->append(JSON_DQUOTE);
+    return result->toString();
 }
 
 static String::CPtr mapToJson(const Value& val) {
