@@ -270,8 +270,8 @@ class JsArrayBufferImpl : public JsArrayBuffer {
     JsArrayBufferImpl(Size length = 0)
         : length_(length)
         , buf64_(0) {
-        Size len64 = length / 8;
-        if (len64) {
+        if (length) {
+            Size len64 = (length >> 3) + !!(length & 0x7);
             buf64_ = new ULong[len64 + 1];
             buf64_[len64] = 0;
         }
@@ -287,6 +287,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return p;
     }
 };  // JsArrayBufferImpl
+
 const union JsArrayBufferImpl::endian_u JsArrayBufferImpl::endian = {1};
 
 JsArrayBuffer::Ptr JsArrayBuffer::create(Size length) {
