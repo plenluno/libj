@@ -89,11 +89,11 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return length_;
     }
 
-    JsArrayBuffer::Ptr slice(Size begin) const {
-        return this->slice(begin, length_);
+    const UByte* data() const {
+        return reinterpret_cast<const UByte*>(buf64_);
     }
 
-    JsArrayBuffer::Ptr slice(Size begin, Size end) const {
+    Value slice(Size begin, Size end) const {
         Size len = 0;
         if (begin < end && begin < length_) {
             if (end >= length_) end = length_;

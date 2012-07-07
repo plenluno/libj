@@ -3,7 +3,9 @@
 #ifndef LIBJ_JS_ARRAY_BUFFER_H_
 #define LIBJ_JS_ARRAY_BUFFER_H_
 
+#include "libj/constant.h"
 #include "libj/mutable.h"
+#include "libj/value.h"
 
 namespace libj {
 
@@ -12,9 +14,9 @@ class JsArrayBuffer : LIBJ_MUTABLE(JsArrayBuffer)
     static Ptr create(Size length = 0);
 
     virtual Size length() const = 0;
+    virtual const UByte* data() const = 0;
 
-    virtual Ptr slice(Size begin) const = 0;
-    virtual Ptr slice(Size begin, Size end) const = 0;
+    virtual Value slice(Size begin = 0, Size end = NO_POS) const = 0;
 
     virtual Boolean getInt8(
         Size byteOffset, Byte* value) const = 0;
@@ -58,6 +60,9 @@ class JsArrayBuffer : LIBJ_MUTABLE(JsArrayBuffer)
 public: \
     Size length() const { \
         return B->length(); \
+    } \
+    const UByte* data() const { \
+        return B->data(); \
     } \
     Boolean getInt8( \
         Size byteOffset, Byte* value) const { \
