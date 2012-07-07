@@ -13,12 +13,15 @@ namespace glue {
 class RegExp {
  public:
     enum Flag {
+        NONE        = 0,
+        GLOBAL      = 1 << 0,
         IGNORE_CASE = 1 << 1,
         MULTILINE   = 1 << 2,
     };
 
     static RegExp* create(const std::u16string& pattern, unsigned int flags);
 
+    bool global() const;
     bool ignoreCase() const;
     bool multiline() const;
 
@@ -29,7 +32,7 @@ class RegExp {
 
  private:
     std::u16string pattern_;
-    int flags_;
+    unsigned int flags_;
     void* code_;
 
     RegExp(const std::u16string& pattern, int flags)

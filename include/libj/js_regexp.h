@@ -12,12 +12,13 @@ namespace libj {
 class JsRegExp : LIBJ_JS_OBJECT(JsRegExp)
  public:
     enum Flag {
+        NONE        = 0,
         GLOBAL      = 1 << 0,
         IGNORE_CASE = 1 << 1,
         MULTILINE   = 1 << 2,
     };
 
-    static Ptr create(String::CPtr pattern, UInt flags);
+    static Ptr create(String::CPtr pattern, UInt flags = NONE);
 
     virtual Boolean global() const = 0;
     virtual Boolean ignoreCase() const = 0;

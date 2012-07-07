@@ -11,20 +11,26 @@ namespace libj {
 class JsRegExpImpl : public JsRegExp {
  public:
     static Ptr create(String::CPtr pattern, UInt flags) {
-        Ptr p(new JsRegExpImpl(pattern, flags));
-        return p;
+        JsRegExpImpl* impl = new JsRegExpImpl(pattern, flags);
+        if (impl->re_) {
+            Ptr p(impl);
+            return p;
+        } else {
+            LIBJ_NULL_PTR(JsRegExp, nullp);
+            return nullp;
+        }
     }
 
     Boolean global() const {
-        return flags_ & GLOBAL;
+        return re_->global();
     }
 
     Boolean ignoreCase() const {
-        return flags_ & IGNORE_CASE;
+        return re_->ignoreCase();
     }
 
     Boolean multiline() const {
-        return flags_ & MULTILINE;
+        return re_->multiline();
     }
 
     String::CPtr source() const {
@@ -66,13 +72,11 @@ class JsRegExpImpl : public JsRegExp {
  private:
     JsObject::Ptr obj_;
     String::CPtr pattern_;
-    UInt flags_;
     glue::RegExp* re_;
 
     JsRegExpImpl(String::CPtr pattern, UInt flags)
         : obj_(JsObject::create())
         , pattern_(pattern)
-        , flags_(flags)
         , re_(glue::RegExp::create(pattern->toStdU16String(), flags)) {}
 
  public:
