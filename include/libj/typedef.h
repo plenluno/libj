@@ -7,10 +7,14 @@
 #include <inttypes.h>
 
 #ifndef LIBJ_USE_CXX11
+#include <string>
+
 namespace std {
 
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
+typedef basic_string<char16_t> u16string;
+typedef basic_string<char32_t> u32string;
 
 }  // namespace std
 #endif

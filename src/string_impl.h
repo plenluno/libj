@@ -249,12 +249,14 @@ class StringImpl : public String {
         }
     }
 
-    std::string toStdString() const;
-
     CPtr toString() const {
         CPtr p(new StringImpl(this));
         return p;
     }
+
+    std::string toStdString() const;
+    std::u16string toStdU16String() const;
+    std::u32string toStdU32String() const;
 
  public:
     static CPtr create(Char c, Size n);

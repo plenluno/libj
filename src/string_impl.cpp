@@ -8,8 +8,9 @@
 namespace cvtutf {
 
 typedef libj::Size Size;
-typedef libj::StringImpl::Str8 Str8;
-typedef libj::StringImpl::Str32 Str32;
+typedef std::basic_string<char> Str8;
+typedef std::basic_string<libj::Char16> Str16;
+typedef std::basic_string<libj::Char32> Str32;
 
 const int kConvertBufferSize = 32;
 const ConversionFlags kConvertFlag = lenientConversion;
@@ -43,7 +44,7 @@ Str32* convertToUtf32(const T* src, Size max) {
     do {
         UTF32* cur32 = buf;
         r = convertToUtf32<T>(&src, &max, &cur32, end32, kConvertFlag);
-        dst->append(reinterpret_cast<libj::Char*>(buf), cur32 - buf);
+        dst->append(reinterpret_cast<libj::Char32*>(buf), cur32 - buf);
     } while (r == targetExhausted);
     return dst;
 }
@@ -59,6 +60,21 @@ Str8 convertStr32ToStr8(const Str32* str32) {
         UTF8* cur8 = buf;
         r = ConvertUTF32toUTF8(&cur32, end32, &cur8, end8, kConvertFlag);
         dst.append(reinterpret_cast<char*>(buf), cur8 - buf);
+    } while (r == targetExhausted);
+    return dst;
+}
+
+Str16 convertStr32ToStr16(const Str32* str32) {
+    UTF16 buf[kConvertBufferSize];
+    const UTF32* cur32 = reinterpret_cast<const UTF32*>(str32->c_str());
+    const UTF32* end32 = cur32 + str32->length();
+    UTF16* end16 = buf + kConvertBufferSize;
+    Str16 dst = Str16();
+    ConversionResult r;
+    do {
+        UTF16* cur16 = buf;
+        r = ConvertUTF32toUTF16(&cur32, end32, &cur16, end16, kConvertFlag);
+        dst.append(reinterpret_cast<libj::Char16*>(buf), cur16 - buf);
     } while (r == targetExhausted);
     return dst;
 }
@@ -100,6 +116,36 @@ std::string StringImpl::toStdString() const {
         return str8_ ? *str8_ : std::string();
     } else {
         return cvtutf::convertStr32ToStr8(str32_);
+    }
+}
+
+std::u16string StringImpl::toStdU16String() const {
+    if (isAscii()) {
+        std::u16string s16;
+        if (str8_) {
+            Size len = str8_->length();
+            for (Size i = 0; i < len; i++) {
+                s16.push_back((*str8_)[i]);
+            }
+        }
+        return s16;
+    } else {
+        return cvtutf::convertStr32ToStr16(str32_);
+    }
+}
+
+std::u32string StringImpl::toStdU32String() const {
+    if (isAscii()) {
+        std::u32string s32;
+        if (str8_) {
+            Size len = str8_->length();
+            for (Size i = 0; i < len; i++) {
+                s32.push_back((*str8_)[i]);
+            }
+        }
+        return s32;
+    } else {
+        return str32_ ? *str32_ : std::u32string();
     }
 }
 
