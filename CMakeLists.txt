@@ -36,6 +36,7 @@ include_directories(
     include
     deps
     deps/boost-svn
+    deps/iv
     deps/jsoncpp/include
 )
 
@@ -46,10 +47,12 @@ link_directories(
 set(libj-src-common
     src/array_list.cpp
     src/console.cpp
+    src/constant.cpp
     src/error.cpp
     src/json.cpp
     src/js_array_buffer.cpp
     src/js_object.cpp
+    src/js_regexp.cpp
     src/linked_list.cpp
     src/map.cpp
     src/set.cpp
@@ -74,6 +77,7 @@ endif(LIBJ_USE_EXCEPTION)
 set(libj-deps-common
     cvtutf
     jsoncpp
+    regexp
 )
 
 if(LIBJ_USE_BDW_GC)
@@ -98,6 +102,11 @@ add_library(jsoncpp STATIC
     deps/jsoncpp/src/lib_json/json_reader.cpp
     deps/jsoncpp/src/lib_json/json_value.cpp
     deps/jsoncpp/src/lib_json/json_writer.cpp
+)
+
+# regexp
+add_library(regexp STATIC
+    src/glue/regexp.cpp
 )
 
 # libj
