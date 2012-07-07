@@ -3,9 +3,9 @@
 #ifndef SRC_GLUE_REGEXP_H_
 #define SRC_GLUE_REGEXP_H_
 
-#include <vector>
 #include <assert.h>
 #include <libj/typedef.h>
+#include <vector>
 
 namespace libj {
 namespace glue {

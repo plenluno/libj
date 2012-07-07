@@ -1,5 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#include <vector>
+
 #include "libj/js_regexp.h"
 #include "libj/undefined.h"
 #include "./glue/regexp.h"
@@ -72,6 +74,7 @@ class JsRegExpImpl : public JsRegExp {
         , pattern_(pattern)
         , flags_(flags)
         , re_(glue::RegExp::create(pattern->toStdU16String(), flags)) {}
+
  public:
     ~JsRegExpImpl() {
         delete re_;
