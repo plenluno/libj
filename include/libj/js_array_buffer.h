@@ -14,7 +14,7 @@ class JsArrayBuffer : LIBJ_MUTABLE(JsArrayBuffer)
     static Ptr create(Size length = 0);
 
     virtual Size length() const = 0;
-    virtual const UByte* data() const = 0;
+    virtual const void* data() const = 0;
 
     virtual Value slice(Size begin = 0, Size end = NO_POS) const = 0;
 

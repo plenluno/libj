@@ -89,8 +89,8 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return length_;
     }
 
-    const UByte* data() const {
-        return reinterpret_cast<const UByte*>(buf64_);
+    const void* data() const {
+        return buf64_;
     }
 
     Value slice(Size begin, Size end) const {
