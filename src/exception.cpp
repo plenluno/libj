@@ -3,6 +3,8 @@
 #include "libj/error.h"
 #include "libj/exception.h"
 
+#ifdef LIBJ_USE_EXCEPTION
+
 namespace libj {
 
 Exception::Exception(Int code)
@@ -36,3 +38,5 @@ Exception::Exception(Int code, const char* file, const char* func, int line)
 Exception::~Exception() throw() {}
 
 }  // namespace libj
+
+#endif  // LIBJ_USE_EXCEPTION
