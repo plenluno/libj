@@ -61,7 +61,7 @@ public: \
     Size length() const { \
         return B->length(); \
     } \
-    const UByte* data() const { \
+    const void* data() const { \
         return B->data(); \
     } \
     Boolean getInt8( \
