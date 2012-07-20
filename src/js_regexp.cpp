@@ -8,6 +8,19 @@
 
 namespace libj {
 
+static glue::RegExp::U16String toU16String(String::CPtr str) {
+    if (Type<std::char16_t>::id() == Type<uint16_t>::id()) {
+        return str->toStdU16String();
+    } else {
+        glue::RegExp::U16String s;
+        std::u16string ss = str->toStdU16String();
+        for (size_t i = 0; i < ss.length(); i++) {
+            s.push_back(ss[i]);
+        }
+        return s;
+    }
+}
+
 class JsRegExpImpl : public JsRegExp {
  public:
     static Ptr create(String::CPtr pattern, UInt flags) {
@@ -44,7 +57,7 @@ class JsRegExpImpl : public JsRegExp {
         }
 
         std::vector<int> captures;
-        re_->execute(str->toStdU16String(), 0, captures);
+        re_->execute(toU16String(str), 0, captures);
         if (captures.empty()) {
             LIBJ_NULL_PTR(JsArray, nullp);
             return nullp;
@@ -77,7 +90,7 @@ class JsRegExpImpl : public JsRegExp {
     JsRegExpImpl(String::CPtr pattern, UInt flags)
         : obj_(JsObject::create())
         , pattern_(pattern)
-        , re_(glue::RegExp::create(pattern->toStdU16String(), flags)) {}
+        , re_(glue::RegExp::create(toU16String(pattern), flags)) {}
 
  public:
     ~JsRegExpImpl() {

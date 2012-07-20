@@ -109,6 +109,11 @@ add_library(regexp STATIC
     src/glue/regexp.cpp
 )
 
+if(NOT APPLE)
+set_target_properties(regexp
+    PROPERTIES COMPILE_FLAGS "--std=c++0x")
+endif(NOT APPLE)
+
 # libj
 add_library(j STATIC
     ${libj-src}

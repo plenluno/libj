@@ -7,7 +7,7 @@
 namespace libj {
 namespace glue {
 
-RegExp* RegExp::create(const std::u16string& pattern, unsigned int flags) {
+RegExp* RegExp::create(const U16String& pattern, unsigned int flags) {
     RegExp* re = new RegExp(pattern, flags);
     iv::core::Space space;
     int fs = (flags & IGNORE_CASE ? iv::aero::IGNORE_CASE : 0)
@@ -39,14 +39,14 @@ bool RegExp::multiline() const {
 }
 
 int RegExp::execute(
-    const std::u16string& str,
+    const U16String& str,
     int offset,
     std::vector<int>& captures) const {
     static iv::aero::VM vm;
     iv::aero::Code* code = static_cast<iv::aero::Code*>(code_);
     captures.clear();
-    Size n = code->captures() * 2;
-    for (Size i = 0; i < n; i++)
+    size_t n = code->captures() * 2;
+    for (size_t i = 0; i < n; i++)
         captures.push_back(-1);
     return vm.Execute(code, str, captures.data(), offset);
 }
