@@ -29,7 +29,7 @@ class StringBufferImpl : public StringBuffer {
         if (buf32_)
             return (*buf32_)[n];
         else
-            return (*buf8_)[n];
+            return static_cast<Char>((*buf8_)[n]);
     }
 
     Boolean append(const Value& val) {
@@ -98,7 +98,7 @@ class StringBufferImpl : public StringBuffer {
             buf32_->reserve(length_);
             if (buf8_) {
                 for (it8 i = buf8_->begin(), e = buf8_->end(); i != e; ++i) {
-                    buf32_->push_back(*i);
+                    buf32_->push_back(static_cast<Char>(*i));
                 }
                 delete buf8_;
                 buf8_ = 0;
@@ -110,7 +110,7 @@ class StringBufferImpl : public StringBuffer {
                     const Str8* s8 = si->getStr8();
                     if (s8) {
                         for (it8 j = s8->begin(), e = s8->end(); j != e; ++j) {
-                            buf32_->push_back(*j);
+                            buf32_->push_back(static_cast<Char>(*j));
                         }
                     }
                 } else {
