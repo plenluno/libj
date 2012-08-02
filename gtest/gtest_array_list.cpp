@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <libj/array_list.h>
 #include <libj/error.h>
+#include <libj/string.h>
 
 namespace libj {
 
@@ -82,6 +83,23 @@ TEST(GTestArrayList, TestRemove2) {
     to<int>(a->get(1), &v);
     ASSERT_EQ(v, 789);
     ASSERT_EQ(a->size(), 2);
+}
+
+TEST(GTestArrayList, TestRemove3) {
+    ArrayList::Ptr a = ArrayList::create();
+    {
+        String::CPtr s = String::create("a");
+        a->add(s);
+        s = String::create("b");
+        a->add(s);
+    }
+
+    a->remove(0);
+    ASSERT_EQ(a->get(0).compareTo(String::create("b")), 0);
+    ASSERT_EQ(a->size(), 1);
+
+    a->remove(0);
+    ASSERT_EQ(a->size(), 0);
 }
 
 TEST(GTestArrayList, TestClear) {

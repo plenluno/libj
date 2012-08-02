@@ -57,7 +57,11 @@ class ArrayListImpl : public ArrayList {
             return Error::create(Error::INDEX_OUT_OF_BOUNDS);
 #endif  // LIBJ_USE_EXCEPTION
         } else {
-            return *vec_.erase(vec_.begin() + i);
+            // destruct shared object!
+            // return *vec_.erase(vec_.begin() + i);
+            Value v = vec_[i];
+            vec_.erase(vec_.begin() + i);
+            return v;
         }
     }
 
