@@ -30,8 +30,7 @@ class StringImpl : public String {
             LIBJ_NULL_CPTR(String, p);
             return p;
         } else if (begin == 0) {
-            CPtr p(this);
-            return p;
+            return toString();
         } else if (str8_) {
             CPtr p(new StringImpl(str8_, begin));
             return p;
@@ -47,8 +46,7 @@ class StringImpl : public String {
             LIBJ_NULL_CPTR(String, p);
             return p;
         } else if (begin == 0 && end == len) {
-            CPtr p(this);
-            return p;
+            return toString();
         } else if (str8_) {
             CPtr p(new StringImpl(str8_, begin, end - begin));
             return p;

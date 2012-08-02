@@ -193,10 +193,19 @@ TEST(GTestString, TestSubstring) {
     String::CPtr s = String::create("abcde", String::ASCII);
     String::CPtr ss1 = s->substring(2);
     String::CPtr ss2 = s->substring(1, 4);
+    String::CPtr ss3 = s->substring(0);
+    String::CPtr ss4 = s->substring(4);
+    String::CPtr ss5 = s->substring(5);
     String::CPtr s1 = String::create("cde", String::ASCII);
     String::CPtr s2 = String::create("bcd", String::ASCII);
+    String::CPtr s3 = String::create("abcde", String::ASCII);
+    String::CPtr s4 = String::create("e", String::ASCII);
+    String::CPtr s5 = String::create();
     ASSERT_EQ(s1->compareTo(ss1), 0);
     ASSERT_EQ(s2->compareTo(ss2), 0);
+    ASSERT_EQ(s3->compareTo(ss3), 0);
+    ASSERT_EQ(s4->compareTo(ss4), 0);
+    ASSERT_EQ(s5->compareTo(ss5), 0);
 }
 
 TEST(GTestString, TestConcat) {
