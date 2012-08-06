@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <stdio.h>
+#include <iv/lv5/third_party/v8_dtoa/conversions.h>
 
 #include "./string_impl.h"
 
@@ -63,19 +64,17 @@ static String::CPtr longToString(const Value& val) {
 static String::CPtr floatToString(const Value& val) {
     Float f;
     to<Float>(val, &f);
-    const Size kLen = (32 / 3) + 5;
+    const Size kLen = 64;
     char s[kLen];
-    snprintf(s, kLen, "%f", f);
-    return String::create(s);
+    return String::create(v8::internal::DoubleToCString(f, s, kLen));
 }
 
 static String::CPtr doubleToString(const Value& val) {
     Double d;
     to<Double>(val, &d);
-    const Size kLen = (64 / 3) + 5;
+    const Size kLen = 64;
     char s[kLen];
-    snprintf(s, kLen, "%lf", d);
-    return String::create(s);
+    return String::create(v8::internal::DoubleToCString(d, s, kLen));
 }
 
 static String::CPtr sizeToString(const Value& val) {

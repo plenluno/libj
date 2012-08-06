@@ -78,6 +78,7 @@ set(libj-deps-common
     cvtutf
     jsoncpp
     regexp
+    v8dtoa
 )
 
 if(LIBJ_USE_BDW_GC)
@@ -113,6 +114,18 @@ if(NOT APPLE)
 set_target_properties(regexp
     PROPERTIES COMPILE_FLAGS "--std=c++0x")
 endif(NOT APPLE)
+
+# v8dtoa
+add_library(v8dtoa STATIC
+    deps/iv/iv/lv5/third_party/netlib_dtoa/netlib_dtoa.c
+    deps/iv/iv/lv5/third_party/v8_dtoa/checks.cc
+    deps/iv/iv/lv5/third_party/v8_dtoa/conversions.cc
+    deps/iv/iv/lv5/third_party/v8_dtoa/diy-fp.cc
+    deps/iv/iv/lv5/third_party/v8_dtoa/fast-dtoa.cc
+    deps/iv/iv/lv5/third_party/v8_dtoa/platform.cc
+    deps/iv/iv/lv5/third_party/v8_dtoa/utils.cc
+    deps/iv/iv/lv5/third_party/v8_dtoa/v8-dtoa.cc
+)
 
 # libj
 add_library(j STATIC

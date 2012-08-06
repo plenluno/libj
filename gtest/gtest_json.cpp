@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
+#include <float.h>
 #include <libj/array_list.h>
 #include <libj/json.h>
 #include <libj/map.h>
@@ -11,16 +12,20 @@ namespace libj {
 TEST(GTestJson, TestStringify) {
     ASSERT_EQ(json::stringify(static_cast<Byte>(3))
         ->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Short>(3))
-        ->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Int>(3))
-        ->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Long>(3))
-        ->compareTo(String::create("3")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Float>(3.3))
-        ->compareTo(String::create("3.300000")), 0);
-    ASSERT_EQ(json::stringify(static_cast<Double>(3.3))
-        ->compareTo(String::create("3.300000")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Short>(4))
+        ->compareTo(String::create("4")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Int>(5))
+        ->compareTo(String::create("5")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Long>(6))
+        ->compareTo(String::create("6")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Float>(2.5))
+        ->compareTo(String::create("2.5")), 0);
+    ASSERT_EQ(json::stringify(static_cast<Double>(3.5))
+        ->compareTo(String::create("3.5")), 0);
+    ASSERT_EQ(json::stringify(DBL_MAX)
+        ->compareTo(String::create("1.7976931348623157e+308")), 0);
+    ASSERT_EQ(json::stringify(-DBL_MIN)
+        ->compareTo(String::create("-2.2250738585072014e-308")), 0);
     ASSERT_EQ(json::stringify(true)
         ->compareTo(String::create("true")), 0);
     ASSERT_EQ(json::stringify(false)
