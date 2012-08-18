@@ -30,7 +30,7 @@ TEST(GTestTypedArrayList, TestGetTyped) {
     ASSERT_ANY_THROW(a->getTyped(1));
     a->add(5);
     a->add(7);
-    ASSERT_EQ(a->getTyped(1), 7);
+    ASSERT_EQ(7, a->getTyped(1));
 }
 
 TEST(GTestTypedArrayList, TestIteratorTyped) {
@@ -39,9 +39,9 @@ TEST(GTestTypedArrayList, TestIteratorTyped) {
     a->add(7);
     TypedIterator<int>::Ptr i = a->iteratorTyped();
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(i->nextTyped(), 5);
+    ASSERT_EQ(5, i->nextTyped());
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(i->nextTyped(), 7);
+    ASSERT_EQ(7, i->nextTyped());
     ASSERT_FALSE(i->hasNext());
 }
 #endif  // LIBJ_USE_EXCEPTION

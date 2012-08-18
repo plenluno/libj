@@ -13,13 +13,13 @@ TEST(GTestStatus, TestCreate) {
 TEST(GTestStatus, TestMessage) {
     Status::CPtr s = Status::create(Status::OK);
     String::CPtr ok = String::create("OK");
-    ASSERT_EQ(s->message()->compareTo(ok), 0);
+    ASSERT_TRUE(s->message()->equals(ok));
 }
 
 TEST(GTestStatus, TestToString) {
     Status::CPtr s = Status::create(Status::OK);
     String::CPtr ok = String::create("OK");
-    ASSERT_EQ(s->toString()->compareTo(ok), 0);
+    ASSERT_TRUE(s->toString()->equals(ok));
 }
 
 TEST(GTestStatus, TestInstanceOf) {

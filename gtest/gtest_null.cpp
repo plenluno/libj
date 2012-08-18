@@ -8,7 +8,7 @@ namespace libj {
 TEST(GTestNull, TestToString) {
     Null::Ptr p = Null::instance();
     String::CPtr s = String::create("null");
-    ASSERT_EQ(s->compareTo(p->toString()), 0);
+    ASSERT_TRUE(s->equals(p->toString()));
 }
 
 TEST(GTestNull, TestInstanceOf) {
@@ -21,7 +21,7 @@ TEST(GTestNull, TestInstanceOf) {
 #ifdef LIBJ_USE_SP
 TEST(GTestNull, TestUseCount) {
     Null::CPtr p = Null::instance();
-    ASSERT_EQ(p.use_count(), 1);
+    ASSERT_EQ(1, p.use_count());
 }
 #endif
 

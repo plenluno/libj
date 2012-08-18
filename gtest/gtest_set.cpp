@@ -8,7 +8,7 @@ namespace libj {
 
 TEST(GTestSet, TestCreate) {
     Set::Ptr s = Set::create();
-    ASSERT_EQ(s->size(), 0);
+    ASSERT_TRUE(s);
 }
 
 TEST(GTestSet, TestInstanceOf) {
@@ -22,13 +22,13 @@ TEST(GTestSet, TestInstanceOf) {
 TEST(GTestSet, TestSize) {
     Set::Ptr s = Set::create();
     s->add(123);
-    ASSERT_EQ(s->size(), 1);
+    ASSERT_EQ(1, s->size());
     s->add(456);
-    ASSERT_EQ(s->size(), 2);
+    ASSERT_EQ(2, s->size());
     s->add(String::create("abc"));
-    ASSERT_EQ(s->size(), 3);
+    ASSERT_EQ(3, s->size());
     s->add(String::create("edf"));
-    ASSERT_EQ(s->size(), 4);
+    ASSERT_EQ(4, s->size());
 }
 
 TEST(GTestSet, TestIterator) {
@@ -52,20 +52,20 @@ TEST(GTestSet, TestRemove) {
     Int i = 5;
     s->add(i);
     s->remove(i);
-    ASSERT_EQ(s->size(), 0);
+    ASSERT_EQ(0, s->size());
 }
 
 TEST(GTestSet, TestClear) {
     Set::Ptr s = Set::create();
     s->add(5);
     s->clear();
-    ASSERT_EQ(s->size(), 0);
+    ASSERT_EQ(0, s->size());
 }
 
 #ifdef LIBJ_USE_SP
 TEST(GTestSet, TestUseCount) {
     Set::CPtr p = Set::create();
-    ASSERT_EQ(p.use_count(), 1);
+    ASSERT_EQ(1, p.use_count());
 }
 #endif
 

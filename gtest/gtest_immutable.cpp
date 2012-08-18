@@ -74,6 +74,7 @@ TEST(GTestImmutable, Test2) {
     GTestImmutable::CPtr p = GTestImmutable::create();
     Immutable::CPtr p2 = p;
     Object::CPtr p3 = p;
+    ASSERT_TRUE(p && p2 && p3);
 }
 
 TEST(GTestImmutable, Test3) {
@@ -87,19 +88,19 @@ TEST(GTestImmutable, Test3) {
 TEST(GTestImmutable, Test4) {
     {
         GTestImmutable::CPtr p = GTestImmutable::create();
-        ASSERT_EQ(p.use_count(), 1);
-        ASSERT_EQ(GTestImmutable::count, 1);
+        ASSERT_EQ(1, p.use_count());
+        ASSERT_EQ(1, GTestImmutable::count);
 
         GTestImmutable::CPtr p2 = GTestImmutable::create();
-        ASSERT_EQ(p2.use_count(), 1);
-        ASSERT_EQ(GTestImmutable::count, 2);
+        ASSERT_EQ(1, p2.use_count());
+        ASSERT_EQ(2, GTestImmutable::count);
 
         p = p2;
-        ASSERT_EQ(p.use_count(), 2);
-        ASSERT_EQ(p2.use_count(), 2);
-        ASSERT_EQ(GTestImmutable::count, 1);
+        ASSERT_EQ(2, p.use_count());
+        ASSERT_EQ(2, p2.use_count());
+        ASSERT_EQ(1, GTestImmutable::count);
     }
-    ASSERT_EQ(GTestImmutable::count, 0);
+    ASSERT_EQ(0, GTestImmutable::count);
 }
 #endif
 

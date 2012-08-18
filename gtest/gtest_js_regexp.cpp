@@ -45,10 +45,10 @@ TEST(GTestJsRegExp, TestExec) {
     JsRegExp::Ptr p1 = JsRegExp::create(
         String::create("a+(b*)(c)"));
     JsArray::Ptr a = p1->exec(String::create("xaacz"));
-    ASSERT_EQ(a->length(), 3);
-    ASSERT_EQ(toCPtr<String>(a->get(0))->compareTo(String::create("aac")), 0);
+    ASSERT_EQ(3, a->length());
+    ASSERT_TRUE(toCPtr<String>(a->get(0))->equals(String::create("aac")));
     ASSERT_TRUE(toCPtr<Undefined>(a->get(1)));
-    ASSERT_EQ(toCPtr<String>(a->get(2))->compareTo(String::create("c")), 0);
+    ASSERT_TRUE(toCPtr<String>(a->get(2))->equals(String::create("c")));
 }
 
 }  // namespace libj

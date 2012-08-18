@@ -18,7 +18,7 @@ TEST(GTestJsTypedArray, TestAddAndGet) {
     Value v = a->get(1);
     Int i;
     to<Int>(v, &i);
-    ASSERT_EQ(i, 7);
+    ASSERT_EQ(7, i);
 }
 
 }  // namespace libj

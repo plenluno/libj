@@ -9,7 +9,7 @@ namespace libj {
 
 TEST(GTestLinkedList, TestCreate) {
     LinkedList::Ptr l = LinkedList::create();
-    ASSERT_EQ(l->size(), 0);
+    ASSERT_TRUE(l);
 }
 
 TEST(GTestLinkedList, TestInstanceOf) {
@@ -24,9 +24,9 @@ TEST(GTestLinkedList, TestInstanceOf) {
 TEST(GTestLinkedList, TestSize) {
     LinkedList::Ptr l = LinkedList::create();
     l->add(123);
-    ASSERT_EQ(l->size(), 1);
+    ASSERT_EQ(1, l->size());
     l->add(456);
-    ASSERT_EQ(l->size(), 2);
+    ASSERT_EQ(2, l->size());
 }
 
 TEST(GTestLinkedList, TestAddAndGet) {
@@ -37,11 +37,11 @@ TEST(GTestLinkedList, TestAddAndGet) {
 
     int v;
     to<int>(l->get(0), &v);
-    ASSERT_EQ(v, 123);
+    ASSERT_EQ(123, v);
     to<int>(l->get(1), &v);
-    ASSERT_EQ(v, 789);
+    ASSERT_EQ(789, v);
     to<int>(l->get(2), &v);
-    ASSERT_EQ(v, 456);
+    ASSERT_EQ(456, v);
 }
 
 TEST(GTestLinkedList, TestSet) {
@@ -53,10 +53,10 @@ TEST(GTestLinkedList, TestSet) {
 
     int v;
     to<int>(l->get(0), &v);
-    ASSERT_EQ(v, 234);
+    ASSERT_EQ(234, v);
     to<int>(l->get(1), &v);
-    ASSERT_EQ(v, 567);
-    ASSERT_EQ(l->size(), 2);
+    ASSERT_EQ(567, v);
+    ASSERT_EQ(2, l->size());
 }
 
 TEST(GTestLinkedList, TestRemove) {
@@ -67,8 +67,8 @@ TEST(GTestLinkedList, TestRemove) {
 
     int v;
     to<int>(l->get(0), &v);
-    ASSERT_EQ(v, 456);
-    ASSERT_EQ(l->size(), 1);
+    ASSERT_EQ(456, v);
+    ASSERT_EQ(1, l->size());
 }
 
 TEST(GTestLinkedList, TestRemove2) {
@@ -81,8 +81,8 @@ TEST(GTestLinkedList, TestRemove2) {
 
     int v;
     to<int>(l->get(1), &v);
-    ASSERT_EQ(v, 789);
-    ASSERT_EQ(l->size(), 2);
+    ASSERT_EQ(789, v);
+    ASSERT_EQ(2, l->size());
 }
 
 
@@ -99,7 +99,7 @@ TEST(GTestLinkedList, TestClear) {
     ASSERT_TRUE(to<Error::CPtr>(l->get(0), &e));
     ASSERT_TRUE(e->instanceof(Type<Error>::id()));
 #endif  // LIBJ_USE_EXCEPTION
-    ASSERT_EQ(l->size(), 0);
+    ASSERT_EQ(0, l->size());
 }
 
 TEST(GTestLinkedList, TestError) {
@@ -111,7 +111,7 @@ TEST(GTestLinkedList, TestError) {
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(l->get(0), &e));
     ASSERT_TRUE(e->instanceof(Type<Error>::id()));
-    ASSERT_EQ(e->code(), Error::INDEX_OUT_OF_BOUNDS);
+    ASSERT_EQ(Error::INDEX_OUT_OF_BOUNDS, e->code());
 #endif  // LIBJ_USE_EXCEPTION
 }
 
@@ -124,10 +124,10 @@ TEST(GTestLinkedList, TestIterator) {
     Iterator::Ptr itr = l->iterator();
     ASSERT_TRUE(itr->hasNext());
     ASSERT_TRUE(to<int>(itr->next(), &v));
-    ASSERT_EQ(v, 123);
+    ASSERT_EQ(123, v);
     ASSERT_TRUE(itr->hasNext());
     ASSERT_TRUE(to<int>(itr->next(), &v));
-    ASSERT_EQ(v, 456);
+    ASSERT_EQ(456, v);
     ASSERT_FALSE(itr->hasNext());
 }
 
@@ -137,13 +137,13 @@ TEST(GTestLinkedList, TestToString) {
     l->add(false);
     l->add(String::create("foo"));
     String::CPtr s = String::create("123,false,foo");
-    ASSERT_EQ(l->toString()->compareTo(s), 0);
+    ASSERT_TRUE(l->toString()->equals(s));
 }
 
 #ifdef LIBJ_USE_SP
 TEST(GTestLinkedList, TestUseCount) {
     LinkedList::CPtr p = LinkedList::create();
-    ASSERT_EQ(p.use_count(), 1);
+    ASSERT_EQ(1, p.use_count());
 }
 #endif
 

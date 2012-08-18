@@ -11,7 +11,7 @@ TEST(GTestStringBuffer, TestCharAt) {
     String::CPtr abc = String::create("abc");
     sb->append(empty);
     sb->append(abc);
-    ASSERT_EQ(sb->charAt(2), 'c');
+    ASSERT_EQ('c', sb->charAt(2));
 }
 
 TEST(GTestStringBuffer, TestToString) {
@@ -21,8 +21,8 @@ TEST(GTestStringBuffer, TestToString) {
     String::CPtr s3 = String::create("abcdef");
     sb->append(s1);
     sb->append(s2);
-    ASSERT_EQ(sb->toString()->compareTo(s3), 0);
-    ASSERT_EQ(sb->toString()->compareTo(s3), 0);
+    ASSERT_TRUE(sb->toString()->equals(s3));
+    ASSERT_TRUE(sb->toString()->equals(s3));
 }
 
 TEST(GTestStringBuffer, TestToString2) {
@@ -38,6 +38,7 @@ TEST(GTestStringBuffer, TestToString2) {
         0x34, 0x35, 0x36,                               // 456
         0
     };
+
     StringBuffer::Ptr sb = StringBuffer::create();
     String::CPtr s1 = String::create("123");
     String::CPtr s2 = String::create(aiu8, String::UTF8);
@@ -47,17 +48,20 @@ TEST(GTestStringBuffer, TestToString2) {
     String::CPtr e2 = String::create(u8, String::UTF8, 8);
     String::CPtr e3 = String::create(u8, String::UTF8);
 
-    ASSERT_EQ(sb->length(), 0);
-    ASSERT_EQ(sb->toString()->compareTo(e0), 0);
+    ASSERT_EQ(0, sb->length());
+    ASSERT_TRUE(sb->toString()->equals(e0));
+
     sb->append(s1);
-    ASSERT_EQ(sb->length(), 3);
-    ASSERT_EQ(sb->toString()->compareTo(e1), 0);
+    ASSERT_EQ(3, sb->length());
+    ASSERT_TRUE(sb->toString()->equals(e1));
+
     sb->append(s2);
-    ASSERT_EQ(sb->length(), 8);
-    ASSERT_EQ(sb->toString()->compareTo(e2), 0);
+    ASSERT_EQ(8, sb->length());
+    ASSERT_TRUE(sb->toString()->equals(e2));
+
     sb->append(s3);
-    ASSERT_EQ(sb->length(), 11);
-    ASSERT_EQ(sb->toString()->compareTo(e3), 0);
+    ASSERT_EQ(11, sb->length());
+    ASSERT_TRUE(sb->toString()->equals(e3));
 }
 
 TEST(GTestStringBuffer, TestAppendManyTimes) {
@@ -68,6 +72,7 @@ TEST(GTestStringBuffer, TestAppendManyTimes) {
         0x81, 0x9f, 0xe3, 0x81, 0x84,   // 猫と暮らしたい
         0
     };
+
     String::CPtr s1 = String::create(a);
     String::CPtr s2 = String::create(u, String::UTF8);
     String::CPtr exp = String::create("");
@@ -77,13 +82,13 @@ TEST(GTestStringBuffer, TestAppendManyTimes) {
         sb->append(s2);
         exp = exp->concat(s1)->concat(s2);
     }
-    ASSERT_EQ(sb->toString()->compareTo(exp), 0);
+    ASSERT_TRUE(sb->toString()->equals(exp));
 }
 
 #ifdef LIBJ_USE_SP
 TEST(GTestStringBuffer, TestUseCount) {
     StringBuffer::CPtr p = StringBuffer::create();
-    ASSERT_EQ(p.use_count(), 1);
+    ASSERT_EQ(1, p.use_count());
 }
 #endif
 

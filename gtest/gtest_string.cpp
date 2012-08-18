@@ -8,7 +8,7 @@ namespace libj {
 TEST(GTestString, TestCreate) {
     String::CPtr s1 = String::create("abc", String::ASCII);
     String::CPtr s2 = String::create("abcde", String::ASCII, 3);
-    ASSERT_EQ(s1->compareTo(s2), 0);
+    ASSERT_TRUE(s1->equals(s2));
 }
 
 TEST(GTestString, TestCreateUtf0) {
@@ -20,9 +20,9 @@ TEST(GTestString, TestCreateUtf0) {
     String::CPtr s2 = String::create(a8, String::UTF8);
     String::CPtr s3 = String::create(a16, String::UTF16);
     String::CPtr s4 = String::create(a32, String::UTF32);
-    ASSERT_EQ(s1->compareTo(s2), 0);
-    ASSERT_EQ(s2->compareTo(s3), 0);
-    ASSERT_EQ(s3->compareTo(s4), 0);
+    ASSERT_TRUE(s1->equals(s2));
+    ASSERT_TRUE(s2->equals(s3));
+    ASSERT_TRUE(s3->equals(s4));
 }
 
 TEST(GTestString, TestCreateUtf1) {
@@ -51,16 +51,16 @@ TEST(GTestString, TestCreateUtf1) {
     String::CPtr s1 = String::create(u8, String::UTF8);
     String::CPtr s2 = String::create(u16, String::UTF16);
     String::CPtr s3 = String::create(u32, String::UTF32);
-    ASSERT_EQ(s1->compareTo(s2), 0);
-    ASSERT_EQ(s2->compareTo(s3), 0);
+    ASSERT_TRUE(s1->equals(s2));
+    ASSERT_TRUE(s2->equals(s3));
 
     // chop at specified position
     for (int len = 0; len <= 8; len++) {
         String::CPtr s1 = String::create(u8, String::UTF8, len);
         String::CPtr s2 = String::create(u16, String::UTF16, len);
         String::CPtr s3 = String::create(u32, String::UTF32, len);
-        ASSERT_EQ(s1->compareTo(s2), 0);
-        ASSERT_EQ(s2->compareTo(s3), 0);
+        ASSERT_TRUE(s1->equals(s2));
+        ASSERT_TRUE(s2->equals(s3));
     }
 }
 
@@ -164,8 +164,8 @@ TEST(GTestString, TestCreateUtf2) {
     String::CPtr s1 = String::create(u8, String::UTF8);
     String::CPtr s2 = String::create(u16, String::UTF16);
     String::CPtr s3 = String::create(u32, String::UTF32);
-    ASSERT_EQ(s1->compareTo(s2), 0);
-    ASSERT_EQ(s2->compareTo(s3), 0);
+    ASSERT_TRUE(s1->equals(s2));
+    ASSERT_TRUE(s2->equals(s3));
 }
 
 TEST(GTestString, TestInstanceOf) {
@@ -177,16 +177,16 @@ TEST(GTestString, TestInstanceOf) {
 
 TEST(GTestString, TestLength) {
     String::CPtr s = String::create();
-    ASSERT_EQ(s->length(), 0);
+    ASSERT_EQ(0, s->length());
 
     s = String::create("abc", String::ASCII);
-    ASSERT_EQ(s->length(), 3);
+    ASSERT_EQ(3, s->length());
 }
 
 TEST(GTestString, TestCharAt) {
     String::CPtr s = String::create("abc", String::ASCII);
-    ASSERT_EQ(s->charAt(1), 'b');
-    ASSERT_EQ(s->charAt(3), NO_CHAR);
+    ASSERT_EQ('b', s->charAt(1));
+    ASSERT_EQ(NO_CHAR, s->charAt(3));
 }
 
 TEST(GTestString, TestSubstring) {
@@ -201,131 +201,130 @@ TEST(GTestString, TestSubstring) {
     String::CPtr s3 = String::create("abcde", String::ASCII);
     String::CPtr s4 = String::create("e", String::ASCII);
     String::CPtr s5 = String::create();
-    ASSERT_EQ(s1->compareTo(ss1), 0);
-    ASSERT_EQ(s2->compareTo(ss2), 0);
-    ASSERT_EQ(s3->compareTo(ss3), 0);
-    ASSERT_EQ(s4->compareTo(ss4), 0);
-    ASSERT_EQ(s5->compareTo(ss5), 0);
+    ASSERT_TRUE(s1->equals(ss1));
+    ASSERT_TRUE(s2->equals(ss2));
+    ASSERT_TRUE(s3->equals(ss3));
+    ASSERT_TRUE(s4->equals(ss4));
+    ASSERT_TRUE(s5->equals(ss5));
 }
 
 TEST(GTestString, TestConcat) {
     String::CPtr s = String::create("abcde", String::ASCII);
     String::CPtr s1 = String::create("abc", String::ASCII);
     String::CPtr s2 = String::create("de", String::ASCII);
-    ASSERT_EQ(s->compareTo(s1->concat(s2)), 0);
+    ASSERT_TRUE(s->equals(s1->concat(s2)));
 
     String::CPtr e = String::create();
-    ASSERT_EQ(s->compareTo(e->concat(s)), 0);
-    ASSERT_EQ(s->compareTo(s->concat(e)), 0);
+    ASSERT_TRUE(s->equals(e->concat(s)));
+    ASSERT_TRUE(s->equals(s->concat(e)));
 
-    LIBJ_NULL_CPTR(String, n);
-    ASSERT_EQ(s->compareTo(s->concat(n)), 0);
+    String::CPtr n = String::null();
+    ASSERT_TRUE(s->equals(s->concat(n)));
 }
 
 TEST(GTestString, TestCompareTo) {
     String::CPtr a = String::create("a", String::ASCII);
     String::CPtr c = String::create("c", String::ASCII);
     String::CPtr abcde = String::create("abcde", String::ASCII);
-    ASSERT_EQ(a->compareTo(c), -2);
-    ASSERT_EQ(a->compareTo(abcde), -4);
-    ASSERT_EQ(abcde->compareTo(c), -2);
-    ASSERT_EQ(abcde->compareTo(a), 4);
-    ASSERT_EQ(abcde->compareTo(abcde), 0);
-    ASSERT_EQ(c->compareTo(a), 2);
-    ASSERT_EQ(c->compareTo(abcde), 2);
+    ASSERT_EQ(-2, a->compareTo(c));
+    ASSERT_EQ(-4, a->compareTo(abcde));
+    ASSERT_EQ(-2, abcde->compareTo(c));
+    ASSERT_EQ(4, abcde->compareTo(a));
+    ASSERT_EQ(0, abcde->compareTo(abcde));
+    ASSERT_EQ(2, c->compareTo(a));
+    ASSERT_EQ(2, c->compareTo(abcde));
 }
 
 TEST(GTestString, TestStartsWith) {
     String::CPtr s = String::create("abcde", String::ASCII);
     String::CPtr s1 = String::create("abc", String::ASCII);
     String::CPtr s2 = String::create("cd", String::ASCII);
-    ASSERT_EQ(s->startsWith(s1), true);
-    ASSERT_EQ(s->startsWith(s2), false);
-    ASSERT_EQ(s->startsWith(s2, 2), true);
+    ASSERT_TRUE(s->startsWith(s1));
+    ASSERT_FALSE(s->startsWith(s2));
+    ASSERT_TRUE(s->startsWith(s2, 2));
 }
 
 TEST(GTestString, TestEndsWith) {
     String::CPtr s = String::create("abcde", String::ASCII);
     String::CPtr s1 = String::create("abc", String::ASCII);
     String::CPtr s2 = String::create("cde", String::ASCII);
-    ASSERT_EQ(s->endsWith(s1), false);
-    ASSERT_EQ(s->endsWith(s2), true);
+    ASSERT_FALSE(s->endsWith(s1));
+    ASSERT_TRUE(s->endsWith(s2));
 }
 
 TEST(GTestString, TestIndexOf) {
     String::CPtr s = String::create("abcabc", String::ASCII);
-    ASSERT_EQ(s->indexOf('b'), 1);
-    ASSERT_EQ(s->indexOf('b', 2), 4);
-    ASSERT_EQ(s->indexOf('d'), NO_POS);
+    ASSERT_EQ(1, s->indexOf('b'));
+    ASSERT_EQ(4, s->indexOf('b', 2));
+    ASSERT_EQ(NO_POS, s->indexOf('d'));
 }
 
 TEST(GTestString, TestIndexOf2) {
     String::CPtr s = String::create("abcabc", String::ASCII);
     String::CPtr s1 = String::create("bc", String::ASCII);
     String::CPtr s2 = String::create("cd", String::ASCII);
-    ASSERT_EQ(s->indexOf(s1), 1);
-    ASSERT_EQ(s->indexOf(s1, 2), 4);
-    ASSERT_EQ(s->indexOf(s2), NO_POS);
+    ASSERT_EQ(1, s->indexOf(s1));
+    ASSERT_EQ(4, s->indexOf(s1, 2));
+    ASSERT_EQ(NO_POS, s->indexOf(s2));
 }
 
 TEST(GTestString, TestLastIndexOf) {
     String::CPtr s = String::create("abcabc", String::ASCII);
-    ASSERT_EQ(s->lastIndexOf('a'), 3);
-    ASSERT_EQ(s->lastIndexOf('a', 2), 0);
-    ASSERT_EQ(s->lastIndexOf('d'), NO_POS);
+    ASSERT_EQ(3, s->lastIndexOf('a'));
+    ASSERT_EQ(0, s->lastIndexOf('a', 2));
+    ASSERT_EQ(NO_POS, s->lastIndexOf('d'));
 }
 
 TEST(GTestString, TestLastIndexOf2) {
     String::CPtr s = String::create("abcabc", String::ASCII);
     String::CPtr s1 = String::create("ab", String::ASCII);
     String::CPtr s2 = String::create("cd", String::ASCII);
-    ASSERT_EQ(s->lastIndexOf(s1), 3);
-    ASSERT_EQ(s->lastIndexOf(s1, 2), 0);
-    ASSERT_EQ(s->lastIndexOf(s2), NO_POS);
+    ASSERT_EQ(3, s->lastIndexOf(s1));
+    ASSERT_EQ(0, s->lastIndexOf(s1, 2));
+    ASSERT_EQ(NO_POS, s->lastIndexOf(s2));
 }
 
 TEST(GTestString, TestToLowerCase) {
     String::CPtr s = String::create("Ab#");
     String::CPtr e = String::create("ab#");
-    ASSERT_EQ(s->toLowerCase()->compareTo(e), 0);
+    ASSERT_TRUE(s->toLowerCase()->equals(e));
 }
 
 TEST(GTestString, TestToUpperCase) {
     String::CPtr s = String::create("Ab#");
     String::CPtr e = String::create("AB#");
-    ASSERT_EQ(s->toUpperCase()->compareTo(e), 0);
+    ASSERT_TRUE(s->toUpperCase()->equals(e));
 }
 
 TEST(GTestString, TestToString) {
     String::CPtr s = String::create("abcabc", String::ASCII);
-    ASSERT_EQ(s->toString()->compareTo(s), 0);
+    ASSERT_TRUE(s->toString()->equals(s));
 
     Object::CPtr o = s;
-    ASSERT_EQ(o->toString()->compareTo(s), 0);
+    ASSERT_TRUE(o->toString()->equals(s));
 }
 
 TEST(GTestString, TestValueOf) {
     Value v;
     ASSERT_FALSE(String::valueOf(v));
 
-    LIBJ_NULL_CPTR(String, nullp);
-    v = nullp;
+    v = String::null();
     ASSERT_FALSE(String::valueOf(v));
 
     v = 3;
-    ASSERT_EQ(String::valueOf(v)->compareTo(String::create("3")), 0);
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("3")));
 
     String::CPtr s = String::create("abc");
     v = s;
-    ASSERT_EQ(String::valueOf(v)->compareTo(s), 0);
+    ASSERT_TRUE(String::valueOf(v)->equals(s));
 }
 
 TEST(GTestString, TestToStdString) {
     String::CPtr s1 = String::create();
-    ASSERT_EQ(s1->toStdString().compare(""), 0);
+    ASSERT_EQ(0, s1->toStdString().compare(""));
 
     String::CPtr s2 = String::create("abc123");
-    ASSERT_EQ(s2->toStdString().compare("abc123"), 0);
+    ASSERT_EQ(0, s2->toStdString().compare("abc123"));
 
     const char u8[] = {
         // Hello New York.
@@ -342,13 +341,13 @@ TEST(GTestString, TestToStdString) {
         0
     };
     String::CPtr s3 = String::create(u8, String::UTF8);
-    ASSERT_EQ(s3->toStdString().compare(u8), 0);
+    ASSERT_EQ(0, s3->toStdString().compare(u8));
 }
 
 #ifdef LIBJ_USE_SP
 TEST(GTestString, TestUseCount) {
-    String::CPtr p = String::create();
-    ASSERT_EQ(p.use_count(), 1);
+    String::CPtr p = String::create("abc");
+    ASSERT_EQ(1, p.use_count());
 }
 #endif
 

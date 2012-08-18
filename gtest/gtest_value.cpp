@@ -31,7 +31,7 @@ TEST(GTestValue, Error2) {
     int i;
     int& ir = i;
     ASSERT_TRUE(to<int&>(v, &ir));
-    ASSERT_EQ(ir, 3);
+    ASSERT_EQ(3, ir);
 }
 #endif
 
@@ -60,14 +60,14 @@ TEST(GTestValue, Error4) {
     const Value* vp = &v;
     int* ip;
     ASSERT_TRUE(to<int>(vp, &ip));
-    ASSERT_EQ(*ip, 3);
+    ASSERT_EQ(3, *ip);
 }
 
 TEST(GTestAny, Error4) {
     boost::any a = 3;
     const boost::any* ap = &a;
     int* ip  = boost::any_cast<int>(ap);
-    ASSERT_EQ(*ip, 3);
+    ASSERT_EQ(3, *ip);
 }
 #endif
 
@@ -75,11 +75,11 @@ TEST(GTestValue, Test) {
     Value v = 3;
     int i;
     ASSERT_TRUE(to<int>(v, &i));
-    ASSERT_EQ(i, 3);
+    ASSERT_EQ(3, i);
 
     v = 5;
     ASSERT_TRUE(to<const int>(v, &i));
-    ASSERT_EQ(i, 5);
+    ASSERT_EQ(5, i);
 
     int64_t l;
     ASSERT_FALSE(to<int64_t>(v, &l));
@@ -88,11 +88,11 @@ TEST(GTestValue, Test) {
 TEST(GTestAny, Test) {
     boost::any a = 3;
     int i = boost::any_cast<int>(a);
-    ASSERT_EQ(i, 3);
+    ASSERT_EQ(3, i);
 
     a = 5;
     i = boost::any_cast<const int>(a);
-    ASSERT_EQ(i, 5);
+    ASSERT_EQ(5, i);
 
     ASSERT_ANY_THROW(boost::any_cast<int64_t>(a));
 }
@@ -103,7 +103,7 @@ TEST(GTestValue, Test2) {
 
     int i;
     ASSERT_TRUE(to<int>(v, &i));
-    ASSERT_EQ(i, 5);
+    ASSERT_EQ(5, i);
 }
 
 TEST(GTestAny, Test2) {
@@ -111,7 +111,7 @@ TEST(GTestAny, Test2) {
     boost::any a = ci;
 
     int i = boost::any_cast<int>(a);
-    ASSERT_EQ(i, 5);
+    ASSERT_EQ(5, i);
 }
 
 TEST(GTestValue, Test3) {
@@ -120,7 +120,7 @@ TEST(GTestValue, Test3) {
 
     int* ip;
     ASSERT_TRUE(to<int*>(v, &ip));
-    ASSERT_EQ(ip, &i);
+    ASSERT_EQ(&i, ip);
 
     const int* cip;
     ASSERT_FALSE(to<const int*>(v, &cip));
@@ -131,7 +131,7 @@ TEST(GTestAny, Test3) {
     boost::any a = &i;
 
     int* ip = boost::any_cast<int*>(a);
-    ASSERT_EQ(ip, &i);
+    ASSERT_EQ(&i, ip);
 
     ASSERT_ANY_THROW(boost::any_cast<const int*>(a));
 }
@@ -145,7 +145,7 @@ TEST(GTestValue, Test4) {
 
     const int* cip;
     ASSERT_TRUE(to<const int*>(v, &cip));
-    ASSERT_EQ(cip, &i);
+    ASSERT_EQ(&i, cip);
 }
 
 TEST(GTestAny, Test4) {
@@ -155,7 +155,7 @@ TEST(GTestAny, Test4) {
     ASSERT_ANY_THROW(boost::any_cast<int*>(a));
 
     const int* cip = boost::any_cast<const int*>(a);
-    ASSERT_EQ(cip, &i);
+    ASSERT_EQ(&i, cip);
 }
 
 TEST(GTestValue, Test5) {
@@ -164,11 +164,11 @@ TEST(GTestValue, Test5) {
     int i;
     int& ir = i;
     ASSERT_TRUE(to<int&>(v, &ir));
-    ASSERT_EQ(ir, 3);
+    ASSERT_EQ(3, ir);
 
     v = 5;
     ASSERT_TRUE(to<const int&>(v, &ir));
-    ASSERT_EQ(ir, 5);
+    ASSERT_EQ(5, ir);
 
     int64_t l;
     int64_t& lr = l;
@@ -181,11 +181,11 @@ TEST(GTestAny, Test5) {
     int i;
     int& ir = i;
     ir = boost::any_cast<int&>(a);
-    ASSERT_EQ(ir, 3);
+    ASSERT_EQ(3, ir);
 
     a = 5;
     ir = boost::any_cast<const int&>(a);
-    ASSERT_EQ(ir, 5);
+    ASSERT_EQ(5, ir);
 
     int64_t l;
     int64_t& lr = l;
@@ -197,10 +197,10 @@ TEST(GTestValue, Test6) {
 
     int i;
     ASSERT_TRUE(to<int>(v, &i));
-    ASSERT_EQ(i, 3);
+    ASSERT_EQ(3, i);
 
     ASSERT_TRUE(to<const int>(v, &i));
-    ASSERT_EQ(i, 3);
+    ASSERT_EQ(3, i);
 
     int64_t l;
     ASSERT_FALSE(to<int64_t>(v, &l));
@@ -210,10 +210,10 @@ TEST(GTestAny, Test6) {
     const boost::any a = 3;
 
     int i = boost::any_cast<int>(a);
-    ASSERT_EQ(i, 3);
+    ASSERT_EQ(3, i);
 
     i = boost::any_cast<const int>(a);
-    ASSERT_EQ(i, 3);
+    ASSERT_EQ(3, i);
 
     ASSERT_ANY_THROW(boost::any_cast<int64_t>(a));
 }
@@ -223,7 +223,7 @@ TEST(GTestValue, Test7) {
     int i;
     int& ir = i;
     ASSERT_TRUE(to<const int&>(v, &ir));
-    ASSERT_EQ(ir, 3);
+    ASSERT_EQ(3, ir);
 }
 
 TEST(GTestAny, Test7) {
@@ -231,7 +231,7 @@ TEST(GTestAny, Test7) {
     int i;
     int& ir = i;
     ir = boost::any_cast<const int&>(a);
-    ASSERT_EQ(ir, 3);
+    ASSERT_EQ(3, ir);
 }
 
 TEST(GTestValue, Test8) {
@@ -240,14 +240,14 @@ TEST(GTestValue, Test8) {
 
     int* ip;
     ASSERT_TRUE(to<int>(vp, &ip));
-    ASSERT_EQ(*ip, 3);
+    ASSERT_EQ(3, *ip);
 
     int64_t* lp;
 #if 1
     ASSERT_FALSE(to<int64_t>(vp, &lp));
 #else
     ASSERT_TRUE(to<int64_t>(vp, &lp));
-    ASSERT_EQ(*lp, 3);
+    ASSERT_EQ(3, *lp);
 #endif
 }
 
@@ -256,11 +256,11 @@ TEST(GTestAny, Test8) {
     boost::any* ap = &a;
 
     int* ip  = boost::any_cast<int>(ap);
-    ASSERT_EQ(*ip, 3);
+    ASSERT_EQ(3, *ip);
 
 //  Segmentation fault
 //  int64_t* lp = boost::any_cast<int64_t>(ap);
-//  ASSERT_EQ(*lp, 3);
+//  ASSERT_EQ(3, *lp);
 }
 
 TEST(GTestValue, Test9) {
@@ -269,11 +269,11 @@ TEST(GTestValue, Test9) {
 
     const int* ip;
     ASSERT_TRUE(to<int>(vp, &ip));
-    ASSERT_EQ(*ip, 3);
+    ASSERT_EQ(3, *ip);
 
     v = 5;
     ASSERT_TRUE(to<const int>(vp, &ip));
-    ASSERT_EQ(*ip, 5);
+    ASSERT_EQ(5, *ip);
 }
 
 TEST(GTestAny, Test9) {
@@ -281,11 +281,11 @@ TEST(GTestAny, Test9) {
     const boost::any* ap = &a;
 
     const int* ip = boost::any_cast<int>(ap);
-    ASSERT_EQ(*ip, 3);
+    ASSERT_EQ(3, *ip);
 
     a = 5;
     ip = boost::any_cast<const int>(ap);
-    ASSERT_EQ(*ip, 5);
+    ASSERT_EQ(5, *ip);
 }
 
 TEST(GTestValue, TestInstanceOf) {
@@ -310,11 +310,11 @@ TEST(GTestValue, TestSingletonToPtrAndCPtr) {
     Value v = null;
 
     Null::Ptr n = toPtr<Null>(v);
-    ASSERT_EQ(n->toString()->compareTo(str), 0);
+    ASSERT_TRUE(n->toString()->equals(str));
     Null::CPtr cn = toCPtr<Null>(v);
-    ASSERT_EQ(cn->toString()->compareTo(str), 0);
+    ASSERT_TRUE(cn->toString()->equals(str));
     Object::CPtr co = toCPtr<Object>(v);
-    ASSERT_EQ(co->toString()->compareTo(str), 0);
+    ASSERT_TRUE(co->toString()->equals(str));
     Mutable::Ptr m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
     Mutable::CPtr cm = toCPtr<Mutable>(v);
@@ -322,18 +322,18 @@ TEST(GTestValue, TestSingletonToPtrAndCPtr) {
     Immutable::CPtr ci = toCPtr<Immutable>(v);
     ASSERT_FALSE(ci);
     Singleton::Ptr s = toPtr<Singleton>(v);
-    ASSERT_EQ(s->toString()->compareTo(str), 0);
+    ASSERT_TRUE(s->toString()->equals(str));
     Singleton::CPtr cs = toCPtr<Singleton>(v);
-    ASSERT_EQ(cs->toString()->compareTo(str), 0);
+    ASSERT_TRUE(cs->toString()->equals(str));
 
     v = cnull;
 
     n = toPtr<Null>(v);
     ASSERT_FALSE(n);
     cn = toCPtr<Null>(v);
-    ASSERT_EQ(cn->toString()->compareTo(str), 0);
+    ASSERT_TRUE(cn->toString()->equals(str));
     co = toCPtr<Object>(v);
-    ASSERT_EQ(co->toString()->compareTo(str), 0);
+    ASSERT_TRUE(co->toString()->equals(str));
     m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
     cm = toCPtr<Mutable>(v);
@@ -343,7 +343,7 @@ TEST(GTestValue, TestSingletonToPtrAndCPtr) {
     s = toPtr<Singleton>(v);
     ASSERT_FALSE(s);
     cs = toCPtr<Singleton>(v);
-    ASSERT_EQ(cs->toString()->compareTo(str), 0);
+    ASSERT_TRUE(cs->toString()->equals(str));
 }
 
 TEST(GTestValue, TestMutableToPtrAndCPtr) {
@@ -355,15 +355,15 @@ TEST(GTestValue, TestMutableToPtrAndCPtr) {
     Value v = arr;
 
     ArrayList::Ptr a = toPtr<ArrayList>(v);
-    ASSERT_EQ(a->size(), 2);
+    ASSERT_EQ(2, a->size());
     ArrayList::CPtr ca = toCPtr<ArrayList>(v);
-    ASSERT_EQ(ca->size(), 2);
+    ASSERT_EQ(2, ca->size());
     Object::CPtr co = toCPtr<Object>(v);
-    ASSERT_EQ(co->type(), Type<ArrayList>::id());
+    ASSERT_EQ(Type<ArrayList>::id(), co->type());
     Mutable::Ptr m = toPtr<Mutable>(v);
-    ASSERT_EQ(m->type(), Type<ArrayList>::id());
+    ASSERT_EQ(Type<ArrayList>::id(), m->type());
     Mutable::CPtr cm = toCPtr<Mutable>(v);
-    ASSERT_EQ(cm->type(), Type<ArrayList>::id());
+    ASSERT_EQ(Type<ArrayList>::id(), cm->type());
     Immutable::CPtr ci = toCPtr<Immutable>(v);
     ASSERT_FALSE(ci);
     Singleton::Ptr s = toPtr<Singleton>(v);
@@ -376,13 +376,13 @@ TEST(GTestValue, TestMutableToPtrAndCPtr) {
     a = toPtr<ArrayList>(v);
     ASSERT_FALSE(a);
     ca = toCPtr<ArrayList>(v);
-    ASSERT_EQ(ca->type(), Type<ArrayList>::id());
+    ASSERT_EQ(Type<ArrayList>::id(), ca->type());
     co = toCPtr<Object>(v);
-    ASSERT_EQ(co->type(), Type<ArrayList>::id());
+    ASSERT_EQ(Type<ArrayList>::id(), co->type());
     m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
     cm = toCPtr<Mutable>(v);
-    ASSERT_EQ(cm->type(), Type<ArrayList>::id());
+    ASSERT_EQ(Type<ArrayList>::id(), cm->type());
     ci = toCPtr<Immutable>(v);
     ASSERT_FALSE(ci);
     s = toPtr<Singleton>(v);
@@ -397,15 +397,15 @@ TEST(GTestValue, TestImmutableToCPtr) {
     Value v = str;
 
     String::CPtr x = toCPtr<String>(v);
-    ASSERT_EQ(x->compareTo(str), 0);
+    ASSERT_TRUE(x->equals(str));
     Object::CPtr co = toCPtr<Object>(v);
-    ASSERT_EQ(co->toString()->compareTo(str), 0);
+    ASSERT_TRUE(co->toString()->equals(str));
     Mutable::Ptr m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
     Mutable::CPtr cm = toCPtr<Mutable>(v);
     ASSERT_FALSE(cm);
     Immutable::CPtr ci = toCPtr<Immutable>(v);
-    ASSERT_EQ(ci->toString()->compareTo(str), 0);
+    ASSERT_TRUE(ci->toString()->equals(str));
     Singleton::Ptr s = toPtr<Singleton>(v);
     ASSERT_FALSE(s);
     Singleton::CPtr cs = toCPtr<Singleton>(v);
@@ -418,10 +418,10 @@ TEST(GTestValue, TestCompareTo) {
     Value v3 = 5;
     Value v4 = (Long)5;
 
-    ASSERT_LT(v1.compareTo(v2), 0);
-    ASSERT_GT(v2.compareTo(v1), 0);
-    ASSERT_EQ(v1.compareTo(v3), 0);
-    ASSERT_NE(v1.compareTo(v4), 0);
+    ASSERT_GT(0, v1.compareTo(v2));
+    ASSERT_LT(0, v2.compareTo(v1));
+    ASSERT_EQ(0, v1.compareTo(v3));
+    ASSERT_NE(0, v1.compareTo(v4));
 }
 
 struct GTestValueStruct {};
@@ -431,7 +431,7 @@ TEST(GTestValue, TestType) {
     Value v1 = i;
     const Value v2 = v1;
     Value v3 = v2;
-    ASSERT_EQ(v3.type(), Type<int>::id());
+    ASSERT_EQ(Type<int>::id(), v3.type());
 
     GTestValueStruct x;
     GTestValueStruct* y;
@@ -439,9 +439,9 @@ TEST(GTestValue, TestType) {
     Value v4 = &x;
     const Value& v5 = v4;
     const Value v6 = v5;
-    ASSERT_EQ(v6.type(), Type<GTestValueStruct*>::id());
+    ASSERT_EQ(Type<GTestValueStruct*>::id(), v6.type());
     ASSERT_TRUE(to<GTestValueStruct*>(v6, &y));
-    ASSERT_EQ(y, &x);
+    ASSERT_EQ(&x, y);
 }
 
 }  // namespace libj

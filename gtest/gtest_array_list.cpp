@@ -9,7 +9,7 @@ namespace libj {
 
 TEST(GTestArrayList, TestCreate) {
     ArrayList::Ptr a = ArrayList::create();
-    ASSERT_EQ(a->size(), 0);
+    ASSERT_TRUE(a);
 }
 
 TEST(GTestArrayList, TestInstanceOf) {
@@ -24,9 +24,9 @@ TEST(GTestArrayList, TestInstanceOf) {
 TEST(GTestArrayList, TestSize) {
     ArrayList::Ptr a = ArrayList::create();
     a->add(123);
-    ASSERT_EQ(a->size(), 1);
+    ASSERT_EQ(1, a->size());
     a->add(456);
-    ASSERT_EQ(a->size(), 2);
+    ASSERT_EQ(2, a->size());
 }
 
 TEST(GTestArrayList, TestAddAndGet) {
@@ -37,11 +37,11 @@ TEST(GTestArrayList, TestAddAndGet) {
 
     int v;
     to<int>(a->get(0), &v);
-    ASSERT_EQ(v, 123);
+    ASSERT_EQ(123, v);
     to<int>(a->get(1), &v);
-    ASSERT_EQ(v, 789);
+    ASSERT_EQ(789, v);
     to<int>(a->get(2), &v);
-    ASSERT_EQ(v, 456);
+    ASSERT_EQ(456, v);
 }
 
 TEST(GTestArrayList, TestSet) {
@@ -53,10 +53,10 @@ TEST(GTestArrayList, TestSet) {
 
     int v;
     to<int>(a->get(0), &v);
-    ASSERT_EQ(v, 234);
+    ASSERT_EQ(234, v);
     to<int>(a->get(1), &v);
-    ASSERT_EQ(v, 567);
-    ASSERT_EQ(a->size(), 2);
+    ASSERT_EQ(567, v);
+    ASSERT_EQ(2, a->size());
 }
 
 TEST(GTestArrayList, TestRemove) {
@@ -67,8 +67,8 @@ TEST(GTestArrayList, TestRemove) {
 
     int v;
     to<int>(a->get(0), &v);
-    ASSERT_EQ(v, 456);
-    ASSERT_EQ(a->size(), 1);
+    ASSERT_EQ(456, v);
+    ASSERT_EQ(1, a->size());
 }
 
 TEST(GTestArrayList, TestRemove2) {
@@ -81,8 +81,8 @@ TEST(GTestArrayList, TestRemove2) {
 
     int v;
     to<int>(a->get(1), &v);
-    ASSERT_EQ(v, 789);
-    ASSERT_EQ(a->size(), 2);
+    ASSERT_EQ(789, v);
+    ASSERT_EQ(2, a->size());
 }
 
 TEST(GTestArrayList, TestRemove3) {
@@ -95,11 +95,11 @@ TEST(GTestArrayList, TestRemove3) {
     }
 
     a->remove(0);
-    ASSERT_EQ(a->get(0).compareTo(String::create("b")), 0);
-    ASSERT_EQ(a->size(), 1);
+    ASSERT_TRUE(a->get(0).equals(String::create("b")));
+    ASSERT_EQ(1, a->size());
 
     a->remove(0);
-    ASSERT_EQ(a->size(), 0);
+    ASSERT_EQ(0, a->size());
 }
 
 TEST(GTestArrayList, TestClear) {
@@ -115,7 +115,7 @@ TEST(GTestArrayList, TestClear) {
     ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
     ASSERT_TRUE(e->instanceof(Type<Error>::id()));
 #endif  // LIBJ_USE_EXCEPTION
-    ASSERT_EQ(a->size(), 0);
+    ASSERT_EQ(0, a->size());
 }
 
 TEST(GTestArrayList, TestError) {
@@ -127,7 +127,7 @@ TEST(GTestArrayList, TestError) {
     Error::CPtr e;
     ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
     ASSERT_TRUE(e->instanceof(Type<Error>::id()));
-    ASSERT_EQ(e->code(), Error::INDEX_OUT_OF_BOUNDS);
+    ASSERT_EQ(Error::INDEX_OUT_OF_BOUNDS, e->code());
 #endif  // LIBJ_USE_EXCEPTION
 }
 
@@ -140,10 +140,10 @@ TEST(GTestArrayList, TestIterator) {
     Iterator::Ptr itr = a->iterator();
     ASSERT_TRUE(itr->hasNext());
     ASSERT_TRUE(to<int>(itr->next(), &v));
-    ASSERT_EQ(v, 123);
+    ASSERT_EQ(123, v);
     ASSERT_TRUE(itr->hasNext());
     ASSERT_TRUE(to<int>(itr->next(), &v));
-    ASSERT_EQ(v, 456);
+    ASSERT_EQ(456, v);
     ASSERT_FALSE(itr->hasNext());
 }
 
@@ -155,13 +155,13 @@ TEST(GTestArrayList, TestToString) {
     a2->add(5);
     a->add(a2);
     a->add(7);
-    ASSERT_EQ(a->toString()->compareTo(String::create("1,3,5,7")), 0);
+    ASSERT_TRUE(a->toString()->equals(String::create("1,3,5,7")));
 }
 
 #ifdef LIBJ_USE_SP
 TEST(GTestArrayList, TestUseCount) {
     ArrayList::CPtr p = ArrayList::create();
-    ASSERT_EQ(p.use_count(), 1);
+    ASSERT_EQ(1, p.use_count());
 }
 #endif
 

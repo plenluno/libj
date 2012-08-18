@@ -30,10 +30,6 @@ GTestMutable::Ptr GTestMutable::create() {
     return p;
 }
 
-GTestMutable::Ptr GTestMutable::clone() const {
-    return GTestMutable::create();
-}
-
 #ifdef LIBJ_GTEST_BUILD_ERRORS
 // #define LIBJ_GTEST_MUTABLE_BUILD_ERRORS
 #endif
@@ -80,7 +76,8 @@ TEST(GTestMutable, Test2) {
     Mutable::CPtr p3 = p;
     Object::CPtr p4 = p;
     Mutable::CPtr p5 = LIBJ_STATIC_CPTR_CAST(Mutable)(p4);
-    GTestMutable::Ptr p7 = LIBJ_STATIC_PTR_CAST(GTestMutable)(p2);
+    GTestMutable::Ptr p6 = LIBJ_STATIC_PTR_CAST(GTestMutable)(p2);
+    ASSERT_TRUE(p && p2 && p3 && p4 && p5 && p6);
 }
 
 TEST(GTestMutable, Test3) {
@@ -94,19 +91,19 @@ TEST(GTestMutable, Test3) {
 TEST(GTestMutable, Test4) {
     {
         GTestMutable::Ptr p = GTestMutable::create();
-        ASSERT_EQ(p.use_count(), 1);
-        ASSERT_EQ(GTestMutable::count, 1);
+        ASSERT_EQ(1, p.use_count());
+        ASSERT_EQ(1, GTestMutable::count);
 
         GTestMutable::Ptr p2 = GTestMutable::create();
-        ASSERT_EQ(p2.use_count(), 1);
-        ASSERT_EQ(GTestMutable::count, 2);
+        ASSERT_EQ(1, p2.use_count());
+        ASSERT_EQ(2, GTestMutable::count);
 
         p = p2;
-        ASSERT_EQ(p.use_count(), 2);
-        ASSERT_EQ(p2.use_count(), 2);
-        ASSERT_EQ(GTestMutable::count, 1);
+        ASSERT_EQ(2, p.use_count());
+        ASSERT_EQ(2, p2.use_count());
+        ASSERT_EQ(1, GTestMutable::count);
     }
-    ASSERT_EQ(GTestMutable::count, 0);
+    ASSERT_EQ(0, GTestMutable::count);
 }
 #endif
 

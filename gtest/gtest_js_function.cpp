@@ -29,8 +29,8 @@ class GTestJsFunctionAdd : LIBJ_JS_FUNCTION(GTestJsFunctionAdd)
 
 TEST(GTestJsFunction, TestToString) {
     GTestJsFunctionAdd::Ptr add = GTestJsFunctionAdd::create();
-    ASSERT_EQ(add->toString()->compareTo(
-        String::create("function GTestJsFunctionAdd() {}")), 0);
+    ASSERT_TRUE(add->toString()->equals(
+        String::create("function GTestJsFunctionAdd() {}")));
 }
 
 }  // namespace libj

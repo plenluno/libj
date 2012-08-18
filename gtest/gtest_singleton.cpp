@@ -29,7 +29,8 @@ TEST(GTestSingleton, Test2) {
     GTestSingleton::Ptr p = GTestSingleton::instance();
     Singleton::Ptr p2 = p;
     Singleton::CPtr p3 = p;
-    Object::CPtr p5(p);
+    Object::CPtr p4(p);
+    ASSERT_TRUE(p && p2 && p3 && p4);
 }
 
 TEST(GTestSingleton, Test3) {
@@ -63,19 +64,19 @@ int GTestSingleton2::count = 0;
 TEST(GTestSingleton, Test4) {
     {
         GTestSingleton2::Ptr p = GTestSingleton2::instance();
-        ASSERT_EQ(p.use_count(), 1);
-        ASSERT_EQ(GTestSingleton2::count, 1);
+        ASSERT_EQ(1, p.use_count());
+        ASSERT_EQ(1, GTestSingleton2::count);
 
         GTestSingleton2::Ptr p2 = GTestSingleton2::instance();
-        ASSERT_EQ(p.use_count(), 1);
-        ASSERT_EQ(GTestSingleton2::count, 1);
+        ASSERT_EQ(1, p.use_count());
+        ASSERT_EQ(1, GTestSingleton2::count);
 
         p = p2;
-        ASSERT_EQ(p.use_count(), 2);
-        ASSERT_EQ(p2.use_count(), 2);
-        ASSERT_EQ(GTestSingleton2::count, 1);
+        ASSERT_EQ(2, p.use_count());
+        ASSERT_EQ(2, p2.use_count());
+        ASSERT_EQ(1, GTestSingleton2::count);
     }
-    ASSERT_EQ(GTestSingleton2::count, 1);
+    ASSERT_EQ(1, GTestSingleton2::count);
 }
 #endif
 

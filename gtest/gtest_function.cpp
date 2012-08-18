@@ -39,7 +39,7 @@ TEST(GTestFunction, TestFunctor) {
     Value sum = (*add)(args);
     Int s;
     to<Int>(sum, &s);
-    ASSERT_EQ(s, 5);
+    ASSERT_EQ(5, s);
 }
 
 TEST(GTestFunction, TestCall) {
@@ -47,13 +47,13 @@ TEST(GTestFunction, TestCall) {
     Value sum = add->call(4, 5);
     Int s;
     to<Int>(sum, &s);
-    ASSERT_EQ(s, 9);
+    ASSERT_EQ(9, s);
 }
 
 #ifdef LIBJ_USE_SP
 TEST(GTestFunction, TestUseCount) {
     Function::CPtr p = GTestFunctionAdd::create();
-    ASSERT_EQ(p.use_count(), 1);
+    ASSERT_EQ(1, p.use_count());
 }
 #endif
 

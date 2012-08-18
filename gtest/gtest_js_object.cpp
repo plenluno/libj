@@ -25,11 +25,11 @@ TEST(GTestObject, TestGetCPtr) {
     JsObject::Ptr obj = JsObject::create();
     String::CPtr abc = String::create("abc");
     obj->put(abc, abc);
-    ASSERT_EQ(obj->getCPtr<String>(abc)->compareTo(abc), 0);
+    ASSERT_TRUE(obj->getCPtr<String>(abc)->equals(abc));
 
     XObj::Ptr xobj = XObj::create();
     xobj->put(abc, abc);
-    ASSERT_EQ(xobj->getCPtr<String>(abc)->compareTo(abc), 0);
+    ASSERT_TRUE(xobj->getCPtr<String>(abc)->equals(abc));
 }
 
 }  // namespace libj
