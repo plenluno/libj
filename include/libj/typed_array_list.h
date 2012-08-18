@@ -110,8 +110,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
             if (p->match(v)) {
                 p->add(v);
             } else {
-                LIBJ_NULL_PTR_TYPE(TypedArrayList, nullp);
-                return nullp;
+                return null();
             }
         }
         return p;
@@ -124,7 +123,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
 };
 
 #define LIBJ_TYPED_ARRAY_LIST_TEMPLATE(D, T) public libj::TypedArrayList<T> { \
-    LIBJ_MUTABLE_TEMPLATE_DECLS(D<T>, libj::TypedArrayList<T>)
+    LIBJ_MUTABLE_TEMPLATE_DEFS(D<T>, libj::TypedArrayList<T>)
 
 }  // namespace libj
 

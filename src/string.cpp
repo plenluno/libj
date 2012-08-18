@@ -7,6 +7,12 @@
 
 namespace libj {
 
+String::CPtr String::create() {
+    static const String::CPtr empty =
+        StringImpl::create(NULL, ASCII, NO_POS);
+    return empty;
+}
+
 String::CPtr String::create(Char c, Size n) {
     return StringImpl::create(c, n);
 }
@@ -102,15 +108,13 @@ static String::CPtr objectToString(const Value& val) {
     if (o) {
         return o->toString();
     } else {
-        LIBJ_NULL_CPTR(String, nullp);
-        return nullp;
+        return String::null();
     }
 }
 
 String::CPtr String::valueOf(const Value& val) {
     if (val.isEmpty()) {
-        LIBJ_NULL_CPTR(String, nullp);
-        return nullp;
+        return null();
     } else if (val.type() == Type<Boolean>::id()) {
         return booleanToString(val);
     } else if (val.type() == Type<Byte>::id()) {
@@ -132,8 +136,7 @@ String::CPtr String::valueOf(const Value& val) {
     } else if (val.instanceof(Type<Object>::id())) {
         return objectToString(val);
     } else {
-        LIBJ_NULL_CPTR(String, nullp);
-        return nullp;
+        return null();
     }
 }
 

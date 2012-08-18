@@ -29,8 +29,7 @@ class JsRegExpImpl : public JsRegExp {
             Ptr p(impl);
             return p;
         } else {
-            LIBJ_NULL_PTR(JsRegExp, nullp);
-            return nullp;
+            return null();
         }
     }
 
@@ -52,15 +51,13 @@ class JsRegExpImpl : public JsRegExp {
 
     JsArray::Ptr exec(String::CPtr str) const {
         if (!str) {
-            LIBJ_NULL_PTR(JsArray, nullp);
-            return nullp;
+            return JsArray::null();
         }
 
         std::vector<int> captures;
         re_->execute(toU16String(str), 0, captures);
         if (captures.empty()) {
-            LIBJ_NULL_PTR(JsArray, nullp);
-            return nullp;
+            return JsArray::null();
         }
 
         JsArray::Ptr res = JsArray::create();

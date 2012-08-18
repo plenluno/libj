@@ -30,8 +30,7 @@ class ErrorImpl : public Error {
  public:
     static CPtr create(Int code) {
         if (code < ANY || code >= END_OF_CODE) {
-            LIBJ_NULL_CPTR(Error, nullp);
-            return nullp;
+            return null();
         } else {
             String::CPtr msg;
             switch (code) {
@@ -78,8 +77,7 @@ class ErrorImpl : public Error {
                 msg = MSG_UNSUPPORTED_OPERATION;
                 break;
             default:
-                LIBJ_NULL_CPTR(String, nullp);
-                msg = nullp;
+                msg = String::null();
             }
             CPtr p(new ErrorImpl(code, msg));
             return p;
@@ -88,8 +86,7 @@ class ErrorImpl : public Error {
 
     static CPtr create(Int code, String::CPtr msg) {
         if (code < ANY || code >= END_OF_CODE) {
-            LIBJ_NULL_CPTR(Error, nullp);
-            return nullp;
+            return null();
         } else {
             CPtr p(new ErrorImpl(code, msg));
             return p;

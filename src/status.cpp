@@ -28,8 +28,7 @@ class StatusImpl : public Status {
         if (code == OK) {
             msg = String::create("OK");
         } else {
-            LIBJ_NULL_CPTR(String, nullp);
-            msg = nullp;
+            msg = String::null();
         }
         CPtr p(new StatusImpl(code, msg));
         return p;

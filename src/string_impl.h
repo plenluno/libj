@@ -27,8 +27,7 @@ class StringImpl : public String {
 
     CPtr substring(Size begin) const {
         if (begin > length()) {
-            LIBJ_NULL_CPTR(String, p);
-            return p;
+            return null();
         } else if (begin == 0) {
             return toString();
         } else if (str8_) {
@@ -43,8 +42,7 @@ class StringImpl : public String {
     CPtr substring(Size begin, Size end) const {
         Size len = length();
         if (begin > len || end > len || begin > end) {
-            LIBJ_NULL_CPTR(String, p);
-            return p;
+            return null();
         } else if (begin == 0 && end == len) {
             return toString();
         } else if (str8_) {
