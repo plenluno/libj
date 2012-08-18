@@ -2,13 +2,14 @@
 
 #include <gtest/gtest.h>
 #include <libj/error.h>
+#include <libj/js_array.h>
 #include <libj/js_function.h>
 
 namespace libj {
 
 class GTestJsFunctionAdd : LIBJ_JS_FUNCTION(GTestJsFunctionAdd)
  public:
-    Value operator()(ArrayList::Ptr args) {
+    Value operator()(JsArray::Ptr args) {
         if (args->size() == 2 &&
             args->get(0).type() == Type<Int>::id() &&
             args->get(1).type() == Type<Int>::id()) {
@@ -31,6 +32,25 @@ TEST(GTestJsFunction, TestToString) {
     GTestJsFunctionAdd::Ptr add = GTestJsFunctionAdd::create();
     ASSERT_TRUE(add->toString()->equals(
         String::create("function GTestJsFunctionAdd() {}")));
+}
+
+TEST(GTestJsFunction, TestOperator) {
+    GTestJsFunctionAdd::Ptr add = GTestJsFunctionAdd::create();
+    JsArray::Ptr args = JsArray::create();
+    args->add(3);
+    args->add(4);
+    Value v = (*add)(args);
+    Int i;
+    ASSERT_TRUE(to<Int>(v, &i));
+    ASSERT_EQ(7, i);
+}
+
+TEST(GTestJsFunction, TestCall) {
+    GTestJsFunctionAdd::Ptr add = GTestJsFunctionAdd::create();
+    Value v = add->call(3, 5);
+    Int i;
+    ASSERT_TRUE(to<Int>(v, &i));
+    ASSERT_EQ(8, i);
 }
 
 }  // namespace libj

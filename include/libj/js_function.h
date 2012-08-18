@@ -4,10 +4,18 @@
 #define LIBJ_JS_FUNCTION_H_
 
 #include "libj/function.h"
+#include "libj/js_array.h"
 
 namespace libj {
 
-typedef Function JsFunction;
+class JsFunction : LIBJ_FUNCTION(JsFunction)
+ public:
+    virtual Value operator()(JsArray::Ptr args) = 0;
+
+    Value operator()(ArrayList::Ptr args) {
+        return operator()(JsArray::create(args));
+    }
+};
 
 #define LIBJ_JS_FUNCTION(T) public libj::JsFunction { \
     LIBJ_MUTABLE_DEFS(T, libj::JsFunction) \
