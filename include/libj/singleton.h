@@ -21,7 +21,7 @@ class SingletonTmpl
  public:
     static LIBJ_PTR_TYPE(T) instance() {
         static T t;
-        LIBJ_SINGLETON_PTR_TYPE(T, p, &t);
+        LIBJ_SINGLETON_PTR_TYPE_DEF(T, p, &t);
         return p;
     }
 
