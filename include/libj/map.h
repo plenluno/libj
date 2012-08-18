@@ -22,7 +22,7 @@ class Map : LIBJ_MUTABLE(Map)
 };
 
 #define LIBJ_MAP(T) public libj::Map { \
-    LIBJ_MUTABLE_DECLS(T, libj::Map)
+    LIBJ_MUTABLE_DEFS(T, libj::Map)
 
 #define LIBJ_MAP_IMPL(M) \
 public: \

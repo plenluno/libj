@@ -21,7 +21,7 @@ class Status : LIBJ_IMMUTABLE(Status)
 };
 
 #define LIBJ_STATUS(T) public libj::Status { \
-    LIBJ_IMMUTABLE_DECLS(T, libj::Status)
+    LIBJ_IMMUTABLE_DEFS(T, libj::Status)
 
 #define LIBJ_STATUS_IMPL(S) \
 public: \

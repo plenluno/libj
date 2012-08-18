@@ -117,7 +117,7 @@ class Function : LIBJ_MUTABLE(Function)
 };
 
 #define LIBJ_FUNCTION(T) public libj::Function { \
-    LIBJ_MUTABLE_DECLS(T, libj::Function)
+    LIBJ_MUTABLE_DEFS(T, libj::Function)
 
 }  // namespace libj
 

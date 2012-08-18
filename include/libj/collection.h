@@ -40,7 +40,7 @@ class Collection : LIBJ_MUTABLE(Collection)
 };
 
 #define LIBJ_COLLECTION(T) public libj::Collection { \
-    LIBJ_MUTABLE_DECLS(T, libj::Collection)
+    LIBJ_MUTABLE_DEFS(T, libj::Collection)
 
 }  // namespace libj
 

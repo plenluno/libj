@@ -27,7 +27,7 @@ class List : LIBJ_COLLECTION(List)
 };
 
 #define LIBJ_LIST(T) public libj::List { \
-    LIBJ_MUTABLE_DECLS(T, libj::List)
+    LIBJ_MUTABLE_DEFS(T, libj::List)
 
 #define LIBJ_LIST_IMPL(L) \
 public: \
