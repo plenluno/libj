@@ -50,6 +50,7 @@ set(libj-src-common
     src/constant.cpp
     src/error.cpp
     src/json.cpp
+    src/js_array.cpp
     src/js_array_buffer.cpp
     src/js_object.cpp
     src/js_regexp.cpp
