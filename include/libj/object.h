@@ -38,6 +38,10 @@ class Object
             return thisId < thatId ? -1 : 1;
     }
 
+    virtual Boolean equals(LIBJ_CPTR(Object) that) const {
+        return !compareTo(that);
+    }
+
     virtual LIBJ_CPTR(String) toString() const = 0;
 };
 
