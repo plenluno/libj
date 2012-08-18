@@ -30,16 +30,24 @@ class Immutable
             || B::instanceof(id); \
     }
 
-#define LIBJ_IMMUTABLE_DECLS(T, B) public: \
+#define LIBJ_IMMUTABLE_DEFS(T, B) public: \
     typedef LIBJ_CPTR(T) CPtr; \
-    LIBJ_IMMUTABLE_METHODS(T, B)
+    LIBJ_IMMUTABLE_METHODS(T, B) \
+    static CPtr null() { \
+        LIBJ_NULL_CPTR_DEF(T, nullp); \
+        return nullp; \
+    }
 
-#define LIBJ_IMMUTABLE_TEMPLATE_DECLS(T, B) public: \
+#define LIBJ_IMMUTABLE_TEMPLATE_DEFS(T, B) public: \
     typedef LIBJ_CPTR_TYPE(T) CPtr; \
-    LIBJ_IMMUTABLE_METHODS(T, B)
+    LIBJ_IMMUTABLE_METHODS(T, B) \
+    static CPtr null() { \
+        LIBJ_NULL_CPTR_TYPE_DEF(T, nullp); \
+        return nullp; \
+    }
 
 #define LIBJ_IMMUTABLE(T) public libj::Immutable { \
-    LIBJ_IMMUTABLE_DECLS(T, libj::Immutable)
+    LIBJ_IMMUTABLE_DEFS(T, libj::Immutable)
 
 }  // namespace libj
 

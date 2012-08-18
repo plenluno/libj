@@ -24,8 +24,7 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
             if (p->match(v)) {
                 p->add(v);
             } else {
-                LIBJ_NULL_PTR_TYPE(JsTypedArray, nullp);
-                return nullp;
+                return null();
             }
         }
         return p;
