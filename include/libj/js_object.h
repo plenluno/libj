@@ -12,8 +12,20 @@ class JsObject : LIBJ_MAP(JsObject)
  public:
     static Ptr create();
 
-    Boolean hasOwnProperty(const Value& name) const {
+    Boolean hasProperty(const Value& name) const {
         return containsKey(name);
+    }
+
+    Value getProperty(const Value& name) const {
+        return get(name);
+    }
+
+    void setProperty(const Value& name, const Value& val) {
+        put(name, val);
+    }
+
+    void deleteProperty(const Value& name) {
+        remove(name);
     }
 
     template<typename T>
