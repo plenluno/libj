@@ -30,10 +30,8 @@ class List : LIBJ_COLLECTION(List)
     LIBJ_MUTABLE_DEFS(T, libj::List)
 
 #define LIBJ_LIST_IMPL(L) \
+    LIBJ_COLLECTION_IMPL(L) \
 public: \
-    Boolean add(const Value& v) { \
-        return L->add(v); \
-    } \
     Boolean add(Size i, const Value& v) { \
         return L->add(i, v); \
     } \
@@ -42,9 +40,6 @@ public: \
     } \
     Value get(Size i) const { \
         return L->get(i); \
-    } \
-    Boolean remove(const Value& v) { \
-        return L->remove(v); \
     } \
     Value remove(Size i) { \
         return L->remove(i); \
