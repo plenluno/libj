@@ -5,9 +5,6 @@
 namespace libj {
 
 class JsObjectImpl : public JsObject {
- private:
-    static String::CPtr STR_OBJECT;
-
  public:
     static Ptr create() {
         Ptr p(new JsObjectImpl());
