@@ -54,7 +54,7 @@ class JsArrayBuffer : LIBJ_MUTABLE(JsArrayBuffer)
 };
 
 #define LIBJ_JS_ARRAY_BUFFER(T) public libj::JsArrayBuffer { \
-    LIBJ_MUTABLE_DECLS(T, libj::JsArrayBuffer)
+    LIBJ_MUTABLE_DEFS(T, libj::JsArrayBuffer)
 
 #define LIBJ_JS_ARRAY_BUFFER_IMPL(B) \
 public: \
