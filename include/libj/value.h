@@ -72,12 +72,17 @@ class Value {
 
     Int compareTo(Value val) const {
         if (content) {
-            if (val.content)
+            if (val.content) {
                 return content->compareTo(val.content);
-            else
-                return 1;
+            } else {
+                return TYPE_CMP_NA;
+            }
         } else {
-            return val.content ? -1 : 0;
+            if (val.content) {
+                return -TYPE_CMP_NA;
+            } else {
+                return 0;
+            }
         }
     }
 
@@ -134,11 +139,13 @@ class Value {
                     static_cast<holder<ValueType>*>(that)->held;
                 return this->held->compareTo(thatHeld);
             } else if (this->instanceof(thatId)) {
-                return 1;
+                return TYPE_CMP_DERIVED;
             } else if (that->instanceof(thisId)) {
-                return -1;
+                return -TYPE_CMP_DERIVED;
             } else {
-                return thisId < thatId ? -1 : 1;
+                return thisId < thatId
+                        ? -TYPE_CMP_NOT_DERIVED
+                        : TYPE_CMP_NOT_DERIVED;
             }
         }
 
@@ -179,13 +186,17 @@ class Value {
             if (thisId == thatId) {
                 ValueType thatHeld =
                     static_cast<holder<ValueType>*>(that)->held;
-                return this->held < thatHeld
-                        ? -1
-                        : this->held > thatHeld
-                            ? 1
-                            : 0;
+                if (this->held < thatHeld) {
+                    return -TYPE_CMP_SAME;
+                } else if (this->held > thatHeld) {
+                    return TYPE_CMP_SAME;
+                } else {
+                    return 0;
+                }
             } else {
-                return thisId < thatId ? -1 : 1;
+                return thisId < thatId
+                    ? -TYPE_CMP_NOT_DERIVED
+                    : TYPE_CMP_NOT_DERIVED;
             }
         }
 

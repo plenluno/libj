@@ -102,6 +102,20 @@ TEST(GTestArrayList, TestRemove3) {
     ASSERT_EQ(0, a->size());
 }
 
+TEST(GTestArrayList, TestRemove4) {
+    ArrayList::Ptr a = ArrayList::create();
+    {
+        String::CPtr s = String::create("a");
+        a->add(s);
+        s = String::create("b");
+        a->add(s);
+    }
+
+    a->remove(String::create("a"));
+    ASSERT_TRUE(a->get(0).equals(String::create("b")));
+    ASSERT_EQ(1, a->size());
+}
+
 TEST(GTestArrayList, TestClear) {
     ArrayList::Ptr a = ArrayList::create();
     a->add(123);

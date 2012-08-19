@@ -53,4 +53,11 @@ TEST(GTestJsFunction, TestCall) {
     ASSERT_EQ(8, i);
 }
 
+TEST(GTestJsFunction, TestCompreTo) {
+    GTestJsFunctionAdd::Ptr add1 = GTestJsFunctionAdd::create();
+    GTestJsFunctionAdd::Ptr add2 = GTestJsFunctionAdd::create();
+    ASSERT_EQ(0, add1->compareTo(add1));
+    ASSERT_NE(0, add1->compareTo(add2));
+}
+
 }  // namespace libj

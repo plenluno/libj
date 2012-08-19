@@ -24,18 +24,28 @@ class Object
     }
 
     virtual Int compareTo(LIBJ_CPTR(Object) that) const {
-        if (!that)
-            return 1;
+        if (!that) return TYPE_CMP_NA;
+
         TypeId thisId = this->type();
         TypeId thatId = that->type();
-        if (thisId == thatId)
-            return 0;
-        else if (this->instanceof(thatId))
-            return 1;
-        else if (that->instanceof(thisId))
-            return -1;
-        else
-            return thisId < thatId ? -1 : 1;
+        if (thisId == thatId) {
+            Int diff = static_cast<const Object*>(this) - &(*that);
+            if (diff < 0) {
+                return -TYPE_CMP_SAME;
+            } else if (diff > 0) {
+                return TYPE_CMP_SAME;
+            } else {
+                return 0;
+            }
+        } else if (this->instanceof(thatId)) {
+            return TYPE_CMP_DERIVED;
+        } else if (that->instanceof(thisId)) {
+            return -TYPE_CMP_DERIVED;
+        } else {
+            return thisId < thatId
+                    ? -TYPE_CMP_NOT_DERIVED
+                    : TYPE_CMP_NOT_DERIVED;
+        }
     }
 
     virtual Boolean equals(LIBJ_CPTR(Object) that) const {

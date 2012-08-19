@@ -19,6 +19,13 @@ enum Category {
     UNDEFINED,
 };
 
+enum TypeCompre {
+    TYPE_CMP_SAME        = 1,
+    TYPE_CMP_DERIVED     = 2,
+    TYPE_CMP_NOT_DERIVED = 3,
+    TYPE_CMP_NA          = 4,
+};
+
 class ObjectBase {};
 class MutableBase {};
 class ImmutableBase {};

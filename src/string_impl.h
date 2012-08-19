@@ -98,8 +98,11 @@ class StringImpl : public String {
 
     Int compareTo(Object::CPtr that) const {
         Int result = Object::compareTo(that);
-        if (result)
+        if (result != TYPE_CMP_SAME &&
+            result != -TYPE_CMP_SAME) {
             return result;
+        }
+
         String::CPtr other = LIBJ_STATIC_CPTR_CAST(String)(that);
         Size len1 = this->length();
         Size len2 = other->length();
