@@ -66,11 +66,15 @@ class Value {
         return content ? content->instanceof(id) : false;
     }
 
+    Boolean isPtr() const {
+        return content ? content->isPtr() : false;
+    }
+
     Boolean isCPtr() const {
         return content ? content->isCPtr() : false;
     }
 
-    Int compareTo(Value val) const {
+    Int compareTo(const Value& val) const {
         if (content) {
             if (val.content) {
                 return content->compareTo(val.content);
@@ -99,7 +103,11 @@ class Value {
      public:
         virtual TypeId type() const = 0;
 
+        virtual TypeId objectType() const = 0;
+
         virtual Boolean instanceof(TypeId id) const = 0;
+
+        virtual Boolean isPtr() const = 0;
 
         virtual Boolean isCPtr() const = 0;
 
@@ -123,8 +131,16 @@ class Value {
             return Type<ValueType>::id();
         }
 
+        virtual TypeId objectType() const {
+            return held ? held->type() : 0;
+        }
+
         virtual Boolean instanceof(TypeId id) const {
             return held ? held->instanceof(id) : false;
+        }
+
+        virtual Boolean isPtr() const {
+            return !IsCPtr;
         }
 
         virtual Boolean isCPtr() const {
@@ -132,8 +148,8 @@ class Value {
         }
 
         virtual Int compareTo(placeholder * that) const {
-            TypeId thisId = this->type();
-            TypeId thatId = that->type();
+            TypeId thisId = this->objectType();
+            TypeId thatId = that->objectType();
             if (thisId == thatId) {
                 ValueType thatHeld =
                     static_cast<holder<ValueType>*>(that)->held;
@@ -172,12 +188,20 @@ class Value {
             return Type<ValueType>::id();
         }
 
+        virtual TypeId objectType() const {
+            return 0;
+        }
+
         virtual Boolean instanceof(TypeId id) const {
             return false;
         }
 
+        virtual Boolean isPtr() const {
+            return false;
+        }
+
         virtual Boolean isCPtr() const {
-            return true;
+            return false;
         }
 
         virtual Int compareTo(placeholder * that) const {

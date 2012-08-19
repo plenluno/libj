@@ -424,6 +424,44 @@ TEST(GTestValue, TestCompareTo) {
     ASSERT_NE(0, v1.compareTo(v4));
 }
 
+TEST(GTestValue, TestCompareTo2) {
+    ArrayList::Ptr p = ArrayList::create();
+    ArrayList::CPtr cp = p;
+    Value v = p;
+    Value cv = cp;
+    Value pv = 3;
+
+    ASSERT_EQ(0, v.compareTo(v));
+    ASSERT_EQ(0, v.compareTo(cv));
+    ASSERT_NE(0, v.compareTo(pv));
+    ASSERT_NE(0, v.compareTo(String::create()));
+    ASSERT_NE(0, v.compareTo(ArrayList::create()));
+    ASSERT_EQ(0, cv.compareTo(v));
+    ASSERT_EQ(0, cv.compareTo(cv));
+    ASSERT_NE(0, cv.compareTo(pv));
+    ASSERT_NE(0, cv.compareTo(String::create()));
+    ASSERT_NE(0, cv.compareTo(ArrayList::create()));
+    ASSERT_NE(0, pv.compareTo(v));
+    ASSERT_NE(0, pv.compareTo(cv));
+    ASSERT_EQ(0, pv.compareTo(pv));
+    ASSERT_EQ(0, pv.compareTo(3));
+}
+
+TEST(GTestValue, TestIsPtrAndIsCPtr) {
+    ArrayList::Ptr p = ArrayList::create();
+    ArrayList::CPtr cp = p;
+    Value v = p;
+    Value cv = cp;
+    Value pv = 3;
+
+    ASSERT_TRUE(v.isPtr());
+    ASSERT_FALSE(v.isCPtr());
+    ASSERT_FALSE(cv.isPtr());
+    ASSERT_TRUE(cv.isCPtr());
+    ASSERT_FALSE(pv.isPtr());
+    ASSERT_FALSE(pv.isCPtr());
+}
+
 struct GTestValueStruct {};
 
 TEST(GTestValue, TestType) {
