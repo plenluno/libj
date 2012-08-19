@@ -159,6 +159,8 @@ class Value {
             } else if (that->instanceof(thisId)) {
                 return -TYPE_CMP_DERIVED;
             } else {
+                thisId = this->type();
+                thatId = that->type();
                 return thisId < thatId
                         ? -TYPE_CMP_NOT_DERIVED
                         : TYPE_CMP_NOT_DERIVED;
