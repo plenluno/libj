@@ -86,7 +86,7 @@ static String::CPtr doubleToString(const Value& val) {
 static String::CPtr sizeToString(const Value& val) {
     Size n;
     to<Size>(val, &n);
-    const Size kLen = (sizeof(Size) / 3) + 3;
+    const Size kLen = ((sizeof(Size) << 3) / 3) + 3;
     char s[kLen];
     snprintf(s, kLen, "%zd", n);
     String::CPtr p = String::create(s);
@@ -96,7 +96,7 @@ static String::CPtr sizeToString(const Value& val) {
 static String::CPtr typeIdToString(const Value& val) {
     TypeId t;
     to<TypeId>(val, &t);
-    const Size kLen = (sizeof(TypeId) / 3) + 3;
+    const Size kLen = ((sizeof(TypeId) << 3) / 3) + 3;
     char s[kLen];
     snprintf(s, kLen, "%zd", t);
     String::CPtr p = String::create(s);

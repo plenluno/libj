@@ -311,8 +311,12 @@ TEST(GTestString, TestValueOf) {
     v = String::null();
     ASSERT_FALSE(String::valueOf(v));
 
-    v = 3;
-    ASSERT_TRUE(String::valueOf(v)->equals(String::create("3")));
+    v = 1234567890;
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("1234567890")));
+
+    Size size = 1234567890;
+    v = size;
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("1234567890")));
 
     String::CPtr s = String::create("abc");
     v = s;
