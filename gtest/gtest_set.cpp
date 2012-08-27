@@ -110,7 +110,7 @@ TEST(GTestSet, TestRemoveAll) {
     s1->add(3);
     s1->add(5);
 
-    Set::Ptr s2 = Set::create();    
+    Set::Ptr s2 = Set::create();
     s2->add(5);
     s2->add(7);
 
