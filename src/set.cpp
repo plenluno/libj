@@ -37,12 +37,6 @@ class SetImpl : public Set {
         set_.clear();
     }
 
-    Set::Ptr clone() const {
-        // TODO(plenluno): implement
-        Set::Ptr p(new SetImpl());
-        return p;
-    }
-
  private:
     class IteratorImpl : public Iterator {
         friend class SetImpl;

@@ -12,10 +12,7 @@ class Collection : LIBJ_MUTABLE(Collection)
  public:
     virtual Boolean add(const Value& val) = 0;
     virtual void clear() = 0;
-    // virtual Boolean contains(const Value& val) const = 0;
-    // virtual Boolean containsAll(CPtr collection) const = 0;
     virtual Boolean remove(const Value& val) = 0;
-    // virtual Boolean removeAll(CPtr collection) = 0;
     virtual Iterator::Ptr iterator() const = 0;
     virtual Size size() const = 0;
 
@@ -23,13 +20,45 @@ class Collection : LIBJ_MUTABLE(Collection)
         return size() == 0;
     }
 
-    Boolean addAll(Collection::CPtr collection) {
+    Boolean contains(const Value& val) const {
+        Iterator::Ptr itr = iterator();
+        while (itr->hasNext()) {
+            if (itr->next().equals(val))
+                return true;
+        }
+        return false;
+    }
+
+    Boolean containsAll(CPtr collection) const {
+        if (!collection) return false;
+
+        Iterator::Ptr itr = collection->iterator();
+        while (itr->hasNext()) {
+            if (!contains(itr->next()))
+                return false;
+        }
+        return true;
+    }
+
+    Boolean addAll(CPtr collection) {
         if (!collection) return false;
 
         Iterator::Ptr itr = collection->iterator();
         Boolean changed = false;
         while (itr->hasNext()) {
             if (add(itr->next()))
+                changed = true;
+        }
+        return changed;
+    }
+
+    Boolean removeAll(CPtr collection) {
+        if (!collection) return false;
+
+        Iterator::Ptr itr = collection->iterator();
+        Boolean changed = false;
+        while (itr->hasNext()) {
+            if (remove(itr->next()))
                 changed = true;
         }
         return changed;

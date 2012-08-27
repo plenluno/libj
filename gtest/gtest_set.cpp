@@ -47,12 +47,40 @@ TEST(GTestSet, TestIterator) {
     ASSERT_FALSE(itr->hasNext());
 }
 
+TEST(GTestSet, TestAdd) {
+    Set::Ptr s = Set::create();
+    ASSERT_TRUE(s->add(5));
+    ASSERT_FALSE(s->add(5));
+    ASSERT_TRUE(s->add(String::create("abc")));
+    ASSERT_FALSE(s->add(String::create("abc")));
+}
+
 TEST(GTestSet, TestRemove) {
     Set::Ptr s = Set::create();
     Int i = 5;
+    String::CPtr str = String::create("abc");
+
     s->add(i);
-    s->remove(i);
+    s->add(str);
+    ASSERT_EQ(2, s->size());
+    ASSERT_TRUE(s->remove(i));
+    ASSERT_TRUE(s->remove(String::create("abc")));
+    ASSERT_FALSE(s->remove(6));
+    ASSERT_FALSE(s->remove(String::create("edf")));
     ASSERT_EQ(0, s->size());
+}
+
+TEST(GTestSet, TestContains) {
+    Set::Ptr s = Set::create();
+    Int i = 5;
+    String::CPtr str = String::create("abc");
+
+    s->add(i);
+    s->add(str);
+    ASSERT_TRUE(s->contains(i));
+    ASSERT_TRUE(s->contains(String::create("abc")));
+    ASSERT_FALSE(s->contains(6));
+    ASSERT_FALSE(s->contains(String::create("edf")));
 }
 
 TEST(GTestSet, TestClear) {
@@ -60,6 +88,54 @@ TEST(GTestSet, TestClear) {
     s->add(5);
     s->clear();
     ASSERT_EQ(0, s->size());
+}
+
+TEST(GTestSet, TestAddAll) {
+    Set::Ptr s1 = Set::create();
+    s1->add(3);
+    s1->add(5);
+
+    Set::Ptr s2 = Set::create();
+    s2->add(5);
+    s2->add(7);
+
+    ASSERT_TRUE(s1->addAll(s2));
+    ASSERT_EQ(3, s1->size());
+    ASSERT_FALSE(s1->addAll(Set::null()));
+    ASSERT_FALSE(s1->addAll(Set::create()));
+}
+
+TEST(GTestSet, TestRemoveAll) {
+    Set::Ptr s1 = Set::create();
+    s1->add(3);
+    s1->add(5);
+
+    Set::Ptr s2 = Set::create();    
+    s2->add(5);
+    s2->add(7);
+
+    ASSERT_TRUE(s1->removeAll(s2));
+    ASSERT_EQ(1, s1->size());
+    ASSERT_FALSE(s1->removeAll(Set::null()));
+    ASSERT_FALSE(s1->removeAll(Set::create()));
+}
+
+TEST(GTestSet, TestContainsAll) {
+    Set::Ptr s1 = Set::create();
+    s1->add(3);
+    s1->add(5);
+
+    Set::Ptr s2 = Set::create();
+    s2->add(5);
+
+    Set::Ptr s3 = Set::create();
+    s3->add(5);
+    s3->add(7);
+
+    ASSERT_TRUE(s1->containsAll(s2));
+    ASSERT_FALSE(s1->containsAll(s3));
+    ASSERT_FALSE(s1->containsAll(Set::null()));
+    ASSERT_TRUE(s1->containsAll(Set::create()));
 }
 
 #ifdef LIBJ_USE_SP
