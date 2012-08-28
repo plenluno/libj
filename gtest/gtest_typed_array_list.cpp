@@ -13,7 +13,8 @@ TEST(GTestTypedArrayList, TestCreate) {
 TEST(GTestTypedArrayList, TestCreate2) {
     ArrayList::Ptr a = ArrayList::create();
     a->add(5);
-    TypedArrayList<int>::Ptr ta = TypedArrayList<int>::create(a);
+    TypedArrayList<int>::Ptr ta =
+        TypedArrayList<int>::create(a);
     ASSERT_TRUE(ta);
     a->add(7.7);
 #ifdef LIBJ_USE_EXCEPTION
@@ -22,6 +23,19 @@ TEST(GTestTypedArrayList, TestCreate2) {
     ta = TypedArrayList<int>::create(a);
     ASSERT_FALSE(ta);
 #endif  // LIBJ_USE_EXCEPTION
+}
+
+TEST(GTestTypedArrayList, TestAdd) {
+    TypedArrayList<String::CPtr>::Ptr ta =
+         TypedArrayList<String::CPtr>::create();
+    ta->add(String::create("abc"));
+    ASSERT_EQ(1, ta->size());
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(ta->add(2));
+#else
+    ta->add(2);
+    ASSERT_EQ(1, ta->size());
+#endif
 }
 
 #ifdef LIBJ_USE_EXCEPTION
