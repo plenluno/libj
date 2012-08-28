@@ -7,48 +7,63 @@
 namespace libj {
 
 TEST(GTestJsRegExp, TestCreate) {
-    JsRegExp::Ptr p = JsRegExp::create(String::create("a+"));
-    ASSERT_TRUE(p);
+    JsRegExp::Ptr re = JsRegExp::create(String::create("a+"));
+    ASSERT_TRUE(re);
 }
 
 TEST(GTestJsRegExp, TestGlobal) {
-    JsRegExp::Ptr p1 = JsRegExp::create(
+    JsRegExp::Ptr re1 = JsRegExp::create(
         String::create("a+"));
-    ASSERT_FALSE(p1->global());
-    JsRegExp::Ptr p2 = JsRegExp::create(
+    ASSERT_FALSE(re1->global());
+
+    JsRegExp::Ptr re2 = JsRegExp::create(
         String::create("a+"),
         JsRegExp::GLOBAL);
-    ASSERT_TRUE(p2->global());
+    ASSERT_TRUE(re2->global());
 }
 
 TEST(GTestJsRegExp, TestIgnoreCase) {
-    JsRegExp::Ptr p1 = JsRegExp::create(
+    JsRegExp::Ptr re1 = JsRegExp::create(
         String::create("a+"));
-    ASSERT_FALSE(p1->ignoreCase());
-    JsRegExp::Ptr p2 = JsRegExp::create(
+    ASSERT_FALSE(re1->ignoreCase());
+
+    JsRegExp::Ptr re2 = JsRegExp::create(
         String::create("a+"),
         JsRegExp::IGNORE_CASE);
-    ASSERT_TRUE(p2->ignoreCase());
+    ASSERT_TRUE(re2->ignoreCase());
 }
 
 TEST(GTestJsRegExp, TestMultiline) {
-    JsRegExp::Ptr p1 = JsRegExp::create(
+    JsRegExp::Ptr re1 = JsRegExp::create(
         String::create("a+"));
-    ASSERT_FALSE(p1->multiline());
-    JsRegExp::Ptr p2 = JsRegExp::create(
+    ASSERT_FALSE(re1->multiline());
+
+    JsRegExp::Ptr re2 = JsRegExp::create(
         String::create("a+"),
         JsRegExp::MULTILINE);
-    ASSERT_TRUE(p2->multiline());
+    ASSERT_TRUE(re2->multiline());
 }
 
 TEST(GTestJsRegExp, TestExec) {
-    JsRegExp::Ptr p1 = JsRegExp::create(
-        String::create("a+(b*)(c)"));
-    JsArray::Ptr a = p1->exec(String::create("xaacz"));
+    JsRegExp::Ptr re = JsRegExp::create(String::create("a+(b*)(c)"));
+    JsArray::Ptr a = re->exec(String::create("xaacz"));
     ASSERT_EQ(3, a->length());
     ASSERT_TRUE(toCPtr<String>(a->get(0))->equals(String::create("aac")));
     ASSERT_TRUE(toCPtr<Undefined>(a->get(1)));
     ASSERT_TRUE(toCPtr<String>(a->get(2))->equals(String::create("c")));
+    ASSERT_FALSE(re->exec(String::create("bc")));
+}
+
+TEST(GTestJsRegExp, TestExec2) {
+    JsRegExp::Ptr re =
+        JsRegExp::create(String::create("^([0-9]+)\\.([0-9]+)$"));
+    JsArray::Ptr a = re->exec(String::create("1.23"));
+    ASSERT_EQ(3, a->length());
+    ASSERT_TRUE(toCPtr<String>(a->get(0))->equals(String::create("1.23")));
+    ASSERT_TRUE(toCPtr<String>(a->get(1))->equals(String::create("1")));
+    ASSERT_TRUE(toCPtr<String>(a->get(2))->equals(String::create("23")));
+    ASSERT_FALSE(re->exec(String::create("1x23")));
+    ASSERT_FALSE(re->exec(String::create("v1.23")));
 }
 
 }  // namespace libj

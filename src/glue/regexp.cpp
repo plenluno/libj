@@ -38,7 +38,7 @@ bool RegExp::multiline() const {
     return flags_ & MULTILINE;
 }
 
-int RegExp::execute(
+bool RegExp::execute(
     const U16String& str,
     int offset,
     std::vector<int>& captures) const {
@@ -48,7 +48,7 @@ int RegExp::execute(
     size_t n = code->captures() * 2;
     for (size_t i = 0; i < n; i++)
         captures.push_back(-1);
-    return vm.Execute(code, str, captures.data(), offset);
+    return vm.Execute(code, str, captures.data(), offset) == iv::aero::AERO_SUCCESS;
 }
 
 }  // namespace glue

@@ -26,8 +26,10 @@ class RegExp {
     bool ignoreCase() const;
     bool multiline() const;
 
-    int execute(
-        const U16String& str, int offset, std::vector<int>& captures) const;
+    bool execute(
+        const U16String& str,
+        int offset,
+        std::vector<int>& captures) const;
 
  private:
     U16String pattern_;

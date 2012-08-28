@@ -55,8 +55,7 @@ class JsRegExpImpl : public JsRegExp {
         }
 
         std::vector<int> captures;
-        re_->execute(toU16String(str), 0, captures);
-        if (captures.empty()) {
+        if (!re_->execute(toU16String(str), 0, captures)) {
             return JsArray::null();
         }
 
