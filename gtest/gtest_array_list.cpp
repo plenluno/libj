@@ -21,11 +21,21 @@ TEST(GTestArrayList, TestInstanceOf) {
     ASSERT_TRUE(a->instanceof(Type<Object>::id()));
 }
 
+TEST(GTestArrayList, TestInstanceOf2) {
+    ArrayList::CPtr a = ArrayList::create();
+    ASSERT_TRUE(a->instanceof(Type<ArrayList>::id()));
+    ASSERT_TRUE(a->instanceof(Type<List>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Collection>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+}
+
 TEST(GTestArrayList, TestSize) {
     ArrayList::Ptr a = ArrayList::create();
+    ASSERT_EQ(0, a->size());
     a->add(123);
     ASSERT_EQ(1, a->size());
-    a->add(456);
+    a->add(String::create("abc"));
     ASSERT_EQ(2, a->size());
 }
 
@@ -42,6 +52,7 @@ TEST(GTestArrayList, TestAddAndGet) {
     ASSERT_EQ(789, v);
     to<int>(a->get(2), &v);
     ASSERT_EQ(456, v);
+    ASSERT_EQ(3, a->size());
 }
 
 TEST(GTestArrayList, TestSet) {
@@ -88,7 +99,8 @@ TEST(GTestArrayList, TestRemove2) {
 TEST(GTestArrayList, TestRemove3) {
     ArrayList::Ptr a = ArrayList::create();
     {
-        String::CPtr s = String::create("a");
+        String::CPtr s;
+        s = String::create("a");
         a->add(s);
         s = String::create("b");
         a->add(s);
@@ -105,7 +117,8 @@ TEST(GTestArrayList, TestRemove3) {
 TEST(GTestArrayList, TestRemove4) {
     ArrayList::Ptr a = ArrayList::create();
     {
-        String::CPtr s = String::create("a");
+        String::CPtr s;
+        s = String::create("a");
         a->add(s);
         s = String::create("b");
         a->add(s);
@@ -139,7 +152,7 @@ TEST(GTestArrayList, TestError) {
     ASSERT_ANY_THROW(a->get(5));
 #else
     Error::CPtr e;
-    ASSERT_TRUE(to<Error::CPtr>(a->get(0), &e));
+    ASSERT_TRUE(to<Error::CPtr>(a->get(5), &e));
     ASSERT_TRUE(e->instanceof(Type<Error>::id()));
     ASSERT_EQ(Error::INDEX_OUT_OF_BOUNDS, e->code());
 #endif  // LIBJ_USE_EXCEPTION
@@ -170,6 +183,96 @@ TEST(GTestArrayList, TestToString) {
     a->add(a2);
     a->add(7);
     ASSERT_TRUE(a->toString()->equals(String::create("1,3,5,7")));
+}
+
+TEST(GTestArrayList, TestIsEmpty) {
+    ArrayList::Ptr a = ArrayList::create();
+    ASSERT_TRUE(a->isEmpty());
+    a->add(5);
+    ASSERT_FALSE(a->isEmpty());
+}
+
+TEST(GTestArrayList, TestAddAll) {
+    ArrayList::Ptr a1 = ArrayList::create();
+    a1->add(3);
+    a1->add(5);
+
+    ArrayList::Ptr a2 = ArrayList::create();
+    a2->add(5);
+    a2->add(7);
+
+    ASSERT_TRUE(a1->addAll(a2));
+    ASSERT_EQ(4, a1->size());
+    ASSERT_TRUE(a1->get(0).equals(3));
+    ASSERT_TRUE(a1->get(1).equals(5));
+    ASSERT_TRUE(a1->get(2).equals(5));
+    ASSERT_TRUE(a1->get(3).equals(7));
+
+    ASSERT_FALSE(a1->addAll(ArrayList::null()));
+    ASSERT_FALSE(a1->addAll(ArrayList::create()));
+}
+
+TEST(GTestArrayList, TestContainsAll) {
+    ArrayList::Ptr a1 = ArrayList::create();
+    a1->add(3);
+    a1->add(5);
+
+    ArrayList::Ptr a2 = ArrayList::create();
+    a2->add(5);
+
+    ArrayList::Ptr a3 = ArrayList::create();
+    a3->add(5);
+    a3->add(7);
+
+    ASSERT_TRUE(a1->containsAll(a2));
+    ASSERT_FALSE(a1->containsAll(a3));
+    ASSERT_FALSE(a1->containsAll(ArrayList::null()));
+    ASSERT_TRUE(a1->containsAll(ArrayList::create()));
+}
+
+TEST(GTestArrayList, TestRemoveAll) {
+    ArrayList::Ptr a1 = ArrayList::create();
+    a1->add(3);
+    a1->add(5);
+    a1->add(7);
+    a1->add(9);
+    a1->add(5);
+
+    ArrayList::Ptr a2 = ArrayList::create();
+    a2->add(5);
+    a2->add(7);
+
+    ASSERT_TRUE(a1->removeAll(a2));
+    ASSERT_EQ(2, a1->size());
+    ASSERT_TRUE(a1->get(0).equals(3));
+    ASSERT_TRUE(a1->get(1).equals(9));
+
+    ASSERT_FALSE(a1->removeAll(ArrayList::null()));
+    ASSERT_FALSE(a1->removeAll(ArrayList::create()));
+}
+
+TEST(GTestArrayList, TestRetainAll) {
+    ArrayList::Ptr a1 = ArrayList::create();
+    a1->add(3);
+    a1->add(5);
+    a1->add(7);
+    a1->add(9);
+    a1->add(5);
+
+    ArrayList::Ptr a2 = ArrayList::create();
+    a2->add(5);
+    a2->add(7);
+
+    ASSERT_TRUE(a1->retainAll(a2));
+    ASSERT_EQ(3, a1->size());
+    ASSERT_TRUE(a1->get(0).equals(5));
+    ASSERT_TRUE(a1->get(1).equals(7));
+    ASSERT_TRUE(a1->get(2).equals(5));
+
+    ASSERT_FALSE(a1->retainAll(ArrayList::null()));
+
+    ASSERT_TRUE(a1->retainAll(ArrayList::create()));
+    ASSERT_TRUE(a1->isEmpty());
 }
 
 #ifdef LIBJ_USE_SP
