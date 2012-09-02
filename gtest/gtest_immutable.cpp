@@ -8,19 +8,15 @@ namespace libj {
 
 class GTestImmutable : LIBJ_IMMUTABLE(GTestImmutable)
  public:
-    String::CPtr toString() const {
-        String::CPtr p(String::create());
-        return p;
-    }
-
-    static int count;
     static CPtr create();
 
- private:
+    static int count;
     GTestImmutable() { count++; }
-
- public:
     ~GTestImmutable() { count--; }
+
+    String::CPtr toString() const {
+        return String::create();
+    }
 };
 
 int GTestImmutable::count = 0;
@@ -62,22 +58,20 @@ class GTestImmutableX {
     virtual int x() { return 0; }
 };
 
-TEST(GTestImmutable, Test) {
-    // check EBCO
+TEST(GTestImmutable, TestEBCO) {
     ASSERT_EQ(
         sizeof(GTestImmutable),
         sizeof(GCBase) + sizeof(GTestImmutableX));
 }
 
-TEST(GTestImmutable, Test2) {
-    // no build errors
+TEST(GTestImmutable, TestSubstitution) {
     GTestImmutable::CPtr p = GTestImmutable::create();
     Immutable::CPtr p2 = p;
     Object::CPtr p3 = p;
     ASSERT_TRUE(p && p2 && p3);
 }
 
-TEST(GTestImmutable, Test3) {
+TEST(GTestImmutable, TestInstanceOf) {
     GTestImmutable::CPtr p = GTestImmutable::create();
     ASSERT_TRUE(p->instanceof(Type<GTestImmutable>::id()));
     ASSERT_TRUE(p->instanceof(Type<Immutable>::id()));
@@ -85,7 +79,7 @@ TEST(GTestImmutable, Test3) {
 }
 
 #ifdef LIBJ_USE_SP
-TEST(GTestImmutable, Test4) {
+TEST(GTestImmutable, TestUseCount) {
     {
         GTestImmutable::CPtr p = GTestImmutable::create();
         ASSERT_EQ(1, p.use_count());
