@@ -3,6 +3,6 @@
 #include "./btest_immutable.h"
 
 int main() {
-	// noncopyable
-	libj::BTestImmutable x, y = x;
+    // noncopyable
+    libj::BTestImmutable x, y = x
 }
