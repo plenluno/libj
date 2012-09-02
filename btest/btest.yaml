@@ -1,0 +1,5 @@
+error:
+    - g++ -I ./include btest/btest_immutable1.cpp
+    - g++ -I ./include btest/btest_immutable2.cpp
+    - g++ -I ./include btest/btest_immutable3.cpp
+    - g++ -I ./include btest/btest_immutable4.cpp

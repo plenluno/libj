@@ -26,32 +26,6 @@ GTestImmutable::CPtr GTestImmutable::create() {
     return p;
 }
 
-#ifdef LIBJ_GTEST_BUILD_ERRORS
-// #define LIBJ_GTEST_IMMUTABLE_BUILD_ERRORS
-#endif
-
-#ifdef LIBJ_GTEST_IMMUTABLE_BUILD_ERRORS
-TEST(GTestImmutalbe, Error) {
-    GTestImmutable::Ptr p;
-}
-
-TEST(GTestImmutable, Error2) {
-    GTestImmutable::CPtr p = GTestImmutable::create();
-    Mutable::CPtr p2 = p;
-}
-
-TEST(GTestImmutable, Error3) {
-    // noncopyable
-    GTestImmutableImpl x, y = x;
-}
-
-TEST(GTestMutable, Error4) {
-    // noncopyable
-    GTestImmutableImpl x, y;
-    x = y;
-}
-#endif
-
 class GTestImmutableX {
  public:
     virtual ~GTestImmutableX() {}
