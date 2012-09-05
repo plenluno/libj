@@ -326,7 +326,6 @@ TEST(GTestJsArrayBuffer, TestToString) {
     String::CPtr s1 = a1->toString();
     String::CPtr e1 = String::create(c1);
     ASSERT_TRUE(s1->equals(e1));
-    ASSERT_TRUE(s1->isAscii());
 
     const char c2[] = {
         0x61, 0x62, 0x63,                                       // abc

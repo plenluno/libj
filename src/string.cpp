@@ -9,7 +9,7 @@ namespace libj {
 
 String::CPtr String::create() {
     static const String::CPtr empty =
-        StringImpl::create(NULL, ASCII, NO_POS);
+        StringImpl::create(NULL, UTF8, NO_POS);
     return empty;
 }
 

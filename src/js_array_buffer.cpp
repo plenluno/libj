@@ -258,10 +258,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
     }
 
     String::CPtr toString() const {
-        if (isAscii())
-            return String::create(buf64_, String::ASCII, length_);
-        else
-            return String::create(buf64_, String::UTF8);
+        return String::create(buf64_, String::UTF8);
     }
 
  private:

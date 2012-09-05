@@ -50,7 +50,7 @@ class StringBufferImpl : public StringBuffer {
             if (strs_.size())
                 join();
             if (ascii_)
-                return String::create(buf8_->c_str(), String::ASCII, length_);
+                return String::create(buf8_->c_str(), String::UTF8, length_);
             else
                 return String::create(buf32_->c_str(), String::UTF32, length_);
         } else {

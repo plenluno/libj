@@ -89,10 +89,12 @@ String::CPtr StringImpl::create(Char c, Size n) {
 }
 
 String::CPtr StringImpl::create(const void* data, Encoding enc, Size max) {
-    if (enc == ASCII) {
-        CPtr p(new StringImpl(static_cast<const char*>(data), max));
+    if (!data) {
+        CPtr p(new StringImpl());
         return p;
-    } else if (enc == UTF8) {
+    }
+
+    if (enc == UTF8) {
         Str32* s = cvtutf::convertToUtf32<cvtutf::UTF8>(
             static_cast<const cvtutf::UTF8*>(data), max);
         CPtr p(new StringImpl(0, s));

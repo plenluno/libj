@@ -14,7 +14,6 @@ namespace libj {
 class String : LIBJ_IMMUTABLE(String)
  public:
     enum Encoding {
-        ASCII,
         UTF8,
         UTF16,
         UTF32,
@@ -22,7 +21,7 @@ class String : LIBJ_IMMUTABLE(String)
 
     static CPtr create();
     static CPtr create(Char, Size = 1);
-    static CPtr create(const void*, Encoding = ASCII, Size = NO_POS);
+    static CPtr create(const void*, Encoding = UTF8, Size = NO_SIZE);
     static CPtr valueOf(const Value&);
 
     virtual Size length() const = 0;
