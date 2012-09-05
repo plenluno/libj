@@ -12,22 +12,6 @@ class JsArrayImpl : public JsArray {
         return p;
     }
 
-    Boolean hasProperty(const Value& name) const {
-        return obj_->hasProperty(name);
-    }
-
-    Value getProperty(const Value& name) const {
-        return obj_->getProperty(name);
-    }
-
-    void setProperty(const Value& name, const Value& val) {
-        obj_->setProperty(name, val);
-    }
-
-    void deleteProperty(const Value& name) {
-        obj_->deleteProperty(name);
-    }
-
  private:
     JsObject::Ptr obj_;
     ArrayList::Ptr ary_;
@@ -37,6 +21,7 @@ class JsArrayImpl : public JsArray {
         , ary_(ArrayList::create()) {}
 
     LIBJ_LIST_IMPL(ary_);
+    LIBJ_JS_PROPERTY_IMPL(obj_);
 };
 
 JsArray::Ptr JsArray::create() {

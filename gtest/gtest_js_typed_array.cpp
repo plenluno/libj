@@ -11,14 +11,30 @@ TEST(GTestJsTypedArray, TestCreate) {
     ASSERT_TRUE(a);
 }
 
-TEST(GTestJsTypedArray, TestAddAndGet) {
+TEST(GTestJsTypedArray, TestAdd) {
     JsTypedArray<Int>::Ptr a = JsTypedArray<Int>::create();
-    a->add(5);
-    a->add(7);
-    Value v = a->get(1);
-    Int i;
-    to<Int>(v, &i);
-    ASSERT_EQ(7, i);
+    ASSERT_TRUE(a->add(5));
+    ASSERT_FALSE(a->add(5.5));
+    ASSERT_TRUE(a->add(7));
+    ASSERT_EQ(2, a->length());
+}
+
+TEST(GTestJsTypedArray, TestGet) {
+    JsTypedArray<Int>::Ptr a = JsTypedArray<Int>::create();
+    ASSERT_TRUE(a->add(5));
+    ASSERT_TRUE(a->add(7));
+    ASSERT_TRUE(a->get(0).equals(5));
+    ASSERT_TRUE(a->get(1).equals(7));
+}
+
+TEST(GTestJsTypedArray, TestJsProperty) {
+    JsTypedArray<Int>::Ptr a = JsTypedArray<Int>::create();
+    a->setProperty(String::create("abc"), 7);
+    ASSERT_TRUE(a->hasProperty(String::create("abc")));
+    ASSERT_TRUE(a->getProperty(String::create("abc")).equals(7));
+
+    a->deleteProperty(String::create("abc"));
+    ASSERT_FALSE(a->hasProperty(String::create("abc")));
 }
 
 }  // namespace libj

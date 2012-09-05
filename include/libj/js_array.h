@@ -4,6 +4,7 @@
 #define LIBJ_JS_ARRAY_H_
 
 #include "libj/array_list.h"
+#include "libj/js_property.h"
 
 namespace libj {
 
@@ -11,11 +12,6 @@ class JsArray : LIBJ_ARRAY_LIST(JsArray)
  public:
     static Ptr create();
     static Ptr create(ArrayList::CPtr);
-
-    Boolean hasProperty(const Value& name) const;
-    Value getProperty(const Value& name) const;
-    void setProperty(const Value& name, const Value& val);
-    void deleteProperty(const Value& name);
 
     template<typename T>
     typename Type<T>::Ptr getPtr(Size index) const {
@@ -30,6 +26,8 @@ class JsArray : LIBJ_ARRAY_LIST(JsArray)
         typename Type<T>::CPtr p = toCPtr<T>(v);
         return p;
     }
+
+    LIBJ_JS_PROPERTY_DECL;
 };
 
 #define LIBJ_JS_ARRAY(T) public libj::JsArray { \

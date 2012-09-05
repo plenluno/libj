@@ -3,8 +3,9 @@
 #ifndef LIBJ_JS_TYPED_ARRAY_H_
 #define LIBJ_JS_TYPED_ARRAY_H_
 
-#include "libj/typed_array_list.h"
 #include "libj/js_array.h"
+#include "libj/js_property.h"
+#include "libj/typed_array_list.h"
 
 namespace libj {
 
@@ -30,10 +31,12 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
         return p;
     }
 
-     // TODO(plenluno): implement
-     // static Ptr create(JsArrayBuffer::Ptr buf);
-     // Ptr subArray(Size from);
-     // Ptr subArray(Size from, Size to);
+    // TODO(plenluno): implement
+    // static Ptr create(JsArrayBuffer::Ptr buf);
+    // Ptr subArray(Size from);
+    // Ptr subArray(Size from, Size to);
+
+    LIBJ_JS_PROPERTY_MIX(JsTypedArray);
 };
 
 }  // namespace libj

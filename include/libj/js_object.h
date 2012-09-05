@@ -20,12 +20,12 @@ class JsObject : LIBJ_MAP(JsObject)
         return get(name);
     }
 
-    void setProperty(const Value& name, const Value& val) {
-        put(name, val);
+    Value setProperty(const Value& name, const Value& val) {
+        return put(name, val);
     }
 
-    void deleteProperty(const Value& name) {
-        remove(name);
+    Value deleteProperty(const Value& name) {
+        return remove(name);
     }
 
     template<typename T>
