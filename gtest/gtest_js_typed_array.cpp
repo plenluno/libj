@@ -14,7 +14,11 @@ TEST(GTestJsTypedArray, TestCreate) {
 TEST(GTestJsTypedArray, TestAdd) {
     JsTypedArray<Int>::Ptr a = JsTypedArray<Int>::create();
     ASSERT_TRUE(a->add(5));
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(a->add(5.5));
+#else
     ASSERT_FALSE(a->add(5.5));
+#endif  // LIBJ_USE_EXCEPTION
     ASSERT_TRUE(a->add(7));
     ASSERT_EQ(2, a->length());
 }
