@@ -8,6 +8,7 @@
 namespace libj {
 
 extern const Size NO_POS;
+extern const Size NO_SIZE;
 extern const Char NO_CHAR;
 
 }  // namespace libj
