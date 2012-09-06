@@ -3,3 +3,7 @@ error:
     - g++ -I ./include btest/btest_immutable2.cpp
     - g++ -I ./include btest/btest_immutable3.cpp
     - g++ -I ./include btest/btest_immutable4.cpp
+    - g++ -I ./include btest/btest_mutable1.cpp
+    - g++ -I ./include btest/btest_mutable2.cpp
+    - g++ -I ./include btest/btest_mutable3.cpp
+    - rm a.out
