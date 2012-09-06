@@ -10,7 +10,7 @@ namespace libj {
 
 TEST(GTestJsArrayBuffer, TestCreate) {
     JsArrayBuffer::Ptr a = JsArrayBuffer::create();
-    ASSERT_EQ(0, a->length());
+    ASSERT_TRUE(a);
 }
 
 TEST(GTestJsArrayBuffer, TestSize) {

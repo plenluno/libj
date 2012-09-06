@@ -22,7 +22,7 @@ class GTestFunctionAdd : LIBJ_FUNCTION(GTestFunctionAdd)
     }
 
     String::CPtr toString() const {
-        return String::create("GTestFunctionAdd");
+        return String::create();
     }
 
     static GTestFunctionAdd::Ptr create() {

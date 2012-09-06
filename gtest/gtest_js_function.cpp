@@ -34,7 +34,7 @@ TEST(GTestJsFunction, TestToString) {
         String::create("function GTestJsFunctionAdd() {}")));
 }
 
-TEST(GTestJsFunction, TestOperator) {
+TEST(GTestJsFunction, TestFunctor) {
     GTestJsFunctionAdd::Ptr add = GTestJsFunctionAdd::create();
     JsArray::Ptr args = JsArray::create();
     args->add(3);

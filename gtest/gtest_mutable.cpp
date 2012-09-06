@@ -8,19 +8,15 @@ namespace libj {
 
 class GTestMutable : LIBJ_MUTABLE(GTestMutable)
  public:
-    String::CPtr toString() const {
-        String::CPtr p(String::create());
-        return p;
-    }
-
-    static int count;
     static Ptr create();
 
- private:
+    static int count;
     GTestMutable() { count++; }
-
- public:
     ~GTestMutable() { count--; }
+
+    String::CPtr toString() const {
+        return String::create();
+    }
 };
 
 int GTestMutable::count = 0;
@@ -30,47 +26,19 @@ GTestMutable::Ptr GTestMutable::create() {
     return p;
 }
 
-#ifdef LIBJ_GTEST_BUILD_ERRORS
-// #define LIBJ_GTEST_MUTABLE_BUILD_ERRORS
-#endif
-
-#ifdef LIBJ_GTEST_MUTABLE_BUILD_ERRORS
-TEST(GTestMutalbe, Error) {
-    GTestMutable::Ptr p = GTestMutable::create();
-    Immutable::CPtr p2 = p;
-}
-
-TEST(GTestMutable, Error2) {
-    new GTestMutable();
-}
-
-TEST(GTestMutable, Error3) {
-    // noncopyable
-    GTestMutableImpl x, y = x;
-}
-
-TEST(GTestMutable, Error4) {
-    // noncopyable
-    GTestMutableImpl x, y;
-    x = y;
-}
-#endif
-
 class GTestMutableX {
  public:
     virtual ~GTestMutableX() {}
     virtual int x() { return 0; }
 };
 
-TEST(GTestMutable, Test) {
-    // check EBCO
+TEST(GTestMutable, TestEBCO) {
     ASSERT_EQ(
         sizeof(GTestMutable),
         sizeof(GCBase) + sizeof(GTestMutableX));
 }
 
-TEST(GTestMutable, Test2) {
-    // no build errors
+TEST(GTestMutable, TestSubstitution) {
     GTestMutable::Ptr p = GTestMutable::create();
     Mutable::Ptr p2 = p;
     Mutable::CPtr p3 = p;
@@ -80,7 +48,7 @@ TEST(GTestMutable, Test2) {
     ASSERT_TRUE(p && p2 && p3 && p4 && p5 && p6);
 }
 
-TEST(GTestMutable, Test3) {
+TEST(GTestMutable, TestInstanceOf) {
     GTestMutable::Ptr p = GTestMutable::create();
     ASSERT_TRUE(p->instanceof(Type<GTestMutable>::id()));
     ASSERT_TRUE(p->instanceof(Type<Mutable>::id()));
@@ -88,7 +56,7 @@ TEST(GTestMutable, Test3) {
 }
 
 #ifdef LIBJ_USE_SP
-TEST(GTestMutable, Test4) {
+TEST(GTestMutable, TestUseCount) {
     {
         GTestMutable::Ptr p = GTestMutable::create();
         ASSERT_EQ(1, p.use_count());
