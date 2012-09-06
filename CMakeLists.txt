@@ -2,17 +2,17 @@ cmake_minimum_required(VERSION 2.8)
 
 project(libj)
 
+# options ------------------------------------------------------------------------------------------
+
+option(LIBJ_BUILD_GTEST "Use Google Test" OFF)
 option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
-option(LIBJ_USE_GTEST "Use Google Test" OFF)
 option(LIBJ_USE_EXCEPTION "Use Exception" OFF)
 
+message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
 message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
-message(STATUS "LIBJ_USE_GTEST=${LIBJ_USE_GTEST}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 
-CONFIGURE_FILE(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h )
+# find libraries -----------------------------------------------------------------------------------
 
 if(LIBJ_USE_BDW_GC)
     find_library(GC gc REQUIRED)
@@ -21,7 +21,7 @@ if(LIBJ_USE_BDW_GC)
     endif()
 endif(LIBJ_USE_BDW_GC)
 
-if(LIBJ_USE_GTEST)
+if(LIBJ_BUILD_GTEST)
     find_library(GTEST gtest REQUIRED)
     if(NOT EXISTS ${GTEST})
         message(FATAL_ERROR "libgtest not found.")
@@ -30,18 +30,22 @@ if(LIBJ_USE_GTEST)
     if(NOT EXISTS ${PTHREAD})
         message(FATAL_ERROR "libpthread not found.")
     endif()
-endif(LIBJ_USE_GTEST)
+endif(LIBJ_BUILD_GTEST)
 
-include_directories(
+# configure ----------------------------------------------------------------------------------------
+
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h )
+
+# set variables ------------------------------------------------------------------------------------
+
+set(libj-include
     include
     deps
     deps/boost-svn
     deps/iv
     deps/jsoncpp/include
-)
-
-link_directories(
-    ${CMAKE_BINARY_DIR}
 )
 
 set(libj-src-common
@@ -64,15 +68,15 @@ set(libj-src-common
 )
 
 if(LIBJ_USE_EXCEPTION)
-set(libj-src
-    src/exception.cpp
-    ${libj-src-common}
-)
+    set(libj-src
+        src/exception.cpp
+        ${libj-src-common}
+    )
 else(LIBJ_USE_EXCEPTION)
-set(libj-src
-    src/no_exceptions.cpp
-    ${libj-src-common}
-)
+    set(libj-src
+        src/no_exceptions.cpp
+        ${libj-src-common}
+    )
 endif(LIBJ_USE_EXCEPTION)
 
 set(libj-deps-common
@@ -83,30 +87,39 @@ set(libj-deps-common
 )
 
 if(LIBJ_USE_BDW_GC)
-set(libj-deps
-    gc
-    ${libj-deps-common}
-)
+    set(libj-deps
+        gc
+        ${libj-deps-common}
+    )
 else(LIBJ_USE_BDW_GC)
-set(libj-deps
-    ${libj-deps-common}
-)
+    set(libj-deps
+        ${libj-deps-common}
+    )
 endif(LIBJ_USE_BDW_GC)
 
+# build libraries ----------------------------------------------------------------------------------
 
-# cvtutf
+include_directories(
+    ${libj-include}
+)
+
+link_directories(
+    ${CMAKE_BINARY_DIR}
+)
+
+## cvtutf
 add_library(cvtutf STATIC
     deps/cvtutf/ConvertUTF.cpp
 )
 
-# jsoncpp
+## jsoncpp
 add_library(jsoncpp STATIC
     deps/jsoncpp/src/lib_json/json_reader.cpp
     deps/jsoncpp/src/lib_json/json_value.cpp
     deps/jsoncpp/src/lib_json/json_writer.cpp
 )
 
-# regexp
+## regexp
 add_library(regexp STATIC
     src/glue/regexp.cpp
 )
@@ -116,7 +129,7 @@ set_target_properties(regexp
     PROPERTIES COMPILE_FLAGS "--std=c++0x")
 endif(NOT APPLE)
 
-# v8dtoa
+## v8dtoa
 add_library(v8dtoa STATIC
     deps/iv/iv/lv5/third_party/netlib_dtoa/netlib_dtoa.c
     deps/iv/iv/lv5/third_party/v8_dtoa/checks.cc
@@ -128,23 +141,28 @@ add_library(v8dtoa STATIC
     deps/iv/iv/lv5/third_party/v8_dtoa/v8-dtoa.cc
 )
 
-# libj
+## libj
 add_library(j STATIC
     ${libj-src}
 )
+
 target_link_libraries(j
     ${libj-deps}
 )
+
 if(LIBJ_USE_EXCEPTION)
     set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti")
+        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti"
+    )
 else(LIBJ_USE_EXCEPTION)
     set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions")
+        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions"
+    )
 endif(LIBJ_USE_EXCEPTION)
 
-# gtest
-if(LIBJ_USE_GTEST)
+# build gtests -------------------------------------------------------------------------------------
+
+if(LIBJ_BUILD_GTEST)
     add_executable(libj-gtest
         gtest/gtest_array_list.cpp
         gtest/gtest_error.cpp
@@ -176,5 +194,6 @@ if(LIBJ_USE_GTEST)
         pthread
     )
     set_target_properties(libj-gtest
-        PROPERTIES COMPILE_FLAGS "-Wall -DLIBJ_GTEST_BUILD_ERRORS")
-endif(LIBJ_USE_GTEST)
+        PROPERTIES COMPILE_FLAGS "-Wall"
+    )
+endif(LIBJ_BUILD_GTEST)
