@@ -38,6 +38,37 @@ TEST(GTestTypedArrayList, TestAdd) {
 #endif
 }
 
+TEST(GTestTypedArrayList, TestSubList) {
+    TypedArrayList<int>::Ptr a = TypedArrayList<int>::create();
+    a->add(3);
+    a->add(5);
+    a->add(7);
+
+    TypedArrayList<int>::Ptr sub1 =
+        toPtr<TypedArrayList<int> >(a->subList(1, 2));
+    ASSERT_TRUE(sub1->toString()->equals(String::create("[5]")));
+
+    TypedArrayList<int>::Ptr sub2 =
+        toPtr<TypedArrayList<int> >(a->subList(0, 3));
+    ASSERT_TRUE(sub2->toString()->equals(String::create("[3, 5, 7]")));
+
+    TypedArrayList<int>::Ptr sub3 =
+        toPtr<TypedArrayList<int> >(a->subList(2, 2));
+    ASSERT_TRUE(sub3->toString()->equals(String::create("[]")));
+
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(a->subList(0, 4));
+    ASSERT_ANY_THROW(a->subList(2, 1));
+#else
+    ASSERT_EQ(
+        Error::INDEX_OUT_OF_BOUNDS,
+        toCPtr<Error>(a->subList(0, 4))->code());
+    ASSERT_EQ(
+        Error::INDEX_OUT_OF_BOUNDS,
+        toCPtr<Error>(a->subList(2, 1))->code());
+#endif  // LIBJ_USE_EXCEPTION
+}
+
 #ifdef LIBJ_USE_EXCEPTION
 TEST(GTestTypedArrayList, TestGetTyped) {
     TypedArrayList<int>::Ptr a = TypedArrayList<int>::create();

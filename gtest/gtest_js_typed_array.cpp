@@ -41,4 +41,54 @@ TEST(GTestJsTypedArray, TestJsProperty) {
     ASSERT_FALSE(a->hasProperty(String::create("abc")));
 }
 
+TEST(GTestJsTypedArray, TestSubList) {
+    JsTypedArray<int>::Ptr a = JsTypedArray<int>::create();
+    a->add(3);
+    a->add(5);
+    a->add(7);
+
+    JsTypedArray<int>::Ptr sub1 = toPtr<JsTypedArray<int> >(a->subList(1, 2));
+    ASSERT_TRUE(sub1 && sub1->toString()->equals(String::create("5")));
+
+    JsTypedArray<int>::Ptr sub2 = toPtr<JsTypedArray<int> >(a->subList(0, 3));
+    ASSERT_TRUE(sub2 && sub2->toString()->equals(String::create("3,5,7")));
+
+    JsTypedArray<int>::Ptr sub3 = toPtr<JsTypedArray<int> >(a->subList(2, 2));
+    ASSERT_TRUE(sub3 && sub3->toString()->equals(String::create("")));
+
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(a->subList(0, 4));
+    ASSERT_ANY_THROW(a->subList(2, 1));
+#else
+    ASSERT_EQ(
+        Error::INDEX_OUT_OF_BOUNDS,
+        toCPtr<Error>(a->subList(0, 4))->code());
+    ASSERT_EQ(
+        Error::INDEX_OUT_OF_BOUNDS,
+        toCPtr<Error>(a->subList(2, 1))->code());
+#endif  // LIBJ_USE_EXCEPTION
+}
+
+TEST(GTestJsTypedArray, TestSubarray) {
+    JsTypedArray<int>::Ptr a = JsTypedArray<int>::create();
+    a->add(3);
+    a->add(5);
+    a->add(7);
+
+    JsTypedArray<int>::Ptr sub1 = toPtr<JsTypedArray<int> >(a->subarray(1, 2));
+    ASSERT_TRUE(sub1 && sub1->toString()->equals(String::create("5")));
+
+    JsTypedArray<int>::Ptr sub2 = toPtr<JsTypedArray<int> >(a->subarray(0, 3));
+    ASSERT_TRUE(sub2 && sub2->toString()->equals(String::create("3,5,7")));
+
+    JsTypedArray<int>::Ptr sub3 = toPtr<JsTypedArray<int> >(a->subarray(2, 2));
+    ASSERT_TRUE(sub3 && sub3->toString()->equals(String::create("")));
+
+    JsTypedArray<int>::Ptr sub4 = toPtr<JsTypedArray<int> >(a->subarray(0, 4));
+    ASSERT_TRUE(sub4 && sub4->toString()->equals(String::create("3,5,7")));
+
+    JsTypedArray<int>::Ptr sub5 = toPtr<JsTypedArray<int> >(a->subarray(2, 1));
+    ASSERT_TRUE(sub5 && sub5->toString()->equals(String::create("")));
+}
+
 }  // namespace libj

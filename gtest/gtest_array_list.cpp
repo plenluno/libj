@@ -182,7 +182,35 @@ TEST(GTestArrayList, TestToString) {
     a2->add(5);
     a->add(a2);
     a->add(7);
-    ASSERT_TRUE(a->toString()->equals(String::create("1,3,5,7")));
+    ASSERT_TRUE(a->toString()->equals(String::create("[1, [3, 5], 7]")));
+}
+
+TEST(GTestArrayList, TestSubList) {
+    ArrayList::Ptr a = ArrayList::create();
+    a->add(3);
+    a->add(5);
+    a->add(7);
+
+    ArrayList::Ptr sub1 = toPtr<ArrayList>(a->subList(1, 2));
+    ASSERT_TRUE(sub1->toString()->equals(String::create("[5]")));
+
+    ArrayList::Ptr sub2 = toPtr<ArrayList>(a->subList(0, 3));
+    ASSERT_TRUE(sub2->toString()->equals(String::create("[3, 5, 7]")));
+
+    ArrayList::Ptr sub3 = toPtr<ArrayList>(a->subList(2, 2));
+    ASSERT_TRUE(sub3->toString()->equals(String::create("[]")));
+
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(a->subList(0, 4));
+    ASSERT_ANY_THROW(a->subList(2, 1));
+#else
+    ASSERT_EQ(
+        Error::INDEX_OUT_OF_BOUNDS,
+        toCPtr<Error>(a->subList(0, 4))->code());
+    ASSERT_EQ(
+        Error::INDEX_OUT_OF_BOUNDS,
+        toCPtr<Error>(a->subList(2, 1))->code());
+#endif  // LIBJ_USE_EXCEPTION
 }
 
 TEST(GTestArrayList, TestIsEmpty) {

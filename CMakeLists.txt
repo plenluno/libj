@@ -170,6 +170,7 @@ if(LIBJ_BUILD_GTEST)
         gtest/gtest_immutable.cpp
         gtest/gtest_json.cpp
         gtest/gtest_jsoncpp.cpp
+        gtest/gtest_js_array.cpp
         gtest/gtest_js_array_buffer.cpp
         gtest/gtest_js_function.cpp
         gtest/gtest_js_object.cpp
@@ -186,6 +187,7 @@ if(LIBJ_BUILD_GTEST)
         gtest/gtest_string.cpp
         gtest/gtest_string_buffer.cpp
         gtest/gtest_typed_array_list.cpp
+        gtest/gtest_undefined.cpp
         gtest/gtest_value.cpp
     )
     target_link_libraries(libj-gtest

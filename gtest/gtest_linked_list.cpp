@@ -136,8 +136,126 @@ TEST(GTestLinkedList, TestToString) {
     l->add(123);
     l->add(false);
     l->add(String::create("foo"));
-    String::CPtr s = String::create("123,false,foo");
+    String::CPtr s = String::create("[123, false, foo]");
     ASSERT_TRUE(l->toString()->equals(s));
+}
+
+TEST(GTestLinkedList, TestSubList) {
+    LinkedList::Ptr l = LinkedList::create();
+    l->add(3);
+    l->add(5);
+    l->add(7);
+
+    LinkedList::Ptr sub1 = toPtr<LinkedList>(l->subList(1, 2));
+    ASSERT_TRUE(sub1->toString()->equals(String::create("[5]")));
+
+    LinkedList::Ptr sub2 = toPtr<LinkedList>(l->subList(0, 3));
+    ASSERT_TRUE(sub2->toString()->equals(String::create("[3, 5, 7]")));
+
+    LinkedList::Ptr sub3 = toPtr<LinkedList>(l->subList(2, 2));
+    ASSERT_TRUE(sub3->toString()->equals(String::create("[]")));
+
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(l->subList(0, 4));
+    ASSERT_ANY_THROW(l->subList(2, 1));
+#else
+    ASSERT_EQ(
+        Error::INDEX_OUT_OF_BOUNDS,
+        toCPtr<Error>(l->subList(0, 4))->code());
+    ASSERT_EQ(
+        Error::INDEX_OUT_OF_BOUNDS,
+        toCPtr<Error>(l->subList(2, 1))->code());
+#endif  // LIBJ_USE_EXCEPTION
+}
+
+TEST(GTestLinkedList, TestIsEmpty) {
+    LinkedList::Ptr l = LinkedList::create();
+    ASSERT_TRUE(l->isEmpty());
+    l->add(5);
+    ASSERT_FALSE(l->isEmpty());
+}
+
+TEST(GTestLinkedList, TestAddAll) {
+    LinkedList::Ptr l1 = LinkedList::create();
+    l1->add(3);
+    l1->add(5);
+
+    LinkedList::Ptr l2 = LinkedList::create();
+    l2->add(5);
+    l2->add(7);
+
+    ASSERT_TRUE(l1->addAll(l2));
+    ASSERT_EQ(4, l1->size());
+    ASSERT_TRUE(l1->get(0).equals(3));
+    ASSERT_TRUE(l1->get(1).equals(5));
+    ASSERT_TRUE(l1->get(2).equals(5));
+    ASSERT_TRUE(l1->get(3).equals(7));
+
+    ASSERT_FALSE(l1->addAll(LinkedList::null()));
+    ASSERT_FALSE(l1->addAll(LinkedList::create()));
+}
+
+TEST(GTestLinkedList, TestContainsAll) {
+    LinkedList::Ptr l1 = LinkedList::create();
+    l1->add(3);
+    l1->add(5);
+
+    LinkedList::Ptr l2 = LinkedList::create();
+    l2->add(5);
+
+    LinkedList::Ptr l3 = LinkedList::create();
+    l3->add(5);
+    l3->add(7);
+
+    ASSERT_TRUE(l1->containsAll(l2));
+    ASSERT_FALSE(l1->containsAll(l3));
+    ASSERT_FALSE(l1->containsAll(LinkedList::null()));
+    ASSERT_TRUE(l1->containsAll(LinkedList::create()));
+}
+
+TEST(GTestLinkedList, TestRemoveAll) {
+    LinkedList::Ptr l1 = LinkedList::create();
+    l1->add(3);
+    l1->add(5);
+    l1->add(7);
+    l1->add(9);
+    l1->add(5);
+
+    LinkedList::Ptr l2 = LinkedList::create();
+    l2->add(5);
+    l2->add(7);
+
+    ASSERT_TRUE(l1->removeAll(l2));
+    ASSERT_EQ(2, l1->size());
+    ASSERT_TRUE(l1->get(0).equals(3));
+    ASSERT_TRUE(l1->get(1).equals(9));
+
+    ASSERT_FALSE(l1->removeAll(LinkedList::null()));
+    ASSERT_FALSE(l1->removeAll(LinkedList::create()));
+}
+
+TEST(GTestLinkedList, TestRetainAll) {
+    LinkedList::Ptr l1 = LinkedList::create();
+    l1->add(3);
+    l1->add(5);
+    l1->add(7);
+    l1->add(9);
+    l1->add(5);
+
+    LinkedList::Ptr l2 = LinkedList::create();
+    l2->add(5);
+    l2->add(7);
+
+    ASSERT_TRUE(l1->retainAll(l2));
+    ASSERT_EQ(3, l1->size());
+    ASSERT_TRUE(l1->get(0).equals(5));
+    ASSERT_TRUE(l1->get(1).equals(7));
+    ASSERT_TRUE(l1->get(2).equals(5));
+
+    ASSERT_FALSE(l1->retainAll(LinkedList::null()));
+
+    ASSERT_TRUE(l1->retainAll(LinkedList::create()));
+    ASSERT_TRUE(l1->isEmpty());
 }
 
 #ifdef LIBJ_USE_SP
