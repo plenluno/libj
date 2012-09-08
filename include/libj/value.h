@@ -4,7 +4,7 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// modified for libj by Plenluno
+// modified boost::any for libj by Plenluno
 
 #ifndef LIBJ_VALUE_H_
 #define LIBJ_VALUE_H_
