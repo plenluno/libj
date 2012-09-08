@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <libj/map.h>
+#include <libj/null.h>
 #include <libj/string.h>
 
 namespace libj {
@@ -13,6 +14,13 @@ TEST(GTestMap, TestCreate) {
 
 TEST(GTestMap, TestInstanceOf) {
     Map::Ptr m = Map::create();
+    ASSERT_TRUE(m->instanceof(Type<Map>::id()));
+    ASSERT_TRUE(m->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(m->instanceof(Type<Object>::id()));
+}
+
+TEST(GTestMap, TestInstanceOf2) {
+    Map::CPtr m = Map::create();
     ASSERT_TRUE(m->instanceof(Type<Map>::id()));
     ASSERT_TRUE(m->instanceof(Type<Mutable>::id()));
     ASSERT_TRUE(m->instanceof(Type<Object>::id()));
@@ -30,7 +38,14 @@ TEST(GTestMap, TestSize) {
     ASSERT_EQ(4, m->size());
 }
 
-TEST(GTestMap, TestIterator) {
+TEST(GTestMap, TestPutAndGet) {
+    Map::Ptr m = Map::create();
+    String::CPtr x = String::create("x");
+    ASSERT_TRUE(m->put(x, 123).instanceof(Type<Null>::id()));
+    ASSERT_TRUE(m->get(x).equals(123));
+}
+
+TEST(GTestMap, TestKeySet) {
     Map::Ptr m = Map::create();
     String::CPtr x = String::create("x");
     String::CPtr y = String::create("y");
@@ -64,6 +79,36 @@ TEST(GTestMap, TestContainsValue) {
     m->put(x, 123);
     ASSERT_TRUE(m->containsValue(123));
     ASSERT_FALSE(m->containsValue(456));
+}
+
+TEST(GTestMap, TestClear) {
+    Map::Ptr m = Map::create();
+    String::CPtr x = String::create("x");
+    String::CPtr y = String::create("y");
+    m->put(x, 123);
+    m->put(y, 456);
+    m->clear();
+    ASSERT_TRUE(m->isEmpty());
+}
+
+TEST(GTestMap, TestRemove) {
+    Map::Ptr m = Map::create();
+    String::CPtr x = String::create("x");
+    m->put(x, 123);
+    ASSERT_FALSE(m->isEmpty());
+    m->remove(x);
+    ASSERT_TRUE(m->isEmpty());
+}
+
+TEST(GTestMap, TestToString) {
+    Map::Ptr m = Map::create();
+    ASSERT_TRUE(m->toString()->equals(String::create("{}")));
+
+    String::CPtr x = String::create("x");
+    String::CPtr y = String::create("y");
+    m->put(x, 123);
+    m->put(y, 456);
+    ASSERT_TRUE(m->toString()->equals(String::create("{x=123, y=456}")));
 }
 
 #ifdef LIBJ_USE_SP

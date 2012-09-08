@@ -19,13 +19,11 @@ class GTestSingletonX {
     virtual int x() { return 0; }
 };
 
-TEST(GTestSingleton, Test) {
-    // check EBCO
+TEST(GTestSingleton, TestEBCO) {
     ASSERT_EQ(sizeof(GTestSingleton), sizeof(GTestSingletonX));
 }
 
-TEST(GTestSingleton, Test2) {
-    // no build errors
+TEST(GTestSingleton, TestSubstitution) {
     GTestSingleton::Ptr p = GTestSingleton::instance();
     Singleton::Ptr p2 = p;
     Singleton::CPtr p3 = p;
@@ -33,8 +31,15 @@ TEST(GTestSingleton, Test2) {
     ASSERT_TRUE(p && p2 && p3 && p4);
 }
 
-TEST(GTestSingleton, Test3) {
+TEST(GTestSingleton, TestInstanceOf) {
     GTestSingleton::Ptr p = GTestSingleton::instance();
+    ASSERT_TRUE(p->instanceof(Type<GTestSingleton>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Singleton>::id()));
+    ASSERT_TRUE(p->instanceof(Type<Object>::id()));
+}
+
+TEST(GTestSingleton, TestInstanceOf2) {
+    GTestSingleton::CPtr p = GTestSingleton::instance();
     ASSERT_TRUE(p->instanceof(Type<GTestSingleton>::id()));
     ASSERT_TRUE(p->instanceof(Type<Singleton>::id()));
     ASSERT_TRUE(p->instanceof(Type<Object>::id()));
@@ -61,7 +66,7 @@ class GTestSingleton2 : public SingletonTmpl<GTestSingleton2> {
 
 int GTestSingleton2::count = 0;
 
-TEST(GTestSingleton, Test4) {
+TEST(GTestSingleton, TestUseCount) {
     {
         GTestSingleton2::Ptr p = GTestSingleton2::instance();
         ASSERT_EQ(1, p.use_count());
