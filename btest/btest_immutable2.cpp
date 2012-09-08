@@ -7,4 +7,6 @@
 int main() {
     libj::BTestImmutable::CPtr p = libj::BTestImmutable::create();
     libj::Mutable::CPtr p2 = p;
+
+    return 0;
 }

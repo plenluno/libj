@@ -6,4 +6,6 @@ int main() {
     // noncopyable
     libj::BTestImmutable x, y;
     x = y;
+
+    return 0;
 }

@@ -5,4 +5,6 @@
 int main() {
     // noncopyable
     libj::BTestMutable x, y = x;
+
+    return 0;
 }

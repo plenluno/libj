@@ -4,5 +4,7 @@
 
 int main() {
     // noncopyable
-    libj::BTestImmutable x, y = x
+    libj::BTestImmutable x, y = x;
+
+    return 0;
 }
