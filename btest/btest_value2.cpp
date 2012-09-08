@@ -7,6 +7,6 @@ int main() {
     libj::Value* vp = &v;
     int* ip;
     libj::to<const int>(vp, &ip);
-    
+
     return 0;
 }
