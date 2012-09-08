@@ -75,7 +75,7 @@ TEST(GTestJsRegExp, TestExec2) {
     ASSERT_EQ(0, index);
     String::CPtr input =
         toCPtr<String>(a->getProperty(String::create("input")));
-    ASSERT_TRUE(input->equals(String::create("1.23")));    
+    ASSERT_TRUE(input->equals(String::create("1.23")));
 
     ASSERT_FALSE(re->exec(String::create("1x23")));
     ASSERT_FALSE(re->exec(String::create("v1.23")));
