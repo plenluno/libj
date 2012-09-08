@@ -19,6 +19,11 @@ class Map : LIBJ_MUTABLE(Map)
     virtual Value put(const Value& key, const Value& val) = 0;
     virtual Value remove(const Value& key) = 0;
     virtual Size size() const = 0;
+
+ public:
+    Boolean isEmpty() const {
+        return size() == 0;
+    }
 };
 
 #define LIBJ_MAP(T) public libj::Map { \
