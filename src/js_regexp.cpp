@@ -1,5 +1,6 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#include <assert.h>
 #include <vector>
 
 #include "libj/js_regexp.h"
@@ -50,6 +51,9 @@ class JsRegExpImpl : public JsRegExp {
     }
 
     JsArray::Ptr exec(String::CPtr str) const {
+        static const String::CPtr index = String::create("index");
+        static const String::CPtr input = String::create("input");
+
         if (!str) {
             return JsArray::null();
         }
@@ -61,6 +65,7 @@ class JsRegExpImpl : public JsRegExp {
 
         JsArray::Ptr res = JsArray::create();
         Size len = captures.size();
+        assert(len > 0);
         for (Size i = 0; i < len; i += 2) {
             if (captures[i] >= 0 &&
                 captures[i+1] >= 0 &&
@@ -71,6 +76,8 @@ class JsRegExpImpl : public JsRegExp {
                 res->add(Undefined::instance());
             }
         }
+        res->setProperty(input, str);
+        res->setProperty(index, captures[0]);
         return res;
     }
 

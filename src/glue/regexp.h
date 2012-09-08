@@ -11,14 +11,14 @@ namespace glue {
 
 class RegExp {
  public:
+    typedef std::basic_string<uint16_t> U16String;
+
     enum Flag {
         NONE        = 0,
         GLOBAL      = 1 << 0,
         IGNORE_CASE = 1 << 1,
         MULTILINE   = 1 << 2,
     };
-
-    typedef std::basic_string<uint16_t> U16String;
 
     static RegExp* create(const U16String& pattern, unsigned int flags);
 
