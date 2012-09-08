@@ -9,70 +9,9 @@
 
 namespace libj {
 
-#ifdef LIBJ_GTEST_BUILD_ERRORS
-// #define LIBJ_GTEST_VALUE_BUILD_ERRORS
-#endif
-
-#ifdef LIBJ_GTEST_VALUE_BUILD_ERRORS
-TEST(GTestValue, Error) {
-    const Value v = 3;
-    v = 5;
-}
-
-TEST(GTestAny, Error) {
-    const boost::any a = 3;
-    a = 5;
-}
-
-#if 0
-// OK
-TEST(GTestValue, Error2) {
-    const Value v = 3;
-    int i;
-    int& ir = i;
-    ASSERT_TRUE(to<int&>(v, &ir));
-    ASSERT_EQ(3, ir);
-}
-#endif
-
-TEST(GTestAny, Error2) {
-    const boost::any a = 3;
-    int i;
-    int& ir = i;
-    ir = boost::any_cast<int&>(a);
-}
-
-TEST(GTestValue, Error3) {
-    int* ip;
-    Value v = 5;
-    Value* vp = &v;
-    to<const int>(vp, &ip);
-}
-
-TEST(GTestAny, Error3) {
-    boost::any a = 5;
-    boost::any* ap = &a;
-    int* ip = boost::any_cast<const int>(ap);
-}
-
-TEST(GTestValue, Error4) {
+TEST(GTestValue, TestTo1) {
     Value v = 3;
-    const Value* vp = &v;
-    int* ip;
-    ASSERT_TRUE(to<int>(vp, &ip));
-    ASSERT_EQ(3, *ip);
-}
 
-TEST(GTestAny, Error4) {
-    boost::any a = 3;
-    const boost::any* ap = &a;
-    int* ip  = boost::any_cast<int>(ap);
-    ASSERT_EQ(3, *ip);
-}
-#endif
-
-TEST(GTestValue, Test) {
-    Value v = 3;
     int i;
     ASSERT_TRUE(to<int>(v, &i));
     ASSERT_EQ(3, i);
@@ -85,7 +24,7 @@ TEST(GTestValue, Test) {
     ASSERT_FALSE(to<int64_t>(v, &l));
 }
 
-TEST(GTestAny, Test) {
+TEST(GTestAny, TestCast1) {
     boost::any a = 3;
     int i = boost::any_cast<int>(a);
     ASSERT_EQ(3, i);
@@ -97,7 +36,33 @@ TEST(GTestAny, Test) {
     ASSERT_ANY_THROW(boost::any_cast<int64_t>(a));
 }
 
-TEST(GTestValue, Test2) {
+TEST(GTestValue, TestTo2) {
+    const Value v = 3;
+
+    int i;
+    ASSERT_TRUE(to<int>(v, &i));
+    ASSERT_EQ(3, i);
+
+    ASSERT_TRUE(to<const int>(v, &i));
+    ASSERT_EQ(3, i);
+
+    int64_t l;
+    ASSERT_FALSE(to<int64_t>(v, &l));
+}
+
+TEST(GTestAny, TestCast2) {
+    const boost::any a = 3;
+
+    int i = boost::any_cast<int>(a);
+    ASSERT_EQ(3, i);
+
+    i = boost::any_cast<const int>(a);
+    ASSERT_EQ(3, i);
+
+    ASSERT_ANY_THROW(boost::any_cast<int64_t>(a));
+}
+
+TEST(GTestValue, TestTo3) {
     const int ci = 5;
     Value v = ci;
 
@@ -106,7 +71,7 @@ TEST(GTestValue, Test2) {
     ASSERT_EQ(5, i);
 }
 
-TEST(GTestAny, Test2) {
+TEST(GTestAny, TestCast3) {
     const int ci = 5;
     boost::any a = ci;
 
@@ -114,29 +79,31 @@ TEST(GTestAny, Test2) {
     ASSERT_EQ(5, i);
 }
 
-TEST(GTestValue, Test3) {
+TEST(GTestValue, TestTo4) {
     int i = 9;
     Value v = &i;
 
     int* ip;
     ASSERT_TRUE(to<int*>(v, &ip));
     ASSERT_EQ(&i, ip);
+    ASSERT_EQ(9, *ip);
 
     const int* cip;
     ASSERT_FALSE(to<const int*>(v, &cip));
 }
 
-TEST(GTestAny, Test3) {
+TEST(GTestAny, TestCast4) {
     int i = 9;
     boost::any a = &i;
 
     int* ip = boost::any_cast<int*>(a);
     ASSERT_EQ(&i, ip);
+    ASSERT_EQ(9, *ip);
 
     ASSERT_ANY_THROW(boost::any_cast<const int*>(a));
 }
 
-TEST(GTestValue, Test4) {
+TEST(GTestValue, TestTo5) {
     const int i = 11;
     Value v = &i;
 
@@ -146,9 +113,10 @@ TEST(GTestValue, Test4) {
     const int* cip;
     ASSERT_TRUE(to<const int*>(v, &cip));
     ASSERT_EQ(&i, cip);
+    ASSERT_EQ(11, *cip);
 }
 
-TEST(GTestAny, Test4) {
+TEST(GTestAny, TestCast5) {
     const int i = 11;
     boost::any a = &i;
 
@@ -156,9 +124,10 @@ TEST(GTestAny, Test4) {
 
     const int* cip = boost::any_cast<const int*>(a);
     ASSERT_EQ(&i, cip);
+    ASSERT_EQ(11, *cip);
 }
 
-TEST(GTestValue, Test5) {
+TEST(GTestValue, TestTo6) {
     Value v = 3;
 
     int i;
@@ -173,9 +142,10 @@ TEST(GTestValue, Test5) {
     int64_t l;
     int64_t& lr = l;
     ASSERT_FALSE(to<int64_t&>(v, &lr));
+    ASSERT_FALSE(to<const int64_t&>(v, &lr));
 }
 
-TEST(GTestAny, Test5) {
+TEST(GTestAny, TestCast6) {
     boost::any a = 3;
 
     int i;
@@ -190,51 +160,46 @@ TEST(GTestAny, Test5) {
     int64_t l;
     int64_t& lr = l;
     ASSERT_ANY_THROW(lr = boost::any_cast<int64_t&>(a));
+    ASSERT_ANY_THROW(lr = boost::any_cast<const int64_t&>(a));
 }
 
-TEST(GTestValue, Test6) {
+TEST(GTestValue, TestTo7) {
     const Value v = 3;
 
-    int i;
-    ASSERT_TRUE(to<int>(v, &i));
-    ASSERT_EQ(3, i);
-
-    ASSERT_TRUE(to<const int>(v, &i));
-    ASSERT_EQ(3, i);
-
-    int64_t l;
-    ASSERT_FALSE(to<int64_t>(v, &l));
-}
-
-TEST(GTestAny, Test6) {
-    const boost::any a = 3;
-
-    int i = boost::any_cast<int>(a);
-    ASSERT_EQ(3, i);
-
-    i = boost::any_cast<const int>(a);
-    ASSERT_EQ(3, i);
-
-    ASSERT_ANY_THROW(boost::any_cast<int64_t>(a));
-}
-
-TEST(GTestValue, Test7) {
-    const Value v = 3;
     int i;
     int& ir = i;
+    ASSERT_TRUE(to<int&>(v, &ir));
+    ASSERT_EQ(3, ir);
+
     ASSERT_TRUE(to<const int&>(v, &ir));
     ASSERT_EQ(3, ir);
+
+    int64_t l;
+    int64_t& lr = l;
+    ASSERT_FALSE(to<int64_t&>(v, &lr));
+    ASSERT_FALSE(to<const int64_t&>(v, &lr));
 }
 
-TEST(GTestAny, Test7) {
+TEST(GTestAny, TestCast7) {
     const boost::any a = 3;
+
     int i;
     int& ir = i;
+    // build error
+    // ir = boost::any_cast<int&>(a);
+    // ASSERT_EQ(3, ir);
+
     ir = boost::any_cast<const int&>(a);
     ASSERT_EQ(3, ir);
+
+    int64_t l;
+    int64_t& lr = l;
+    // build error
+    // ASSERT_ANY_THROW(lr = boost::any_cast<int64_t&>(a));
+    ASSERT_ANY_THROW(lr = boost::any_cast<const int64_t&>(a));
 }
 
-TEST(GTestValue, Test8) {
+TEST(GTestValue, TestTo8) {
     Value v = 3;
     Value* vp = &v;
 
@@ -242,50 +207,71 @@ TEST(GTestValue, Test8) {
     ASSERT_TRUE(to<int>(vp, &ip));
     ASSERT_EQ(3, *ip);
 
+    v = 5;
+    const int* cip;
+    ASSERT_TRUE(to<int>(vp, &cip));
+    ASSERT_EQ(5, *cip);
+
+    // differ from boost::any!
+    ASSERT_FALSE(to<const int>(vp, &cip));
+
     int64_t* lp;
-#if 1
     ASSERT_FALSE(to<int64_t>(vp, &lp));
-#else
-    ASSERT_TRUE(to<int64_t>(vp, &lp));
-    ASSERT_EQ(3, *lp);
-#endif
 }
 
-TEST(GTestAny, Test8) {
+TEST(GTestAny, TestCast8) {
     boost::any a = 3;
     boost::any* ap = &a;
 
     int* ip  = boost::any_cast<int>(ap);
     ASSERT_EQ(3, *ip);
 
-//  Segmentation fault
-//  int64_t* lp = boost::any_cast<int64_t>(ap);
-//  ASSERT_EQ(3, *lp);
+    a = 5;
+    const int* cip = boost::any_cast<int>(ap);
+    ASSERT_EQ(5, *cip);
+
+    a = 7;
+    cip = boost::any_cast<const int>(ap);
+    ASSERT_EQ(7, *cip);
+
+    // Segmentation fault
+    // int64_t* lp = boost::any_cast<int64_t>(ap);
+    // ASSERT_EQ(7, *lp);
 }
 
-TEST(GTestValue, Test9) {
+TEST(GTestValue, TestTo9) {
     Value v = 3;
     const Value* vp = &v;
 
-    const int* ip;
-    ASSERT_TRUE(to<int>(vp, &ip));
-    ASSERT_EQ(3, *ip);
+    const int* cip;
+    ASSERT_TRUE(to<int>(vp, &cip));
+    ASSERT_EQ(3, *cip);
 
     v = 5;
-    ASSERT_TRUE(to<const int>(vp, &ip));
-    ASSERT_EQ(5, *ip);
+    ASSERT_TRUE(to<const int>(vp, &cip));
+    ASSERT_EQ(5, *cip);
+
+    const int64_t* clp;
+    ASSERT_FALSE(to<int64_t>(vp, &clp));
+    ASSERT_FALSE(to<const int64_t>(vp, &clp));
 }
 
-TEST(GTestAny, Test9) {
+TEST(GTestAny, TestCast9) {
     boost::any a = 3;
     const boost::any* ap = &a;
 
-    const int* ip = boost::any_cast<int>(ap);
-    ASSERT_EQ(3, *ip);
+    const int* cip = boost::any_cast<int>(ap);
+    ASSERT_EQ(3, *cip);
 
     a = 5;
-    ip = boost::any_cast<const int>(ap);
-    ASSERT_EQ(5, *ip);
+    cip = boost::any_cast<const int>(ap);
+    ASSERT_EQ(5, *cip);
+
+    // Segmentation fault
+    // const int64_t* clp = boost::any_cast<int64_t>(ap);
+    // ASSERT_EQ(5, *clp);
+    // const int64_t* clp2 = boost::any_cast<const int64_t>(ap);
+    // ASSERT_EQ(5, *clp2);
 }
 
 TEST(GTestValue, TestInstanceOf) {
