@@ -72,15 +72,30 @@ class MapImpl : public Map {
         map_.clear();
     }
 
-    Map::Ptr clone() const {
-        // TODO(plenluno): implement
-        Map::Ptr p(new MapImpl());
-        return p;
-    }
-
     String::CPtr toString() const {
-        // TODO(plenluno): implement
-        return String::create();
+        static const String::CPtr lbrace = String::create("{");
+        static const String::CPtr rbrace = String::create("}");
+        static const String::CPtr eq = String::create("=");
+        static const String::CPtr comma = String::create(", ");
+
+        StringBuffer::Ptr sb = StringBuffer::create();
+        sb->append(lbrace);
+        Boolean first = true;
+        Set::CPtr keys = keySet();
+        Iterator::Ptr itr = keys->iterator();
+        while (itr->hasNext()) {
+            Value v = itr->next();
+            if (first) {
+                first = false;
+            } else {
+                sb->append(comma);
+            }
+            sb->append(String::valueOf(v));
+            sb->append(eq);
+            sb->append(String::valueOf(get(v)));
+        }
+        sb->append(rbrace);
+        return sb->toString();
     }
 
  private:
