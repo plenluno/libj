@@ -7,6 +7,7 @@
 #include <inttypes.h>
 
 #ifndef LIBJ_USE_CXX11
+
 #include <string>
 
 namespace std {
@@ -17,7 +18,8 @@ typedef basic_string<char16_t> u16string;
 typedef basic_string<char32_t> u32string;
 
 }  // namespace std
-#endif
+
+#endif  // LIBJ_USE_CXX11
 
 namespace libj {
 
