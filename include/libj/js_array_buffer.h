@@ -51,6 +51,11 @@ class JsArrayBuffer : LIBJ_MUTABLE(JsArrayBuffer)
         Size byteOffset, Float value, Boolean littleEndian = false) = 0;
     virtual Boolean setFloat64(
         Size byteOffset, Double value, Boolean littleEndian = false) = 0;
+
+ public:
+    Boolean isEmpty() const {
+        return length() == 0;
+    }
 };
 
 #define LIBJ_JS_ARRAY_BUFFER(T) public libj::JsArrayBuffer { \
