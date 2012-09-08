@@ -9,18 +9,15 @@ namespace libj {
 
 class List : LIBJ_COLLECTION(List)
  public:
-    virtual Boolean add(const Value&) = 0;
-    virtual Boolean add(Size, const Value&) = 0;
-    // TODO(plenluno): implement
-    // virtual Boolean addAll(Collection::CPtr) = 0;
-    // virtual Boolean addAll(Size, Collection::CPtr) = 0;
-    virtual Value get(Size) const = 0;
-    virtual Value remove(Size) = 0;
-    virtual Boolean remove(const Value&) = 0;
-    virtual Boolean set(Size, const Value&) = 0;
-    // virtual Ptr subList(Size from) = 0;
-    // virtual Ptr subList(Size from, Size to) = 0;
+    virtual Boolean add(const Value& val) = 0;
+    virtual Boolean add(Size, const Value& val) = 0;
+    virtual Value get(Size index) const = 0;
+    virtual Value remove(Size index) = 0;
+    virtual Boolean remove(const Value& val) = 0;
+    virtual Boolean set(Size, const Value& val) = 0;
+    virtual Value subList(Size from, Size to) const = 0;
 
+ public:
     Size length() const {
         return size();
     }
@@ -35,14 +32,14 @@ public: \
     Boolean add(Size i, const Value& v) { \
         return L->add(i, v); \
     } \
-    Boolean set(Size i, const Value& v) { \
-        return L->set(i, v); \
-    } \
     Value get(Size i) const { \
         return L->get(i); \
     } \
     Value remove(Size i) { \
         return L->remove(i); \
+    } \
+    Boolean set(Size i, const Value& v) { \
+        return L->set(i, v); \
     }
 
 }  // namespace libj

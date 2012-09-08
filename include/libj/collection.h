@@ -90,15 +90,24 @@ class Collection : LIBJ_MUTABLE(Collection)
     }
 
     String::CPtr toString() const {
-        static String::CPtr comma = String::create(",");
+        static const String::CPtr lbracket = String::create("[");
+        static const String::CPtr rbracket = String::create("]");
+        static const String::CPtr comma = String::create(", ");
+
         StringBuffer::Ptr sb = StringBuffer::create();
+        sb->append(lbracket);
+        Boolean first = true;
         Iterator::Ptr itr = iterator();
         while (itr->hasNext()) {
             Value v = itr->next();
-            if (sb->length())
+            if (first) {
+                first = false;
+            } else {
                 sb->append(comma);
+            }
             sb->append(String::valueOf(v));
         }
+        sb->append(rbracket);
         return sb->toString();
     }
 };

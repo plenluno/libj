@@ -25,10 +25,6 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
     }
 
  public:
-    Size size() const {
-        return list_->size();
-    }
-
     Boolean add(const Value& v) {
         if (match(v)) {
             return list_->add(v);
@@ -53,8 +49,29 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
         }
     }
 
+    Value subList(Size from, Size to) const {
+        if (to > size() || from > to) {
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
+        }
+
+        TypedArrayList* a = new TypedArrayList();
+        for (Size i = from; i < to; i++) {
+            a->list_->add(get(i));
+        }
+        Ptr p(a);
+        return p;
+    }
+
+    void clear() {
+        return list_->clear();
+    }
+
     Value get(Size i) const {
         return list_->get(i);
+    }
+
+    Iterator::Ptr iterator() const {
+        return list_->iterator();
     }
 
     Value remove(Size i) {
@@ -65,16 +82,12 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
         return list_->remove(v);
     }
 
-    void clear() {
-        return list_->clear();
+    Size size() const {
+        return list_->size();
     }
 
     String::CPtr toString() const {
         return list_->toString();
-    }
-
-    Iterator::Ptr iterator() const {
-        return list_->iterator();
     }
 
 #ifdef LIBJ_USE_EXCEPTION

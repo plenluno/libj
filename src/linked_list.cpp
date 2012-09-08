@@ -48,11 +48,7 @@ class LinkedListImpl : public LinkedList {
 
     Value get(Size i) const {
         if (i >= list_.size()) {
-#ifdef LIBJ_USE_EXCEPTION
-            LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
-#else
-            return Error::create(Error::INDEX_OUT_OF_BOUNDS);
-#endif  // LIBJ_USE_EXCEPTION
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         } else {
             cit pos = list_.begin();
             for (; i; i--) ++pos;
@@ -62,11 +58,7 @@ class LinkedListImpl : public LinkedList {
 
     Value remove(Size i) {
         if (i >= list_.size()) {
-#ifdef LIBJ_USE_EXCEPTION
-            LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
-#else
-            return Error::create(Error::INDEX_OUT_OF_BOUNDS);
-#endif  // LIBJ_USE_EXCEPTION
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         } else {
             it pos = list_.begin();
             for (; i; i--) ++pos;
@@ -90,11 +82,17 @@ class LinkedListImpl : public LinkedList {
         list_.clear();
     }
 
-    LinkedList::Ptr clone() const {
+    Value subList(Size from, Size to) const {
+        if (to > size() || from > to) {
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
+        }
+
         LinkedListImpl* ls = new LinkedListImpl();
         LinkedList::Ptr p(ls);
-        for (cit i = list_.begin(), e = list_.end(); i != e; ++i) {
-            ls->add(*i);
+        cit itr = list_.begin();
+        for (Size index = 0; index < to; index++, itr++) {
+            if (index >= from)
+                ls->add(*itr);
         }
         return p;
     }
@@ -116,11 +114,7 @@ class LinkedListImpl : public LinkedList {
 
         Value next() {
             if (itr_ == list_->end()) {
-#ifdef LIBJ_USE_EXCEPTION
-                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-#else
-                return Error::create(Error::NO_SUCH_ELEMENT);
-#endif  // LIBJ_USE_EXCEPTION
+                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
             } else {
                 Value v = *itr_;
                 ++itr_;

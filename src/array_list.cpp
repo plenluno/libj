@@ -39,11 +39,7 @@ class ArrayListImpl : public ArrayList {
 
     Value get(Size i) const {
         if (i >= vec_.size()) {
-#ifdef LIBJ_USE_EXCEPTION
-            LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
-#else
-            return Error::create(Error::INDEX_OUT_OF_BOUNDS);
-#endif  // LIBJ_USE_EXCEPTION
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         } else {
             return vec_[i];
         }
@@ -51,11 +47,7 @@ class ArrayListImpl : public ArrayList {
 
     Value remove(Size i) {
         if (i >= vec_.size()) {
-#ifdef LIBJ_USE_EXCEPTION
-            LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
-#else
-            return Error::create(Error::INDEX_OUT_OF_BOUNDS);
-#endif  // LIBJ_USE_EXCEPTION
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         } else {
             // destruct shared object!
             // return *vec_.erase(vec_.begin() + i);
@@ -80,10 +72,16 @@ class ArrayListImpl : public ArrayList {
         vec_.clear();
     }
 
-    ArrayList::Ptr clone() const {
-        // TODO(plenluno): implement
-        ArrayList::Ptr p(new ArrayListImpl());
-        return p;
+    Value subList(Size from, Size to) const {
+        if (to > size() || from > to) {
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
+        }
+
+        ArrayList::Ptr a = ArrayList::create();
+        for (Size i = from; i < to; i++) {
+            a->add(vec_[i]);
+        }
+        return a;
     }
 
  private:
@@ -101,11 +99,7 @@ class ArrayListImpl : public ArrayList {
 
         Value next() {
             if (itr_ == vec_->end()) {
-#ifdef LIBJ_USE_EXCEPTION
-                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-#else
-                return Error::create(Error::NO_SUCH_ELEMENT);
-#endif  // LIBJ_USE_EXCEPTION
+                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
             } else {
                 Value v = *itr_;
                 ++itr_;
