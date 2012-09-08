@@ -7,10 +7,10 @@
 
 #define LIBJ_JS_PROPERTY_DECL \
 public: \
-    Boolean hasProperty(const Value& name) const; \
-    Value getProperty(const Value& name) const; \
-    Value setProperty(const Value& name, const Value& val); \
-    Value deleteProperty(const Value& name);
+    virtual Boolean hasProperty(const Value& name) const = 0; \
+    virtual Value getProperty(const Value& name) const = 0; \
+    virtual Value setProperty(const Value& name, const Value& val) = 0; \
+    virtual Value deleteProperty(const Value& name) = 0;
 
 #define LIBJ_JS_PROPERTY_IMPL(JO) \
 public: \
