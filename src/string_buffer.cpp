@@ -3,14 +3,10 @@
 #include <list>
 
 #include "libj/string_buffer.h"
-#include "./string_impl.h"
 
 namespace libj {
 
 class StringBufferImpl : public StringBuffer {
-    typedef StringImpl::Str8 Str8;
-    typedef StringImpl::Str32 Str32;
-
  public:
     static Ptr create() {
         Ptr p(new StringBufferImpl());
@@ -18,27 +14,21 @@ class StringBufferImpl : public StringBuffer {
     }
 
     Size length() const {
-        return length_;
+        return buf_.length();
     }
 
     Char charAt(Size n) const {
-        if (n >= length_)
+        if (n >= length()) {
             return NO_CHAR;
-        if (strs_.size())
-            join();
-        if (buf32_)
-            return (*buf32_)[n];
-        else
-            return static_cast<Char>((*buf8_)[n]);
+        } else {
+            return buf_[n];
+        }
     }
 
     Boolean append(const Value& val) {
         String::CPtr s = String::valueOf(val);
         if (s) {
-            strs_.push_back(s);
-            length_ += s->length();
-            if (!s->isAscii())
-                ascii_ = false;
+            buf_.append(s->toStdU32String());
             return true;
         } else {
             return false;
@@ -46,85 +36,12 @@ class StringBufferImpl : public StringBuffer {
     }
 
     String::CPtr toString() const {
-        if (length_) {
-            if (strs_.size())
-                join();
-            if (ascii_)
-                return String::create(buf8_->c_str(), String::UTF8, length_);
-            else
-                return String::create(buf32_->c_str(), String::UTF32, length_);
-        } else {
-            return LIBJ_STR_NULL;
-        }
-    }
-
-    ~StringBufferImpl() {
-        delete buf8_;
-        delete buf32_;
+        return String::create(buf_);
     }
 
  private:
-    static String::CPtr LIBJ_STR_NULL;
-
-    StringBufferImpl()
-        : length_(0)
-        , buf8_(0)
-        , buf32_(0)
-        , ascii_(true) {}
-
-    Size length_;
-    mutable Str8* buf8_;
-    mutable Str32* buf32_;
-    mutable bool ascii_;
-    mutable std::list<String::CPtr> strs_;
-
-    void join() const {
-        typedef std::list<String::CPtr>::const_iterator li;
-        if (ascii_) {
-            if (!buf8_)
-                buf8_ = new Str8();
-            buf8_->reserve(length_);
-            for (li i = strs_.begin(), e = strs_.end(); i != e; ++i) {
-                String::CPtr s = *i;
-                const StringImpl* si = reinterpret_cast<const StringImpl*>(&*s);
-                const Str8* s8 = si->getStr8();
-                if (s8)
-                    buf8_->append(*s8);
-            }
-        } else {
-            typedef Str8::const_iterator it8;
-            if (!buf32_)
-                buf32_ = new Str32();
-            buf32_->reserve(length_);
-            if (buf8_) {
-                for (it8 i = buf8_->begin(), e = buf8_->end(); i != e; ++i) {
-                    buf32_->push_back(static_cast<Char>(*i));
-                }
-                delete buf8_;
-                buf8_ = 0;
-            }
-            for (li i = strs_.begin(), e = strs_.end(); i != e; ++i) {
-                String::CPtr s = *i;
-                const StringImpl* si = reinterpret_cast<const StringImpl*>(&*s);
-                if (si->isAscii()) {
-                    const Str8* s8 = si->getStr8();
-                    if (s8) {
-                        for (it8 j = s8->begin(), e = s8->end(); j != e; ++j) {
-                            buf32_->push_back(static_cast<Char>(*j));
-                        }
-                    }
-                } else {
-                    const Str32* s32 = si->getStr32();
-                    if (s32)
-                        buf32_->append(*s32);
-                }
-            }
-        }
-        strs_.clear();
-    }
+    std::u32string buf_;
 };
-
-String::CPtr StringBufferImpl::LIBJ_STR_NULL = String::create();
 
 StringBuffer::Ptr StringBuffer::create() {
     return StringBufferImpl::create();

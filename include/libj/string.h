@@ -15,13 +15,16 @@ class String : LIBJ_IMMUTABLE(String)
  public:
     enum Encoding {
         UTF8,
-        UTF16,
-        UTF32,
+        UTF16BE,
+        UTF16LE,
+        UTF32BE,
+        UTF32LE,
     };
 
     static CPtr create();
     static CPtr create(Char, Size = 1);
     static CPtr create(const void*, Encoding = UTF8, Size = NO_SIZE);
+    static CPtr create(const std::u32string& s32);
     static CPtr valueOf(const Value&);
 
     virtual Size length() const = 0;
@@ -34,7 +37,6 @@ class String : LIBJ_IMMUTABLE(String)
     virtual Size lastIndexOf(Char, Size = NO_POS) const = 0;
     virtual Size lastIndexOf(CPtr, Size = NO_POS) const = 0;
     virtual Boolean isEmpty() const = 0;
-    virtual Boolean isAscii() const = 0;
     virtual Boolean startsWith(CPtr, Size = 0) const = 0;
     virtual Boolean endsWith(CPtr) const = 0;
     virtual CPtr toLowerCase() const = 0;

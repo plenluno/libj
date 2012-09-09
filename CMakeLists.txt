@@ -64,7 +64,6 @@ set(libj-src-common
     src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
-    src/string_impl.cpp
 )
 
 if(LIBJ_USE_EXCEPTION)
@@ -81,6 +80,7 @@ endif(LIBJ_USE_EXCEPTION)
 
 set(libj-deps-common
     cvtutf
+    iconv
     jsoncpp
     regexp
     v8dtoa
@@ -109,7 +109,7 @@ link_directories(
 
 ## cvtutf
 add_library(cvtutf STATIC
-    deps/cvtutf/ConvertUTF.cpp
+    src/glue/cvtutf.cpp
 )
 
 ## jsoncpp
@@ -165,6 +165,7 @@ endif(LIBJ_USE_EXCEPTION)
 if(LIBJ_BUILD_GTEST)
     add_executable(libj-gtest
         gtest/gtest_array_list.cpp
+        gtest/gtest_cvtutf.cpp
         gtest/gtest_error.cpp
         gtest/gtest_function.cpp
         gtest/gtest_immutable.cpp

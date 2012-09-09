@@ -17,8 +17,8 @@ TEST(GTestString, TestCreateUtf0) {
     const int16_t a16[] = { 0x61, 0x62, 0x63, 0x64, 0x65, 0 };
     const int32_t a32[] = { 0x61, 0x62, 0x63, 0x64, 0x65, 0 };
     String::CPtr s1 = String::create(a8, String::UTF8);
-    String::CPtr s2 = String::create(a16, String::UTF16);
-    String::CPtr s3 = String::create(a32, String::UTF32);
+    String::CPtr s2 = String::create(a16, String::UTF16LE);
+    String::CPtr s3 = String::create(a32, String::UTF32LE);
     ASSERT_TRUE(s1->equals(s2));
     ASSERT_TRUE(s2->equals(s3));
     ASSERT_TRUE(s3->equals(s1));
@@ -48,16 +48,16 @@ TEST(GTestString, TestCreateUtf1) {
         0
     };
     String::CPtr s1 = String::create(u8, String::UTF8);
-    String::CPtr s2 = String::create(u16, String::UTF16);
-    String::CPtr s3 = String::create(u32, String::UTF32);
+    String::CPtr s2 = String::create(u16, String::UTF16LE);
+    String::CPtr s3 = String::create(u32, String::UTF32LE);
     ASSERT_TRUE(s1->equals(s2));
     ASSERT_TRUE(s2->equals(s3));
 
     // chop at specified position
     for (int len = 0; len <= 8; len++) {
         String::CPtr s1 = String::create(u8, String::UTF8, len);
-        String::CPtr s2 = String::create(u16, String::UTF16, len);
-        String::CPtr s3 = String::create(u32, String::UTF32, len);
+        String::CPtr s2 = String::create(u16, String::UTF16LE, len);
+        String::CPtr s3 = String::create(u32, String::UTF32LE, len);
         ASSERT_TRUE(s1->equals(s2));
         ASSERT_TRUE(s2->equals(s3));
     }
@@ -161,8 +161,8 @@ TEST(GTestString, TestCreateUtf2) {
         0
     };
     String::CPtr s1 = String::create(u8, String::UTF8);
-    String::CPtr s2 = String::create(u16, String::UTF16);
-    String::CPtr s3 = String::create(u32, String::UTF32);
+    String::CPtr s2 = String::create(u16, String::UTF16LE);
+    String::CPtr s3 = String::create(u32, String::UTF32LE);
     ASSERT_TRUE(s1->equals(s2));
     ASSERT_TRUE(s2->equals(s3));
 }

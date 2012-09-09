@@ -10,10 +10,11 @@
 
 #include <string>
 
-namespace std {
-
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
+
+namespace std {
+
 typedef basic_string<char16_t> u16string;
 typedef basic_string<char32_t> u32string;
 
@@ -34,8 +35,8 @@ typedef uint32_t UInt;
 typedef uint64_t ULong;
 typedef float Float;
 typedef double Double;
-typedef std::char16_t Char16;
-typedef std::char32_t Char32;
+typedef char16_t Char16;
+typedef char32_t Char32;
 typedef Char32 Char;
 typedef size_t Size;
 typedef uintptr_t TypeId;

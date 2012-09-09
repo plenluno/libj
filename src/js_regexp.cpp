@@ -10,7 +10,7 @@
 namespace libj {
 
 static glue::RegExp::U16String toU16String(String::CPtr str) {
-    if (Type<std::char16_t>::id() == Type<uint16_t>::id()) {
+    if (Type<char16_t>::id() == Type<uint16_t>::id()) {
         return str->toStdU16String();
     } else {
         glue::RegExp::U16String s;
