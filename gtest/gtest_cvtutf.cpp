@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
+#include <string>
 
 #include "../src/glue/cvtutf.h"
 

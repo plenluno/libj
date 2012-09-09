@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <iv/lv5/third_party/v8_dtoa/conversions.h>
+#include <string>
 
 #include "libj/string.h"
 #include "./glue/cvtutf.h"
@@ -213,7 +214,7 @@ class StringImpl : public String {
     }
 
     static CPtr create(const void* data, Encoding enc, Size max) {
-        CPtr p (new StringImpl(data, enc, max));
+        CPtr p(new StringImpl(data, enc, max));
         return p;
     }
 
