@@ -151,7 +151,7 @@ std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc) {
         char c8[8];
         char* outBuf = c8;
         size_t outBytesLeft = 8;
-        size_t ret = ICONV(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft);
+        ICONV(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft);
         assert(outBytesLeft < 8);
         size_t outLen = 8 - outBytesLeft;
         for (size_t j = 0; j < outLen; j++) {
