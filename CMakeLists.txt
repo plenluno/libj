@@ -48,7 +48,7 @@ set(libj-include
     deps/jsoncpp/include
 )
 
-set(libj-src-common
+set(libj-src
     src/array_list.cpp
     src/console.cpp
     src/constant.cpp
@@ -69,31 +69,33 @@ set(libj-src-common
 if(LIBJ_USE_EXCEPTION)
     set(libj-src
         src/exception.cpp
-        ${libj-src-common}
+        ${libj-src}
     )
 else(LIBJ_USE_EXCEPTION)
     set(libj-src
         src/no_exceptions.cpp
-        ${libj-src-common}
+        ${libj-src}
     )
 endif(LIBJ_USE_EXCEPTION)
 
-set(libj-deps-common
+set(libj-deps
     cvtutf
-    iconv
     jsoncpp
     regexp
     v8dtoa
 )
 
+if(APPLE)
+    set(libj-deps
+        iconv
+        ${libj-deps}
+    )
+endif(APPLE)
+
 if(LIBJ_USE_BDW_GC)
     set(libj-deps
         gc
-        ${libj-deps-common}
-    )
-else(LIBJ_USE_BDW_GC)
-    set(libj-deps
-        ${libj-deps-common}
+        ${libj-deps}
     )
 endif(LIBJ_USE_BDW_GC)
 
