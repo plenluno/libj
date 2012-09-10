@@ -16,10 +16,10 @@ enum UnicodeEncoding {
     UTF32LE,
 };
 
+std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc);
 std::u32string toUtf32(const void* data, UnicodeEncoding enc, size_t max);
 
-std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc);
-
+std::u32string utf16ToUtf32(const std::u16string& str);
 std::u16string utf32ToUtf16(const std::u32string& str);
 
 }  // namespace glue
