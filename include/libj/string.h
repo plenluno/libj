@@ -22,28 +22,30 @@ class String : LIBJ_IMMUTABLE(String)
     };
 
     static CPtr create();
-    static CPtr create(Char, Size = 1);
-    static CPtr create(const void*, Encoding = UTF8, Size = NO_SIZE);
+    static CPtr create(Char c, Size n = 1);
+    static CPtr create(const std::u16string& s16);
     static CPtr create(const std::u32string& s32);
-    static CPtr valueOf(const Value&);
+    static CPtr create(
+        const void* data, Encoding enc = UTF8, Size len = NO_SIZE);
+    static CPtr valueOf(const Value& val);
 
     virtual Size length() const = 0;
-    virtual Char charAt(Size) const = 0;
-    virtual CPtr concat(CPtr) const = 0;
-    virtual CPtr substring(Size) const = 0;
-    virtual CPtr substring(Size, Size) const = 0;
-    virtual Size indexOf(Char, Size = 0) const = 0;
-    virtual Size indexOf(CPtr, Size = 0) const = 0;
-    virtual Size lastIndexOf(Char, Size = NO_POS) const = 0;
-    virtual Size lastIndexOf(CPtr, Size = NO_POS) const = 0;
+    virtual Char charAt(Size index) const = 0;
+    virtual CPtr concat(CPtr str) const = 0;
+    virtual CPtr substring(Size from) const = 0;
+    virtual CPtr substring(Size from, Size to) const = 0;
+    virtual Size indexOf(Char c, Size from = 0) const = 0;
+    virtual Size indexOf(CPtr str, Size from = 0) const = 0;
+    virtual Size lastIndexOf(Char c, Size from = NO_POS) const = 0;
+    virtual Size lastIndexOf(CPtr str, Size from = NO_POS) const = 0;
     virtual Boolean isEmpty() const = 0;
-    virtual Boolean startsWith(CPtr, Size = 0) const = 0;
-    virtual Boolean endsWith(CPtr) const = 0;
+    virtual Boolean startsWith(CPtr str, Size from = 0) const = 0;
+    virtual Boolean endsWith(CPtr str) const = 0;
     virtual CPtr toLowerCase() const = 0;
     virtual CPtr toUpperCase() const = 0;
-    virtual std::string toStdString() const = 0;
     virtual std::u16string toStdU16String() const = 0;
     virtual std::u32string toStdU32String() const = 0;
+    virtual std::string toStdString(Encoding enc = UTF8) const = 0;
 };
 
 }  // namespace libj
