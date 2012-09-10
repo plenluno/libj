@@ -24,25 +24,25 @@ class StringImpl : public String {
         }
     }
 
-    CPtr substring(Size begin) const {
-        if (begin > length()) {
+    CPtr substring(Size from) const {
+        if (from > length()) {
             return null();
-        } else if (begin == 0) {
+        } else if (from == 0) {
             return toString();
         } else {
-            CPtr p(new StringImpl(*this, begin));
+            CPtr p(new StringImpl(*this, from));
             return p;
         }
     }
 
-    CPtr substring(Size begin, Size end) const {
+    CPtr substring(Size from, Size to) const {
         Size len = length();
-        if (begin > len || end > len || begin > end) {
+        if (from > len || to > len || from > to) {
             return null();
-        } else if (begin == 0 && end == len) {
+        } else if (from == 0 && to == len) {
             return toString();
         } else {
-            CPtr p(new StringImpl(*this, begin, end - begin));
+            CPtr p(new StringImpl(*this, from, to - from));
             return p;
         }
     }
@@ -82,13 +82,13 @@ class StringImpl : public String {
         return len1 - len2;
     }
 
-    Boolean startsWith(CPtr other, Size offset) const {
+    Boolean startsWith(CPtr other, Size from) const {
         Size len1 = this->length();
         Size len2 = other->length();
-        if (len1 < offset + len2)
+        if (len1 < from + len2)
             return false;
         for (Size i = 0; i < len2; i++)
-            if (this->charAt(offset + i) != other->charAt(i))
+            if (this->charAt(from + i) != other->charAt(i))
                 return false;
         return true;
     }
@@ -105,32 +105,33 @@ class StringImpl : public String {
         return true;
     }
 
-    Size indexOf(Char c, Size offset) const {
+    Size indexOf(Char c, Size from) const {
         Size len = length();
-        for (Size i = offset; i < len; i++)
+        for (Size i = from; i < len; i++)
             if (charAt(i) == c)
                 return i;
         return NO_POS;
     }
 
-    Size indexOf(CPtr other, Size offset) const {
+    Size indexOf(CPtr other, Size from) const {
         // TODO(plenluno): make it more efficient
         Size len1 = this->length();
         Size len2 = other->length();
-        if (len1 < offset + len2)
+        if (len1 < from + len2)
             return NO_POS;
         Size n = len1 - len2 + 1;
-        for (Size i = offset; i < n; i++)
+        for (Size i = from; i < n; i++)
             if (startsWith(other, i))
                 return i;
         return NO_POS;
     }
 
-    Size lastIndexOf(Char c, Size offset) const {
+    Size lastIndexOf(Char c, Size from) const {
         Size len = length();
         if (len == 0)
             return NO_POS;
-        for (Size i = offset < len ? offset : len-1; ; i--) {
+        from = from < len ? from : len - 1;
+        for (Size i = from; ; i--) {
             if (charAt(i) == c)
                 return i;
             if (i == 0)
@@ -139,14 +140,14 @@ class StringImpl : public String {
         return NO_POS;
     }
 
-    Size lastIndexOf(CPtr other, Size offset) const {
+    Size lastIndexOf(CPtr other, Size from) const {
         // TODO(plenluno): make it more efficient
         Size len1 = this->length();
         Size len2 = other->length();
-        if (len1 < offset + len2)
+        if (len1 < len2)
             return NO_POS;
-        Size from = len1 - len2;
-        from = offset < from ? offset : from;
+        Size diff = len1 - len2;
+        from = from < diff ? from : diff;
         for (Size i = from; ; i--) {
             if (startsWith(other, i))
                 return i;
@@ -191,16 +192,16 @@ class StringImpl : public String {
         return p;
     }
 
-    std::string toStdString() const {
-        return glue::fromUtf32(str_, glue::UTF8);
-    }
-
     std::u16string toStdU16String() const {
         return glue::utf32ToUtf16(str_);
     }
 
     std::u32string toStdU32String() const {
         return str_;
+    }
+
+    std::string toStdString(Encoding enc) const {
+        return glue::fromUtf32(str_, convertEncoding(enc));
     }
 
     static CPtr create() {
@@ -213,13 +214,18 @@ class StringImpl : public String {
         return p;
     }
 
-    static CPtr create(const void* data, Encoding enc, Size max) {
-        CPtr p(new StringImpl(data, enc, max));
+    static CPtr create(const std::u16string& s16) {
+        CPtr p(new StringImpl(s16));
         return p;
     }
 
     static CPtr create(const std::u32string& s32) {
         CPtr p(new StringImpl(s32));
+        return p;
+    }
+
+    static CPtr create(const void* data, Encoding enc, Size max) {
+        CPtr p(new StringImpl(data, enc, max));
         return p;
     }
 
@@ -248,10 +254,13 @@ class StringImpl : public String {
 
     StringImpl(Char c, Size n) : str_(n, c) {}
 
-    StringImpl(const void* data, Encoding enc, Size max)
-        : str_(glue::toUtf32(data, convertEncoding(enc), max)) {}
+    StringImpl(const std::u16string& s16)
+        : str_(glue::utf16ToUtf32(s16)) {}
 
     StringImpl(const std::u32string& s32) : str_(s32) {}
+
+    StringImpl(const void* data, Encoding enc, Size max)
+        : str_(glue::toUtf32(data, convertEncoding(enc), max)) {}
 
     StringImpl(const StringImpl& other) : str_(other.str_) {}
 
@@ -269,12 +278,16 @@ String::CPtr String::create(Char c, Size n) {
     return StringImpl::create(c, n);
 }
 
-String::CPtr String::create(const void* data, Encoding enc, Size max) {
-    return StringImpl::create(data, enc, max);
+String::CPtr String::create(const std::u16string& s16) {
+    return StringImpl::create(s16);
 }
 
 String::CPtr String::create(const std::u32string& s32) {
     return StringImpl::create(s32);
+}
+
+String::CPtr String::create(const void* data, Encoding enc, Size max) {
+    return StringImpl::create(data, enc, max);
 }
 
 static String::CPtr LIBJ_STR_TRUE = String::create("true");
