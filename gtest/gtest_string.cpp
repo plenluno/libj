@@ -11,17 +11,37 @@ TEST(GTestString, TestCreate) {
     ASSERT_TRUE(s1->equals(s2));
 }
 
-TEST(GTestString, TestCreateUtf0) {
+TEST(GTestString, TestCreate0) {
     // single byte characters
     const int8_t  a8[]  = "abcde";
-    const int16_t a16[] = { 0x61, 0x62, 0x63, 0x64, 0x65, 0 };
-    const int32_t a32[] = { 0x61, 0x62, 0x63, 0x64, 0x65, 0 };
+    const int16_t a16be[] = {
+        0x6100, 0x6200, 0x6300,
+        0x6400, 0x6500, 0x0000
+    };
+    const int16_t a16le[] = {
+        0x0061, 0x0062, 0x0063,
+        0x0064, 0x0065, 0x0000
+    };
+    const int32_t a32be[] = {
+        0x61000000, 0x62000000,
+        0x63000000, 0x64000000,
+        0x65000000, 0x00000000
+    };
+    const int32_t a32le[] = {
+        0x00000061, 0x00000062,
+        0x00000063, 0x00000064,
+        0x00000065, 0x00000000
+    };
     String::CPtr s1 = String::create(a8, String::UTF8);
-    String::CPtr s2 = String::create(a16, String::UTF16LE);
-    String::CPtr s3 = String::create(a32, String::UTF32LE);
+    String::CPtr s2 = String::create(a16be, String::UTF16BE);
+    String::CPtr s3 = String::create(a16le, String::UTF16LE);
+    String::CPtr s4 = String::create(a32be, String::UTF32BE);
+    String::CPtr s5 = String::create(a32le, String::UTF32LE);
     ASSERT_TRUE(s1->equals(s2));
     ASSERT_TRUE(s2->equals(s3));
-    ASSERT_TRUE(s3->equals(s1));
+    ASSERT_TRUE(s3->equals(s4));
+    ASSERT_TRUE(s4->equals(s5));
+    ASSERT_TRUE(s5->equals(s1));
 }
 
 TEST(GTestString, TestCreateUtf1) {
@@ -35,37 +55,59 @@ TEST(GTestString, TestCreateUtf1) {
         0xef, 0xbf, 0xbf,        // U+FFFF
         0xf0, 0x90, 0x80, 0x80,  // U+10000
         0xf4, 0x8f, 0xbf, 0xbf,  // U+10FFFF
-        0                        // U+0000 (end of string)
+        0x00                     // U+0000 (end of string)
     };
-    const int16_t u16[] = {
-        0x01, 0x7f, 0x0080, 0x07ff, 0x0800, 0xffff,
+    const int16_t u16be[] = {
+        0x0100, 0x7f00, 0x8000, 0xff07, 0x0008, 0xffff,
+        0x00d8, 0x00dc,  // U+10000
+        0xffdb, 0xffdf,  // U+10FFFF
+        0x0000           // U+0000 (end of string)
+    };
+    const int16_t u16le[] = {
+        0x0001, 0x007f, 0x0080, 0x07ff, 0x0800, 0xffff,
         0xd800, 0xdc00,  // U+10000
         0xdbff, 0xdfff,  // U+10FFFF
-        0                // U+0000 (end of string)
+        0x0000           // U+0000 (end of string)
     };
-    const int32_t u32[] = {
-        0x01, 0x7f, 0x0080, 0x07ff, 0x0800, 0xffff, 0x10000, 0x10ffff,
+    const int32_t u32be[] = {
+        0x01000000, 0x7f000000, 0x80000000, 0xff070000,
+        0x00080000, 0xffff0000, 0x00000100, 0xffff1000,
+        0x00000000
+    };
+    const int32_t u32le[] = {
+        0x00000001, 0x0000007f, 0x00000080, 0x000007ff,
+        0x00000800, 0x0000ffff, 0x00010000, 0x0010ffff,
         0
     };
     String::CPtr s1 = String::create(u8, String::UTF8);
-    String::CPtr s2 = String::create(u16, String::UTF16LE);
-    String::CPtr s3 = String::create(u32, String::UTF32LE);
+    String::CPtr s2 = String::create(u16be, String::UTF16BE);
+    String::CPtr s3 = String::create(u16le, String::UTF16LE);
+    String::CPtr s4 = String::create(u32be, String::UTF32BE);
+    String::CPtr s5 = String::create(u32le, String::UTF32LE);
     ASSERT_TRUE(s1->equals(s2));
     ASSERT_TRUE(s2->equals(s3));
+    ASSERT_TRUE(s3->equals(s4));
+    ASSERT_TRUE(s4->equals(s5));
+    ASSERT_TRUE(s5->equals(s1));
 
     // chop at specified position
     for (int len = 0; len <= 8; len++) {
         String::CPtr s1 = String::create(u8, String::UTF8, len);
-        String::CPtr s2 = String::create(u16, String::UTF16LE, len);
-        String::CPtr s3 = String::create(u32, String::UTF32LE, len);
+        String::CPtr s2 = String::create(u16be, String::UTF16BE, len);
+        String::CPtr s3 = String::create(u16le, String::UTF16LE, len);
+        String::CPtr s4 = String::create(u32be, String::UTF32BE, len);
+        String::CPtr s5 = String::create(u32le, String::UTF32LE, len);
         ASSERT_TRUE(s1->equals(s2));
         ASSERT_TRUE(s2->equals(s3));
+        ASSERT_TRUE(s3->equals(s4));
+        ASSERT_TRUE(s4->equals(s5));
+        ASSERT_TRUE(s5->equals(s1));
     }
 }
 
 TEST(GTestString, TestCreateUtf2) {
     // convert longer string than internal buffer
-    const int8_t u8[] = {
+    const char u8[] = {
         0xe5, 0xaf, 0xbf, 0xe9, 0x99, 0x90, 0xe7, 0x84,
         0xa1, 0xe3, 0x80, 0x81, 0xe5, 0xaf, 0xbf, 0xe9,
         0x99, 0x90, 0xe7, 0x84, 0xa1, 0x0a, 0xe4, 0xba,
@@ -109,7 +151,7 @@ TEST(GTestString, TestCreateUtf2) {
         0xae, 0xe9, 0x95, 0xb7, 0xe5, 0x8a, 0xa9, 0x0a,
         0
     };
-    const int16_t u16[] = {
+    const char16_t u16[] = {
         0x5bff, 0x9650, 0x7121, 0x3001, 0x5bff, 0x9650, 0x7121, 0x000a,
         0x4e94, 0x52ab, 0x306e, 0x64e6, 0x308a, 0x5207, 0x308c, 0x000a,
         0x6d77, 0x7802, 0x5229, 0x6c34, 0x9b5a, 0x306e, 0x000a, 0x6c34,
@@ -127,7 +169,7 @@ TEST(GTestString, TestCreateUtf2) {
         0x4e45, 0x547d, 0x306e, 0x9577, 0x52a9, 0x000a,
         0
     };
-    const int32_t u32[] = {
+    const char32_t u32[] = {
         0x00005bff, 0x00009650, 0x00007121, 0x00003001,
         0x00005bff, 0x00009650, 0x00007121, 0x0000000a,
         0x00004e94, 0x000052ab, 0x0000306e, 0x000064e6,
@@ -161,10 +203,12 @@ TEST(GTestString, TestCreateUtf2) {
         0
     };
     String::CPtr s1 = String::create(u8, String::UTF8);
-    String::CPtr s2 = String::create(u16, String::UTF16LE);
-    String::CPtr s3 = String::create(u32, String::UTF32LE);
-    ASSERT_TRUE(s1->equals(s2));
-    ASSERT_TRUE(s2->equals(s3));
+    std::u16string s16(u16);
+    String::CPtr s2 = String::create(s16);
+    std::u32string s32(u32);
+    String::CPtr s3 = String::create(s32);
+    ASSERT_TRUE(s2->equals(s1));
+    ASSERT_TRUE(s3->equals(s1));
 }
 
 TEST(GTestString, TestInstanceOf) {
@@ -278,9 +322,11 @@ TEST(GTestString, TestLastIndexOf2) {
     String::CPtr s = String::create("abcabc");
     String::CPtr s1 = String::create("ab");
     String::CPtr s2 = String::create("cd");
+    String::CPtr s3 = String::create("abcabc");
     ASSERT_EQ(3, s->lastIndexOf(s1));
     ASSERT_EQ(0, s->lastIndexOf(s1, 2));
     ASSERT_EQ(NO_POS, s->lastIndexOf(s2));
+    ASSERT_EQ(0, s->lastIndexOf(s3, 5));
 }
 
 TEST(GTestString, TestToLowerCase) {
@@ -322,6 +368,8 @@ TEST(GTestString, TestValueOf) {
     ASSERT_TRUE(String::valueOf(v)->equals(s));
 }
 
+#include <iostream>
+
 TEST(GTestString, TestToStdString) {
     String::CPtr s1 = String::create();
     ASSERT_EQ(0, s1->toStdString().compare(""));
@@ -345,6 +393,27 @@ TEST(GTestString, TestToStdString) {
     };
     String::CPtr s3 = String::create(u8, String::UTF8);
     ASSERT_EQ(0, s3->toStdString().compare(u8));
+
+    String::CPtr s4 = String::create(
+        s3->toStdString(String::UTF8).c_str(),
+        String::UTF8);
+    String::CPtr s5 = String::create(
+        s3->toStdString(String::UTF16BE).c_str(),
+        String::UTF16BE);
+    String::CPtr s6 = String::create(
+        s3->toStdString(String::UTF16LE).c_str(),
+        String::UTF16LE);
+    String::CPtr s7 = String::create(
+        s3->toStdString(String::UTF32BE).c_str(),
+        String::UTF32BE);
+    String::CPtr s8 = String::create(
+        s3->toStdString(String::UTF32LE).c_str(),
+        String::UTF32LE);
+    ASSERT_TRUE(s4->equals(s3));
+    ASSERT_TRUE(s5->equals(s3));
+    ASSERT_TRUE(s6->equals(s3));
+    ASSERT_TRUE(s7->equals(s3));
+    ASSERT_TRUE(s8->equals(s3));
 }
 
 #ifdef LIBJ_USE_SP
