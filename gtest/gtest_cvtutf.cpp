@@ -158,46 +158,58 @@ TEST(GTestCvtUtf, TestUtf32ToUtf8) {
 TEST(GTestCvtUtf, TestUtf32ToUtf16BE) {
     std::u32string s32;
     std::string s16be = fromUtf32(s32, UTF16BE);
-    ASSERT_EQ(0, s16be.length());
+    ASSERT_EQ(2, s16be.length());
+    ASSERT_EQ(static_cast<char>(0x00), s16be[0]);
+    ASSERT_EQ(static_cast<char>(0x00), s16be[1]);
 
     s32 += 0x3042;
     s32 += 0x2000b;
     s16be = fromUtf32(s32, UTF16BE);
-    ASSERT_EQ(6, s16be.length());
+    ASSERT_EQ(8, s16be.length());
     ASSERT_EQ(static_cast<char>(0x30), s16be[0]);
     ASSERT_EQ(static_cast<char>(0x42), s16be[1]);
     ASSERT_EQ(static_cast<char>(0xd8), s16be[2]);
     ASSERT_EQ(static_cast<char>(0x40), s16be[3]);
     ASSERT_EQ(static_cast<char>(0xdc), s16be[4]);
     ASSERT_EQ(static_cast<char>(0x0b), s16be[5]);
+    ASSERT_EQ(static_cast<char>(0x00), s16be[6]);
+    ASSERT_EQ(static_cast<char>(0x00), s16be[7]);
 }
 
 TEST(GTestCvtUtf, TestUtf32ToUtf16LE) {
     std::u32string s32;
     std::string s16le = fromUtf32(s32, UTF16LE);
-    ASSERT_EQ(0, s16le.length());
+    ASSERT_EQ(2, s16le.length());
+    ASSERT_EQ(static_cast<char>(0x00), s16le[0]);
+    ASSERT_EQ(static_cast<char>(0x00), s16le[1]);
 
     s32 += 0x3042;
     s32 += 0x2000b;
     s16le = fromUtf32(s32, UTF16LE);
-    ASSERT_EQ(6, s16le.length());
+    ASSERT_EQ(8, s16le.length());
     ASSERT_EQ(static_cast<char>(0x42), s16le[0]);
     ASSERT_EQ(static_cast<char>(0x30), s16le[1]);
     ASSERT_EQ(static_cast<char>(0x40), s16le[2]);
     ASSERT_EQ(static_cast<char>(0xd8), s16le[3]);
     ASSERT_EQ(static_cast<char>(0x0b), s16le[4]);
     ASSERT_EQ(static_cast<char>(0xdc), s16le[5]);
+    ASSERT_EQ(static_cast<char>(0x00), s16le[6]);
+    ASSERT_EQ(static_cast<char>(0x00), s16le[7]);
 }
 
 TEST(GTestCvtUtf, TestUtf32ToUtf32BE) {
     std::u32string s32;
     std::string s32be = fromUtf32(s32, UTF32BE);
-    ASSERT_EQ(0, s32be.length());
+    ASSERT_EQ(4, s32be.length());
+    ASSERT_EQ(static_cast<char>(0x00), s32be[0]);
+    ASSERT_EQ(static_cast<char>(0x00), s32be[1]);
+    ASSERT_EQ(static_cast<char>(0x00), s32be[2]);
+    ASSERT_EQ(static_cast<char>(0x00), s32be[3]);
 
     s32 += 0x3042;
     s32 += 0x2000b;
     s32be = fromUtf32(s32, UTF32BE);
-    ASSERT_EQ(8, s32be.length());
+    ASSERT_EQ(12, s32be.length());
     ASSERT_EQ(static_cast<char>(0x00), s32be[0]);
     ASSERT_EQ(static_cast<char>(0x00), s32be[1]);
     ASSERT_EQ(static_cast<char>(0x30), s32be[2]);
@@ -206,17 +218,25 @@ TEST(GTestCvtUtf, TestUtf32ToUtf32BE) {
     ASSERT_EQ(static_cast<char>(0x02), s32be[5]);
     ASSERT_EQ(static_cast<char>(0x00), s32be[6]);
     ASSERT_EQ(static_cast<char>(0x0b), s32be[7]);
+    ASSERT_EQ(static_cast<char>(0x00), s32be[8]);
+    ASSERT_EQ(static_cast<char>(0x00), s32be[9]);
+    ASSERT_EQ(static_cast<char>(0x00), s32be[10]);
+    ASSERT_EQ(static_cast<char>(0x00), s32be[11]);
 }
 
 TEST(GTestCvtUtf, TestUtf32ToUtf32LE) {
     std::u32string s32;
     std::string s32le = fromUtf32(s32, UTF32LE);
-    ASSERT_EQ(0, s32le.length());
+    ASSERT_EQ(4, s32le.length());
+    ASSERT_EQ(static_cast<char>(0x00), s32le[0]);
+    ASSERT_EQ(static_cast<char>(0x00), s32le[1]);
+    ASSERT_EQ(static_cast<char>(0x00), s32le[2]);
+    ASSERT_EQ(static_cast<char>(0x00), s32le[3]);
 
     s32 += 0x3042;
     s32 += 0x2000b;
     s32le = fromUtf32(s32, UTF32LE);
-    ASSERT_EQ(8, s32le.length());
+    ASSERT_EQ(12, s32le.length());
     ASSERT_EQ(static_cast<char>(0x42), s32le[0]);
     ASSERT_EQ(static_cast<char>(0x30), s32le[1]);
     ASSERT_EQ(static_cast<char>(0x00), s32le[2]);
@@ -225,6 +245,24 @@ TEST(GTestCvtUtf, TestUtf32ToUtf32LE) {
     ASSERT_EQ(static_cast<char>(0x00), s32le[5]);
     ASSERT_EQ(static_cast<char>(0x02), s32le[6]);
     ASSERT_EQ(static_cast<char>(0x00), s32le[7]);
+    ASSERT_EQ(static_cast<char>(0x00), s32le[8]);
+    ASSERT_EQ(static_cast<char>(0x00), s32le[9]);
+    ASSERT_EQ(static_cast<char>(0x00), s32le[10]);
+    ASSERT_EQ(static_cast<char>(0x00), s32le[11]);
+}
+
+TEST(GTestCvtUtf, TestUtf16ToUtf32) {
+    std::u16string s16;
+    std::u32string s32 = utf16ToUtf32(s16);
+    ASSERT_EQ(0, s16.length());
+
+    s16 += 0x3042;
+    s16 += 0xd840;
+    s16 += 0xdc0b;
+    s32 = utf16ToUtf32(s16);
+    ASSERT_EQ(2, s32.length());
+    ASSERT_EQ(static_cast<char32_t>(0x3042), s32[0]);
+    ASSERT_EQ(static_cast<char32_t>(0x2000b), s32[1]);
 }
 
 TEST(GTestCvtUtf, TestUtf32ToUtf16) {
