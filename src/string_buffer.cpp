@@ -17,11 +17,11 @@ class StringBufferImpl : public StringBuffer {
         return buf_.length();
     }
 
-    Char charAt(Size n) const {
-        if (n >= length()) {
+    Char charAt(Size index) const {
+        if (index >= length()) {
             return NO_CHAR;
         } else {
-            return buf_[n];
+            return buf_[index];
         }
     }
 

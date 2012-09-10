@@ -13,8 +13,8 @@ class StringBuffer : LIBJ_MUTABLE(StringBuffer)
     static Ptr create();
 
     virtual Size length() const = 0;
-    virtual Char charAt(Size) const = 0;
-    virtual Boolean append(const Value&) = 0;
+    virtual Char charAt(Size index) const = 0;
+    virtual Boolean append(const Value& val) = 0;
 };
 
 }  // namespace libj
