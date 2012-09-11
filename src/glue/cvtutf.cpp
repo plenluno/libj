@@ -171,6 +171,50 @@ std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc) {
     return s;
 }
 
+static size_t getByteLength(const void* data, UnicodeEncoding enc) {
+    switch (enc) {
+    case UTF8: {
+            uint8_t c = static_cast<const uint8_t*>(data)[0];
+            if (c < 0x80) {
+                return 1;
+            } else if (c < 0xe0) {
+                return 2;
+            } else if (c < 0xf0) {
+                return 3;
+            } else if (c < 0xf8) {
+                return 4;
+            } else if (c < 0xfc) {
+                return 5;
+            } else if (c < 0xfe) {
+                return 6;
+            } else {
+                return 0;
+            }
+        }
+    case UTF16BE: {
+            uint16_t c = static_cast<const uint16_t*>(data)[0];
+            if ((c & 0x00f8) == 0x00d8) {
+                return 4;
+            } else {
+                return 2;
+            }
+        }
+    case UTF16LE: {
+            uint16_t c = static_cast<const uint16_t*>(data)[0];
+            if ((c & 0xf800) == 0xd800) {
+                return 4;
+            } else {
+                return 2;
+            }
+        }
+    case UTF32BE:
+    case UTF32LE:
+        return 4;
+    default:
+        assert(false);
+    }
+}
+
 std::u32string toUtf32(const void* data, UnicodeEncoding enc, size_t max) {
     if (!data) return std::u32string();
 
@@ -178,14 +222,15 @@ std::u32string toUtf32(const void* data, UnicodeEncoding enc, size_t max) {
     iconv_t cd = iconvOpenToUtf32(enc);
     char* inBuf = static_cast<char*>(const_cast<void*>(data));
     for (size_t i = 0; i < max; i++) {
-        size_t inBytesLeft = 8;
+        size_t inBytesLeft = getByteLength(inBuf, enc);
+        if (!inBytesLeft) break;
         union {
             char32_t c32;
             char c8[4];
         } u;
         char* outBuf = u.c8;
         size_t outBytesLeft = 4;
-        size_t ret = ICONV(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft);
+        ICONV(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft);
         if (outBytesLeft || !u.c32) {
             break;
         } else {
