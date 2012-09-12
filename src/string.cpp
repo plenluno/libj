@@ -323,8 +323,7 @@ static String::CPtr intToString(const Value& val) {
     const Size kLen = (32 / 3) + 3;
     char s[kLen];
     snprintf(s, kLen, "%d", i);
-    String::CPtr p = String::create(s);
-    return p;
+    return String::create(s);
 }
 
 static String::CPtr longToString(const Value& val) {
@@ -358,8 +357,7 @@ static String::CPtr sizeToString(const Value& val) {
     const Size kLen = ((sizeof(Size) << 3) / 3) + 3;
     char s[kLen];
     snprintf(s, kLen, "%zd", n);
-    String::CPtr p = String::create(s);
-    return p;
+    return String::create(s);
 }
 
 static String::CPtr typeIdToString(const Value& val) {
@@ -368,8 +366,7 @@ static String::CPtr typeIdToString(const Value& val) {
     const Size kLen = ((sizeof(TypeId) << 3) / 3) + 3;
     char s[kLen];
     snprintf(s, kLen, "%zd", t);
-    String::CPtr p = String::create(s);
-    return p;
+    return String::create(s);
 }
 
 static String::CPtr objectToString(const Value& val) {
