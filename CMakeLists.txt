@@ -167,6 +167,7 @@ endif(LIBJ_USE_EXCEPTION)
 if(LIBJ_BUILD_GTEST)
     add_executable(libj-gtest
         gtest/gtest_array_list.cpp
+        gtest/gtest_console.cpp
         gtest/gtest_cvtutf.cpp
         gtest/gtest_error.cpp
         gtest/gtest_function.cpp
