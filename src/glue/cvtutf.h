@@ -3,6 +3,8 @@
 #ifndef SRC_GLUE_CVTUTF_H_
 #define SRC_GLUE_CVTUTF_H_
 
+#include <string>
+
 #include "libj/typedef.h"
 
 namespace libj {

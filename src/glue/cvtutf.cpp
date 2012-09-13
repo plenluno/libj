@@ -1,9 +1,5 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include <assert.h>
-#include <errno.h>
-#include <iconv.h>
-
 // #define LIBJ_CVTUTF_DEBUG
 #ifdef LIBJ_CVTUTF_DEBUG
     #include <stdio.h>
@@ -11,6 +7,11 @@
 #else
     #define ICONV iconv
 #endif  // LIBJ_CVTUTF_DEBUG
+
+#include <assert.h>
+#include <errno.h>
+#include <iconv.h>
+#include <string>
 
 #include "./cvtutf.h"
 
@@ -114,7 +115,7 @@ static size_t iconvDebug(
 
     printf("return: %zd\n", ret);
     if (ret) {
-        switch(errno) {
+        switch (errno) {
         case EILSEQ:
             printf("errno: EILSEQ\n");
             break;

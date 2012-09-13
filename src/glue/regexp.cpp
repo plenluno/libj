@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <iv/aero/aero.h>
+#include <vector>
 
 #include "./regexp.h"
 
@@ -48,7 +49,8 @@ bool RegExp::execute(
     size_t n = code->captures() * 2;
     for (size_t i = 0; i < n; i++)
         captures.push_back(-1);
-    return vm.Execute(code, str, captures.data(), offset) == iv::aero::AERO_SUCCESS;
+    int res = vm.Execute(code, str, captures.data(), offset);
+    return res == iv::aero::AERO_SUCCESS;
 }
 
 }  // namespace glue

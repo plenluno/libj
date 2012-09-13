@@ -1,2 +1,2 @@
 #!/bin/sh
-tools/cpplint/cpplint.py --filter=-runtime/explicit,-readability/streams include/libj/* src/* gtest/* btest/*.h btest/*.cpp
+tools/cpplint/cpplint.py --filter=-runtime/explicit,-readability/streams `find include src btest gtest -type f`
