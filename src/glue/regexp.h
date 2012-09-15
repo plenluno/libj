@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef SRC_GLUE_REGEXP_H_
-#define SRC_GLUE_REGEXP_H_
+#ifndef LIBJ_SRC_GLUE_REGEXP_H_
+#define LIBJ_SRC_GLUE_REGEXP_H_
 
 #include <string>
 #include <vector>
@@ -48,4 +48,4 @@ class RegExp {
 }  // namespace glue
 }  // namespace libj
 
-#endif  // SRC_GLUE_REGEXP_H_
+#endif  // LIBJ_SRC_GLUE_REGEXP_H_

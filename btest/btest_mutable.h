@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef BTEST_BTEST_MUTABLE_H_
-#define BTEST_BTEST_MUTABLE_H_
+#ifndef LIBJ_BTEST_BTEST_MUTABLE_H_
+#define LIBJ_BTEST_BTEST_MUTABLE_H_
 
 #include <libj/mutable.h>
 #include <libj/string.h>
@@ -22,4 +22,4 @@ class BTestMutable : LIBJ_MUTABLE(BTestMutable)
 
 }  // namespace libj
 
-#endif  // BTEST_BTEST_MUTABLE_H_
+#endif  // LIBJ_BTEST_BTEST_MUTABLE_H_
