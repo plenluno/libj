@@ -1,2 +1,2 @@
 #!/bin/sh
-tools/btest/btest.rb btest/btest.yaml
+tools/btest/btest btest/btest.yaml
