@@ -1,5 +1,6 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#include <assert.h>
 #include <iostream>
 
 #include "libj/collection.h"
@@ -11,24 +12,40 @@
 namespace libj {
 namespace console {
 
-void log(const char* s) {
-    std::cout << s << std::endl;
+void log(const char* str) {
+    std::cout << str << std::endl;
 }
 
-void error(const char* s) {
-    std::cerr << s << std::endl;
+void debug(const char* str) {
+    log(str);
 }
 
-void write(const char* s) {
-    std::cout << s;
+void info(const char* str) {
+    log(str);
 }
 
-void info(const char* s) {
-    log(s);
+void warn(const char* str) {
+    error(str);
 }
 
-void warn(const char* s) {
-    error(s);
+void error(const char* str) {
+    std::cerr << str << std::endl;
+}
+
+void write(const char* str, Level level) {
+    switch (level) {
+    case NORMAL:
+    case DEBUG:
+    case INFO:
+        std::cout << str;
+        break;
+    case WARNING:
+    case ERROR:
+        std::cerr << str;
+        break;
+    default:
+        assert(false);
+    }
 }
 
 static String::CPtr toString(const Value& val) {
@@ -52,6 +69,18 @@ Boolean log(const Value& val) {
     }
 }
 
+Boolean debug(const Value& val) {
+    return log(val);
+}
+
+Boolean info(const Value& val) {
+    return log(val);
+}
+
+Boolean warn(const Value& val) {
+    return error(val);
+}
+
 Boolean error(const Value& val) {
     String::CPtr s = toString(val);
     if (s) {
@@ -62,22 +91,14 @@ Boolean error(const Value& val) {
     }
 }
 
-Boolean write(const Value& val) {
+Boolean write(const Value& val, Level level) {
     String::CPtr s = toString(val);
     if (s) {
-        write(s->toStdString().c_str());
+        write(s->toStdString().c_str(), level);
         return true;
     } else {
         return false;
     }
-}
-
-Boolean info(const Value& val) {
-    return log(val);
-}
-
-Boolean warn(const Value& val) {
-    return error(val);
 }
 
 }  // namespace console

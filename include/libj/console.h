@@ -8,17 +8,27 @@
 namespace libj {
 namespace console {
 
-void log(const char* s);
-void info(const char* s);
-void warn(const char* s);
-void error(const char* s);
-void write(const char* s);
+enum Level {
+    NORMAL,
+    DEBUG,
+    INFO,
+    WARNING,
+    ERROR,
+};
+
+void log(const char* str);
+void debug(const char* str);
+void info(const char* str);
+void warn(const char* str);
+void error(const char* str);
+void write(const char* str, Level level = NORMAL);
 
 Boolean log(const Value& val);
+Boolean debug(const Value& val);
 Boolean info(const Value& val);
 Boolean warn(const Value& val);
 Boolean error(const Value& val);
-Boolean write(const Value& val);
+Boolean write(const Value& val, Level level = NORMAL);
 
 }  // namespace console
 }  // namespace libj
