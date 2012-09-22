@@ -5,6 +5,8 @@
 
 #include "../src/glue/cvtutf.h"
 
+#pragma GCC diagnostic ignored "-Wnarrowing"
+
 namespace libj {
 namespace glue {
 

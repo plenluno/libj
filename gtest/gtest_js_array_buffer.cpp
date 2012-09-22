@@ -6,6 +6,8 @@
 #include <libj/string.h>
 #include <cstring>
 
+#pragma GCC diagnostic ignored "-Wnarrowing"
+
 namespace libj {
 
 TEST(GTestJsArrayBuffer, TestCreate) {

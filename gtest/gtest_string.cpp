@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 #include <libj/string.h>
 
+#pragma GCC diagnostic ignored "-Wnarrowing"
+
 namespace libj {
 
 TEST(GTestString, TestCreate) {
