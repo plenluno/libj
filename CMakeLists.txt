@@ -5,10 +5,12 @@ project(libj)
 # options ------------------------------------------------------------------------------------------
 
 option(LIBJ_BUILD_GTEST "Use Google Test" OFF)
+option(LIBJ_USE_CXX11 "Use C++11")
 option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
 option(LIBJ_USE_EXCEPTION "Use Exception" OFF)
 
 message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
+message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 
@@ -99,6 +101,27 @@ if(LIBJ_USE_BDW_GC)
     )
 endif(LIBJ_USE_BDW_GC)
 
+set(libj-cflags
+    -Wall
+    -fno-rtti
+)
+
+if(LIBJ_USE_CXX11)
+    set(libj-cflags
+        ${libj-cflags}
+        --std=c++0x
+    )
+endif(LIBJ_USE_CXX11)
+
+if(NOT LIBJ_USE_EXCEPTION)
+    set(libj-cflags
+        ${libj-cflags}
+        -fno-exceptions
+    )
+endif(NOT LIBJ_USE_EXCEPTION)
+
+string(REPLACE ";" " " libj-cflags "${libj-cflags}")
+
 # build libraries ----------------------------------------------------------------------------------
 
 include_directories(
@@ -114,6 +137,10 @@ add_library(cvtutf STATIC
     src/glue/cvtutf.cpp
 )
 
+set_target_properties(cvtutf PROPERTIES
+    COMPILE_FLAGS ${libj-cflags}
+)
+
 ## jsoncpp
 add_library(jsoncpp STATIC
     deps/jsoncpp/src/lib_json/json_reader.cpp
@@ -127,8 +154,8 @@ add_library(regexp STATIC
 )
 
 if(NOT APPLE)
-set_target_properties(regexp
-    PROPERTIES COMPILE_FLAGS "--std=c++0x")
+set_target_properties(regexp PROPERTIES
+    COMPILE_FLAGS "--std=c++0x")
 endif(NOT APPLE)
 
 ## v8dtoa
@@ -152,15 +179,9 @@ target_link_libraries(j
     ${libj-deps}
 )
 
-if(LIBJ_USE_EXCEPTION)
-    set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti"
-    )
-else(LIBJ_USE_EXCEPTION)
-    set_target_properties(j
-        PROPERTIES COMPILE_FLAGS "-Wall -fno-rtti -fno-exceptions"
-    )
-endif(LIBJ_USE_EXCEPTION)
+set_target_properties(j PROPERTIES
+    COMPILE_FLAGS "${libj-cflags}"
+)
 
 # build gtests -------------------------------------------------------------------------------------
 
@@ -199,7 +220,13 @@ if(LIBJ_BUILD_GTEST)
         j
         pthread
     )
-    set_target_properties(libj-gtest
-        PROPERTIES COMPILE_FLAGS "-Wall"
-    )
+    if(LIBJ_USE_CXX11)
+        set_target_properties(libj-gtest PROPERTIES
+            COMPILE_FLAGS "-Wall --std=c++0x -fpermissive"
+        )
+    else(LIBJ_USE_CXX11)
+        set_target_properties(libj-gtest PROPERTIES
+            COMPILE_FLAGS "-Wall"
+        )
+    endif(LIBJ_USE_CXX11)
 endif(LIBJ_BUILD_GTEST)

@@ -5,10 +5,11 @@
 
 #include <stddef.h>
 #include <inttypes.h>
+#include <string>
+
+#include "libj/config.h"
 
 #ifndef LIBJ_USE_CXX11
-
-#include <string>
 
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
