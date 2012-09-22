@@ -9,7 +9,7 @@ namespace libj {
 
 TEST(GTestLinkedList, TestCreate) {
     LinkedList::Ptr l = LinkedList::create();
-    ASSERT_TRUE(l);
+    ASSERT_TRUE(!!l);
 }
 
 TEST(GTestLinkedList, TestInstanceOf) {

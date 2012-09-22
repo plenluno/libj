@@ -8,7 +8,7 @@ namespace libj {
 
 TEST(GTestJsTypedArray, TestCreate) {
     JsTypedArray<Int>::Ptr a = JsTypedArray<Int>::create();
-    ASSERT_TRUE(a);
+    ASSERT_TRUE(!!a);
 }
 
 TEST(GTestJsTypedArray, TestAdd) {

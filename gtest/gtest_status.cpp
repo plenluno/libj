@@ -7,7 +7,7 @@ namespace libj {
 
 TEST(GTestStatus, TestCreate) {
     Status::CPtr s = Status::create(Status::OK);
-    ASSERT_TRUE(s);
+    ASSERT_TRUE(!!s);
 }
 
 TEST(GTestStatus, TestMessage) {

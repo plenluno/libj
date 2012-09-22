@@ -8,7 +8,7 @@ namespace libj {
 
 TEST(GTestJsRegExp, TestCreate) {
     JsRegExp::Ptr re = JsRegExp::create(String::create("a+"));
-    ASSERT_TRUE(re);
+    ASSERT_TRUE(!!re);
 }
 
 TEST(GTestJsRegExp, TestGlobal) {
@@ -50,7 +50,7 @@ TEST(GTestJsRegExp, TestExec) {
     JsArray::Ptr a = re->exec(String::create("xaacz"));
     ASSERT_EQ(3, a->length());
     ASSERT_TRUE(toCPtr<String>(a->get(0))->equals(String::create("aac")));
-    ASSERT_TRUE(toCPtr<Undefined>(a->get(1)));
+    ASSERT_TRUE(!!toCPtr<Undefined>(a->get(1)));
     ASSERT_TRUE(toCPtr<String>(a->get(2))->equals(String::create("c")));
     Int index = -1;
     to<Int>(a->getProperty(String::create("index")), &index);

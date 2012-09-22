@@ -9,7 +9,7 @@ namespace libj {
 
 TEST(GTestJsArray, TestCreate) {
     JsArray::Ptr a = JsArray::create();
-    ASSERT_TRUE(a);
+    ASSERT_TRUE(!!a);
 }
 
 TEST(GTestJsArray, TestInstanceOf) {

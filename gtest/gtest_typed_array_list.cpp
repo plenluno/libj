@@ -7,7 +7,7 @@ namespace libj {
 
 TEST(GTestTypedArrayList, TestCreate) {
     TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
-    ASSERT_TRUE(a);
+    ASSERT_TRUE(!!a);
 }
 
 TEST(GTestTypedArrayList, TestCreate2) {
@@ -15,13 +15,13 @@ TEST(GTestTypedArrayList, TestCreate2) {
     a->add(5);
     TypedArrayList<int>::Ptr ta =
         TypedArrayList<int>::create(a);
-    ASSERT_TRUE(ta);
+    ASSERT_TRUE(!!ta);
     a->add(7.7);
 #ifdef LIBJ_USE_EXCEPTION
     ASSERT_ANY_THROW(TypedArrayList<int>::create(a));
 #else
     ta = TypedArrayList<int>::create(a);
-    ASSERT_FALSE(ta);
+    ASSERT_FALSE(!!ta);
 #endif  // LIBJ_USE_EXCEPTION
 }
 

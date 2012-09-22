@@ -9,7 +9,7 @@ namespace libj {
 
 TEST(GTestMap, TestCreate) {
     Map::Ptr m = Map::create();
-    ASSERT_TRUE(m);
+    ASSERT_TRUE(!!m);
 }
 
 TEST(GTestMap, TestInstanceOf) {

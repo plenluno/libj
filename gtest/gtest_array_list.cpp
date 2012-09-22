@@ -9,7 +9,7 @@ namespace libj {
 
 TEST(GTestArrayList, TestCreate) {
     ArrayList::Ptr a = ArrayList::create();
-    ASSERT_TRUE(a);
+    ASSERT_TRUE(!!a);
 }
 
 TEST(GTestArrayList, TestInstanceOf) {

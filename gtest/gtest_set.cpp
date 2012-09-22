@@ -8,7 +8,7 @@ namespace libj {
 
 TEST(GTestSet, TestCreate) {
     Set::Ptr s = Set::create();
-    ASSERT_TRUE(s);
+    ASSERT_TRUE(!!s);
 }
 
 TEST(GTestSet, TestInstanceOf) {

@@ -12,11 +12,11 @@ namespace libj {
 
 TEST(GTestJsArrayBuffer, TestCreate) {
     JsArrayBuffer::Ptr a = JsArrayBuffer::create();
-    ASSERT_TRUE(a);
+    ASSERT_TRUE(!!a);
     ASSERT_FALSE(a->data());
 
     a = JsArrayBuffer::create(1);
-    ASSERT_TRUE(a);
+    ASSERT_TRUE(!!a);
     ASSERT_TRUE(a->data());
 }
 
