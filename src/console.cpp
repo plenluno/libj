@@ -57,6 +57,9 @@ static const char* fore(Color color) {
         return "\033[36m";
     case WHITE:
         return "\033[37m";
+    default:
+        assert(false);
+        return "";
     }
 }
 
@@ -80,6 +83,9 @@ static const char* back(Color color) {
         return "\033[46m";
     case WHITE:
         return "\033[47m";
+    default:
+        assert(false);
+        return "";
     }
 }
 
