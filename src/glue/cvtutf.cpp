@@ -271,7 +271,7 @@ std::u16string utf32ToUtf16(const std::u32string& str) {
         } u;
         char* outBuf = u.c8;
         size_t outBytesLeft = 8;
-        size_t ret = ICONV(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft);
+        ICONV(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft);
         assert(outBytesLeft < 8);
         size_t outLen = (8 - outBytesLeft) >> 1;
         for (size_t j = 0; j < outLen; j++) {
