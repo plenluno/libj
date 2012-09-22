@@ -9,4 +9,5 @@ error:
     - g++ -I ./include btest/btest_value1.cpp
     - g++ -I ./include btest/btest_value2.cpp
     - g++ -I ./include btest/btest_value3.cpp
+    - g++ -I ./include btest/btest_value4.cpp
     - rm a.out

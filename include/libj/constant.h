@@ -4,12 +4,14 @@
 #define LIBJ_CONSTANT_H_
 
 #include "libj/typedef.h"
+#include "libj/value.h"
 
 namespace libj {
 
 extern const Size NO_POS;
 extern const Size NO_SIZE;
 extern const Char NO_CHAR;
+extern const Value NO_VALUE;
 
 }  // namespace libj
 
