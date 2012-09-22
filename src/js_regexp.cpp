@@ -10,16 +10,16 @@
 namespace libj {
 
 static glue::RegExp::U16String toU16String(String::CPtr str) {
-    if (Type<char16_t>::id() == Type<uint16_t>::id()) {
-        return str->toStdU16String();
-    } else {
-        glue::RegExp::U16String s;
-        std::u16string ss = str->toStdU16String();
-        for (size_t i = 0; i < ss.length(); i++) {
-            s.push_back(ss[i]);
-        }
-        return s;
+#ifdef LIBJ_USE_CXX11
+    glue::RegExp::U16String s;
+    std::u16string ss = str->toStdU16String();
+    for (size_t i = 0; i < ss.length(); i++) {
+        s.push_back(ss[i]);
     }
+    return s;
+#else
+    return str->toStdU16String();
+#endif
 }
 
 class JsRegExpImpl : public JsRegExp {
