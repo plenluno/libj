@@ -16,14 +16,20 @@ struct NullDeleter {
 #define LIBJ_NULL(T) static_cast<T*>(0)
 #define LIBJ_NULL_DELETER libj::NullDeleter()
 
+#ifdef LIBJ_USE_CXX11
+    #define STATIC_POINTER_CAST(T) std::static_pointer_cast<T>
+#else
+    #define STATIC_POINTER_CAST(T) boost::static_pointer_cast<T>
+#endif
+
 #ifdef LIBJ_USE_SP
     #include "libj/shared_ptr.h"
     #define LIBJ_PTR(T) libj::SharedPtr<T>::Type
     #define LIBJ_CPTR(T) libj::SharedPtr<const T>::Type
     #define LIBJ_PTR_TYPE(T) typename LIBJ_PTR(T)
     #define LIBJ_CPTR_TYPE(T) typename LIBJ_CPTR(T)
-    #define LIBJ_STATIC_PTR_CAST(T) boost::static_pointer_cast<T>
-    #define LIBJ_STATIC_CPTR_CAST(T) boost::static_pointer_cast<const T>
+    #define LIBJ_STATIC_PTR_CAST(T) STATIC_POINTER_CAST(T)
+    #define LIBJ_STATIC_CPTR_CAST(T) STATIC_POINTER_CAST(const T)
     #define LIBJ_NULL_PTR_DEF(T, V) \
         LIBJ_PTR(T) V(LIBJ_NULL(T), LIBJ_NULL_DELETER);
     #define LIBJ_NULL_CPTR_DEF(T, V) \
