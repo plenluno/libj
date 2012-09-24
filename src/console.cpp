@@ -183,6 +183,15 @@ void setBackgroundColor(Level level, Color color) {
     }
 }
 
+#define LIBJ_VFPRINTF(LEVEL, OUT, FMT) \
+    va_list argp; \
+    va_start(argp, FMT); \
+    fprintf(OUT, fore(LEVEL)); \
+    fprintf(OUT, back(LEVEL)); \
+    vfprintf(OUT, FMT, argp); \
+    fprintf(OUT, "\033[0m"); \
+    fprintf(OUT, "\033[0m");
+
 void printf(Level level, const char* fmt, ...) {
     if (!isPrintable(level)) return;
 
@@ -201,13 +210,7 @@ void printf(Level level, const char* fmt, ...) {
         assert(false);
     }
 
-    va_list argp;
-    va_start(argp, fmt);
-    fprintf(out, fore(level));
-    fprintf(out, back(level));
-    vfprintf(out, fmt, argp);
-    fprintf(out, "\033[0m");
-    fprintf(out, "\033[0m");
+    LIBJ_VFPRINTF(level, out, fmt);
 }
 
 static String::CPtr toString(const Value& val) {
@@ -273,49 +276,29 @@ void printv(
         s[9] ? s[9]->toStdString().c_str() : "");
 }
 
-void log(const char* fmt, ...) {
-    if (!isPrintable(NORMAL)) return;
+#define LIBJ_PRINTLN(LEVEL, OUT, FMT) \
+    if (!isPrintable(LEVEL)) return; \
+    LIBJ_VFPRINTF(LEVEL, OUT, FMT) \
+    fprintf(OUT, "\n");
 
-    va_list argp;
-    va_start(argp, fmt);
-    printf(NORMAL, fmt, argp);
-    ::printf("\n");
+void log(const char* fmt, ...) {
+    LIBJ_PRINTLN(NORMAL, stdout, fmt);
 }
 
 void debug(const char* fmt, ...) {
-    if (!isPrintable(DEBUG)) return;
-
-    va_list argp;
-    va_start(argp, fmt);
-    printf(DEBUG, fmt, argp);
-    ::printf("\n");
+    LIBJ_PRINTLN(DEBUG, stdout, fmt);
 }
 
 void info(const char* fmt, ...) {
-    if (!isPrintable(INFO)) return;
-
-    va_list argp;
-    va_start(argp, fmt);
-    printf(INFO, fmt, argp);
-    ::printf("\n");
+    LIBJ_PRINTLN(INFO, stdout, fmt);
 }
 
 void warn(const char* fmt, ...) {
-    if (!isPrintable(WARNING)) return;
-
-    va_list argp;
-    va_start(argp, fmt);
-    printf(WARNING, fmt, argp);
-    ::printf("\n");
+    LIBJ_PRINTLN(WARNING, stderr, fmt);
 }
 
 void error(const char* fmt, ...) {
-    if (!isPrintable(ERROR)) return;
-
-    va_list argp;
-    va_start(argp, fmt);
-    printf(ERROR, fmt, argp);
-    ::printf("\n");
+    LIBJ_PRINTLN(ERROR, stderr, fmt);
 }
 
 Boolean log(const Value& val) {

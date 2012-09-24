@@ -7,7 +7,17 @@
 namespace libj {
 namespace console {
 
-TEST(GTestConsole, TestConsole1) {
+TEST(GTestConsole, TestLogFunctions) {
+    // no assert
+
+    log("log %d", 1);
+    debug("debug %f", 2.2);
+    info("info %s", "3.33");
+    warn("warn %o", 04444);
+    error("error %x", 0x55555);
+}
+
+TEST(GTestConsole, TestSetForegroundColor) {
     // no assert
 
     setForegroundColor(NORMAL, DEFAULT);
@@ -29,7 +39,7 @@ TEST(GTestConsole, TestConsole1) {
     setForegroundColor(ERROR, DEFAULT);
 }
 
-TEST(GTestConsole, TestConsole2) {
+TEST(GTestConsole, TestSetBackgroundColor) {
     // no assert
 
     setBackgroundColor(NORMAL, DEFAULT);
@@ -51,19 +61,24 @@ TEST(GTestConsole, TestConsole2) {
     setBackgroundColor(ERROR, DEFAULT);
 }
 
-TEST(TestConsole, TestConsole3) {
+TEST(TestConsole, TestPrintf) {
     // no assert
 
+    printf(INFO, "%d %d %d\n", 1, 2, 3);
     printf(DEBUG, "%s\n", "printf");
-    printv(ERROR, "%v\n", String::create("printv"));
+}
+
+TEST(TestConsole, TestPrintv) {
+    // no assert
 
     Value a = 1;
     Value b = 2;
     Value c = 3;
     printv(NORMAL, "%v %v %v\n", a, b, c);
+    printv(ERROR, "%v\n", String::create("printv"));
 }
 
-TEST(TestConsole, TestConsole4) {
+TEST(TestConsole, TestSetLevel) {
     setLevel(NORMAL);
     ASSERT_FALSE(info(String::create("info")));
     ASSERT_TRUE(log(String::create("log")));
