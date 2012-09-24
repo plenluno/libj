@@ -9,6 +9,15 @@
 
 namespace libj {
 
+TEST(GTestValue, TestIsEmpty) {
+    Value v;
+    ASSERT_TRUE(v.isEmpty());
+    v = 0;
+    ASSERT_FALSE(v.isEmpty());
+
+    ASSERT_TRUE(NO_VALUE.isEmpty());
+}
+
 TEST(GTestValue, TestTo1) {
     Value v = 3;
 
@@ -431,6 +440,20 @@ TEST(GTestValue, TestCompareTo2) {
     ASSERT_NE(0, pv.compareTo(cv));
     ASSERT_EQ(0, pv.compareTo(pv));
     ASSERT_EQ(0, pv.compareTo(3));
+}
+
+TEST(GTestValue, TestEquals) {
+    Value f = false;
+    ASSERT_TRUE(f.equals(false));
+    ASSERT_FALSE(f.equals(true));
+
+    Value x = 1.23;
+    ASSERT_TRUE(x.equals(1.23));
+    ASSERT_FALSE(x.equals(4.56));
+
+    Value n = Null::instance();
+    ASSERT_TRUE(n.equals(Null::instance()));
+    ASSERT_FALSE(n.equals(String::create()));
 }
 
 TEST(GTestValue, TestIsPtrAndIsCPtr) {
