@@ -4,6 +4,8 @@
 #include <float.h>
 #include <libj/array_list.h>
 #include <libj/json.h>
+#include <libj/js_array.h>
+#include <libj/js_object.h>
 #include <libj/map.h>
 #include <libj/null.h>
 
@@ -71,7 +73,7 @@ TEST(GTestJson, TestParse) {
     Value v = json::parse(json);
     ASSERT_TRUE(v.instanceof(Type<Map>::id()));
 
-    Map::CPtr m = toCPtr<Map>(v);
+    JsObject::CPtr m = toCPtr<JsObject>(v);
     ASSERT_EQ(2, m->size());
 
     Value xv = m->get(String::create("x"));
@@ -84,7 +86,7 @@ TEST(GTestJson, TestParse) {
     Value yv = m->get(String::create("y"));
     ASSERT_TRUE(yv.instanceof(Type<ArrayList>::id()));
 
-    ArrayList::CPtr a = toCPtr<ArrayList>(yv);
+    JsArray::CPtr a = toCPtr<JsArray>(yv);
     Value a0 = a->get(0);
     ASSERT_EQ(Type<Double>::id(), a0.type());
 
