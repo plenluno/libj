@@ -78,6 +78,16 @@ TEST(TestConsole, TestPrintv) {
     printv(ERROR, "%v\n", String::create("printv"));
 }
 
+TEST(TestConsole, TestAmbibuous0) {
+    // no assert
+
+    log(0);
+    debug(0);
+    info(0);
+    warn(0);
+    error(0);
+}
+
 TEST(TestConsole, TestSetLevel) {
     setLevel(NORMAL);
     ASSERT_FALSE(info(String::create("info")));

@@ -278,27 +278,35 @@ void printv(
 
 #define LIBJ_PRINTLN(LEVEL, OUT, FMT) \
     if (!isPrintable(LEVEL)) return; \
-    LIBJ_VFPRINTF(LEVEL, OUT, FMT) \
-    fprintf(OUT, "\n");
+    if (FMT) { \
+        LIBJ_VFPRINTF(LEVEL, OUT, FMT) \
+        fprintf(OUT, "\n"); \
+        return; \
+    }
 
 void log(const char* fmt, ...) {
     LIBJ_PRINTLN(NORMAL, stdout, fmt);
+    if (!fmt) { log(static_cast<Value>(0)); }
 }
 
 void debug(const char* fmt, ...) {
     LIBJ_PRINTLN(DEBUG, stdout, fmt);
+    if (!fmt) { debug(static_cast<Value>(0)); }
 }
 
 void info(const char* fmt, ...) {
     LIBJ_PRINTLN(INFO, stdout, fmt);
+    if (!fmt) { info(static_cast<Value>(0)); }
 }
 
 void warn(const char* fmt, ...) {
     LIBJ_PRINTLN(WARNING, stderr, fmt);
+    if (!fmt) { warn(static_cast<Value>(0)); }
 }
 
 void error(const char* fmt, ...) {
     LIBJ_PRINTLN(ERROR, stderr, fmt);
+    if (!fmt) { error(static_cast<Value>(0)); }
 }
 
 Boolean log(const Value& val) {
