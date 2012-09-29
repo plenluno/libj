@@ -308,6 +308,8 @@ TEST(GTestValue, TestSingletonToPtrAndCPtr) {
     ASSERT_TRUE(n->toString()->equals(str));
     Null::CPtr cn = toCPtr<Null>(v);
     ASSERT_TRUE(cn->toString()->equals(str));
+    cn = toPtr<Null>(v);
+    ASSERT_TRUE(cn->toString()->equals(str));
     Object::CPtr co = toCPtr<Object>(v);
     ASSERT_TRUE(co->toString()->equals(str));
     Mutable::Ptr m = toPtr<Mutable>(v);
@@ -352,6 +354,8 @@ TEST(GTestValue, TestMutableToPtrAndCPtr) {
     ArrayList::Ptr a = toPtr<ArrayList>(v);
     ASSERT_EQ(2, a->size());
     ArrayList::CPtr ca = toCPtr<ArrayList>(v);
+    ASSERT_EQ(2, ca->size());
+    ca = toPtr<ArrayList>(v);
     ASSERT_EQ(2, ca->size());
     Object::CPtr co = toCPtr<Object>(v);
     ASSERT_EQ(Type<ArrayList>::id(), co->type());

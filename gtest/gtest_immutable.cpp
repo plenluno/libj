@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <libj/immutable.h>
+#include <libj/mutable.h>
 #include <libj/string.h>
 
 namespace libj {
@@ -47,9 +48,12 @@ TEST(GTestImmutable, TestSubstitution) {
 
 TEST(GTestImmutable, TestInstanceOf) {
     GTestImmutable::CPtr p = GTestImmutable::create();
+
     ASSERT_TRUE(p->instanceof(Type<GTestImmutable>::id()));
     ASSERT_TRUE(p->instanceof(Type<Immutable>::id()));
     ASSERT_TRUE(p->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(p->instanceof(Type<Mutable>::id()));
 }
 
 #ifdef LIBJ_USE_SP
