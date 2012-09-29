@@ -308,12 +308,30 @@ static String::CPtr byteToString(const Value& val) {
     return String::create(s);
 }
 
+static String::CPtr ubyteToString(const Value& val) {
+    UByte ub;
+    to<UByte>(val, &ub);
+    const Size kLen = (8 / 3) + 2;
+    char s[kLen];
+    snprintf(s, kLen, "%d", ub);
+    return String::create(s);
+}
+
 static String::CPtr shortToString(const Value& val) {
     Short sh;
     to<Short>(val, &sh);
     const Size kLen = (16 / 3) + 3;
     char s[kLen];
     snprintf(s, kLen, "%d", sh);
+    return String::create(s);
+}
+
+static String::CPtr ushortToString(const Value& val) {
+    UShort ush;
+    to<UShort>(val, &ush);
+    const Size kLen = (16 / 3) + 2;
+    char s[kLen];
+    snprintf(s, kLen, "%d", ush);
     return String::create(s);
 }
 
@@ -326,12 +344,30 @@ static String::CPtr intToString(const Value& val) {
     return String::create(s);
 }
 
+static String::CPtr uintToString(const Value& val) {
+    UInt ui;
+    to<UInt>(val, &ui);
+    const Size kLen = (32 / 3) + 2;
+    char s[kLen];
+    snprintf(s, kLen, "%d", ui);
+    return String::create(s);
+}
+
 static String::CPtr longToString(const Value& val) {
     Long l;
     to<Long>(val, &l);
     const Size kLen = (64 / 3) + 3;
     char s[kLen];
     snprintf(s, kLen, "%lld", l);
+    return String::create(s);
+}
+
+static String::CPtr ulongToString(const Value& val) {
+    ULong ul;
+    to<ULong>(val, &ul);
+    const Size kLen = (64 / 3) + 2;
+    char s[kLen];
+    snprintf(s, kLen, "%lld", ul);
     return String::create(s);
 }
 
@@ -381,16 +417,26 @@ static String::CPtr objectToString(const Value& val) {
 String::CPtr String::valueOf(const Value& val) {
     if (val.isEmpty()) {
         return null();
+    } else if (val.instanceof(Type<Object>::id())) {
+        return objectToString(val);
     } else if (val.type() == Type<Boolean>::id()) {
         return booleanToString(val);
     } else if (val.type() == Type<Byte>::id()) {
         return byteToString(val);
+    } else if (val.type() == Type<UByte>::id()) {
+        return ubyteToString(val);
     } else if (val.type() == Type<Short>::id()) {
         return shortToString(val);
+    } else if (val.type() == Type<UShort>::id()) {
+        return ushortToString(val);
     } else if (val.type() == Type<Int>::id()) {
         return intToString(val);
+    } else if (val.type() == Type<UInt>::id()) {
+        return uintToString(val);
     } else if (val.type() == Type<Long>::id()) {
         return longToString(val);
+    } else if (val.type() == Type<ULong>::id()) {
+        return ulongToString(val);
     } else if (val.type() == Type<Float>::id()) {
         return floatToString(val);
     } else if (val.type() == Type<Double>::id()) {
@@ -399,8 +445,6 @@ String::CPtr String::valueOf(const Value& val) {
         return sizeToString(val);
     } else if (val.type() == Type<TypeId>::id()) {
         return typeIdToString(val);
-    } else if (val.instanceof(Type<Object>::id())) {
-        return objectToString(val);
     } else {
         return null();
     }

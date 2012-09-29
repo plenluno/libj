@@ -358,8 +358,38 @@ TEST(GTestString, TestValueOf) {
     v = String::null();
     ASSERT_FALSE(String::valueOf(v));
 
-    v = 1234567890;
+    v = false;
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("false")));
+
+    v = static_cast<Byte>(-123);
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("-123")));
+
+    v = static_cast<UByte>(123);
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("123")));
+
+    v = static_cast<Short>(-12345);
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("-12345")));
+
+    v = static_cast<UShort>(12345);
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("12345")));
+
+    v = -1234567890;
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("-1234567890")));
+
+    v = static_cast<UInt>(1234567890);
     ASSERT_TRUE(String::valueOf(v)->equals(String::create("1234567890")));
+
+    v = static_cast<Long>(-1234567890);
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("-1234567890")));
+
+    v = static_cast<ULong>(1234567890);
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("1234567890")));
+
+    v = static_cast<Float>(-1.25);
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("-1.25")));
+
+    v = -1.2345;
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("-1.2345")));
 
     Size size = 1234567890;
     v = size;
