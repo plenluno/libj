@@ -12,6 +12,20 @@ TEST(GTestJsArray, TestCreate) {
     ASSERT_TRUE(!!a);
 }
 
+TEST(GTestJsArray, TestCreate2) {
+    ASSERT_FALSE(JsArray::create(ArrayList::null()));
+
+    ArrayList::Ptr a = ArrayList::create();
+    a->add(3);
+    a->add(String::create("abc"));
+    JsArray::Ptr ja = JsArray::create(a);
+    ASSERT_EQ(2, ja->size());
+    Int i;
+    ASSERT_TRUE(to<Int>(ja->get(0), &i));
+    ASSERT_EQ(3, i);
+    ASSERT_TRUE(ja->get(1).equals(String::create("abc")));
+}
+
 TEST(GTestJsArray, TestInstanceOf) {
     JsArray::Ptr a = JsArray::create();
     ASSERT_TRUE(a->instanceof(Type<JsArray>::id()));

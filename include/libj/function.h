@@ -9,11 +9,10 @@ namespace libj {
 
 class Function : LIBJ_MUTABLE(Function)
  public:
-    virtual Value operator()(ArrayList::Ptr args) = 0;
+    virtual Value operator()(ArrayList::Ptr args = ArrayList::null()) = 0;
 
     Value call() {
-        ArrayList::Ptr args = ArrayList::create();
-        return operator()(args);
+        return operator()();
     }
 
     Value call(const Value& v) {

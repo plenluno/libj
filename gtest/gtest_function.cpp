@@ -9,7 +9,8 @@ namespace libj {
 class GTestFunctionAdd : LIBJ_FUNCTION(GTestFunctionAdd)
  public:
     Value operator()(ArrayList::Ptr args) {
-        if (args->size() == 2 &&
+        if (args &&
+            args->size() == 2 &&
             args->get(0).type() == Type<Int>::id() &&
             args->get(1).type() == Type<Int>::id()) {
             int x, y;
@@ -40,6 +41,9 @@ TEST(GTestFunction, TestFunctor) {
     Int s;
     to<Int>(sum, &s);
     ASSERT_EQ(5, s);
+
+    sum = (*add)();
+    ASSERT_TRUE(sum.instanceof(Type<Error>::id()));
 }
 
 TEST(GTestFunction, TestCall) {
@@ -48,6 +52,9 @@ TEST(GTestFunction, TestCall) {
     Int s;
     to<Int>(sum, &s);
     ASSERT_EQ(9, s);
+
+    sum = add->call();
+    ASSERT_TRUE(sum.instanceof(Type<Error>::id()));
 }
 
 #ifdef LIBJ_USE_SP

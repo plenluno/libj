@@ -10,9 +10,9 @@ namespace libj {
 
 class JsFunction : LIBJ_FUNCTION(JsFunction)
  public:
-    virtual Value operator()(JsArray::Ptr args) = 0;
+    virtual Value operator()(JsArray::Ptr args = JsArray::null()) = 0;
 
-    Value operator()(ArrayList::Ptr args) {
+    Value operator()(ArrayList::Ptr args = ArrayList::null()) {
         return operator()(JsArray::create(args));
     }
 };
