@@ -1,0 +1,13 @@
+error:
+    - g++ -I ./include --std=c++0x btest/btest_immutable1.cpp
+    - g++ -I ./include --std=c++0x btest/btest_immutable2.cpp
+    - g++ -I ./include --std=c++0x btest/btest_immutable3.cpp
+    - g++ -I ./include --std=c++0x btest/btest_immutable4.cpp
+    - g++ -I ./include --std=c++0x btest/btest_mutable1.cpp
+    - g++ -I ./include --std=c++0x btest/btest_mutable2.cpp
+    - g++ -I ./include --std=c++0x btest/btest_mutable3.cpp
+    - g++ -I ./include --std=c++0x btest/btest_value1.cpp
+    - g++ -I ./include --std=c++0x btest/btest_value2.cpp
+    - g++ -I ./include --std=c++0x btest/btest_value3.cpp
+    - g++ -I ./include --std=c++0x btest/btest_value4.cpp
+    - rm a.out
