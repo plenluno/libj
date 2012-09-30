@@ -12,7 +12,7 @@ class JsFunction : LIBJ_FUNCTION(JsFunction)
  public:
     virtual Value operator()(JsArray::Ptr args = JsArray::null()) = 0;
 
-    Value operator()(ArrayList::Ptr args = ArrayList::null()) {
+    Value operator()(ArrayList::Ptr args) {
         return operator()(JsArray::create(args));
     }
 };
