@@ -45,10 +45,16 @@ CONFIGURE_FILE(
 set(libj-include
     include
     deps
-    deps/boost-svn
     deps/iv
     deps/jsoncpp/include
 )
+
+if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_GTEST)
+    set(libj-include
+        ${libj-include}
+        deps/boost-svn
+    )
+endif(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_GTEST)
 
 set(libj-src
     src/array_list.cpp

@@ -3,9 +3,8 @@
 #ifndef LIBJ_OBJECT_H_
 #define LIBJ_OBJECT_H_
 
-#include <boost/utility.hpp>
-
 #include "libj/type.h"
+#include "libj/noncopyable.h"
 
 namespace libj {
 
@@ -13,7 +12,7 @@ class String;
 
 class Object
     : public ObjectBase
-    , private boost::noncopyable {
+    , private NonCopyable {
  public:
     typedef LIBJ_CPTR(Object) CPtr;
 

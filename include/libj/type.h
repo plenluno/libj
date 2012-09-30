@@ -3,10 +3,14 @@
 #ifndef LIBJ_TYPE_H_
 #define LIBJ_TYPE_H_
 
-#include <boost/type_traits/is_base_of.hpp>
+#include <libj/pointer.h>
+#include <libj/typedef.h>
 
-#include "libj/pointer.h"
-#include "libj/typedef.h"
+#ifdef LIBJ_USE_CXX11
+    #include <type_traits>
+#else
+    #include <boost/type_traits/is_base_of.hpp>
+#endif
 
 namespace libj {
 
@@ -36,6 +40,18 @@ class SingletonBase {};
     return reinterpret_cast<TypeId>(&c); \
 }
 
+#ifdef LIBJ_USE_CXX11
+template <typename T, Category =
+    std::is_base_of<MutableBase, T>::value
+        ? MUTABLE
+        : std::is_base_of<ImmutableBase, T>::value
+            ? IMMUTABLE
+            : std::is_base_of<SingletonBase, T>::value
+                ? SINGLETON
+                : std::is_base_of<ObjectBase, T>::value
+                    ? OBJECT
+                    : PRIMITIVE>
+#else
 template <typename T, Category =
     boost::is_base_of<MutableBase, T>::value
         ? MUTABLE
@@ -46,6 +62,7 @@ template <typename T, Category =
                 : boost::is_base_of<ObjectBase, T>::value
                     ? OBJECT
                     : PRIMITIVE>
+#endif
 class Type {
  public:
     typedef LIBJ_PTR_TYPE(T) Ptr;

@@ -9,11 +9,15 @@
 #ifndef LIBJ_VALUE_H_
 #define LIBJ_VALUE_H_
 
-#include <boost/type_traits/remove_const.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <algorithm>
+#include <libj/type.h>
 
-#include "libj/type.h"
+#ifdef LIBJ_USE_CXX11
+    #include <type_traits>
+#else
+    #include <boost/type_traits/remove_const.hpp>
+    #include <boost/type_traits/remove_reference.hpp>
+#endif
+#include <algorithm>
 
 namespace libj {
 
@@ -247,6 +251,31 @@ class Value {
     placeholder * content;
 };
 
+#ifdef LIBJ_USE_CXX11
+
+template<typename T>
+class remove_const {
+ public:
+    typedef typename std::remove_const<T>::type type;
+};
+
+template<typename T>
+class remove_reference {
+ public:
+    typedef typename std::remove_reference<T>::type type;
+};
+
+template<typename T>
+class remove_reference_and_const {
+ private:
+    typedef typename std::remove_reference<T>::type nonref;
+
+ public:
+    typedef typename std::remove_const<nonref>::type type;
+};
+
+#else  // LIBJ_USE_CXX11
+
 template<typename T>
 class remove_const {
  public:
@@ -267,6 +296,8 @@ class remove_reference_and_const {
  public:
     typedef typename boost::remove_const<nonref>::type type;
 };
+
+#endif  // LIBJ_USE_CXX11
 
 template<typename ValueType>
 Boolean to(Value* operand, ValueType** out, Boolean instanceof) {
