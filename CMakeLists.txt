@@ -159,10 +159,10 @@ add_library(regexp STATIC
     src/glue/regexp.cpp
 )
 
-if(NOT APPLE)
+if(NOT APPLE OR LIBJ_USE_CXX11)
 set_target_properties(regexp PROPERTIES
     COMPILE_FLAGS "--std=c++0x")
-endif(NOT APPLE)
+endif(NOT APPLE OR LIBJ_USE_CXX11)
 
 ## v8dtoa
 add_library(v8dtoa STATIC
