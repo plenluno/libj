@@ -63,7 +63,7 @@ class Value {
     }
 
     TypeId type() const {
-        return content ? content->type() : Type<void>::id();
+        return content ? content->type() : 0;
     }
 
     Boolean instanceof(TypeId id) const {
@@ -152,19 +152,27 @@ class Value {
         }
 
         virtual Int compareTo(placeholder * that) const {
-            TypeId thisId = this->objectType();
-            TypeId thatId = that->objectType();
-            if (thisId == thatId) {
-                ValueType thatHeld =
-                    static_cast<holder<ValueType>*>(that)->held;
-                return this->held->compareTo(thatHeld);
-            } else if (this->instanceof(thatId)) {
-                return TYPE_CMP_DERIVED;
-            } else if (that->instanceof(thisId)) {
-                return -TYPE_CMP_DERIVED;
+            if (that->isPtr() || that->isCPtr()) {
+                TypeId thisId = this->objectType();
+                TypeId thatId = that->objectType();
+                if (thisId == thatId) {
+                    ValueType thatHeld =
+                        static_cast<holder<ValueType>*>(that)->held;
+                    return this->held
+                            ? this->held->compareTo(thatHeld)
+                            : 0;
+                } else if (this->instanceof(thatId)) {
+                    return TYPE_CMP_DERIVED;
+                } else if (that->instanceof(thisId)) {
+                    return -TYPE_CMP_DERIVED;
+                } else {
+                    return thisId < thatId
+                        ? -TYPE_CMP_NOT_DERIVED
+                        : TYPE_CMP_NOT_DERIVED;
+                }
             } else {
-                thisId = this->type();
-                thatId = that->type();
+                TypeId thisId = this->type();
+                TypeId thatId = that->type();
                 return thisId < thatId
                         ? -TYPE_CMP_NOT_DERIVED
                         : TYPE_CMP_NOT_DERIVED;
@@ -300,7 +308,7 @@ class remove_reference_and_const {
 #endif  // LIBJ_USE_CXX11
 
 template<typename ValueType>
-Boolean to(Value* operand, ValueType** out, Boolean instanceof) {
+inline Boolean to(Value* operand, ValueType** out, Boolean instanceof) {
     if (operand && (operand->type() == Type<ValueType>::id() || instanceof)) {
         Value::holder<ValueType>* content =
             static_cast<Value::holder<ValueType>*>(operand->content);
@@ -324,7 +332,7 @@ inline Boolean to(
 }
 
 template<typename ValueType>
-Boolean to(
+inline Boolean to(
     const Value & operand,
     typename remove_reference_and_const<ValueType>::type* out,
     Boolean instanceof = false) {
@@ -340,7 +348,7 @@ Boolean to(
 }
 
 template<typename T>
-typename Type<T>::Ptr toPtr(const Value& v) {
+inline typename Type<T>::Ptr toPtr(const Value& v) {
     LIBJ_PTR_TYPE(T) p;
     if (v.instanceof(Type<T>::id()) &&
         !v.isCPtr() &&
@@ -353,7 +361,7 @@ typename Type<T>::Ptr toPtr(const Value& v) {
 }
 
 template<typename T>
-typename Type<T>::CPtr toCPtr(const Value& v) {
+inline typename Type<T>::CPtr toCPtr(const Value& v) {
     LIBJ_CPTR_TYPE(T) p;
     if (v.instanceof(Type<T>::id()) &&
         to<typename Type<T>::CPtr>(v, &p, true)) {
