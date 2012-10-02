@@ -3,7 +3,6 @@
 #include <map>
 
 #include "libj/map.h"
-#include "libj/null.h"
 #include "libj/string.h"
 
 namespace libj {
@@ -43,7 +42,7 @@ class MapImpl : public Map {
         if (itr != map_.end())
             return itr->second;
         else
-            return Null::instance();
+            return NO_VALUE;
     }
 
     Value put(const Value& key, const Value& val) {

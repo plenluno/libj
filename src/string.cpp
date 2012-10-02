@@ -406,18 +406,20 @@ static String::CPtr typeIdToString(const Value& val) {
 }
 
 static String::CPtr objectToString(const Value& val) {
+    static const String::CPtr null = String::create("null");
+
     Object::CPtr o = toCPtr<Object>(val);
     if (o) {
         return o->toString();
     } else {
-        return String::null();
+        return null;
     }
 }
 
 String::CPtr String::valueOf(const Value& val) {
     if (val.isEmpty()) {
         return null();
-    } else if (val.instanceof(Type<Object>::id())) {
+    } else if (val.isPtr() || val.isCPtr()) {
         return objectToString(val);
     } else if (val.type() == Type<Boolean>::id()) {
         return booleanToString(val);

@@ -356,7 +356,7 @@ TEST(GTestString, TestValueOf) {
     ASSERT_FALSE(String::valueOf(v));
 
     v = String::null();
-    ASSERT_FALSE(String::valueOf(v));
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("null")));
 
     v = false;
     ASSERT_TRUE(String::valueOf(v)->equals(String::create("false")));

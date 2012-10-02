@@ -8,7 +8,6 @@
 #include "libj/js_array.h"
 #include "libj/js_function.h"
 #include "libj/js_object.h"
-#include "libj/null.h"
 #include "libj/string_buffer.h"
 #include "libj/undefined.h"
 
@@ -19,7 +18,7 @@ static Json::Reader jsonReader;
 
 static Value toLibjValue(const Json::Value& val) {
     if (val.isNull()) {
-        return Null::instance();
+        return Object::null();
     } else if (val.isBool()) {
         return val.asBool();
     } else if (val.isInt()) {

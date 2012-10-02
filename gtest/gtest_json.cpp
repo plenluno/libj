@@ -7,7 +7,6 @@
 #include <libj/js_array.h>
 #include <libj/js_object.h>
 #include <libj/map.h>
-#include <libj/null.h>
 
 namespace libj {
 
@@ -42,7 +41,7 @@ TEST(GTestJson, TestStringify) {
     ASSERT_TRUE(json::stringify(false)
         ->equals(String::create("false")));
 
-    ASSERT_TRUE(json::stringify(Null::instance())
+    ASSERT_TRUE(json::stringify(Object::null())
         ->equals(String::create("null")));
 
     ASSERT_TRUE(json::stringify(String::create("456"))
@@ -58,8 +57,9 @@ TEST(GTestJson, TestStringify) {
     m->put(3, false);
     m->put(String::create("x"), 123);
     m->put(String::create("y"), String::create("456"));
+    m->put(String::create("z"), String::null());
     ASSERT_TRUE(json::stringify(m)
-        ->equals(String::create("{\"x\":123,\"y\":\"456\"}")));
+        ->equals(String::create("{\"x\":123,\"y\":\"456\",\"z\":null}")));
 
     ArrayList::Ptr a = ArrayList::create();
     a->add(3);
@@ -69,12 +69,13 @@ TEST(GTestJson, TestStringify) {
 }
 
 TEST(GTestJson, TestParse) {
-    String::CPtr json = String::create("{\"x\":123,\"y\":[3.0,false]}");
+    String::CPtr json =
+        String::create("{\"x\":123,\"y\":[3.0,false],\"z\":null}");
     Value v = json::parse(json);
     ASSERT_TRUE(v.instanceof(Type<Map>::id()));
 
     JsObject::CPtr m = toCPtr<JsObject>(v);
-    ASSERT_EQ(2, m->size());
+    ASSERT_EQ(3, m->size());
 
     Value xv = m->get(String::create("x"));
     ASSERT_EQ(Type<Long>::id(), xv.type());
@@ -100,6 +101,9 @@ TEST(GTestJson, TestParse) {
     Boolean b;
     to<Boolean>(a1, &b);
     ASSERT_FALSE(b);
+
+    Value zv = m->get(String::create("z"));
+    ASSERT_TRUE(zv.equals(Object::null()));
 }
 
 TEST(GTestJson, TestEscape) {
