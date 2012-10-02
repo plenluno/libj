@@ -5,10 +5,20 @@
 
 namespace libj {
 
-TEST(GTestUndefined, TestToString) {
+TEST(GTestUndefined, TestInstance) {
     Undefined::Ptr p = Undefined::instance();
+    ASSERT_TRUE(p);
+    ASSERT_EQ(Type<Undefined>::id(), p->type());
+}
+
+TEST(GTestUndefined, TestNull) {
+    Undefined::Ptr p = Undefined::null();
+    ASSERT_FALSE(p);
+}
+
+TEST(GTestUndefined, TestToString) {
     String::CPtr s = String::create("undefined");
-    ASSERT_TRUE(s->equals(p->toString()));
+    ASSERT_TRUE(Undefined::instance()->toString()->equals(s));
 }
 
 TEST(GTestUndefined, TestInstanceOf) {

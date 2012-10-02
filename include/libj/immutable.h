@@ -15,6 +15,11 @@ class Immutable
  public:
     typedef LIBJ_CPTR(Immutable) CPtr;
 
+    static CPtr null() {
+        LIBJ_NULL_CPTR_DEF(Immutable, nullp);
+        return nullp;
+    }
+
     Boolean instanceof(TypeId id) const {
         return id == Type<Immutable>::id()
             || Object::instanceof(id);

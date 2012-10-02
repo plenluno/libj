@@ -16,6 +16,11 @@ class Object
  public:
     typedef LIBJ_CPTR(Object) CPtr;
 
+    static CPtr null() {
+        LIBJ_NULL_PTR_DEF(Object, nullp);
+        return nullp;
+    }
+
     virtual TypeId type() const = 0;
 
     virtual Boolean instanceof(TypeId id) const {

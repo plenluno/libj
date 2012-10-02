@@ -13,20 +13,38 @@ class Singleton
  public:
     typedef LIBJ_PTR(Singleton) Ptr;
     typedef LIBJ_CPTR(Singleton) CPtr;
+
+    static Ptr null() {
+        LIBJ_NULL_PTR_DEF(Singleton, nullp);
+        return nullp;
+    }
 };
 
 template<typename T>
 class SingletonTmpl
     : public Singleton {
  public:
-    static LIBJ_PTR_TYPE(T) instance() {
+    typedef LIBJ_PTR_TYPE(T) Ptr;
+    typedef LIBJ_CPTR_TYPE(T) CPtr;
+
+    static Ptr null() {
+        LIBJ_NULL_PTR_TYPE_DEF(T, nullp);
+        return nullp;
+    }
+
+    static Ptr instance() {
         static T t;
         LIBJ_SINGLETON_PTR_TYPE_DEF(T, p, &t);
         return p;
     }
 
+    TypeId type() const {
+        return Type<T>::id();
+    }
+
     Boolean instanceof(TypeId id) const {
-        return id == Type<Singleton>::id()
+        return id == type()
+            || id == Type<Singleton>::id()
             || Object::instanceof(id);
     }
 
@@ -39,17 +57,7 @@ class SingletonTmpl
 private: \
     friend class libj::SingletonTmpl<T>; \
     T() : libj::SingletonTmpl<T>() {} \
-    ~T() {} \
-public: \
-    typedef LIBJ_PTR(T) Ptr; \
-    typedef LIBJ_CPTR(T) CPtr; \
-    libj::TypeId type() const { \
-        return libj::Type<T>::id(); \
-    } \
-    Boolean instanceof(libj::TypeId id) const { \
-        return id == type() \
-            || libj::SingletonTmpl<T>::instanceof(id); \
-    }
+    ~T() {}
 
 }  // namespace libj
 

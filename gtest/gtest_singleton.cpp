@@ -31,6 +31,12 @@ TEST(GTestSingleton, TestSubstitution) {
     ASSERT_TRUE(p && p2 && p3 && p4);
 }
 
+TEST(GTestSingleton, TestNull) {
+    GTestSingleton::Ptr p = GTestSingleton::null();
+    Singleton::Ptr p2 = Singleton::null();
+    ASSERT_FALSE(p || p2);
+}
+
 TEST(GTestSingleton, TestInstanceOf) {
     GTestSingleton::Ptr p = GTestSingleton::instance();
     ASSERT_TRUE(p->instanceof(Type<GTestSingleton>::id()));

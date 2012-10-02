@@ -46,6 +46,12 @@ TEST(GTestImmutable, TestSubstitution) {
     ASSERT_TRUE(p && p2 && p3);
 }
 
+TEST(GTestImmutable, TestNull) {
+    GTestImmutable::CPtr p = GTestImmutable::null();
+    Immutable::CPtr p2 = Immutable::null();
+    ASSERT_FALSE(p || p2);
+}
+
 TEST(GTestImmutable, TestInstanceOf) {
     GTestImmutable::CPtr p = GTestImmutable::create();
 

@@ -16,6 +16,11 @@ class Mutable
     typedef LIBJ_PTR(Mutable) Ptr;
     typedef LIBJ_CPTR(Mutable) CPtr;
 
+    static Ptr null() {
+        LIBJ_NULL_PTR_DEF(Mutable, nullp);
+        return nullp;
+    }
+
     Boolean instanceof(TypeId id) const {
         return id == Type<Mutable>::id()
             || Object::instanceof(id);

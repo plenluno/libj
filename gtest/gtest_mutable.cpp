@@ -49,6 +49,13 @@ TEST(GTestMutable, TestSubstitution) {
     ASSERT_TRUE(p && p2 && p3 && p4 && p5 && p6);
 }
 
+
+TEST(GTestMutable, TestNull) {
+    GTestMutable::Ptr p = GTestMutable::null();
+    Mutable::CPtr p2 = Mutable::null();
+    ASSERT_FALSE(p || p2);
+}
+
 TEST(GTestMutable, TestInstanceOf) {
     GTestMutable::Ptr p = GTestMutable::create();
 
