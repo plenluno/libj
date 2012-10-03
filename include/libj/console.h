@@ -43,11 +43,11 @@ void error(const char* fmt, ...);
 
 void printf(Level level, const char* fmt, ...);
 void printv(Level level, const char* fmt,
-    const Value& v0 = NO_VALUE, const Value& v1 = NO_VALUE,
-    const Value& v2 = NO_VALUE, const Value& v3 = NO_VALUE,
-    const Value& v4 = NO_VALUE, const Value& v5 = NO_VALUE,
-    const Value& v6 = NO_VALUE, const Value& v7 = NO_VALUE,
-    const Value& v8 = NO_VALUE, const Value& v9 = NO_VALUE);
+    const Value& v0 = UNDEFINED, const Value& v1 = UNDEFINED,
+    const Value& v2 = UNDEFINED, const Value& v3 = UNDEFINED,
+    const Value& v4 = UNDEFINED, const Value& v5 = UNDEFINED,
+    const Value& v6 = UNDEFINED, const Value& v7 = UNDEFINED,
+    const Value& v8 = UNDEFINED, const Value& v9 = UNDEFINED);
 
 void setLevel(Level level);
 void setForegroundColor(Level level, Color color);

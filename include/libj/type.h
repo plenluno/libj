@@ -20,7 +20,6 @@ enum Category {
     MUTABLE,
     IMMUTABLE,
     SINGLETON,
-    UNDEFINED,
 };
 
 enum TypeCompre {

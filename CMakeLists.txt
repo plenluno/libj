@@ -217,7 +217,6 @@ if(LIBJ_BUILD_GTEST)
         gtest/gtest_string.cpp
         gtest/gtest_string_buffer.cpp
         gtest/gtest_typed_array_list.cpp
-        gtest/gtest_undefined.cpp
         gtest/gtest_value.cpp
     )
     target_link_libraries(libj-gtest

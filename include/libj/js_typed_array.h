@@ -35,11 +35,16 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
         static String::CPtr comma = String::create(",");
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = this->iterator();
+        Boolean first = true;
         while (itr->hasNext()) {
             Value v = itr->next();
-            if (sb->length())
+            if (first) {
+                first = false;
+            } else {
                 sb->append(comma);
-            sb->append(String::valueOf(v));
+            }
+            if (!v.isNull() && !v.isUndefined())
+                sb->append(String::valueOf(v));
         }
         return sb->toString();
     }

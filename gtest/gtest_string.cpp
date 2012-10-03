@@ -353,7 +353,7 @@ TEST(GTestString, TestToString) {
 
 TEST(GTestString, TestValueOf) {
     Value v;
-    ASSERT_FALSE(String::valueOf(v));
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("undefined")));
 
     v = String::null();
     ASSERT_TRUE(String::valueOf(v)->equals(String::create("null")));

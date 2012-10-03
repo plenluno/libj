@@ -310,8 +310,11 @@ void error(const char* fmt, ...) {
 }
 
 Boolean log(const Value& val) {
+    if (val.isUndefined() || !isPrintable(NORMAL))
+        return false;
+
     String::CPtr s = toString(val);
-    if (s && isPrintable(NORMAL)) {
+    if (s) {
         log(s->toStdString().c_str());
         return true;
     } else {
@@ -320,8 +323,11 @@ Boolean log(const Value& val) {
 }
 
 Boolean debug(const Value& val) {
+    if (val.isUndefined() || !isPrintable(DEBUG))
+        return false;
+
     String::CPtr s = toString(val);
-    if (s && isPrintable(DEBUG)) {
+    if (s) {
         debug(s->toStdString().c_str());
         return true;
     } else {
@@ -330,8 +336,11 @@ Boolean debug(const Value& val) {
 }
 
 Boolean info(const Value& val) {
+    if (val.isUndefined() || !isPrintable(INFO))
+        return false;
+
     String::CPtr s = toString(val);
-    if (s && isPrintable(INFO)) {
+    if (s) {
         info(s->toStdString().c_str());
         return true;
     } else {
@@ -340,8 +349,11 @@ Boolean info(const Value& val) {
 }
 
 Boolean warn(const Value& val) {
+    if (val.isUndefined() || !isPrintable(WARNING))
+        return false;
+
     String::CPtr s = toString(val);
-    if (s && isPrintable(WARNING)) {
+    if (s) {
         warn(s->toStdString().c_str());
         return true;
     } else {
@@ -350,8 +362,11 @@ Boolean warn(const Value& val) {
 }
 
 Boolean error(const Value& val) {
+    if (val.isUndefined() || !isPrintable(ERROR))
+        return false;
+
     String::CPtr s = toString(val);
-    if (s && isPrintable(ERROR)) {
+    if (s) {
         error(s->toStdString().c_str());
         return true;
     } else {

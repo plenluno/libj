@@ -58,16 +58,20 @@ class Value {
     }
 
  public:
-    Boolean isEmpty() const {
-        return !content;
-    }
-
     TypeId type() const {
         return content ? content->type() : 0;
     }
 
     Boolean instanceof(TypeId id) const {
         return content ? content->instanceof(id) : false;
+    }
+
+    Boolean isUndefined() const {
+        return !content;
+    }
+
+    Boolean isNull() const {
+        return content ? content->isNull() : false;
     }
 
     Boolean isPtr() const {
@@ -111,6 +115,8 @@ class Value {
 
         virtual Boolean instanceof(TypeId id) const = 0;
 
+        virtual Boolean isNull() const = 0;
+
         virtual Boolean isPtr() const = 0;
 
         virtual Boolean isCPtr() const = 0;
@@ -141,6 +147,10 @@ class Value {
 
         virtual Boolean instanceof(TypeId id) const {
             return held ? held->instanceof(id) : false;
+        }
+
+        virtual Boolean isNull() const {
+            return !held;
         }
 
         virtual Boolean isPtr() const {
@@ -207,6 +217,10 @@ class Value {
         }
 
         virtual Boolean instanceof(TypeId id) const {
+            return false;
+        }
+
+        virtual Boolean isNull() const {
             return false;
         }
 

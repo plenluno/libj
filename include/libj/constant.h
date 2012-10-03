@@ -11,7 +11,7 @@ namespace libj {
 extern const Size NO_POS;
 extern const Size NO_SIZE;
 extern const Char NO_CHAR;
-extern const Value NO_VALUE;
+extern const Value UNDEFINED;
 
 }  // namespace libj
 

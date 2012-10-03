@@ -42,7 +42,7 @@ class MapImpl : public Map {
         if (itr != map_.end())
             return itr->second;
         else
-            return NO_VALUE;
+            return UNDEFINED;
     }
 
     Value put(const Value& key, const Value& val) {

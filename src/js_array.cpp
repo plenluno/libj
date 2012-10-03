@@ -38,11 +38,16 @@ class JsArrayImpl : public JsArray {
         static String::CPtr comma = String::create(",");
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = iterator();
+        Boolean first = true;
         while (itr->hasNext()) {
             Value v = itr->next();
-            if (sb->length())
+            if (first) {
+                first = false;
+            } else {
                 sb->append(comma);
-            sb->append(String::valueOf(v));
+            }
+            if (!v.isNull() && !v.isUndefined())
+                sb->append(String::valueOf(v));
         }
         return sb->toString();
     }

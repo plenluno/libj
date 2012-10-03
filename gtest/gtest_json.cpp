@@ -11,6 +11,8 @@
 namespace libj {
 
 TEST(GTestJson, TestStringify) {
+    ASSERT_FALSE(json::stringify(UNDEFINED));
+
     ASSERT_TRUE(json::stringify(static_cast<Byte>(3))
         ->equals(String::create("3")));
 
@@ -55,6 +57,7 @@ TEST(GTestJson, TestStringify) {
 
     Map::Ptr m = Map::create();
     m->put(3, false);
+    m->put(String::create("w"), UNDEFINED);
     m->put(String::create("x"), 123);
     m->put(String::create("y"), String::create("456"));
     m->put(String::create("z"), String::null());
@@ -63,9 +66,10 @@ TEST(GTestJson, TestStringify) {
 
     ArrayList::Ptr a = ArrayList::create();
     a->add(3);
+    a->add(UNDEFINED);
     a->add(false);
     ASSERT_TRUE(json::stringify(a)
-        ->equals(String::create("[3,false]")));
+        ->equals(String::create("[3,null,false]")));
 }
 
 TEST(GTestJson, TestParse) {

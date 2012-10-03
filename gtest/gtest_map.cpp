@@ -37,12 +37,14 @@ TEST(GTestMap, TestSize) {
     ASSERT_EQ(4, m->size());
     m->put(Object::null(), String::null());
     ASSERT_EQ(5, m->size());
+    m->put(UNDEFINED, UNDEFINED);
+    ASSERT_EQ(6, m->size());
 }
 
 TEST(GTestMap, TestPutAndGet) {
     Map::Ptr m = Map::create();
     String::CPtr x = String::create("x");
-    ASSERT_TRUE(m->put(x, 123).isEmpty());
+    ASSERT_TRUE(m->put(x, 123).isUndefined());
     ASSERT_TRUE(m->get(x).equals(123));
 
     ASSERT_TRUE(m->put(x, 456).equals(123));
@@ -51,12 +53,15 @@ TEST(GTestMap, TestPutAndGet) {
 
 TEST(GTestMap, TestPutAndGet2) {
     Map::Ptr m = Map::create();
-    ASSERT_TRUE(m->put(String::null(), 123).isEmpty());
+    ASSERT_TRUE(m->put(String::null(), 123).isUndefined());
     ASSERT_TRUE(m->get(String::null()).equals(123));
     ASSERT_TRUE(m->get(Map::null()).equals(123));
 
     ASSERT_TRUE(m->put(Map::null(), String::null()).equals(123));
     ASSERT_TRUE(m->get(String::null()).equals(Map::null()));
+
+    ASSERT_TRUE(m->put(UNDEFINED, UNDEFINED).isUndefined());
+    ASSERT_TRUE(m->get(UNDEFINED).isUndefined());
 }
 
 TEST(GTestMap, TestKeySet) {
@@ -88,12 +93,16 @@ TEST(GTestMap, TestContainsKey) {
 
     m->put(String::null(), 456);
     ASSERT_TRUE(m->containsKey(String::null()));
+
+    m->put(UNDEFINED, 789);
+    ASSERT_TRUE(m->containsKey(UNDEFINED));
 }
 
 TEST(GTestMap, TestContainsValue) {
     Map::Ptr m = Map::create();
     String::CPtr x = String::create("x");
     String::CPtr y = String::create("y");
+    String::CPtr z = String::create("z");
     m->put(x, 123);
     ASSERT_TRUE(m->containsValue(123));
     ASSERT_FALSE(m->containsValue(456));
@@ -101,6 +110,9 @@ TEST(GTestMap, TestContainsValue) {
 
     m->put(y, String::null());
     ASSERT_TRUE(m->containsValue(String::null()));
+
+    m->put(z, UNDEFINED);
+    ASSERT_TRUE(m->containsValue(UNDEFINED));
 }
 
 TEST(GTestMap, TestClear) {
@@ -109,6 +121,7 @@ TEST(GTestMap, TestClear) {
     String::CPtr y = String::create("y");
     m->put(x, 123);
     m->put(y, 456);
+    m->put(String::null(), UNDEFINED);
     m->clear();
     ASSERT_TRUE(m->isEmpty());
 }
@@ -121,12 +134,15 @@ TEST(GTestMap, TestRemove) {
     m->put(x, 123);
     m->put(y, String::null());
     m->put(String::null(), z);
-    ASSERT_EQ(3, m->size());
+    m->put(UNDEFINED, UNDEFINED);
+    ASSERT_EQ(4, m->size());
     ASSERT_TRUE(m->remove(x).equals(123));
-    ASSERT_EQ(2, m->size());
+    ASSERT_EQ(3, m->size());
     ASSERT_TRUE(m->remove(y).equals(String::null()));
-    ASSERT_EQ(1, m->size());
+    ASSERT_EQ(2, m->size());
     ASSERT_TRUE(m->remove(String::null()).equals(z));
+    ASSERT_EQ(1, m->size());
+    ASSERT_TRUE(m->remove(UNDEFINED).isUndefined());
     ASSERT_TRUE(m->isEmpty());
 }
 
@@ -140,8 +156,9 @@ TEST(GTestMap, TestToString) {
     m->put(x, 123);
     m->put(y, String::null());
     m->put(String::null(), z);
+    m->put(UNDEFINED, UNDEFINED);
     ASSERT_TRUE(m->toString()->equals(
-        String::create("{null=z, x=123, y=null}")));
+        String::create("{undefined=undefined, null=z, x=123, y=null}")));
 }
 
 #ifdef LIBJ_USE_SP

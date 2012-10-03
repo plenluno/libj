@@ -3,19 +3,60 @@
 #include <gtest/gtest.h>
 #include <boost/any.hpp>
 #include <libj/array_list.h>
+#include <libj/singleton.h>
 #include <libj/string.h>
-#include <libj/undefined.h>
 #include <libj/value.h>
 
 namespace libj {
 
-TEST(GTestValue, TestIsEmpty) {
+TEST(GTestValue, TestIsUndefined) {
     Value v;
-    ASSERT_TRUE(v.isEmpty());
+    ASSERT_TRUE(v.isUndefined());
     v = 0;
-    ASSERT_FALSE(v.isEmpty());
+    ASSERT_FALSE(v.isUndefined());
 
-    ASSERT_TRUE(NO_VALUE.isEmpty());
+    ASSERT_TRUE(UNDEFINED.isUndefined());
+}
+
+TEST(GTestValue, TestIsNull) {
+    Value v = Object::null();
+    ASSERT_TRUE(v.isNull());
+
+    v = String::null();
+    ASSERT_TRUE(v.isNull());
+
+    v = String::create();
+    ASSERT_FALSE(v.isNull());
+
+    v = ArrayList::null();
+    ASSERT_TRUE(v.isNull());
+
+    v = ArrayList::create();
+    ASSERT_FALSE(v.isNull());
+
+    v = 0;
+    ASSERT_FALSE(v.isNull());
+
+    v = NULL;
+    ASSERT_FALSE(v.isNull());
+
+    v = 5;
+    ASSERT_FALSE(v.isNull());
+}
+
+TEST(GTestValue, TestIsPtrAndIsCPtr) {
+    ArrayList::Ptr p = ArrayList::create();
+    ArrayList::CPtr cp = p;
+    Value v = p;
+    Value cv = cp;
+    Value pv = 3;
+
+    ASSERT_TRUE(v.isPtr());
+    ASSERT_FALSE(v.isCPtr());
+    ASSERT_FALSE(cv.isPtr());
+    ASSERT_TRUE(cv.isCPtr());
+    ASSERT_FALSE(pv.isPtr());
+    ASSERT_FALSE(pv.isCPtr());
 }
 
 TEST(GTestValue, TestTo1) {
@@ -329,20 +370,27 @@ TEST(GTestValue, TestInstanceOf) {
     ASSERT_FALSE(v.instanceof(Type<int>::id()));
 }
 
+class GTestValueSingleton : LIBJ_SINGLETON(GTestValueSingleton)
+ public:
+    String::CPtr toString() const {
+        return String::create("GTestValueSingleton");
+    }
+};
+
 TEST(GTestValue, TestSingletonToPtrAndCPtr) {
-    Undefined::Ptr undef = Undefined::instance();
-    Undefined::CPtr cundef = Undefined::instance();
+    GTestValueSingleton::Ptr singleton = GTestValueSingleton::instance();
+    GTestValueSingleton::CPtr csingleton = singleton;
 
-    Value v = undef;
+    Value v = singleton;
 
-    Undefined::Ptr u = toPtr<Undefined>(v);
-    ASSERT_EQ(Type<Undefined>::id(), u->type());
-    Undefined::CPtr cu = toCPtr<Undefined>(v);
-    ASSERT_EQ(Type<Undefined>::id(), cu->type());
-    Undefined::CPtr cu2 = toPtr<Undefined>(v);
-    ASSERT_EQ(Type<Undefined>::id(), cu2->type());
+    GTestValueSingleton::Ptr g = toPtr<GTestValueSingleton>(v);
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), g->type());
+    GTestValueSingleton::CPtr cg = toCPtr<GTestValueSingleton>(v);
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), cg->type());
+    GTestValueSingleton::CPtr cg2 = toPtr<GTestValueSingleton>(v);
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), cg2->type());
     Object::CPtr co = toCPtr<Object>(v);
-    ASSERT_EQ(Type<Undefined>::id(), co->type());
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), co->type());
     Mutable::Ptr m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
     Mutable::CPtr cm = toCPtr<Mutable>(v);
@@ -350,20 +398,20 @@ TEST(GTestValue, TestSingletonToPtrAndCPtr) {
     Immutable::CPtr ci = toCPtr<Immutable>(v);
     ASSERT_FALSE(ci);
     Singleton::Ptr s = toPtr<Singleton>(v);
-    ASSERT_EQ(Type<Undefined>::id(), s->type());
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), s->type());
     Singleton::CPtr cs = toCPtr<Singleton>(v);
-    ASSERT_EQ(Type<Undefined>::id(), cs->type());
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), cs->type());
 
-    v = cundef;
+    v = csingleton;
 
-    u = toPtr<Undefined>(v);
-    ASSERT_FALSE(u);
-    cu = toCPtr<Undefined>(v);
-    ASSERT_EQ(Type<Undefined>::id(), cu->type());
-    cu2 = toPtr<Undefined>(v);
-    ASSERT_FALSE(cu2);
+    g = toPtr<GTestValueSingleton>(v);
+    ASSERT_FALSE(g);
+    cg = toCPtr<GTestValueSingleton>(v);
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), cg->type());
+    cg2 = toPtr<GTestValueSingleton>(v);
+    ASSERT_FALSE(cg2);
     co = toCPtr<Object>(v);
-    ASSERT_EQ(Type<Undefined>::id(), co->type());
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), co->type());
     m = toPtr<Mutable>(v);
     ASSERT_FALSE(m);
     cm = toCPtr<Mutable>(v);
@@ -373,7 +421,7 @@ TEST(GTestValue, TestSingletonToPtrAndCPtr) {
     s = toPtr<Singleton>(v);
     ASSERT_FALSE(s);
     cs = toCPtr<Singleton>(v);
-    ASSERT_EQ(Type<Undefined>::id(), cs->type());
+    ASSERT_EQ(Type<GTestValueSingleton>::id(), cs->type());
 }
 
 TEST(GTestValue, TestMutableToPtrAndCPtr) {
@@ -502,34 +550,48 @@ TEST(GTestValue, TestCompareTo2) {
 }
 
 TEST(GTestValue, TestCompareTo3) {
+    Value undef;
+    Value intv = 123;
     Value snull = String::null();
     Value anull = ArrayList::null();
     Value empty = String::create();
-    Value abc = String::create("abc");
-    Value intv = 123;
+    Value abcde = String::create("abcde");
 
     ASSERT_EQ(0, snull.compareTo(snull));
     ASSERT_EQ(0, snull.compareTo(anull));
     ASSERT_GT(0, snull.compareTo(empty));
-    ASSERT_GT(0, snull.compareTo(abc));
+    ASSERT_GT(0, snull.compareTo(abcde));
+    ASSERT_LT(0, snull.compareTo(undef));
 
     ASSERT_EQ(0, anull.compareTo(snull));
     ASSERT_EQ(0, anull.compareTo(anull));
     ASSERT_GT(0, anull.compareTo(empty));
-    ASSERT_GT(0, anull.compareTo(abc));
+    ASSERT_GT(0, anull.compareTo(abcde));
+    ASSERT_LT(0, anull.compareTo(undef));
 
     ASSERT_LT(0, empty.compareTo(snull));
     ASSERT_LT(0, empty.compareTo(anull));
     ASSERT_EQ(0, empty.compareTo(empty));
-    ASSERT_GT(0, empty.compareTo(abc));
+    ASSERT_GT(0, empty.compareTo(abcde));
+    ASSERT_LT(0, empty.compareTo(undef));
 
-    ASSERT_LT(0, abc.compareTo(snull));
-    ASSERT_LT(0, abc.compareTo(anull));
-    ASSERT_LT(0, abc.compareTo(empty));
-    ASSERT_EQ(0, abc.compareTo(abc));
+    ASSERT_LT(0, abcde.compareTo(snull));
+    ASSERT_LT(0, abcde.compareTo(anull));
+    ASSERT_LT(0, abcde.compareTo(empty));
+    ASSERT_EQ(0, abcde.compareTo(abcde));
+    ASSERT_LT(0, abcde.compareTo(undef));
+
+    ASSERT_GT(0, undef.compareTo(snull));
+    ASSERT_GT(0, undef.compareTo(anull));
+    ASSERT_GT(0, undef.compareTo(empty));
+    ASSERT_GT(0, undef.compareTo(abcde));
+    ASSERT_EQ(0, undef.compareTo(undef));
+    ASSERT_GT(0, undef.compareTo(intv));
 
     ASSERT_GT(0, snull.compareTo(intv) * intv.compareTo(snull));
     ASSERT_GT(0, anull.compareTo(intv) * intv.compareTo(anull));
+    ASSERT_GT(0, empty.compareTo(intv) * intv.compareTo(empty));
+    ASSERT_GT(0, abcde.compareTo(intv) * intv.compareTo(abcde));
 }
 
 TEST(GTestValue, TestEquals) {
@@ -541,24 +603,12 @@ TEST(GTestValue, TestEquals) {
     ASSERT_TRUE(x.equals(1.23));
     ASSERT_FALSE(x.equals(4.56));
 
-    Value u = Undefined::instance();
-    ASSERT_TRUE(u.equals(Undefined::instance()));
-    ASSERT_FALSE(u.equals(String::create()));
-}
+    Value g = GTestValueSingleton::instance();
+    ASSERT_TRUE(g.equals(GTestValueSingleton::instance()));
+    ASSERT_FALSE(g.equals(String::create()));
 
-TEST(GTestValue, TestIsPtrAndIsCPtr) {
-    ArrayList::Ptr p = ArrayList::create();
-    ArrayList::CPtr cp = p;
-    Value v = p;
-    Value cv = cp;
-    Value pv = 3;
-
-    ASSERT_TRUE(v.isPtr());
-    ASSERT_FALSE(v.isCPtr());
-    ASSERT_FALSE(cv.isPtr());
-    ASSERT_TRUE(cv.isCPtr());
-    ASSERT_FALSE(pv.isPtr());
-    ASSERT_FALSE(pv.isCPtr());
+    Value v;
+    ASSERT_TRUE(v.equals(UNDEFINED));
 }
 
 struct GTestValueStruct {};
@@ -579,14 +629,16 @@ TEST(GTestValue, TestType) {
     ASSERT_EQ(Type<GTestValueStruct*>::id(), v6.type());
     ASSERT_TRUE(to<GTestValueStruct*>(v6, &y));
     ASSERT_EQ(&x, y);
-}
 
-TEST(GTestValue, TestType2) {
     Value obj = Object::null();
     ASSERT_EQ(Type<Object::CPtr>::id(), obj.type());
 
     Value str = String::create("abc");
     ASSERT_EQ(Type<String::CPtr>::id(), str.type());
+
+    Value v;
+    ASSERT_FALSE(v.type());
+    ASSERT_FALSE(UNDEFINED.type());
 }
 
 }  // namespace libj

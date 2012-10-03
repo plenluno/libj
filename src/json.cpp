@@ -9,7 +9,6 @@
 #include "libj/js_function.h"
 #include "libj/js_object.h"
 #include "libj/string_buffer.h"
-#include "libj/undefined.h"
 
 namespace libj {
 namespace json {
@@ -49,7 +48,7 @@ static Value toLibjValue(const Json::Value& val) {
         }
         return jo;
     } else {
-        return Undefined::instance();
+        return UNDEFINED;
     }
 }
 
@@ -122,13 +121,15 @@ static String::CPtr mapToJson(const Value& val) {
     StringBuffer::Ptr result = StringBuffer::create();
     result->append(JSON_LBRACE);
     while (itr->hasNext()) {
-        Value v = itr->next();
-        if (v.instanceof(Type<String>::id())) {
+        Value k = itr->next();
+        Value v = m->get(k);
+        if (k.instanceof(Type<String>::id()) &&
+            !v.isUndefined()) {
             if (result->length() > 1)
                 result->append(JSON_COMMA);
-            result->append(stringToJson(v));
+            result->append(stringToJson(k));
             result->append(JSON_COLON);
-            result->append(json::stringify(m->get(v)));
+            result->append(json::stringify(v));
         }
     }
     result->append(JSON_RBRACE);
@@ -151,7 +152,9 @@ static String::CPtr collectionToJson(const Value& val) {
 }
 
 String::CPtr stringify(const Value& val) {
-    if (val.instanceof(Type<String>::id())) {
+    if (val.isUndefined()) {
+        return String::null();
+    } else if (val.instanceof(Type<String>::id())) {
         return stringToJson(val);
     } else if (val.instanceof(Type<Map>::id())) {
         return mapToJson(val);

@@ -292,6 +292,7 @@ String::CPtr String::create(const void* data, Encoding enc, Size max) {
 
 static String::CPtr LIBJ_STR_TRUE = String::create("true");
 static String::CPtr LIBJ_STR_FALSE = String::create("false");
+static String::CPtr LIBJ_STR_UNDEFINED = String::create("undefined");
 
 static String::CPtr booleanToString(const Value& val) {
     Boolean b;
@@ -417,8 +418,8 @@ static String::CPtr objectToString(const Value& val) {
 }
 
 String::CPtr String::valueOf(const Value& val) {
-    if (val.isEmpty()) {
-        return null();
+    if (val.isUndefined()) {
+        return LIBJ_STR_UNDEFINED;
     } else if (val.isPtr() || val.isCPtr()) {
         return objectToString(val);
     } else if (val.type() == Type<Boolean>::id()) {

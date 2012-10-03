@@ -2,7 +2,6 @@
 
 #include <gtest/gtest.h>
 #include <libj/js_regexp.h>
-#include <libj/undefined.h>
 
 namespace libj {
 
@@ -50,7 +49,7 @@ TEST(GTestJsRegExp, TestExec) {
     JsArray::Ptr a = re->exec(String::create("xaacz"));
     ASSERT_EQ(3, a->length());
     ASSERT_TRUE(toCPtr<String>(a->get(0))->equals(String::create("aac")));
-    ASSERT_TRUE(!!toCPtr<Undefined>(a->get(1)));
+    ASSERT_TRUE(a->get(1).isUndefined());
     ASSERT_TRUE(toCPtr<String>(a->get(2))->equals(String::create("c")));
     Int index = -1;
     to<Int>(a->getProperty(String::create("index")), &index);

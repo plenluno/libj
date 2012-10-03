@@ -181,8 +181,10 @@ TEST(GTestArrayList, TestToString) {
     a2->add(3);
     a2->add(5);
     a->add(a2);
-    a->add(7);
-    ASSERT_TRUE(a->toString()->equals(String::create("[1, [3, 5], 7]")));
+    a->add(Object::null());
+    a->add(UNDEFINED);
+    ASSERT_TRUE(a->toString()->equals(
+        String::create("[1, [3, 5], null, undefined]")));
 }
 
 TEST(GTestArrayList, TestSubList) {

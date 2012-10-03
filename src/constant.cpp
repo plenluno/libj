@@ -10,6 +10,6 @@ const Size NO_SIZE = -1;
 
 const Char NO_CHAR = -1;
 
-const Value NO_VALUE;
+const Value UNDEFINED;
 
 }  // namespace libj

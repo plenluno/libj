@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "libj/js_regexp.h"
-#include "libj/undefined.h"
 #include "./glue/regexp.h"
 
 namespace libj {
@@ -73,7 +72,7 @@ class JsRegExpImpl : public JsRegExp {
                 captures[i+1] <= static_cast<int>(str->length())) {
                 res->add(str->substring(captures[i], captures[i+1]));
             } else {
-                res->add(Undefined::instance());
+                res->add(UNDEFINED);
             }
         }
         res->setProperty(input, str);
