@@ -72,6 +72,7 @@ set(libj-src
     src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
+    src/value_holder.cpp
 )
 
 if(LIBJ_USE_EXCEPTION)
@@ -218,6 +219,7 @@ if(LIBJ_BUILD_GTEST)
         gtest/gtest_string_buffer.cpp
         gtest/gtest_typed_array_list.cpp
         gtest/gtest_value.cpp
+        gtest/gtest_value_holder.cpp
     )
     target_link_libraries(libj-gtest
         gtest
