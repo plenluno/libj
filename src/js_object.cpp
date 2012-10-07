@@ -7,8 +7,7 @@ namespace libj {
 class JsObjectImpl : public JsObject {
  public:
     static Ptr create() {
-        Ptr p(new JsObjectImpl());
-        return p;
+        return Ptr(new JsObjectImpl());
     }
 
     void clear() {

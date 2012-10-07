@@ -4,7 +4,6 @@
 #define LIBJ_JS_OBJECT_H_
 
 #include "libj/map.h"
-#include "libj/string.h"
 
 namespace libj {
 
@@ -30,16 +29,12 @@ class JsObject : LIBJ_MAP(JsObject)
 
     template<typename T>
     typename Type<T>::Ptr getPtr(const Value& name) const {
-        Value v = get(name);
-        typename Type<T>::Ptr p = toPtr<T>(v);
-        return p;
+        return toPtr<T>(get(name));
     }
 
     template<typename T>
     typename Type<T>::CPtr getCPtr(const Value& name) const {
-        Value v = get(name);
-        typename Type<T>::CPtr p = toCPtr<T>(v);
-        return p;
+        return toCPtr<T>(get(name));
     }
 };
 
