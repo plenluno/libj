@@ -1,15 +1,18 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <vector>
+
 #include "libj/array_list.h"
 #include "libj/error.h"
-#include "libj/exception.h"
-#include "libj/string.h"
 
 namespace libj {
 
 class ArrayListImpl : public ArrayList {
  public:
+    static Ptr create() {
+        return Ptr(new ArrayListImpl());
+    }
+
     Size size() const {
         return vec_.size();
     }
@@ -49,7 +52,7 @@ class ArrayListImpl : public ArrayList {
         if (i >= vec_.size()) {
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         } else {
-            // destruct shared object!
+            // destruct the shared object!
             // return *vec_.erase(vec_.begin() + i);
             Value v = vec_[i];
             vec_.erase(vec_.begin() + i);
@@ -60,7 +63,7 @@ class ArrayListImpl : public ArrayList {
     Boolean remove(const Value& v) {
         Size n = size();
         for (Size i = 0; i < n; i++) {
-            if (!vec_[i].compareTo(v)) {
+            if (vec_[i].equals(v)) {
                 remove(i);
                 return true;
             }
@@ -101,9 +104,7 @@ class ArrayListImpl : public ArrayList {
             if (itr_ == vec_->end()) {
                 LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
             } else {
-                Value v = *itr_;
-                ++itr_;
-                return v;
+                return *itr_++;
             }
         }
 
@@ -118,17 +119,17 @@ class ArrayListImpl : public ArrayList {
 
  public:
     Iterator::Ptr iterator() const {
-        Iterator::Ptr p(new IteratorImpl(&vec_));
-        return p;
+        return Iterator::Ptr(new IteratorImpl(&vec_));
     }
 
  private:
     std::vector<Value> vec_;
+
+    ArrayListImpl() {}
 };
 
 ArrayList::Ptr ArrayList::create() {
-    ArrayList::Ptr p(new ArrayListImpl());
-    return p;
+    return ArrayListImpl::create();
 }
 
 }  // namespace libj
