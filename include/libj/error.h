@@ -3,6 +3,7 @@
 #ifndef LIBJ_ERROR_H_
 #define LIBJ_ERROR_H_
 
+#include "libj/exception.h"
 #include "libj/status.h"
 
 namespace libj {
@@ -35,6 +36,14 @@ class Error : LIBJ_STATUS(Error)
 
 #define LIBJ_ERROR(T) public libj::Error { \
     LIBJ_IMMUTABLE_DEFS(T, libj::Error)
+
+#ifdef LIBJ_USE_EXCEPTION
+    #define LIBJ_HANDLE_ERROR(code) \
+        LIBJ_THROW(code)
+#else
+    #define LIBJ_HANDLE_ERROR(code) \
+        return libj::Error::create(code);
+#endif
 
 }  // namespace libj
 

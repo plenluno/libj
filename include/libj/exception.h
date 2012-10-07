@@ -57,12 +57,4 @@ class Exception : public std::exception {
 
 #endif  // LIBJ_USE_EXCEPTION
 
-#ifdef LIBJ_USE_EXCEPTION
-    #define LIBJ_HANDLE_ERROR(code) \
-        LIBJ_THROW(code)
-#else
-    #define LIBJ_HANDLE_ERROR(code) \
-        return libj::Error::create(code);
-#endif
-
 #endif  // LIBJ_EXCEPTION_H_
