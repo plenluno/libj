@@ -8,8 +8,7 @@ namespace libj {
 class ValueHolderImpl : public ValueHolder {
  public:
     static Ptr create(const Value& val) {
-        Ptr p(new ValueHolderImpl(val));
-        return p;
+        return Ptr(new ValueHolderImpl(val));
     }
 
     virtual Value get() const {

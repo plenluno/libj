@@ -17,14 +17,12 @@ class ValueHolder : LIBJ_MUTABLE(ValueHolder)
 
     template<typename T>
     typename Type<T>::Ptr getPtr() const {
-        typename Type<T>::Ptr p = toPtr<T>(get());
-        return p;
+        return toPtr<T>(get());
     }
 
     template<typename T>
     typename Type<T>::CPtr getCPtr() const {
-        typename Type<T>::CPtr p = toCPtr<T>(get());
-        return p;
+        return toCPtr<T>(get());
     }
 };
 
