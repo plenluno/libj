@@ -23,8 +23,7 @@ class GTestMutable : LIBJ_MUTABLE(GTestMutable)
 int GTestMutable::count = 0;
 
 GTestMutable::Ptr GTestMutable::create() {
-    GTestMutable::Ptr p(new GTestMutable);
-    return p;
+    return Ptr(new GTestMutable);
 }
 
 class GTestMutableX {

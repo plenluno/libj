@@ -8,8 +8,7 @@ namespace libj {
 class GTestJsObject : LIBJ_JS_OBJECT(GTestJsObject)
  public:
     static Ptr create() {
-        Ptr p(new GTestJsObject());
-        return p;
+        return Ptr(new GTestJsObject());
     }
 
  private:

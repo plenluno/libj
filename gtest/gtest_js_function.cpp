@@ -23,8 +23,7 @@ class GTestJsFunctionAdd : LIBJ_JS_FUNCTION(GTestJsFunctionAdd)
     }
 
     static GTestJsFunctionAdd::Ptr create() {
-        GTestJsFunctionAdd::Ptr p(new GTestJsFunctionAdd());
-        return p;
+        return Ptr(new GTestJsFunctionAdd());
     }
 };
 

@@ -23,8 +23,7 @@ class GTestImmutable : LIBJ_IMMUTABLE(GTestImmutable)
 int GTestImmutable::count = 0;
 
 GTestImmutable::CPtr GTestImmutable::create() {
-    GTestImmutable::CPtr p(new GTestImmutable);
-    return p;
+    return CPtr(new GTestImmutable);
 }
 
 class GTestImmutableX {
@@ -83,4 +82,3 @@ TEST(GTestImmutable, TestUseCount) {
 #endif
 
 }  // namespace libj
-

@@ -26,9 +26,8 @@ class GTestFunctionAdd : LIBJ_FUNCTION(GTestFunctionAdd)
         return String::create();
     }
 
-    static GTestFunctionAdd::Ptr create() {
-        GTestFunctionAdd::Ptr p(new GTestFunctionAdd());
-        return p;
+    static Ptr create() {
+        return Ptr(new GTestFunctionAdd());
     }
 };
 
