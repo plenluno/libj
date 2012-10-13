@@ -4,10 +4,10 @@ project(libj)
 
 # options ------------------------------------------------------------------------------------------
 
-option(LIBJ_BUILD_GTEST "Use Google Test" OFF)
-option(LIBJ_USE_CXX11 "Use C++11")
+option(LIBJ_BUILD_GTEST "Build Google tests" OFF)
+option(LIBJ_USE_CXX11 "Use C++11" OFF)
 option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
-option(LIBJ_USE_EXCEPTION "Use Exception" OFF)
+option(LIBJ_USE_EXCEPTION "Use exceptions" OFF)
 
 message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
