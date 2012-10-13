@@ -123,7 +123,7 @@ public: \
     void clear() { \
         C->clear(); \
     } \
-        Iterator::Ptr iterator() const { \
+    Iterator::Ptr iterator() const { \
         return C->iterator(); \
     } \
     Boolean remove(const Value& v) { \

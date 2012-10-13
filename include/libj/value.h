@@ -24,16 +24,16 @@ namespace libj {
 class Value {
  public:
     Value()
-      : content(0) {
+        : content(0) {
     }
 
     template<typename ValueType>
     Value(const ValueType & value)
-      : content(new holder<ValueType>(value)) {
+        : content(new holder<ValueType>(value)) {
     }
 
     Value(const Value & other)
-      : content(other.content ? other.content->clone() : 0) {
+        : content(other.content ? other.content->clone() : 0) {
     }
 
     ~Value() {
@@ -133,7 +133,7 @@ class Value {
     class holder : public placeholder {
      public:
         holder(const ValueType & value)
-          : held(value) {
+            : held(value) {
         }
 
      public:
@@ -204,7 +204,7 @@ class Value {
     class holder<ValueType, false, false> : public placeholder {
      public:
         holder(const ValueType & value)
-          : held(value) {
+            : held(value) {
         }
 
      public:
