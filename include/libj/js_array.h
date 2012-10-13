@@ -15,16 +15,12 @@ class JsArray : LIBJ_ARRAY_LIST(JsArray)
 
     template<typename T>
     typename Type<T>::Ptr getPtr(Size index) const {
-        Value v = get(index);
-        typename Type<T>::Ptr p = toPtr<T>(v);
-        return p;
+        return toPtr<T>(get(index));
     }
 
     template<typename T>
     typename Type<T>::CPtr getCPtr(Size index) const {
-        Value v = get(index);
-        typename Type<T>::CPtr p = toCPtr<T>(v);
-        return p;
+        return toCPtr<T>(get(index));
     }
 
     LIBJ_JS_PROPERTY_DECL;

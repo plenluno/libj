@@ -10,8 +10,7 @@ namespace libj {
 class JsArrayImpl : public JsArray {
  public:
     static Ptr create() {
-        Ptr p(new JsArrayImpl());
-        return p;
+        return Ptr(new JsArrayImpl());
     }
 
  private:
