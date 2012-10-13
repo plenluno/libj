@@ -9,8 +9,7 @@ namespace libj {
 class StringBufferImpl : public StringBuffer {
  public:
     static Ptr create() {
-        Ptr p(new StringBufferImpl());
-        return p;
+        return Ptr(new StringBufferImpl());
     }
 
     Size length() const {

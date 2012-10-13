@@ -12,10 +12,11 @@ class StatusImpl : public Status {
     }
 
     String::CPtr message() const {
-        if (message_)
+        if (message_) {
             return message_;
-        else
+        } else {
             return String::create();
+        }
     }
 
     String::CPtr toString() const {
@@ -30,13 +31,11 @@ class StatusImpl : public Status {
         } else {
             msg = String::null();
         }
-        CPtr p(new StatusImpl(code, msg));
-        return p;
+        return CPtr(new StatusImpl(code, msg));
     }
 
     static CPtr create(Int code, String::CPtr msg) {
-        Status::CPtr p(new StatusImpl(code, msg));
-        return p;
+        return CPtr(new StatusImpl(code, msg));
     }
 
  private:

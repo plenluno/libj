@@ -26,8 +26,7 @@ class JsRegExpImpl : public JsRegExp {
     static Ptr create(String::CPtr pattern, UInt flags) {
         JsRegExpImpl* impl = new JsRegExpImpl(pattern, flags);
         if (impl->re_) {
-            Ptr p(impl);
-            return p;
+            return Ptr(impl);
         } else {
             return null();
         }

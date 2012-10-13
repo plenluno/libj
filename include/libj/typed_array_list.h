@@ -58,8 +58,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
         for (Size i = from; i < to; i++) {
             a->list_->add(get(i));
         }
-        Ptr p(a);
-        return p;
+        return Ptr(a);
     }
 
     void clear() {
@@ -97,10 +96,11 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
         } else {
             Value v = list_->get(i);
             T t;
-            if (to<T>(v, &t))
+            if (to<T>(v, &t)) {
                 return t;
-            else
+            } else {
                 LIBJ_THROW(Error::ILLEGAL_STATE);
+            }
         }
     }
 
@@ -111,8 +111,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
 
  public:
     static Ptr create() {
-        Ptr p(new TypedArrayList());
-        return p;
+        return Ptr(new TypedArrayList());
     }
 
     static Ptr create(ArrayList::CPtr a) {

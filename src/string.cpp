@@ -1,8 +1,8 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <assert.h>
-#include <stdio.h>
 #include <iv/lv5/third_party/v8_dtoa/conversions.h>
+#include <stdio.h>
 #include <string>
 
 #include "libj/string.h"
@@ -30,8 +30,7 @@ class StringImpl : public String {
         } else if (from == 0) {
             return toString();
         } else {
-            CPtr p(new StringImpl(*this, from));
-            return p;
+            return CPtr(new StringImpl(*this, from));
         }
     }
 
@@ -42,8 +41,7 @@ class StringImpl : public String {
         } else if (from == 0 && to == len) {
             return toString();
         } else {
-            CPtr p(new StringImpl(*this, from, to - from));
-            return p;
+            return CPtr(new StringImpl(*this, from, to - from));
         }
     }
 
@@ -58,8 +56,7 @@ class StringImpl : public String {
         Size len = other->length();
         for (Size i = 0; i < len; i++)
             s->str_.push_back(other->charAt(i));
-        CPtr p(s);
-        return p;
+        return CPtr(s);
     }
 
     Int compareTo(Object::CPtr that) const {
@@ -170,8 +167,7 @@ class StringImpl : public String {
                 c += 'a' - 'A';
             s->str_ += c;
         }
-        CPtr p(s);
-        return p;
+        return CPtr(s);
     }
 
     CPtr toUpperCase() const {
@@ -183,13 +179,11 @@ class StringImpl : public String {
                 c -= 'a' - 'A';
             s->str_ += c;
         }
-        CPtr p(s);
-        return p;
+        return CPtr(s);
     }
 
     CPtr toString() const {
-        CPtr p(new StringImpl(*this));
-        return p;
+        return CPtr(new StringImpl(*this));
     }
 
     std::u16string toStdU16String() const {
@@ -205,28 +199,23 @@ class StringImpl : public String {
     }
 
     static CPtr create() {
-        CPtr p(new StringImpl());
-        return p;
+        return CPtr(new StringImpl());
     }
 
     static CPtr create(Char c, Size n) {
-        CPtr p(new StringImpl(c, n));
-        return p;
+        return CPtr(new StringImpl(c, n));
     }
 
     static CPtr create(const std::u16string& s16) {
-        CPtr p(new StringImpl(s16));
-        return p;
+        return CPtr(new StringImpl(s16));
     }
 
     static CPtr create(const std::u32string& s32) {
-        CPtr p(new StringImpl(s32));
-        return p;
+        return CPtr(new StringImpl(s32));
     }
 
     static CPtr create(const void* data, Encoding enc, Size max) {
-        CPtr p(new StringImpl(data, enc, max));
-        return p;
+        return CPtr(new StringImpl(data, enc, max));
     }
 
  private:

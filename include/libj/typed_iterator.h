@@ -14,8 +14,7 @@ template<typename T>
 class TypedIterator : LIBJ_ITERATOR_TEMPLATE(TypedIterator<T>)
  public:
     static Ptr create(Iterator::Ptr i) {
-        Ptr p(new TypedIterator(i));
-        return p;
+        return Ptr(new TypedIterator(i));
     }
 
     Boolean hasNext() const {
@@ -29,10 +28,11 @@ class TypedIterator : LIBJ_ITERATOR_TEMPLATE(TypedIterator<T>)
     T nextTyped() {
         Value v = next();
         T t;
-        if (to<T>(v, &t))
+        if (to<T>(v, &t)) {
             return t;
-        else
+        } else {
             LIBJ_THROW(Error::ILLEGAL_TYPE);
+        }
     }
 
     String::CPtr toString() const {

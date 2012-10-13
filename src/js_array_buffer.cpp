@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <algorithm>
+
 #include "libj/js_array_buffer.h"
 #include "libj/string.h"
 
@@ -100,13 +101,12 @@ class JsArrayBufferImpl : public JsArrayBuffer {
             len = end - begin;
         }
         JsArrayBufferImpl* buf = new JsArrayBufferImpl(len);
-        JsArrayBuffer::Ptr p(buf);
         if (len) {
             const Byte* src = reinterpret_cast<const Byte*>(buf64_);
             Byte *dst = reinterpret_cast<Byte*>(buf->buf64_);
             std::copy(src + begin, src + end, dst);
         }
-        return p;
+        return Ptr(buf);
     }
 
     Boolean getInt8(Size byteOffset, Byte* value) const {
@@ -282,12 +282,11 @@ class JsArrayBufferImpl : public JsArrayBuffer {
     }
 
     static JsArrayBuffer::Ptr create(Size length = 0) {
-        JsArrayBuffer::Ptr p(new JsArrayBufferImpl(length));
-        return p;
+        return Ptr(new JsArrayBufferImpl(length));
     }
-};  // JsArrayBufferImpl
+};
 
-const union JsArrayBufferImpl::endian_u JsArrayBufferImpl::endian = {1};
+const union JsArrayBufferImpl::endian_u JsArrayBufferImpl::endian = { 1 };
 
 JsArrayBuffer::Ptr JsArrayBuffer::create(Size length) {
     return JsArrayBufferImpl::create(length);

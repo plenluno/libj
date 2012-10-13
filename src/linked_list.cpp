@@ -88,13 +88,12 @@ class LinkedListImpl : public LinkedList {
         }
 
         LinkedListImpl* ls = new LinkedListImpl();
-        LinkedList::Ptr p(ls);
         cit itr = list_.begin();
         for (Size index = 0; index < to; index++, itr++) {
             if (index >= from)
                 ls->add(*itr);
         }
-        return p;
+        return Ptr(ls);
     }
 
  private:
@@ -129,8 +128,7 @@ class LinkedListImpl : public LinkedList {
 
  public:
     Iterator::Ptr iterator() const {
-        Iterator::Ptr p(new IteratorImpl(&list_));
-        return p;
+        return Iterator::Ptr(new IteratorImpl(&list_));
     }
 
  private:
@@ -139,8 +137,7 @@ class LinkedListImpl : public LinkedList {
 
  public:
     static LinkedList::Ptr create() {
-        LinkedList::Ptr p(new LinkedListImpl());
-        return p;
+        return Ptr(new LinkedListImpl());
     }
 };
 

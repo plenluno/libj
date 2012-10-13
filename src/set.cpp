@@ -20,6 +20,10 @@ class SetImpl : public Set {
     typedef std::set<Value, ValueComp> ValueSet;
 
  public:
+    static Ptr create() {
+        return Ptr(new SetImpl());
+    }
+
     Size size() const {
         return set_.size();
     }
@@ -67,8 +71,7 @@ class SetImpl : public Set {
 
  public:
     Iterator::Ptr iterator() const {
-        Iterator::Ptr p(new IteratorImpl(&set_));
-        return p;
+        return Iterator::Ptr(new IteratorImpl(&set_));
     }
 
  private:
@@ -76,8 +79,7 @@ class SetImpl : public Set {
 };
 
 Set::Ptr Set::create() {
-    Set::Ptr p(new SetImpl());
-    return p;
+    return SetImpl::create();
 }
 
 }  // namespace libj

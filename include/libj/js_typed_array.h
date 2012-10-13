@@ -13,8 +13,7 @@ template<typename T>
 class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
  public:
     static Ptr create() {
-        Ptr p(new JsTypedArray());
-        return p;
+        return Ptr(new JsTypedArray());
     }
 
     static Ptr create(JsArray::CPtr a) {
@@ -33,6 +32,7 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
 
     String::CPtr toString() const {
         static String::CPtr comma = String::create(",");
+
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = this->iterator();
         Boolean first = true;
@@ -64,8 +64,7 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
     Ptr subarray(Size from, Size to = NO_POS) const {
         to = to > this->list_->size() ? this->list_->size() : to;
         if (from >= to) {
-            Ptr p(new JsTypedArray());
-            return p;
+            return Ptr(new JsTypedArray());
         }
 
         Ptr p(new JsTypedArray());

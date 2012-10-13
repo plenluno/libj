@@ -50,8 +50,7 @@ class ErrorImpl : public Error {
             default:
                 return null();
             }
-            CPtr p(new ErrorImpl(code, msg));
-            return p;
+            return CPtr(new ErrorImpl(code, msg));
         }
     }
 
@@ -59,8 +58,7 @@ class ErrorImpl : public Error {
         if (code < ANY || code >= END_OF_CODE) {
             return null();
         } else {
-            CPtr p(new ErrorImpl(code, msg));
-            return p;
+            return CPtr(new ErrorImpl(code, msg));
         }
     }
 

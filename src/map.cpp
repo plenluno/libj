@@ -19,6 +19,10 @@ class MapImpl : public Map {
     typedef std::map<Value, Value, ValueComp> ValueMap;
 
  public:
+    static Ptr create() {
+        return Ptr(new MapImpl());
+    }
+
     Size size() const {
         return map_.size();
     }
@@ -39,10 +43,11 @@ class MapImpl : public Map {
 
     Value get(const Value& key) const {
         ValueMap::const_iterator itr = map_.find(key);
-        if (itr != map_.end())
+        if (itr != map_.end()) {
             return itr->second;
-        else
+        } else {
             return UNDEFINED;
+        }
     }
 
     Value put(const Value& key, const Value& val) {
@@ -102,8 +107,7 @@ class MapImpl : public Map {
 };
 
 Map::Ptr Map::create() {
-    Map::Ptr p(new MapImpl());
-    return p;
+    return MapImpl::create();
 }
 
 }  // namespace libj
