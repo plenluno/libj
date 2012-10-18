@@ -9,17 +9,20 @@ namespace libj {
 class GTestFunctionAdd : LIBJ_FUNCTION(GTestFunctionAdd)
  public:
     Value operator()(ArrayList::Ptr args) {
-        if (args &&
-            args->size() == 2 &&
-            args->get(0).type() == Type<Int>::id() &&
-            args->get(1).type() == Type<Int>::id()) {
-            int x, y;
-            to<Int>(args->get(0), &x);
-            to<Int>(args->get(1), &y);
-            return x + y;
-        } else {
+        if (!args) {
             return Error::create(Error::ILLEGAL_ARGUMENT);
         }
+
+        Int sum = 0;
+        for (Size i = 0; i < args->length(); i++) {
+            int x;
+            if (to<Int>(args->get(i), &x)) {
+                sum += x;
+            } else {
+                return Error::create(Error::ILLEGAL_ARGUMENT);
+            }
+        }
+        return sum;
     }
 
     String::CPtr toString() const {
@@ -36,24 +39,23 @@ TEST(GTestFunction, TestFunctor) {
     ArrayList::Ptr args = ArrayList::create();
     args->add(2);
     args->add(3);
-    Value sum = (*add)(args);
-    Int s;
-    to<Int>(sum, &s);
-    ASSERT_EQ(5, s);
+    ASSERT_TRUE((*add)(args).equals(5));
 
-    sum = (*add)();
-    ASSERT_TRUE(sum.instanceof(Type<Error>::id()));
+    ASSERT_TRUE((*add)().instanceof(Type<Error>::id()));
 }
 
 TEST(GTestFunction, TestCall) {
     Function::Ptr add = GTestFunctionAdd::create();
-    Value sum = add->call(4, 5);
-    Int s;
-    to<Int>(sum, &s);
-    ASSERT_EQ(9, s);
-
-    sum = add->call();
-    ASSERT_TRUE(sum.instanceof(Type<Error>::id()));
+    ASSERT_TRUE(add->call().instanceof(Type<Error>::id()));
+    ASSERT_TRUE(add->call(1).equals(1));
+    ASSERT_TRUE(add->call(1, 2).equals(3));
+    ASSERT_TRUE(add->call(1, 2, 3).equals(6));
+    ASSERT_TRUE(add->call(1, 2, 3, 4).equals(10));
+    ASSERT_TRUE(add->call(1, 2, 3, 4, 5).equals(15));
+    ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6).equals(21));
+    ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7).equals(28));
+    ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7, 8).equals(36));
+    ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7, 8, 9).equals(45));
 }
 
 #ifdef LIBJ_USE_SP
