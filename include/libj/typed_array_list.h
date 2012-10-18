@@ -115,17 +115,17 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
     }
 
     static Ptr create(ArrayList::CPtr a) {
-        Ptr p(new TypedArrayList());
+        Ptr ta(new TypedArrayList());
         Iterator::Ptr itr = a->iterator();
         while (itr->hasNext()) {
             Value v = itr->next();
-            if (p->match(v)) {
-                p->add(v);
+            if (ta->match(v)) {
+                ta->add(v);
             } else {
                 return null();
             }
         }
-        return p;
+        return ta;
     }
 
  protected:
