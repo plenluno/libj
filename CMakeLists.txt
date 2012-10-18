@@ -72,20 +72,14 @@ set(libj-src
     src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
-    src/value_holder.cpp
 )
 
-if(LIBJ_USE_EXCEPTION)
-    set(libj-src
-        src/exception.cpp
-        ${libj-src}
-    )
-else(LIBJ_USE_EXCEPTION)
+if(NOT LIBJ_USE_EXCEPTION)
     set(libj-src
         src/no_exceptions.cpp
         ${libj-src}
     )
-endif(LIBJ_USE_EXCEPTION)
+endif(NOT LIBJ_USE_EXCEPTION)
 
 set(libj-deps
     cvtutf
@@ -218,6 +212,8 @@ if(LIBJ_BUILD_GTEST)
         gtest/gtest_string.cpp
         gtest/gtest_string_buffer.cpp
         gtest/gtest_typed_array_list.cpp
+        gtest/gtest_typed_linked_list.cpp
+        gtest/gtest_typed_value_holder.cpp
         gtest/gtest_value.cpp
         gtest/gtest_value_holder.cpp
     )
