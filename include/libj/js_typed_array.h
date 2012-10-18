@@ -17,17 +17,17 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
     }
 
     static Ptr create(JsArray::CPtr a) {
-        Ptr p(new JsTypedArray());
+        JsTypedArray* ary(new JsTypedArray());
         Iterator::Ptr itr = a->iterator();
         while (itr->hasNext()) {
             Value v = itr->next();
-            if (p->match(v)) {
-                p->list_->add(v);
+            if (ary->match(v)) {
+                ary->list_->add(v);
             } else {
                 return null();
             }
         }
-        return p;
+        return Ptr(ary);
     }
 
     String::CPtr toString() const {
@@ -54,11 +54,11 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         }
 
-        Ptr p(new JsTypedArray());
+        JsTypedArray* ary(new JsTypedArray());
         for (Size i = from; i < to; i++) {
-            p->list_->add(this->list_->get(i));
+            ary->list_->add(this->list_->get(i));
         }
-        return p;
+        return Ptr(ary);
     }
 
     Ptr subarray(Size from, Size to = NO_POS) const {
@@ -67,11 +67,11 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
             return Ptr(new JsTypedArray());
         }
 
-        Ptr p(new JsTypedArray());
+        JsTypedArray* ary(new JsTypedArray());
         for (Size i = from; i < to; i++) {
-            p->list_->add(this->list_->get(i));
+            ary->list_->add(this->list_->get(i));
         }
-        return p;
+        return Ptr(ary);
     }
 
     LIBJ_JS_PROPERTY_MIX(JsTypedArray);
