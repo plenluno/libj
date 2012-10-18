@@ -13,6 +13,7 @@ class JsArray : LIBJ_ARRAY_LIST(JsArray)
     static Ptr create();
     static Ptr create(ArrayList::CPtr);
 
+ public:
     template<typename T>
     typename Type<T>::Ptr getPtr(Size index) const {
         return toPtr<T>(get(index));

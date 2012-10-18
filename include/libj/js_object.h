@@ -11,6 +11,7 @@ class JsObject : LIBJ_MAP(JsObject)
  public:
     static Ptr create();
 
+ public:
     Boolean hasProperty(const Value& name) const {
         return containsKey(name);
     }
