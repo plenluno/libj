@@ -17,7 +17,7 @@ class Mutable
     typedef LIBJ_CPTR(Mutable) CPtr;
 
     static Ptr null() {
-        LIBJ_NULL_PTR_DEF(Mutable, nullp);
+        static LIBJ_NULL_PTR_DEF(Mutable, nullp);
         return nullp;
     }
 
@@ -56,6 +56,9 @@ class Mutable
 
 #define LIBJ_MUTABLE(T) public libj::Mutable { \
     LIBJ_MUTABLE_DEFS(T, libj::Mutable)
+
+#define LIBJ_MUTABLE_TEMPLATE(T) public libj::Mutable { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(T, libj::Mutable)
 
 }  // namespace libj
 
