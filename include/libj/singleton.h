@@ -15,7 +15,7 @@ class Singleton
     typedef LIBJ_CPTR(Singleton) CPtr;
 
     static Ptr null() {
-        LIBJ_NULL_PTR_DEF(Singleton, nullp);
+        static LIBJ_NULL_PTR_DEF(Singleton, nullp);
         return nullp;
     }
 };
@@ -28,7 +28,7 @@ class SingletonTmpl
     typedef LIBJ_CPTR_TYPE(T) CPtr;
 
     static Ptr null() {
-        LIBJ_NULL_PTR_TYPE_DEF(T, nullp);
+        static LIBJ_NULL_PTR_TYPE_DEF(T, nullp);
         return nullp;
     }
 

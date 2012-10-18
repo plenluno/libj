@@ -16,7 +16,7 @@ class Immutable
     typedef LIBJ_CPTR(Immutable) CPtr;
 
     static CPtr null() {
-        LIBJ_NULL_CPTR_DEF(Immutable, nullp);
+        static LIBJ_NULL_CPTR_DEF(Immutable, nullp);
         return nullp;
     }
 

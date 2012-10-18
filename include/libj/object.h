@@ -17,7 +17,7 @@ class Object
     typedef LIBJ_CPTR(Object) CPtr;
 
     static CPtr null() {
-        LIBJ_NULL_PTR_DEF(Object, nullp);
+        static LIBJ_NULL_PTR_DEF(Object, nullp);
         return nullp;
     }
 
