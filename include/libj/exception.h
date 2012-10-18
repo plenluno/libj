@@ -15,12 +15,35 @@ namespace libj {
 
 class Exception : public std::exception {
  public:
-    Exception(Int code);
-    Exception(String::CPtr message);
-    Exception(Int code, String::CPtr message);
-    Exception(Int code, const char* file, const char* func, int line);
+    Exception(Int code)
+        : code_(code)
+        , msg_(String::null())
+        , file_(String::null())
+        , func_(String::null())
+        , line_(0) {}
 
-    virtual ~Exception() throw();
+    Exception(String::CPtr message)
+        : code_(1)  // Error::ANY
+        , msg_(message)
+        , file_(String::null())
+        , func_(String::null())
+        , line_(0) {}
+
+    Exception(Int code, String::CPtr message)
+        : code_(code)
+        , msg_(message)
+        , file_(String::null())
+        , func_(String::null())
+        , line_(0) {}
+
+    Exception(Int code, const char* file, const char* func, int line)
+        : code_(code)
+        , msg_(String::null())
+        , file_(String::create(file))
+        , func_(String::create(func))
+        , line_(line) {}
+
+    virtual ~Exception() throw() {}
 
     Int code() const {
         return code_;
