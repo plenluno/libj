@@ -13,14 +13,15 @@ TEST(GTestTypedArrayList, TestCreate) {
 TEST(GTestTypedArrayList, TestCreate2) {
     ArrayList::Ptr a = ArrayList::create();
     a->add(5);
-    TypedArrayList<int>::Ptr ta =
-        TypedArrayList<int>::create(a);
+    TypedArrayList<Int>::Ptr ta =
+        TypedArrayList<Int>::create(a);
     ASSERT_TRUE(!!ta);
+
     a->add(7.7);
 #ifdef LIBJ_USE_EXCEPTION
-    ASSERT_ANY_THROW(TypedArrayList<int>::create(a));
+    ASSERT_ANY_THROW(TypedArrayList<Int>::create(a));
 #else
-    ta = TypedArrayList<int>::create(a);
+    ta = TypedArrayList<Int>::create(a);
     ASSERT_FALSE(!!ta);
 #endif  // LIBJ_USE_EXCEPTION
 }
