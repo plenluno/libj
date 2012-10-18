@@ -2,9 +2,8 @@
 
 #include <list>
 
-#include "libj/linked_list.h"
-#include "libj/error.h"
 #include "libj/exception.h"
+#include "libj/linked_list.h"
 #include "libj/string_buffer.h"
 
 namespace libj {

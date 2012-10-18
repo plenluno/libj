@@ -1,6 +1,5 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/error.h"
 #include "libj/exception.h"
 #include "libj/js_array.h"
 #include "libj/js_object.h"

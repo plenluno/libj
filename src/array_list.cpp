@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "libj/array_list.h"
-#include "libj/error.h"
+#include "libj/exception.h"
 
 namespace libj {
 

@@ -3,7 +3,8 @@
 #ifndef LIBJ_ERROR_H_
 #define LIBJ_ERROR_H_
 
-#include "libj/exception.h"
+#include <assert.h>
+
 #include "libj/status.h"
 
 namespace libj {
@@ -26,21 +27,19 @@ class Error : LIBJ_STATUS(Error)
         NULL_POINTER,
         UNSUPPORTED_VERSION,
         UNSUPPORTED_OPERATION,
-
-        END_OF_CODE
     };
 
-    static CPtr create(Int code);
-    static CPtr create(Int code, String::CPtr msg);
+    static CPtr create(Code code);
+    static CPtr create(Code code, String::CPtr msg);
 };
 
 #define LIBJ_ERROR(T) public libj::Error { \
     LIBJ_IMMUTABLE_DEFS(T, libj::Error)
 
-#ifdef LIBJ_USE_EXCEPTION
-    #define LIBJ_HANDLE_ERROR(code) \
-        LIBJ_THROW(code)
-#else
+#ifndef LIBJ_USE_EXCEPTION
+    #define LIBJ_THROW(code) \
+        assert(false);
+
     #define LIBJ_HANDLE_ERROR(code) \
         return libj::Error::create(code);
 #endif

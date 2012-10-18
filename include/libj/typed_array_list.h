@@ -4,7 +4,6 @@
 #define LIBJ_TYPED_ARRAY_LIST_H_
 
 #include "libj/array_list.h"
-#include "libj/error.h"
 #include "libj/exception.h"
 #include "libj/string.h"
 #include "libj/typed_iterator.h"

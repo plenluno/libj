@@ -3,7 +3,7 @@
 #ifndef LIBJ_EXCEPTION_H_
 #define LIBJ_EXCEPTION_H_
 
-#include <libj/config.h>
+#include <libj/error.h>
 
 #ifdef LIBJ_USE_EXCEPTION
 
@@ -15,30 +15,26 @@ namespace libj {
 
 class Exception : public std::exception {
  public:
-    Exception(Int code)
-        : code_(code)
-        , msg_(String::null())
+    Exception(Error::Code code)
+        : err_(Error::create(code))
         , file_(String::null())
         , func_(String::null())
         , line_(0) {}
 
     Exception(String::CPtr message)
-        : code_(1)  // Error::ANY
-        , msg_(message)
+        : err_(Error::create(Error::ANY))
         , file_(String::null())
         , func_(String::null())
         , line_(0) {}
 
-    Exception(Int code, String::CPtr message)
-        : code_(code)
-        , msg_(message)
+    Exception(Error::Code code, String::CPtr message)
+        : err_(Error::create(code, message))
         , file_(String::null())
         , func_(String::null())
         , line_(0) {}
 
-    Exception(Int code, const char* file, const char* func, int line)
-        : code_(code)
-        , msg_(String::null())
+    Exception(Error::Code code, const char* file, const char* func, int line)
+        : err_(Error::create(code))
         , file_(String::create(file))
         , func_(String::create(func))
         , line_(line) {}
@@ -46,11 +42,11 @@ class Exception : public std::exception {
     virtual ~Exception() throw() {}
 
     Int code() const {
-        return code_;
+        return err_ ? err_->code() : -1;
     }
 
     String::CPtr message() const {
-        return msg_;
+        return err_ ? err_->message() : String::null();
     }
 
     String::CPtr file() const {
@@ -65,16 +61,18 @@ class Exception : public std::exception {
         return line_;
     }
 
- private:
-    Int code_;
-    String::CPtr msg_;
+ protected:
+    Error::CPtr err_;
     String::CPtr file_;
     String::CPtr func_;
     Int line_;
 };
 
 #define LIBJ_THROW(code) \
-    throw libj::Exception(code, __FILE__, __func__, __LINE__)
+    throw libj::Exception(code, __FILE__, __func__, __LINE__);
+
+#define LIBJ_HANDLE_ERROR(code) \
+    LIBJ_THROW(code)
 
 }  // namespace libj
 

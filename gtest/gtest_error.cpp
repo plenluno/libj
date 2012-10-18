@@ -6,9 +6,7 @@
 namespace libj {
 
 TEST(GTestError, TestCreate) {
-    Error::CPtr e = Error::create(Status::OK);
-    ASSERT_FALSE(!!e);
-    e = Error::create(Error::ANY);
+    Error::CPtr e = Error::create(Error::ANY);
     ASSERT_TRUE(!!e);
 }
 

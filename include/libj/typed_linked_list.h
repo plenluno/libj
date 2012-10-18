@@ -4,7 +4,6 @@
 #define LIBJ_TYPED_LINKED_LIST_H_
 
 #include "libj/linked_list.h"
-#include "libj/error.h"
 #include "libj/exception.h"
 #include "libj/string.h"
 #include "libj/typed_iterator.h"
