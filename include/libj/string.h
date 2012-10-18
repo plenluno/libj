@@ -27,6 +27,9 @@ class String : LIBJ_IMMUTABLE(String)
     static CPtr create(const std::u32string& s32);
     static CPtr create(
         const void* data, Encoding enc = UTF8, Size len = NO_SIZE);
+    static CPtr intern(CPtr str);
+    static CPtr intern(
+        const void* data, Encoding enc = UTF8, Size len = NO_SIZE);
     static CPtr valueOf(const Value& val);
 
     virtual Size length() const = 0;

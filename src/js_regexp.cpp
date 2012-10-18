@@ -49,8 +49,8 @@ class JsRegExpImpl : public JsRegExp {
     }
 
     JsArray::Ptr exec(String::CPtr str) const {
-        static const String::CPtr index = String::create("index");
-        static const String::CPtr input = String::create("input");
+        static const String::CPtr strIndex = String::intern("index");
+        static const String::CPtr strInput = String::intern("input");
 
         if (!str) {
             return JsArray::null();
@@ -74,8 +74,8 @@ class JsRegExpImpl : public JsRegExp {
                 res->add(UNDEFINED);
             }
         }
-        res->setProperty(input, str);
-        res->setProperty(index, captures[0]);
+        res->setProperty(strInput, str);
+        res->setProperty(strIndex, captures[0]);
         return res;
     }
 

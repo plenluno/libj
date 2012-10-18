@@ -43,7 +43,8 @@ class JsObjectImpl : public JsObject {
     }
 
     String::CPtr toString() const {
-        const String::CPtr strObject = String::create("[object Object]");
+        static const String::CPtr strObject =
+            String::intern("[object Object]");
         return strObject;
     }
 

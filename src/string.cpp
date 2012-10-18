@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string>
 
+#include "libj/map.h"
 #include "libj/string.h"
 #include "./glue/cvtutf.h"
 
@@ -258,9 +259,8 @@ class StringImpl : public String {
 };
 
 String::CPtr String::create() {
-    static const String::CPtr empty =
-        StringImpl::create(NULL, UTF8, NO_POS);
-    return empty;
+    static const String::CPtr strEmpty = String::intern(NULL, UTF8, NO_POS);
+    return strEmpty;
 }
 
 String::CPtr String::create(Char c, Size n) {
@@ -279,14 +279,30 @@ String::CPtr String::create(const void* data, Encoding enc, Size max) {
     return StringImpl::create(data, enc, max);
 }
 
-static String::CPtr LIBJ_STR_TRUE = String::create("true");
-static String::CPtr LIBJ_STR_FALSE = String::create("false");
-static String::CPtr LIBJ_STR_UNDEFINED = String::create("undefined");
+String::CPtr String::intern(String::CPtr str) {
+    // TODO(plenluno): make it thread-safe
+    static const Map::Ptr symbols = Map::create();
+
+    String::CPtr sym = toCPtr<String>(symbols->get(str));
+    if (sym) {
+        return sym;
+    } else {
+        symbols->put(str, str);
+        return str;
+    }
+}
+
+String::CPtr String::intern(const void* data, Encoding enc, Size max) {
+    return String::intern(String::create(data, enc, max));
+}
 
 static String::CPtr booleanToString(const Value& val) {
+    static const String::CPtr strTrue = String::intern("true");
+    static const String::CPtr strFalse = String::intern("false");
+
     Boolean b;
     to<Boolean>(val, &b);
-    return b ? LIBJ_STR_TRUE : LIBJ_STR_FALSE;
+    return b ? strTrue : strFalse;
 }
 
 static String::CPtr byteToString(const Value& val) {
@@ -396,19 +412,21 @@ static String::CPtr typeIdToString(const Value& val) {
 }
 
 static String::CPtr objectToString(const Value& val) {
-    static const String::CPtr null = String::create("null");
+    static const String::CPtr strNull = String::intern("null");
 
     Object::CPtr o = toCPtr<Object>(val);
     if (o) {
         return o->toString();
     } else {
-        return null;
+        return strNull;
     }
 }
 
 String::CPtr String::valueOf(const Value& val) {
+    static const String::CPtr strUndefined = String::intern("undefined");
+
     if (val.isUndefined()) {
-        return LIBJ_STR_UNDEFINED;
+        return strUndefined;
     } else if (val.isPtr() || val.isCPtr()) {
         return objectToString(val);
     } else if (val.type() == Type<Boolean>::id()) {
