@@ -38,18 +38,12 @@ TEST(GTestJsFunction, TestFunctor) {
     JsArray::Ptr args = JsArray::create();
     args->add(3);
     args->add(4);
-    Value v = (*add)(args);
-    Int i;
-    ASSERT_TRUE(to<Int>(v, &i));
-    ASSERT_EQ(7, i);
+    ASSERT_TRUE((*add)(args).equals(7));
 }
 
 TEST(GTestJsFunction, TestCall) {
     GTestJsFunctionAdd::Ptr add = GTestJsFunctionAdd::create();
-    Value v = add->call(3, 5);
-    Int i;
-    ASSERT_TRUE(to<Int>(v, &i));
-    ASSERT_EQ(8, i);
+    ASSERT_TRUE(add->call(4, 5).equals(9));
 }
 
 TEST(GTestJsFunction, TestCompreTo) {
