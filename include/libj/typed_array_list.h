@@ -57,7 +57,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
     }
 
     Boolean removeTyped(const T& t) {
-        return list_->remove(t);
+        return list_->removeTyped(t);
     }
 
     void clear() {

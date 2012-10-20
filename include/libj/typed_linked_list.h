@@ -57,7 +57,7 @@ class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
     }
 
     Boolean removeTyped(const T& t) {
-        return list_->remove(t);
+        return list_->removeTyped(t);
     }
 
     void clear() {
