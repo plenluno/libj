@@ -3,8 +3,6 @@
 #ifndef LIBJ_TYPED_ITERATOR_H_
 #define LIBJ_TYPED_ITERATOR_H_
 
-#ifdef LIBJ_USE_EXCEPTION
-
 #include "libj/iterator.h"
 #include "libj/string.h"
 
@@ -17,7 +15,5 @@ class TypedIterator : LIBJ_ITERATOR_TEMPLATE(TypedIterator<T>)
 };
 
 }  // namespace libj
-
-#endif  // LIBJ_USE_EXCEPTION
 
 #endif  // LIBJ_TYPED_ITERATOR_H_
