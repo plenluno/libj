@@ -4,133 +4,169 @@
 #define LIBJ_TYPED_LINKED_LIST_H_
 
 #include "libj/linked_list.h"
-#include "libj/exception.h"
-#include "libj/string.h"
 #include "libj/typed_iterator.h"
+#include "libj/detail/generic_linked_list.h"
 
 namespace libj {
 
 template<typename T>
 class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
- protected:
-    Boolean match(const Value& v) {
-        TypeId id = Type<T>::id();
-        Boolean result = v.type() == id;
-#ifdef LIBJ_USE_EXCEPTION
-        if (!result)
-            LIBJ_THROW(Error::ILLEGAL_TYPE);
-#endif  // LIBJ_USE_EXCEPTION
-        return result;
-    }
-
  public:
     Boolean add(const Value& v) {
-        if (match(v)) {
-            return list_->add(v);
-        } else {
-            return false;
-        }
+        return list_->add(v);
+    }
+
+    Boolean addTyped(const T& t) {
+        return list_->addTyped(t);
     }
 
     Boolean add(Size i, const Value& v) {
-        if (match(v)) {
-            return list_->add(i, v);
-        } else {
-            return false;
-        }
+        return list_->add(i, v);
+    }
+
+    Boolean addTyped(Size i, const T& t) {
+        return list_->addTyped(i, t);
     }
 
     Boolean set(Size i, const Value& v) {
-        if (match(v)) {
-            return list_->set(i, v);
-        } else {
-            return false;
-        }
+        return list_->set(i, v);
     }
 
-    Value subList(Size from, Size to) const {
-        if (to > size() || from > to) {
-            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
-        }
-
-        TypedLinkedList* a = new TypedLinkedList();
-        for (Size i = from; i < to; i++) {
-            a->list_->add(get(i));
-        }
-        return Ptr(a);
-    }
-
-    void clear() {
-        return list_->clear();
+    Boolean setTyped(Size i, const T& t) {
+        return list_->set(i, t);
     }
 
     Value get(Size i) const {
         return list_->get(i);
     }
 
-    Iterator::Ptr iterator() const {
-        return list_->iterator();
+    T getTyped(Size i) const {
+        return list_->getTyped(i);
     }
 
     Value remove(Size i) {
         return list_->remove(i);
     }
 
+    T removeTyped(Size i) {
+        return list_->removeTyped(i);
+    }
+
     Boolean remove(const Value& v) {
         return list_->remove(v);
+    }
+
+    Boolean removeTyped(const T& t) {
+        return list_->remove(t);
+    }
+
+    void clear() {
+        return list_->clear();
     }
 
     Size size() const {
         return list_->size();
     }
 
-    String::CPtr toString() const {
-        return list_->toString();
-    }
-
-#ifdef LIBJ_USE_EXCEPTION
-    T getTyped(Size i) const {
-        if (i >= size()) {
-            LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
+    Value subList(Size from, Size to) const {
+        GenericLinkedList<T>* sl = list_->subList(from, to);
+        if (sl) {
+            return Ptr(new TypedLinkedList(sl));
         } else {
-            Value v = list_->get(i);
-            T t;
-            if (to<T>(v, &t)) {
-                return t;
-            } else {
-                LIBJ_THROW(Error::ILLEGAL_STATE);
-            }
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         }
     }
 
-    typename TypedIterator<T>::Ptr iteratorTyped() const {
-        return TypedIterator<T>::create(iterator());
-    }
-#endif  // LIBJ_USE_EXCEPTION
+ private:
+    class IteratorImpl : public Iterator {
+        friend class TypedLinkedList;
+
+     public:
+        Boolean hasNext() const {
+            return itr_.hasNext();
+        }
+
+        Value next() {
+            return itr_.next();
+        }
+
+        String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        typename GenericLinkedList<T>::Iterator itr_;
+
+        IteratorImpl(const GenericLinkedList<T>* list)
+            : itr_(list->iterator()) {}
+    };
+
+    class TypedIteratorImpl : public TypedIterator<T> {
+        friend class TypedLinkedList;
+
+     public:
+        Boolean hasNext() const {
+            return itr_.hasNext();
+        }
+
+        Value next() {
+            return itr_.next();
+        }
+
+        T nextTyped() {
+            return itr_.nextTyped();
+        }
+
+        String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        typename GenericLinkedList<T>::Iterator itr_;
+
+        TypedIteratorImpl(const GenericLinkedList<T>* list)
+            : itr_(list->iterator()) {}
+    };
 
  public:
+    Iterator::Ptr iterator() const {
+        return Iterator::Ptr(new IteratorImpl(list_));
+    }
+
+    typename TypedIterator<T>::Ptr iteratorTyped() const {
+        return typename TypedIterator<T>::Ptr(
+                    new TypedIteratorImpl(list_));
+    }
+
     static Ptr create() {
         return Ptr(new TypedLinkedList());
     }
 
-    static Ptr create(LinkedList::CPtr a) {
-        Ptr ta(new TypedLinkedList());
-        Iterator::Ptr itr = a->iterator();
+    static Ptr create(Collection::CPtr c) {
+        Ptr list(new TypedLinkedList());
+        Iterator::Ptr itr = c->iterator();
         while (itr->hasNext()) {
             Value v = itr->next();
-            if (ta->match(v)) {
-                ta->add(v);
+            T t;
+            if (GenericLinkedList<T>::convert(v, &t)) {
+                list->addTyped(t);
             } else {
                 return null();
             }
         }
-        return ta;
+        return list;
+    }
+
+    virtual ~TypedLinkedList() {
+        delete list_;
     }
 
  protected:
-    TypedLinkedList() : list_(LinkedList::create()) {}
+    GenericLinkedList<T>* list_;
 
-    LinkedList::Ptr list_;
+    TypedLinkedList() : list_(new GenericLinkedList<T>()) {}
+
+    TypedLinkedList(GenericLinkedList<T>* list) : list_(list) {}
 };
 
 }  // namespace libj

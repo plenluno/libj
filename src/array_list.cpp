@@ -1,111 +1,64 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include <vector>
-
 #include "libj/array_list.h"
-#include "libj/exception.h"
+#include "libj/detail/generic_array_list.h"
 
 namespace libj {
 
 class ArrayListImpl : public ArrayList {
  public:
-    static Ptr create() {
-        return Ptr(new ArrayListImpl());
-    }
-
-    Size size() const {
-        return vec_.size();
-    }
-
     Boolean add(const Value& v) {
-        vec_.push_back(v);
-        return true;
+        return list_->addTyped(v);
     }
 
     Boolean add(Size i, const Value& v) {
-        if (i > vec_.size()) {
-            return false;
-        } else {
-            vec_.insert(vec_.begin() + i, v);
-            return true;
-        }
+        return list_->addTyped(i, v);
     }
 
     Boolean set(Size i, const Value& v) {
-        if (i >= vec_.size()) {
-            return false;
-        } else {
-            vec_[i] = v;
-            return true;
-        }
+        return list_->setTyped(i, v);
     }
 
     Value get(Size i) const {
-        if (i >= vec_.size()) {
-            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
-        } else {
-            return vec_[i];
-        }
+        return list_->get(i);
     }
 
     Value remove(Size i) {
-        if (i >= vec_.size()) {
-            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
-        } else {
-            // destruct the shared object!
-            // return *vec_.erase(vec_.begin() + i);
-            Value v = vec_[i];
-            vec_.erase(vec_.begin() + i);
-            return v;
-        }
+        return list_->remove(i);
     }
 
     Boolean remove(const Value& v) {
-        Size n = size();
-        for (Size i = 0; i < n; i++) {
-            if (vec_[i].equals(v)) {
-                remove(i);
-                return true;
-            }
-        }
-        return false;
+        return list_->remove(v);
     }
 
     void clear() {
-        vec_.clear();
+        list_->clear();
+    }
+
+    Size size() const {
+        return list_->size();
     }
 
     Value subList(Size from, Size to) const {
-        if (to > size() || from > to) {
+        GenericArrayList<Value>* sl = list_->subList(from, to);
+        if (sl) {
+            return Ptr(new ArrayListImpl(sl));
+        } else {
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         }
-
-        ArrayList::Ptr a = ArrayList::create();
-        for (Size i = from; i < to; i++) {
-            a->add(vec_[i]);
-        }
-        return a;
     }
 
  private:
     class IteratorImpl : public Iterator {
         friend class ArrayListImpl;
 
-        IteratorImpl(const std::vector<Value>* v)
-            : vec_(v)
-            , itr_(v->begin()) {}
-
      public:
         Boolean hasNext() const {
-            return itr_ != vec_->end();
+            return itr_.hasNext();
         }
 
         Value next() {
-            if (itr_ == vec_->end()) {
-                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
-            } else {
-                return *itr_++;
-            }
+            return itr_.next();
         }
 
         String::CPtr toString() const {
@@ -113,19 +66,32 @@ class ArrayListImpl : public ArrayList {
         }
 
      private:
-        const std::vector<Value>* vec_;
-        std::vector<Value>::const_iterator itr_;
+        GenericArrayList<Value>::Iterator itr_;
+
+        IteratorImpl(const GenericArrayList<Value>* list)
+            : itr_(list->iterator()) {}
     };
 
  public:
     Iterator::Ptr iterator() const {
-        return Iterator::Ptr(new IteratorImpl(&vec_));
+        return Iterator::Ptr(new IteratorImpl(list_));
     }
 
  private:
-    std::vector<Value> vec_;
+    GenericArrayList<Value>* list_;
 
-    ArrayListImpl() {}
+    ArrayListImpl() : list_(new GenericArrayList<Value>()) {}
+
+    ArrayListImpl(GenericArrayList<Value>* list) : list_(list) {}
+
+ public:
+    static Ptr create() {
+        return Ptr(new ArrayListImpl());
+    }
+
+    virtual ~ArrayListImpl() {
+        delete list_;
+    }
 };
 
 ArrayList::Ptr ArrayList::create() {
