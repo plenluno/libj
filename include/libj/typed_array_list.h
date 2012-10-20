@@ -4,169 +4,169 @@
 #define LIBJ_TYPED_ARRAY_LIST_H_
 
 #include "libj/array_list.h"
-#include "libj/exception.h"
-#include "libj/string.h"
 #include "libj/typed_iterator.h"
+#include "libj/detail/generic_array_list.h"
 
 namespace libj {
 
 template<typename T>
 class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
- protected:
-    Boolean match(const Value& v) {
-        TypeId id = Type<T>::id();
-        Boolean result = v.type() == id;
-#ifdef LIBJ_USE_EXCEPTION
-        if (!result)
-            LIBJ_THROW(Error::ILLEGAL_TYPE);
-#endif  // LIBJ_USE_EXCEPTION
-        return result;
-    }
-
  public:
     Boolean add(const Value& v) {
-        if (match(v)) {
-            return list_->add(v);
-        } else {
-            return false;
-        }
+        return list_->add(v);
+    }
+
+    Boolean addTyped(const T& t) {
+        return list_->addTyped(t);
     }
 
     Boolean add(Size i, const Value& v) {
-        if (match(v)) {
-            return list_->add(i, v);
-        } else {
-            return false;
-        }
+        return list_->add(i, v);
+    }
+
+    Boolean addTyped(Size i, const T& t) {
+        return list_->addTyped(i, t);
     }
 
     Boolean set(Size i, const Value& v) {
-        if (match(v)) {
-            return list_->set(i, v);
-        } else {
-            return false;
-        }
+        return list_->set(i, v);
     }
 
-    Value subList(Size from, Size to) const {
-        if (to > size() || from > to) {
-            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
-        }
-
-        TypedArrayList* a = new TypedArrayList();
-        for (Size i = from; i < to; i++) {
-            a->list_->add(get(i));
-        }
-        return Ptr(a);
-    }
-
-    void clear() {
-        return list_->clear();
+    Boolean setTyped(Size i, const T& t) {
+        return list_->set(i, t);
     }
 
     Value get(Size i) const {
         return list_->get(i);
     }
 
-    Iterator::Ptr iterator() const {
-        return list_->iterator();
+    T getTyped(Size i) const {
+        return list_->getTyped(i);
     }
 
     Value remove(Size i) {
         return list_->remove(i);
     }
 
+    T removeTyped(Size i) {
+        return list_->removeTyped(i);
+    }
+
     Boolean remove(const Value& v) {
         return list_->remove(v);
+    }
+
+    Boolean removeTyped(const T& t) {
+        return list_->remove(t);
+    }
+
+    void clear() {
+        return list_->clear();
     }
 
     Size size() const {
         return list_->size();
     }
 
-    String::CPtr toString() const {
-        return list_->toString();
-    }
-
-#ifdef LIBJ_USE_EXCEPTION
-    T getTyped(Size i) const {
-        if (i >= size()) {
-            LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
+    Value subList(Size from, Size to) const {
+        GenericArrayList<T>* sl = list_->subList(from, to);
+        if (sl) {
+            return Ptr(new TypedArrayList(sl));
         } else {
-            Value v = list_->get(i);
-            T t;
-            if (to<T>(v, &t)) {
-                return t;
-            } else {
-                LIBJ_THROW(Error::ILLEGAL_STATE);
-            }
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         }
     }
 
-    class TypedIteratorImpl : public TypedIterator<T> {
+ private:
+    class IteratorImpl : public Iterator {
+        friend class TypedArrayList;
+
      public:
-        typedef typename TypedIterator<T>::Ptr Ptr;
-
-        static Ptr create(Iterator::Ptr i) {
-            return Ptr(new TypedIteratorImpl(i));
-        }
-
         Boolean hasNext() const {
-            return itr_->hasNext();
+            return itr_.hasNext();
         }
 
         Value next() {
-            return itr_->next();
-        }
-
-        T nextTyped() {
-            Value v = next();
-            T t;
-            if (to<T>(v, &t)) {
-                return t;
-            } else {
-                LIBJ_THROW(Error::ILLEGAL_TYPE);
-            }
+            return itr_.next();
         }
 
         String::CPtr toString() const {
-            return itr_->toString();
+            return String::create();
         }
 
      private:
-        Iterator::Ptr itr_;
+        typename GenericArrayList<T>::Iterator itr_;
 
-        TypedIteratorImpl(Iterator::Ptr i) : itr_(i) {}
+        IteratorImpl(const GenericArrayList<T>* list)
+            : itr_(list->iterator()) {}
     };
 
-    typename TypedIterator<T>::Ptr iteratorTyped() const {
-        return TypedIteratorImpl::create(iterator());
-    }
-#endif  // LIBJ_USE_EXCEPTION
+    class TypedIteratorImpl : public TypedIterator<T> {
+        friend class TypedArrayList;
+
+     public:
+        Boolean hasNext() const {
+            return itr_.hasNext();
+        }
+
+        Value next() {
+            return itr_.next();
+        }
+
+        T nextTyped() {
+            return itr_.nextTyped();
+        }
+
+        String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        typename GenericArrayList<T>::Iterator itr_;
+
+        TypedIteratorImpl(const GenericArrayList<T>* list)
+            : itr_(list->iterator()) {}
+    };
 
  public:
+    Iterator::Ptr iterator() const {
+        return Iterator::Ptr(new IteratorImpl(list_));
+    }
+
+    typename TypedIterator<T>::Ptr iteratorTyped() const {
+        return typename TypedIterator<T>::Ptr(
+                    new TypedIteratorImpl(list_));
+    }
+
     static Ptr create() {
         return Ptr(new TypedArrayList());
     }
 
-    static Ptr create(ArrayList::CPtr a) {
-        Ptr ta(new TypedArrayList());
-        Iterator::Ptr itr = a->iterator();
+    static Ptr create(Collection::CPtr c) {
+        Ptr list(new TypedArrayList());
+        Iterator::Ptr itr = c->iterator();
         while (itr->hasNext()) {
             Value v = itr->next();
-            if (ta->match(v)) {
-                ta->add(v);
+            T t;
+            if (GenericArrayList<T>::convert(v, &t)) {
+                list->addTyped(t);
             } else {
                 return null();
             }
         }
-        return ta;
+        return list;
+    }
+
+    virtual ~TypedArrayList() {
+        delete list_;
     }
 
  protected:
-    TypedArrayList() : list_(ArrayList::create()) {}
+    GenericArrayList<T>* list_;
 
-    ArrayList::Ptr list_;
+    TypedArrayList() : list_(new GenericArrayList<T>()) {}
+
+    TypedArrayList(GenericArrayList<T>* list) : list_(list) {}
 };
 
 #define LIBJ_TYPED_ARRAY_LIST_TEMPLATE(D, T) public libj::TypedArrayList<T> { \
