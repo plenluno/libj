@@ -13,36 +13,7 @@ namespace libj {
 template<typename T>
 class TypedIterator : LIBJ_ITERATOR_TEMPLATE(TypedIterator<T>)
  public:
-    static Ptr create(Iterator::Ptr i) {
-        return Ptr(new TypedIterator(i));
-    }
-
-    Boolean hasNext() const {
-        return itr_->hasNext();
-    }
-
-    Value next() {
-        return itr_->next();
-    }
-
-    T nextTyped() {
-        Value v = next();
-        T t;
-        if (to<T>(v, &t)) {
-            return t;
-        } else {
-            LIBJ_THROW(Error::ILLEGAL_TYPE);
-        }
-    }
-
-    String::CPtr toString() const {
-        return itr_->toString();
-    }
-
- private:
-    Iterator::Ptr itr_;
-
-    TypedIterator(Iterator::Ptr i) : itr_(i) {}
+    virtual T nextTyped() = 0;
 };
 
 }  // namespace libj

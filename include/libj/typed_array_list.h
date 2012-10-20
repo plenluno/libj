@@ -103,8 +103,44 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
         }
     }
 
+    class TypedIteratorImpl : public TypedIterator<T> {
+     public:
+        typedef typename TypedIterator<T>::Ptr Ptr;
+
+        static Ptr create(Iterator::Ptr i) {
+            return Ptr(new TypedIteratorImpl(i));
+        }
+
+        Boolean hasNext() const {
+            return itr_->hasNext();
+        }
+
+        Value next() {
+            return itr_->next();
+        }
+
+        T nextTyped() {
+            Value v = next();
+            T t;
+            if (to<T>(v, &t)) {
+                return t;
+            } else {
+                LIBJ_THROW(Error::ILLEGAL_TYPE);
+            }
+        }
+
+        String::CPtr toString() const {
+            return itr_->toString();
+        }
+
+     private:
+        Iterator::Ptr itr_;
+
+        TypedIteratorImpl(Iterator::Ptr i) : itr_(i) {}
+    };
+
     typename TypedIterator<T>::Ptr iteratorTyped() const {
-        return TypedIterator<T>::create(iterator());
+        return TypedIteratorImpl::create(iterator());
     }
 #endif  // LIBJ_USE_EXCEPTION
 
