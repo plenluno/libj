@@ -40,21 +40,21 @@ TEST(GTestTypedArrayList, TestAdd) {
 }
 
 TEST(GTestTypedArrayList, TestSubList) {
-    TypedArrayList<int>::Ptr a = TypedArrayList<int>::create();
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
     a->add(3);
     a->add(5);
     a->add(7);
 
-    TypedArrayList<int>::Ptr sub1 =
-        toPtr<TypedArrayList<int> >(a->subList(1, 2));
+    TypedArrayList<Int>::Ptr sub1 =
+        toPtr<TypedArrayList<Int> >(a->subList(1, 2));
     ASSERT_TRUE(sub1->toString()->equals(String::create("[5]")));
 
-    TypedArrayList<int>::Ptr sub2 =
-        toPtr<TypedArrayList<int> >(a->subList(0, 3));
+    TypedArrayList<Int>::Ptr sub2 =
+        toPtr<TypedArrayList<Int> >(a->subList(0, 3));
     ASSERT_TRUE(sub2->toString()->equals(String::create("[3, 5, 7]")));
 
-    TypedArrayList<int>::Ptr sub3 =
-        toPtr<TypedArrayList<int> >(a->subList(2, 2));
+    TypedArrayList<Int>::Ptr sub3 =
+        toPtr<TypedArrayList<Int> >(a->subList(2, 2));
     ASSERT_TRUE(sub3->toString()->equals(String::create("[]")));
 
 #ifdef LIBJ_USE_EXCEPTION
@@ -70,26 +70,51 @@ TEST(GTestTypedArrayList, TestSubList) {
 #endif  // LIBJ_USE_EXCEPTION
 }
 
-#ifdef LIBJ_USE_EXCEPTION
 TEST(GTestTypedArrayList, TestGetTyped) {
-    TypedArrayList<int>::Ptr a = TypedArrayList<int>::create();
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+#ifdef LIBJ_USE_EXCEPTION
     ASSERT_ANY_THROW(a->getTyped(1));
+#endif
+
     a->add(5);
     a->add(7);
     ASSERT_EQ(7, a->getTyped(1));
 }
 
+TEST(GTestTypedArrayList, TestAddTyped) {
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+    a->addTyped(9);
+    a->addTyped(0, 11);
+    ASSERT_EQ(9, a->getTyped(1));
+}
+
+TEST(GTestTypedArrayList, TestSetTyped) {
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+    a->addTyped(9);
+    a->setTyped(0, 11);
+    ASSERT_EQ(11, a->getTyped(0));
+}
+
+TEST(GTestTypedArrayList, TestRemoveTyped) {
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+    a->addTyped(9);
+    ASSERT_EQ(9, a->removeTyped(static_cast<Size>(0)));
+
+    a->addTyped(11);
+    ASSERT_FALSE(a->removeTyped(9));
+    ASSERT_TRUE(a->removeTyped(11));
+}
+
 TEST(GTestTypedArrayList, TestIteratorTyped) {
-    TypedArrayList<int>::Ptr a = TypedArrayList<int>::create();
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
     a->add(5);
     a->add(7);
-    TypedIterator<int>::Ptr i = a->iteratorTyped();
+    TypedIterator<Int>::Ptr i = a->iteratorTyped();
     ASSERT_TRUE(i->hasNext());
     ASSERT_EQ(5, i->nextTyped());
     ASSERT_TRUE(i->hasNext());
     ASSERT_EQ(7, i->nextTyped());
     ASSERT_FALSE(i->hasNext());
 }
-#endif  // LIBJ_USE_EXCEPTION
 
 }  // namespace libj

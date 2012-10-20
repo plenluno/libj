@@ -70,13 +70,40 @@ TEST(GTestTypedLinkedList, TestSubList) {
 #endif  // LIBJ_USE_EXCEPTION
 }
 
-#ifdef LIBJ_USE_EXCEPTION
+
 TEST(GTestTypedLinkedList, TestGetTyped) {
     TypedLinkedList<int>::Ptr l = TypedLinkedList<int>::create();
+#ifdef LIBJ_USE_EXCEPTION
     ASSERT_ANY_THROW(l->getTyped(1));
+#endif  // LIBJ_USE_EXCEPTION
+
     l->add(5);
     l->add(7);
     ASSERT_EQ(7, l->getTyped(1));
+}
+
+TEST(GTestTypedLinkedList, TestAddTyped) {
+    TypedLinkedList<Int>::Ptr a = TypedLinkedList<Int>::create();
+    a->addTyped(9);
+    a->addTyped(0, 11);
+    ASSERT_EQ(9, a->getTyped(1));
+}
+
+TEST(GTestTypedLinkedList, TestSetTyped) {
+    TypedLinkedList<Int>::Ptr a = TypedLinkedList<Int>::create();
+    a->addTyped(9);
+    a->setTyped(0, 11);
+    ASSERT_EQ(11, a->getTyped(0));
+}
+
+TEST(GTestTypedLinkedList, TestRemoveTyped) {
+    TypedLinkedList<Int>::Ptr a = TypedLinkedList<Int>::create();
+    a->addTyped(9);
+    ASSERT_EQ(9, a->removeTyped(static_cast<Size>(0)));
+
+    a->addTyped(11);
+    ASSERT_FALSE(a->removeTyped(9));
+    ASSERT_TRUE(a->removeTyped(11));
 }
 
 TEST(GTestTypedLinkedList, TestIteratorTyped) {
@@ -90,6 +117,5 @@ TEST(GTestTypedLinkedList, TestIteratorTyped) {
     ASSERT_EQ(7, i->nextTyped());
     ASSERT_FALSE(i->hasNext());
 }
-#endif  // LIBJ_USE_EXCEPTION
 
 }  // namespace libj
