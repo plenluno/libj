@@ -16,22 +16,23 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
         return Ptr(new JsTypedArray());
     }
 
-    static Ptr create(JsArray::CPtr a) {
-        JsTypedArray* ary(new JsTypedArray());
-        Iterator::Ptr itr = a->iterator();
+    static Ptr create(Collection::CPtr c) {
+        Ptr ary(new JsTypedArray());
+        Iterator::Ptr itr = c->iterator();
         while (itr->hasNext()) {
             Value v = itr->next();
-            if (ary->match(v)) {
-                ary->list_->add(v);
+            T t;
+            if (GenericArrayList<T>::convert(v, &t)) {
+                ary->addTyped(t);
             } else {
                 return null();
             }
         }
-        return Ptr(ary);
+        return ary;
     }
 
     String::CPtr toString() const {
-        static String::CPtr comma = String::create(",");
+        static const String::CPtr strComma = String::intern(",");
 
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = this->iterator();
@@ -41,7 +42,7 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
             if (first) {
                 first = false;
             } else {
-                sb->append(comma);
+                sb->append(strComma);
             }
             if (!v.isNull() && !v.isUndefined())
                 sb->append(String::valueOf(v));
@@ -50,26 +51,26 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
     }
 
     Value subList(Size from, Size to) const {
-        if (to > this->list_->size() || from > to) {
+        if (to > this->size() || from > to) {
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         }
 
         JsTypedArray* ary(new JsTypedArray());
         for (Size i = from; i < to; i++) {
-            ary->list_->add(this->list_->get(i));
+            ary->addTyped(this->getTyped(i));
         }
         return Ptr(ary);
     }
 
     Ptr subarray(Size from, Size to = NO_POS) const {
-        to = to > this->list_->size() ? this->list_->size() : to;
+        to = to > this->size() ? this->size() : to;
         if (from >= to) {
             return Ptr(new JsTypedArray());
         }
 
         JsTypedArray* ary(new JsTypedArray());
         for (Size i = from; i < to; i++) {
-            ary->list_->add(this->list_->get(i));
+            ary->addTyped(this->getTyped(i));
         }
         return Ptr(ary);
     }
