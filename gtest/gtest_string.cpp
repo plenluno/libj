@@ -280,6 +280,45 @@ TEST(GTestString, TestCompareTo) {
     ASSERT_EQ(2, c->compareTo(abcde));
 }
 
+TEST(GTestString, TestEquals) {
+    String::CPtr abc = String::create("abc");
+    String::CPtr internedAbc = String::intern(abc);
+    String::CPtr internedAbc2 = String::intern("abc");
+    ASSERT_NE(abc, internedAbc);
+    ASSERT_EQ(internedAbc, internedAbc2);
+    ASSERT_TRUE(abc->equals(internedAbc));
+    ASSERT_TRUE(internedAbc->equals(abc));
+
+    String::CPtr ab = String::create("ab");
+    String::CPtr abcd = String::create("abcd");
+    ASSERT_FALSE(abc->equals(ab));
+    ASSERT_FALSE(abc->equals(abcd));
+    ASSERT_FALSE(internedAbc->equals(ab));
+    ASSERT_FALSE(internedAbc->equals(abcd));
+}
+
+TEST(GTestString, TestIsEmpty) {
+    String::CPtr empty = String::create();
+    ASSERT_TRUE(empty->isEmpty());
+
+    String::CPtr abc = String::create("abc");
+    ASSERT_FALSE(abc->isEmpty());
+}
+
+TEST(GTestString, TestIsInterned) {
+    String::CPtr empty = String::create();
+    ASSERT_TRUE(empty->isInterned());
+
+    String::CPtr abc = String::create("abc");
+    ASSERT_FALSE(abc->isInterned());
+
+    String::CPtr internedAbc = String::intern(abc);
+    ASSERT_TRUE(internedAbc->isInterned());
+
+    String::CPtr interned123 = String::intern("123");
+    ASSERT_TRUE(interned123->isInterned());
+}
+
 TEST(GTestString, TestStartsWith) {
     String::CPtr s = String::create("abcde");
     String::CPtr s1 = String::create("abc");

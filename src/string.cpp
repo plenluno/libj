@@ -80,6 +80,32 @@ class StringImpl : public String {
         return len1 - len2;
     }
 
+    Boolean equals(Object::CPtr that) const {
+        Int result = Object::compareTo(that);
+        if (result != TYPE_CMP_SAME &&
+            result != -TYPE_CMP_SAME) {
+            return !result;
+        }
+
+        String::CPtr other = LIBJ_STATIC_CPTR_CAST(String)(that);
+        if (this->isInterned() && other->isInterned()) {
+            return false;
+        } else {
+            Size len = this->length();
+            if (other->length() != len) {
+                return false;
+            } else {
+                for (Size i = 0; i < len; i++) {
+                    Char c1 = this->charAt(i);
+                    Char c2 = other->charAt(i);
+                    if (c1 != c2)
+                        return false;
+                }
+                return true;
+            }
+        }
+    }
+
     Boolean startsWith(CPtr other, Size from) const {
         Size len1 = this->length();
         Size len2 = other->length();
@@ -159,6 +185,10 @@ class StringImpl : public String {
         return length() == 0;
     }
 
+    Boolean isInterned() const {
+        return interned_;
+    }
+
     CPtr toLowerCase() const {
         Size len = length();
         StringImpl* s = new StringImpl();
@@ -216,7 +246,35 @@ class StringImpl : public String {
     }
 
     static CPtr create(const void* data, Encoding enc, Size max) {
-        return CPtr(new StringImpl(data, enc, max));
+        return CPtr(new StringImpl(data, enc, max, false));
+    }
+
+    static CPtr intern(const void* data, Encoding enc, Size max) {
+        return intern(CPtr(new StringImpl(data, enc, max, true)));
+    }
+
+    static CPtr intern(CPtr str) {
+        // TODO(plenluno): make it thread-safe
+        static const Map::Ptr symbols = Map::create();
+
+        if (!str) return str;
+
+        String::CPtr sym = toCPtr<String>(symbols->get(str));
+        if (sym) {
+            return sym;
+        } else if (str->isInterned()) {
+            symbols->put(str, str);
+            return str;
+        } else {
+            StringImpl* s = new StringImpl();
+            s->interned_ = true;
+            Size len = str->length();
+            for (Size i = 0; i < len; i++)
+                s->str_.push_back(str->charAt(i));
+            CPtr sp(s);
+            symbols->put(sp, sp);
+            return sp;
+        }
     }
 
  private:
@@ -239,28 +297,44 @@ class StringImpl : public String {
 
  private:
     std::u32string str_;
+    Boolean interned_;
 
-    StringImpl() : str_() {}
+    StringImpl()
+        : str_()
+        , interned_(false) {}
 
-    StringImpl(Char c, Size n) : str_(n, c) {}
+    StringImpl(Char c, Size n)
+        : str_(n, c)
+        , interned_(false) {}
 
     StringImpl(const std::u16string& s16)
-        : str_(glue::utf16ToUtf32(s16)) {}
+        : str_(glue::utf16ToUtf32(s16))
+        , interned_(false) {}
 
-    StringImpl(const std::u32string& s32) : str_(s32) {}
+    StringImpl(const std::u32string& s32)
+        : str_(s32)
+        , interned_(false) {}
 
-    StringImpl(const void* data, Encoding enc, Size max)
-        : str_(glue::toUtf32(data, convertEncoding(enc), max)) {}
-
-    StringImpl(const StringImpl& other) : str_(other.str_) {}
+    StringImpl(const StringImpl& other)
+        : str_(other.str_)
+        , interned_(false) {}
 
     StringImpl(const StringImpl& other, Size pos, Size count = NO_POS)
-        : str_(other.str_, pos, count) {}
+        : str_(other.str_, pos, count)
+        , interned_(false) {}
+
+    StringImpl(
+        const void* data,
+        Encoding enc,
+        Size max,
+        Boolean interned)
+        : str_(glue::toUtf32(data, convertEncoding(enc), max))
+        , interned_(interned) {}
 };
 
 String::CPtr String::create() {
-    static const String::CPtr strEmpty = String::intern(NULL, UTF8, NO_POS);
-    return strEmpty;
+    static const String::CPtr empty = String::intern(StringImpl::create());
+    return empty;
 }
 
 String::CPtr String::create(Char c, Size n) {
@@ -280,20 +354,15 @@ String::CPtr String::create(const void* data, Encoding enc, Size max) {
 }
 
 String::CPtr String::intern(String::CPtr str) {
-    // TODO(plenluno): make it thread-safe
-    static const Map::Ptr symbols = Map::create();
-
-    String::CPtr sym = toCPtr<String>(symbols->get(str));
-    if (sym) {
-        return sym;
-    } else {
-        symbols->put(str, str);
+    if (str->isInterned()) {
         return str;
+    } else {
+        return StringImpl::intern(str);
     }
 }
 
 String::CPtr String::intern(const void* data, Encoding enc, Size max) {
-    return String::intern(String::create(data, enc, max));
+    return StringImpl::intern(data, enc, max);
 }
 
 static String::CPtr booleanToString(const Value& val) {
@@ -413,6 +482,9 @@ static String::CPtr typeIdToString(const Value& val) {
 
 static String::CPtr objectToString(const Value& val) {
     static const String::CPtr strNull = String::intern("null");
+
+    String::CPtr s = toCPtr<String>(val);
+    if (s) return s;
 
     Object::CPtr o = toCPtr<Object>(val);
     if (o) {

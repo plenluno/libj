@@ -42,6 +42,7 @@ class String : LIBJ_IMMUTABLE(String)
     virtual Size lastIndexOf(Char c, Size from = NO_POS) const = 0;
     virtual Size lastIndexOf(CPtr str, Size from = NO_POS) const = 0;
     virtual Boolean isEmpty() const = 0;
+    virtual Boolean isInterned() const = 0;
     virtual Boolean startsWith(CPtr str, Size from = 0) const = 0;
     virtual Boolean endsWith(CPtr str) const = 0;
     virtual CPtr toLowerCase() const = 0;
