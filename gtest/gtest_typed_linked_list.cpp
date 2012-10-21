@@ -112,9 +112,9 @@ TEST(GTestTypedLinkedList, TestIteratorTyped) {
     l->add(7);
     TypedIterator<int>::Ptr i = l->iteratorTyped();
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(5, i->nextTyped());
+    ASSERT_EQ(5, i->next());
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(7, i->nextTyped());
+    ASSERT_EQ(7, i->next());
     ASSERT_FALSE(i->hasNext());
 }
 

@@ -3,15 +3,15 @@
 #ifndef LIBJ_TYPED_ITERATOR_H_
 #define LIBJ_TYPED_ITERATOR_H_
 
-#include "libj/iterator.h"
-#include "libj/string.h"
+#include "libj/mutable.h"
 
 namespace libj {
 
 template<typename T>
-class TypedIterator : LIBJ_ITERATOR_TEMPLATE(TypedIterator<T>)
+class TypedIterator : LIBJ_MUTABLE_TEMPLATE(TypedIterator<T>)
  public:
-    virtual T nextTyped() = 0;
+    virtual Boolean hasNext() const = 0;
+    virtual T next() = 0;
 };
 
 }  // namespace libj

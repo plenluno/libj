@@ -109,11 +109,7 @@ class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
             return itr_.hasNext();
         }
 
-        Value next() {
-            return itr_.next();
-        }
-
-        T nextTyped() {
+        T next() {
             return itr_.nextTyped();
         }
 

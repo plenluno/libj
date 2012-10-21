@@ -109,11 +109,7 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
             return itr_.hasNext();
         }
 
-        Value next() {
-            return itr_.next();
-        }
-
-        T nextTyped() {
+        T next() {
             return itr_.nextTyped();
         }
 

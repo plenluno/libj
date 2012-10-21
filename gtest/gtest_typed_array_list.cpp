@@ -111,9 +111,9 @@ TEST(GTestTypedArrayList, TestIteratorTyped) {
     a->add(7);
     TypedIterator<Int>::Ptr i = a->iteratorTyped();
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(5, i->nextTyped());
+    ASSERT_EQ(5, i->next());
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(7, i->nextTyped());
+    ASSERT_EQ(7, i->next());
     ASSERT_FALSE(i->hasNext());
 }
 
