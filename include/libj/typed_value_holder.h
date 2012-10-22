@@ -4,6 +4,7 @@
 #define LIBJ_TYPED_VALUE_HOLDER_H_
 
 #include "libj/mutable.h"
+#include "libj/string.h"
 
 namespace libj {
 
