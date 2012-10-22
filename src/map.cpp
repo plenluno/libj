@@ -77,13 +77,8 @@ class MapImpl : public Map {
     }
 
     String::CPtr toString() const {
-        static const String::CPtr strEq = String::intern("=");
-        static const String::CPtr strComma = String::intern(", ");
-        static const String::CPtr strLBrace = String::intern("{");
-        static const String::CPtr strRBrace = String::intern("}");
-
         StringBuffer::Ptr sb = StringBuffer::create();
-        sb->append(strLBrace);
+        sb->appendChar('{');
         Boolean first = true;
         Set::CPtr keys = keySet();
         Iterator::Ptr itr = keys->iterator();
@@ -92,13 +87,13 @@ class MapImpl : public Map {
             if (first) {
                 first = false;
             } else {
-                sb->append(strComma);
+                sb->appendCStr(", ");
             }
             sb->append(String::valueOf(v));
-            sb->append(strEq);
+            sb->appendChar('=');
             sb->append(String::valueOf(get(v)));
         }
-        sb->append(strRBrace);
+        sb->appendChar('}');
         return sb->toString();
     }
 

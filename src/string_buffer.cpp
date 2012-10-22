@@ -34,6 +34,29 @@ class StringBufferImpl : public StringBuffer {
         }
     }
 
+    Boolean appendChar(Char c) {
+        buf_.push_back(c);
+        return true;
+    }
+
+    Boolean appendCStr(const char* cstr) {
+        if (!cstr) return false;
+
+        while (Char c = *cstr++) {
+            appendChar(c);
+        }
+        return true;
+    }
+
+    Boolean setCharAt(Size index, Char c) {
+        if (index >= length()) {
+            return false;
+        } else {
+            buf_[index] = c;
+            return true;
+        }
+    }
+
     String::CPtr toString() const {
         return String::create(buf_);
     }

@@ -90,12 +90,8 @@ class Collection : LIBJ_MUTABLE(Collection)
     }
 
     String::CPtr toString() const {
-        static const String::CPtr strComma = String::intern(", ");
-        static const String::CPtr strLBracket = String::intern("[");
-        static const String::CPtr strRBracket = String::intern("]");
-
         StringBuffer::Ptr sb = StringBuffer::create();
-        sb->append(strLBracket);
+        sb->appendChar('[');
         Boolean first = true;
         Iterator::Ptr itr = iterator();
         while (itr->hasNext()) {
@@ -103,11 +99,11 @@ class Collection : LIBJ_MUTABLE(Collection)
             if (first) {
                 first = false;
             } else {
-                sb->append(strComma);
+                sb->appendCStr(", ");
             }
             sb->append(String::valueOf(v));
         }
-        sb->append(strRBracket);
+        sb->appendChar(']');
         return sb->toString();
     }
 };

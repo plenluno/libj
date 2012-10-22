@@ -33,8 +33,6 @@ class JsArrayImpl : public JsArray {
     }
 
     String::CPtr toString() const {
-        static const String::CPtr strComma = String::intern(",");
-
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = iterator();
         Boolean first = true;
@@ -43,7 +41,7 @@ class JsArrayImpl : public JsArray {
             if (first) {
                 first = false;
             } else {
-                sb->append(strComma);
+                sb->appendChar(',');
             }
             if (!v.isNull() && !v.isUndefined())
                 sb->append(String::valueOf(v));

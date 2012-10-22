@@ -61,55 +61,39 @@ Value parse(String::CPtr str) {
         return Error::create(Error::ILLEGAL_ARGUMENT);
 }
 
-static const String::CPtr strNull = String::intern("null");
-static const String::CPtr strColon = String::intern(":");
-static const String::CPtr strComma = String::intern(",");
-static const String::CPtr strDQuote = String::intern("\"");
-static const String::CPtr strLBrace = String::intern("{");
-static const String::CPtr strRBrace = String::intern("}");
-static const String::CPtr strLBracket = String::intern("[");
-static const String::CPtr strRBracket = String::intern("]");
-static const String::CPtr strLF = String::intern("\\n");
-static const String::CPtr strCR = String::intern("\\r");
-static const String::CPtr strTab = String::intern("\\t");
-static const String::CPtr strBSlash = String::intern("\\");
-static const String::CPtr strBSpace = String::intern("\\b");
-
 static String::CPtr stringToJson(const Value& val) {
     String::CPtr s = toCPtr<String>(val);
     StringBuffer::Ptr result = StringBuffer::create();
-    result->append(strDQuote);
+    result->appendChar('"');
     for (Size i = 0; i < s->length(); i++) {
         Char c = s->charAt(i);
         switch (c) {
         case '\b':
-            result->append(strBSpace);
+            result->appendCStr("\\b");
             break;
         case '\t':
-            result->append(strTab);
+            result->appendCStr("\\t");
             break;
         case '\n':
-            result->append(strLF);
+            result->appendCStr("\\n");
             break;
         case '\r':
-            result->append(strCR);
+            result->appendCStr("\\r");
             break;
         case '"':
-            result->append(strBSlash);
-            result->append(strDQuote);
+            result->appendCStr("\\\"");
             break;
         case '\\':
-            result->append(strBSlash);
-            result->append(strBSlash);
+            result->appendCStr("\\\\");
             break;
         case '\0':
         case '\v':
             return String::null();
         default:
-            result->append(String::create(c));
+            result->appendChar(c);
         }
     }
-    result->append(strDQuote);
+    result->appendChar('"');
     return result->toString();
 }
 
@@ -118,20 +102,20 @@ static String::CPtr mapToJson(const Value& val) {
     Set::CPtr ks = m->keySet();
     Iterator::Ptr itr = ks->iterator();
     StringBuffer::Ptr result = StringBuffer::create();
-    result->append(strLBrace);
+    result->appendChar('{');
     while (itr->hasNext()) {
         Value k = itr->next();
         Value v = m->get(k);
         if (k.instanceof(Type<String>::id()) &&
             !v.isUndefined()) {
             if (result->length() > 1)
-                result->append(strComma);
+                result->appendChar(',');
             result->append(stringToJson(k));
-            result->append(strColon);
+            result->appendChar(':');
             result->append(json::stringify(v));
         }
     }
-    result->append(strRBrace);
+    result->appendChar('}');
     return result->toString();
 }
 
@@ -139,18 +123,20 @@ static String::CPtr collectionToJson(const Value& val) {
     Collection::CPtr a = toCPtr<Collection>(val);
     Iterator::Ptr itr = a->iterator();
     StringBuffer::Ptr result = StringBuffer::create();
-    result->append(strLBracket);
+    result->appendChar('[');
     while (itr->hasNext()) {
         Value v = itr->next();
         if (result->length() > 1)
-            result->append(strComma);
+            result->appendChar(',');
         result->append(json::stringify(v));
     }
-    result->append(strRBracket);
+    result->appendChar(']');
     return result->toString();
 }
 
 String::CPtr stringify(const Value& val) {
+    static const String::CPtr strNull = String::intern("null");
+
     if (val.isUndefined()) {
         return String::null();
     } else if (val.instanceof(Type<String>::id())) {

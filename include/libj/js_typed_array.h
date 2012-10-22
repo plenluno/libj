@@ -32,8 +32,6 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
     }
 
     String::CPtr toString() const {
-        static const String::CPtr strComma = String::intern(",");
-
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = this->iterator();
         Boolean first = true;
@@ -42,7 +40,7 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
             if (first) {
                 first = false;
             } else {
-                sb->append(strComma);
+                sb->appendChar(',');
             }
             if (!v.isNull() && !v.isUndefined())
                 sb->append(String::valueOf(v));

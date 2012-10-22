@@ -87,6 +87,21 @@ TEST(GTestStringBuffer, TestAppendManyTimes) {
     ASSERT_TRUE(sb->toString()->equals(exp));
 }
 
+TEST(GTestStringBuffer, TestAppendChar) {
+    StringBuffer::Ptr sb = StringBuffer::create();
+    ASSERT_TRUE(sb->appendChar('a'));
+    ASSERT_TRUE(sb->appendChar('1'));
+    ASSERT_TRUE(sb->toString()->equals(String::create("a1")));
+}
+
+TEST(GTestStringBuffer, TestAppendCStr) {
+    StringBuffer::Ptr sb = StringBuffer::create();
+    ASSERT_TRUE(sb->appendCStr("abc"));
+    ASSERT_FALSE(sb->appendCStr(NULL));
+    ASSERT_TRUE(sb->appendCStr("123"));
+    ASSERT_TRUE(sb->toString()->equals(String::create("abc123")));
+}
+
 #ifdef LIBJ_USE_SP
 TEST(GTestStringBuffer, TestUseCount) {
     StringBuffer::CPtr p = StringBuffer::create();
