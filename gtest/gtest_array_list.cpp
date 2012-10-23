@@ -163,14 +163,24 @@ TEST(GTestArrayList, TestIterator) {
     a->add(123);
     a->add(456);
 
-    int v;
     Iterator::Ptr itr = a->iterator();
     ASSERT_TRUE(itr->hasNext());
-    ASSERT_TRUE(to<int>(itr->next(), &v));
-    ASSERT_EQ(123, v);
+    ASSERT_TRUE(itr->next().equals(123));
     ASSERT_TRUE(itr->hasNext());
-    ASSERT_TRUE(to<int>(itr->next(), &v));
-    ASSERT_EQ(456, v);
+    ASSERT_TRUE(itr->next().equals(456));
+    ASSERT_FALSE(itr->hasNext());
+}
+
+TEST(GTestArrayList, TestReverseIterator) {
+    ArrayList::Ptr a = ArrayList::create();
+    a->add(123);
+    a->add(456);
+
+    Iterator::Ptr itr = a->reverseIterator();
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_TRUE(itr->next().equals(456));
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_TRUE(itr->next().equals(123));
     ASSERT_FALSE(itr->hasNext());
 }
 

@@ -16,6 +16,8 @@ class GenericArrayList {
     typedef std::vector<T> Container;
     typedef typename Container::iterator Itr;
     typedef typename Container::const_iterator CItr;
+    typedef typename Container::reverse_iterator RItr;
+    typedef typename Container::const_reverse_iterator CRItr;
 
  public:
     static Boolean convert(const Value& v, T* t) {
@@ -176,6 +178,47 @@ class GenericArrayList {
 
     Iterator iterator() const {
         return Iterator(vec_);
+    }
+
+    class ReverseIterator {
+        friend class GenericArrayList;
+
+     public:
+        Boolean hasNext() const {
+            return pos_ != end_;
+        }
+
+        Value next() {
+            if (pos_ == end_) {
+                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+        T nextTyped() {
+            if (pos_ == end_) {
+                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+     private:
+        CRItr pos_;
+        CRItr end_;
+
+        ReverseIterator(const Container& vec)
+            : pos_(vec.rbegin())
+            , end_(vec.rend()) {}
+    };
+
+    ReverseIterator reverseIterator() const {
+        return ReverseIterator(vec_);
     }
 
     GenericArrayList() : vec_() {}

@@ -16,6 +16,8 @@ class GenericLinkedList {
     typedef std::list<T> Container;
     typedef typename Container::iterator Itr;
     typedef typename Container::const_iterator CItr;
+    typedef typename Container::reverse_iterator RItr;
+    typedef typename Container::const_reverse_iterator CRItr;
 
  public:
     static Boolean convert(const Value& v, T* t) {
@@ -187,20 +189,78 @@ class GenericLinkedList {
         return Iterator(list_);
     }
 
+    class ReverseIterator {
+        friend class GenericLinkedList;
+
+     public:
+        Boolean hasNext() const {
+            return pos_ != end_;
+        }
+
+        Value next() {
+            if (pos_ == end_) {
+                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+        T nextTyped() {
+            if (pos_ == end_) {
+                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+     private:
+        CRItr pos_;
+        CRItr end_;
+
+        ReverseIterator(const Container& list)
+            : pos_(list.rbegin())
+            , end_(list.rend()) {}
+    };
+
+    ReverseIterator reverseIterator() const {
+        return ReverseIterator(list_);
+    }
+
     GenericLinkedList() : list_() {}
 
  private:
     Container list_;
 
     T getAux(Size i) const {
-        CItr pos = list_.begin();
-        for (; i; i--) ++pos;
-        return *pos;
+        Size len = size();
+        if (i <= (len >> 1)) {
+            CItr pos = list_.begin();
+            for (; i; i--) ++pos;
+            return *pos;
+        } else {
+            CRItr rpos = list_.rbegin();
+            i = len - i - 1;
+            for (; i; i--) ++rpos;
+            return *rpos;
+        }
     }
 
     T removeAux(Size i) {
-        Itr pos = list_.begin();
-        for (; i; i--) ++pos;
+        Itr pos;
+        Size len = size();
+        if (i <= (size() >> 1)) {
+            pos = list_.begin();
+            for (; i; i--) ++pos;
+        } else {
+            RItr rpos = list_.rbegin();
+            i = len - i - 1;
+            for (; i; i--) ++rpos;
+            pos = (++rpos).base();
+        }
         T t = *pos;
         list_.erase(pos);
         return t;

@@ -63,7 +63,9 @@ TEST(GTestLinkedList, TestRemove) {
     LinkedList::Ptr l = LinkedList::create();
     l->add(123);
     l->add(456);
-    l->remove(0);
+    l->add(789);
+    ASSERT_TRUE(l->remove(2).equals(789));
+    ASSERT_TRUE(l->remove(0).equals(123));
 
     int v;
     to<int>(l->get(0), &v);
@@ -120,14 +122,24 @@ TEST(GTestLinkedList, TestIterator) {
     l->add(123);
     l->add(456);
 
-    int v;
     Iterator::Ptr itr = l->iterator();
     ASSERT_TRUE(itr->hasNext());
-    ASSERT_TRUE(to<int>(itr->next(), &v));
-    ASSERT_EQ(123, v);
+    ASSERT_TRUE(itr->next().equals(123));
     ASSERT_TRUE(itr->hasNext());
-    ASSERT_TRUE(to<int>(itr->next(), &v));
-    ASSERT_EQ(456, v);
+    ASSERT_TRUE(itr->next().equals(456));
+    ASSERT_FALSE(itr->hasNext());
+}
+
+TEST(GTestLinkedList, TestReverseIterator) {
+    LinkedList::Ptr l = LinkedList::create();
+    l->add(123);
+    l->add(456);
+
+    Iterator::Ptr itr = l->reverseIterator();
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_TRUE(itr->next().equals(456));
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_TRUE(itr->next().equals(123));
     ASSERT_FALSE(itr->hasNext());
 }
 

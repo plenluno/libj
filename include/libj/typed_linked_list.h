@@ -101,6 +101,29 @@ class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
             : itr_(list->iterator()) {}
     };
 
+    class ReverseIteratorImpl : public Iterator {
+        friend class TypedLinkedList;
+
+     public:
+        Boolean hasNext() const {
+            return itr_.hasNext();
+        }
+
+        Value next() {
+            return itr_.next();
+        }
+
+        String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        typename GenericLinkedList<T>::ReverseIterator itr_;
+
+        ReverseIteratorImpl(const GenericLinkedList<T>* list)
+            : itr_(list->reverseIterator()) {}
+    };
+
     class TypedIteratorImpl : public TypedIterator<T> {
         friend class TypedLinkedList;
 
@@ -127,6 +150,10 @@ class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
  public:
     Iterator::Ptr iterator() const {
         return Iterator::Ptr(new IteratorImpl(list_));
+    }
+
+    Iterator::Ptr reverseIterator() const {
+        return Iterator::Ptr(new ReverseIteratorImpl(list_));
     }
 
     typename TypedIterator<T>::Ptr iteratorTyped() const {

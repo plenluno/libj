@@ -101,6 +101,29 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
             : itr_(list->iterator()) {}
     };
 
+    class ReverseIteratorImpl : public Iterator {
+        friend class TypedArrayList;
+
+     public:
+        Boolean hasNext() const {
+            return itr_.hasNext();
+        }
+
+        Value next() {
+            return itr_.next();
+        }
+
+        String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        typename GenericArrayList<T>::ReverseIterator itr_;
+
+        ReverseIteratorImpl(const GenericArrayList<T>* list)
+            : itr_(list->reverseIterator()) {}
+    };
+
     class TypedIteratorImpl : public TypedIterator<T> {
         friend class TypedArrayList;
 
@@ -127,6 +150,10 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
  public:
     Iterator::Ptr iterator() const {
         return Iterator::Ptr(new IteratorImpl(list_));
+    }
+
+    Iterator::Ptr reverseIterator() const {
+        return Iterator::Ptr(new ReverseIteratorImpl(list_));
     }
 
     typename TypedIterator<T>::Ptr iteratorTyped() const {
