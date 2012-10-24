@@ -83,27 +83,47 @@ TEST(GTestTypedLinkedList, TestGetTyped) {
 }
 
 TEST(GTestTypedLinkedList, TestAddTyped) {
-    TypedLinkedList<Int>::Ptr a = TypedLinkedList<Int>::create();
-    a->addTyped(9);
-    a->addTyped(0, 11);
-    ASSERT_EQ(9, a->getTyped(1));
+    TypedLinkedList<Int>::Ptr l = TypedLinkedList<Int>::create();
+    l->addTyped(9);
+    l->addTyped(0, 11);
+    ASSERT_EQ(9, l->getTyped(1));
 }
 
 TEST(GTestTypedLinkedList, TestSetTyped) {
-    TypedLinkedList<Int>::Ptr a = TypedLinkedList<Int>::create();
-    a->addTyped(9);
-    a->setTyped(0, 11);
-    ASSERT_EQ(11, a->getTyped(0));
+    TypedLinkedList<Int>::Ptr l = TypedLinkedList<Int>::create();
+    l->addTyped(9);
+    l->setTyped(0, 11);
+    ASSERT_EQ(11, l->getTyped(0));
 }
 
 TEST(GTestTypedLinkedList, TestRemoveTyped) {
-    TypedLinkedList<Int>::Ptr a = TypedLinkedList<Int>::create();
-    a->addTyped(9);
-    ASSERT_EQ(9, a->removeTyped(static_cast<Size>(0)));
+    TypedLinkedList<Int>::Ptr l = TypedLinkedList<Int>::create();
+    l->addTyped(9);
+    ASSERT_EQ(9, l->removeTyped(static_cast<Size>(0)));
 
-    a->addTyped(11);
-    ASSERT_FALSE(a->removeTyped(9));
-    ASSERT_TRUE(a->removeTyped(11));
+    l->addTyped(11);
+    ASSERT_FALSE(l->removeTyped(9));
+    ASSERT_TRUE(l->removeTyped(11));
+}
+
+TEST(GTestTypedLinkedList, TestShiftTypedAndUnshiftTyped) {
+    TypedLinkedList<Int>::Ptr l = TypedLinkedList<Int>::create();
+    ASSERT_EQ(1, l->unshiftTyped(5));
+    ASSERT_EQ(2, l->unshiftTyped(7));
+    ASSERT_EQ(7, l->getTyped(0));
+    ASSERT_EQ(7, l->shiftTyped());
+    ASSERT_EQ(5, l->shiftTyped());
+    ASSERT_TRUE(l->isEmpty());
+}
+
+TEST(GTestTypedLinkedList, TestPushTypedAndPopTyped) {
+    TypedLinkedList<Int>::Ptr l = TypedLinkedList<Int>::create();
+    ASSERT_EQ(1, l->pushTyped(5));
+    ASSERT_EQ(2, l->pushTyped(7));
+    ASSERT_EQ(5, l->getTyped(0));
+    ASSERT_EQ(7, l->popTyped());
+    ASSERT_EQ(5, l->popTyped());
+    ASSERT_TRUE(l->isEmpty());
 }
 
 TEST(GTestTypedLinkedList, TestIteratorTyped) {
@@ -115,6 +135,18 @@ TEST(GTestTypedLinkedList, TestIteratorTyped) {
     ASSERT_EQ(5, i->next());
     ASSERT_TRUE(i->hasNext());
     ASSERT_EQ(7, i->next());
+    ASSERT_FALSE(i->hasNext());
+}
+
+TEST(GTestTypedLinkedList, TestReverseIteratorTyped) {
+    TypedLinkedList<Int>::Ptr l = TypedLinkedList<Int>::create();
+    l->add(5);
+    l->add(7);
+    TypedIterator<Int>::Ptr i = l->reverseIteratorTyped();
+    ASSERT_TRUE(i->hasNext());
+    ASSERT_EQ(7, i->next());
+    ASSERT_TRUE(i->hasNext());
+    ASSERT_EQ(5, i->next());
     ASSERT_FALSE(i->hasNext());
 }
 

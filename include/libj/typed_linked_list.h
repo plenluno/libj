@@ -4,6 +4,7 @@
 #define LIBJ_TYPED_LINKED_LIST_H_
 
 #include "libj/linked_list.h"
+#include "libj/typed_list.h"
 #include "libj/typed_iterator.h"
 #include "libj/detail/generic_linked_list.h"
 
@@ -12,62 +13,6 @@ namespace libj {
 template<typename T>
 class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
  public:
-    Boolean add(const Value& v) {
-        return list_->add(v);
-    }
-
-    Boolean addTyped(const T& t) {
-        return list_->addTyped(t);
-    }
-
-    Boolean add(Size i, const Value& v) {
-        return list_->add(i, v);
-    }
-
-    Boolean addTyped(Size i, const T& t) {
-        return list_->addTyped(i, t);
-    }
-
-    Boolean set(Size i, const Value& v) {
-        return list_->set(i, v);
-    }
-
-    Boolean setTyped(Size i, const T& t) {
-        return list_->set(i, t);
-    }
-
-    Value get(Size i) const {
-        return list_->get(i);
-    }
-
-    T getTyped(Size i) const {
-        return list_->getTyped(i);
-    }
-
-    Value remove(Size i) {
-        return list_->remove(i);
-    }
-
-    T removeTyped(Size i) {
-        return list_->removeTyped(i);
-    }
-
-    Boolean remove(const Value& v) {
-        return list_->remove(v);
-    }
-
-    Boolean removeTyped(const T& t) {
-        return list_->removeTyped(t);
-    }
-
-    void clear() {
-        return list_->clear();
-    }
-
-    Size size() const {
-        return list_->size();
-    }
-
     Value subList(Size from, Size to) const {
         GenericLinkedList<T>* sl = list_->subList(from, to);
         if (sl) {
@@ -147,6 +92,29 @@ class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
             : itr_(list->iterator()) {}
     };
 
+    class TypedReverseIteratorImpl : public TypedIterator<T> {
+        friend class TypedLinkedList;
+
+     public:
+        Boolean hasNext() const {
+            return itr_.hasNext();
+        }
+
+        T next() {
+            return itr_.nextTyped();
+        }
+
+        String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        typename GenericLinkedList<T>::ReverseIterator itr_;
+
+        TypedReverseIteratorImpl(const GenericLinkedList<T>* list)
+            : itr_(list->reverseIterator()) {}
+    };
+
  public:
     Iterator::Ptr iterator() const {
         return Iterator::Ptr(new IteratorImpl(list_));
@@ -159,6 +127,11 @@ class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
     typename TypedIterator<T>::Ptr iteratorTyped() const {
         return typename TypedIterator<T>::Ptr(
                     new TypedIteratorImpl(list_));
+    }
+
+    typename TypedIterator<T>::Ptr reverseIteratorTyped() const {
+        return typename TypedIterator<T>::Ptr(
+                    new TypedReverseIteratorImpl(list_));
     }
 
     static Ptr create() {
@@ -190,6 +163,8 @@ class TypedLinkedList : LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList<T>)
     TypedLinkedList() : list_(new GenericLinkedList<T>()) {}
 
     TypedLinkedList(GenericLinkedList<T>* list) : list_(list) {}
+
+    LIBJ_TYPED_LIST_IMPL(list_);
 };
 
 }  // namespace libj

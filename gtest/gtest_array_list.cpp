@@ -315,6 +315,43 @@ TEST(GTestArrayList, TestRetainAll) {
     ASSERT_TRUE(a1->isEmpty());
 }
 
+TEST(GTestArrayList, TestShiftAndUnshift) {
+    ArrayList::Ptr a = ArrayList::create();
+    ASSERT_EQ(1, a->unshift(5));
+    ASSERT_EQ(2, a->unshift(7));
+    ASSERT_TRUE(a->get(0).equals(7));
+    ASSERT_TRUE(a->shift().equals(7));
+    ASSERT_TRUE(a->shift().equals(5));
+    ASSERT_TRUE(a->isEmpty());
+}
+
+TEST(GTestArrayList, TestPushAndPop) {
+    ArrayList::Ptr a = ArrayList::create();
+    ASSERT_EQ(1, a->push(5));
+    ASSERT_EQ(2, a->push(7));
+    ASSERT_TRUE(a->get(0).equals(5));
+    ASSERT_TRUE(a->pop().equals(7));
+    ASSERT_TRUE(a->pop().equals(5));
+    ASSERT_TRUE(a->isEmpty());
+}
+
+TEST(GTestArrayList, TestIndexOfAndLastIndexOf) {
+    ArrayList::Ptr a = ArrayList::create();
+    a->add(3);
+    a->add(5);
+    a->add(7);
+    a->add(9);
+    a->add(5);
+
+    ASSERT_EQ(1, a->indexOf(5));
+    ASSERT_EQ(3, a->indexOf(9));
+    ASSERT_EQ(-1, a->indexOf(11));
+
+    ASSERT_EQ(4, a->lastIndexOf(5));
+    ASSERT_EQ(3, a->lastIndexOf(9));
+    ASSERT_EQ(-1, a->lastIndexOf(11));
+}
+
 #ifdef LIBJ_USE_SP
 TEST(GTestArrayList, TestUseCount) {
     ArrayList::CPtr p = ArrayList::create();

@@ -105,6 +105,26 @@ TEST(GTestTypedArrayList, TestRemoveTyped) {
     ASSERT_TRUE(a->removeTyped(11));
 }
 
+TEST(GTestTypedArrayList, TestShiftTypedAndUnshiftTyped) {
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+    ASSERT_EQ(1, a->unshiftTyped(5));
+    ASSERT_EQ(2, a->unshiftTyped(7));
+    ASSERT_EQ(7, a->getTyped(0));
+    ASSERT_EQ(7, a->shiftTyped());
+    ASSERT_EQ(5, a->shiftTyped());
+    ASSERT_TRUE(a->isEmpty());
+}
+
+TEST(GTestTypedArrayList, TestPushTypedAndPopTyped) {
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+    ASSERT_EQ(1, a->pushTyped(5));
+    ASSERT_EQ(2, a->pushTyped(7));
+    ASSERT_EQ(5, a->getTyped(0));
+    ASSERT_EQ(7, a->popTyped());
+    ASSERT_EQ(5, a->popTyped());
+    ASSERT_TRUE(a->isEmpty());
+}
+
 TEST(GTestTypedArrayList, TestIteratorTyped) {
     TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
     a->add(5);
@@ -114,6 +134,18 @@ TEST(GTestTypedArrayList, TestIteratorTyped) {
     ASSERT_EQ(5, i->next());
     ASSERT_TRUE(i->hasNext());
     ASSERT_EQ(7, i->next());
+    ASSERT_FALSE(i->hasNext());
+}
+
+TEST(GTestTypedArrayList, TestReverseIteratorTyped) {
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+    a->add(5);
+    a->add(7);
+    TypedIterator<Int>::Ptr i = a->reverseIteratorTyped();
+    ASSERT_TRUE(i->hasNext());
+    ASSERT_EQ(7, i->next());
+    ASSERT_TRUE(i->hasNext());
+    ASSERT_EQ(5, i->next());
     ASSERT_FALSE(i->hasNext());
 }
 

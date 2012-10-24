@@ -4,6 +4,7 @@
 #define LIBJ_TYPED_ARRAY_LIST_H_
 
 #include "libj/array_list.h"
+#include "libj/typed_list.h"
 #include "libj/typed_iterator.h"
 #include "libj/detail/generic_array_list.h"
 
@@ -12,62 +13,6 @@ namespace libj {
 template<typename T>
 class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
  public:
-    Boolean add(const Value& v) {
-        return list_->add(v);
-    }
-
-    Boolean addTyped(const T& t) {
-        return list_->addTyped(t);
-    }
-
-    Boolean add(Size i, const Value& v) {
-        return list_->add(i, v);
-    }
-
-    Boolean addTyped(Size i, const T& t) {
-        return list_->addTyped(i, t);
-    }
-
-    Boolean set(Size i, const Value& v) {
-        return list_->set(i, v);
-    }
-
-    Boolean setTyped(Size i, const T& t) {
-        return list_->set(i, t);
-    }
-
-    Value get(Size i) const {
-        return list_->get(i);
-    }
-
-    T getTyped(Size i) const {
-        return list_->getTyped(i);
-    }
-
-    Value remove(Size i) {
-        return list_->remove(i);
-    }
-
-    T removeTyped(Size i) {
-        return list_->removeTyped(i);
-    }
-
-    Boolean remove(const Value& v) {
-        return list_->remove(v);
-    }
-
-    Boolean removeTyped(const T& t) {
-        return list_->removeTyped(t);
-    }
-
-    void clear() {
-        return list_->clear();
-    }
-
-    Size size() const {
-        return list_->size();
-    }
-
     Value subList(Size from, Size to) const {
         GenericArrayList<T>* sl = list_->subList(from, to);
         if (sl) {
@@ -147,6 +92,29 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
             : itr_(list->iterator()) {}
     };
 
+    class TypedReverseIteratorImpl : public TypedIterator<T> {
+        friend class TypedArrayList;
+
+     public:
+        Boolean hasNext() const {
+            return itr_.hasNext();
+        }
+
+        T next() {
+            return itr_.nextTyped();
+        }
+
+        String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        typename GenericArrayList<T>::ReverseIterator itr_;
+
+        TypedReverseIteratorImpl(const GenericArrayList<T>* list)
+            : itr_(list->reverseIterator()) {}
+    };
+
  public:
     Iterator::Ptr iterator() const {
         return Iterator::Ptr(new IteratorImpl(list_));
@@ -159,6 +127,11 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
     typename TypedIterator<T>::Ptr iteratorTyped() const {
         return typename TypedIterator<T>::Ptr(
                     new TypedIteratorImpl(list_));
+    }
+
+    typename TypedIterator<T>::Ptr reverseIteratorTyped() const {
+        return typename TypedIterator<T>::Ptr(
+                    new TypedReverseIteratorImpl(list_));
     }
 
     static Ptr create() {
@@ -190,6 +163,8 @@ class TypedArrayList : LIBJ_ARRAY_LIST_TEMPLATE(TypedArrayList<T>)
     TypedArrayList() : list_(new GenericArrayList<T>()) {}
 
     TypedArrayList(GenericArrayList<T>* list) : list_(list) {}
+
+    LIBJ_TYPED_LIST_IMPL(list_);
 };
 
 #define LIBJ_TYPED_ARRAY_LIST_TEMPLATE(D, T) public libj::TypedArrayList<T> { \
