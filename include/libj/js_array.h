@@ -8,7 +8,9 @@
 
 namespace libj {
 
-class JsArray : LIBJ_ARRAY_LIST(JsArray)
+class JsArray
+    : public JsPropertyMixin
+    , LIBJ_ARRAY_LIST(JsArray)
  public:
     static Ptr create();
     static Ptr create(ArrayList::CPtr);
@@ -23,8 +25,6 @@ class JsArray : LIBJ_ARRAY_LIST(JsArray)
     typename Type<T>::CPtr getCPtr(Size index) const {
         return toCPtr<T>(get(index));
     }
-
-    LIBJ_JS_PROPERTY_DECL;
 };
 
 #define LIBJ_JS_ARRAY(T) public libj::JsArray { \

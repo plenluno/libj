@@ -13,12 +13,9 @@ class JsArrayImpl : public JsArray {
     }
 
  private:
-    JsObject::Ptr obj_;
     ArrayList::Ptr ary_;
 
-    JsArrayImpl()
-        : obj_(JsObject::create())
-        , ary_(ArrayList::create()) {}
+    JsArrayImpl() : ary_(ArrayList::create()) {}
 
     Value subList(Size from, Size to) const {
         if (to > size() || from > to) {
@@ -50,7 +47,6 @@ class JsArrayImpl : public JsArray {
     }
 
     LIBJ_LIST_IMPL(ary_);
-    LIBJ_JS_PROPERTY_IMPL(obj_);
 };
 
 JsArray::Ptr JsArray::create() {

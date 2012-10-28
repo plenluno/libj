@@ -10,7 +10,9 @@
 namespace libj {
 
 template<typename T>
-class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
+class JsTypedArray
+    : public JsPropertyMixin
+    , LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
  public:
     static Ptr create() {
         return Ptr(new JsTypedArray());
@@ -72,8 +74,6 @@ class JsTypedArray : LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
         }
         return Ptr(ary);
     }
-
-    LIBJ_JS_PROPERTY_MIX(JsTypedArray);
 };
 
 }  // namespace libj

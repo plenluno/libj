@@ -5,34 +5,32 @@
 
 #include "libj/js_object.h"
 
-#define LIBJ_JS_PROPERTY_DECL \
-public: \
-    virtual Boolean hasProperty(const Value& name) const = 0; \
-    virtual Value getProperty(const Value& name) const = 0; \
-    virtual Value setProperty(const Value& name, const Value& val) = 0; \
-    virtual Value deleteProperty(const Value& name) = 0;
+namespace libj {
 
-#define LIBJ_JS_PROPERTY_IMPL(JO) \
-public: \
-    Boolean hasProperty(const Value& name) const { \
-        return JO->hasProperty(name); \
-    } \
-    Value getProperty(const Value& name) const { \
-        return JO->getProperty(name); \
-    } \
-    Value setProperty(const Value& name, const Value& val) { \
-        return JO->setProperty(name, val); \
-    } \
-    Value deleteProperty(const Value& name) { \
-        return JO->deleteProperty(name); \
+class JsPropertyMixin {
+ public:
+    Boolean hasProperty(const Value& name) const {
+        return obj_->hasProperty(name);
     }
 
-#define LIBJ_JS_PROPERTY_MIX(T) \
-private: \
-    JsObject::Ptr jo_; \
-public: \
-    T() : jo_(JsObject::create()) {} \
-    LIBJ_JS_PROPERTY_IMPL(jo_)
+    Value getProperty(const Value& name) const {
+        return obj_->getProperty(name);
+    }
 
+    Value setProperty(const Value& name, const Value& val) {
+        return obj_->setProperty(name, val);
+    }
+
+    Value deleteProperty(const Value& name) {
+        return obj_->deleteProperty(name);
+    }
+
+ protected:
+    JsObject::Ptr obj_;
+
+    JsPropertyMixin() : obj_(JsObject::create()) {}
+};
+
+}  // namespace libj
 
 #endif  // LIBJ_JS_PROPERTY_H_
