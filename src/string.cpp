@@ -1,9 +1,9 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <assert.h>
-#include <iv/lv5/third_party/v8_dtoa/conversions.h>
 #include <stdio.h>
 #include <string>
+#include <iv/lv5/third_party/v8_dtoa/conversions.h>
 
 #include "libj/map.h"
 #include "libj/string.h"
@@ -294,6 +294,7 @@ class StringImpl : public String {
             return glue::UTF32LE;
         default:
             assert(false);
+            return glue::UTF8;
         }
     }
 
