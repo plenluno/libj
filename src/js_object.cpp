@@ -44,8 +44,8 @@ class JsObjectImpl : public JsObject {
     }
 
     String::CPtr toString() const {
-        LIBJ_STATIC_SYMBOL_DEF(strObject, "[object Object]");
-        return strObject;
+        LIBJ_STATIC_SYMBOL_DEF(symObject, "[object Object]");
+        return symObject;
     }
 
  private:

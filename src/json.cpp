@@ -136,7 +136,7 @@ static String::CPtr collectionToJson(const Value& val) {
 }
 
 String::CPtr stringify(const Value& val) {
-    LIBJ_STATIC_SYMBOL_DEF(strNull, "null");
+    LIBJ_STATIC_SYMBOL_DEF(symNull, "null");
 
     if (val.isUndefined()) {
         return String::null();
@@ -147,7 +147,7 @@ String::CPtr stringify(const Value& val) {
     } else if (val.instanceof(Type<Collection>::id())) {
         return collectionToJson(val);
     } else if (val.instanceof(Type<Object>::id())) {
-        return strNull;
+        return symNull;
     } else {
         return String::valueOf(val);
     }

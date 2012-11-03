@@ -368,12 +368,12 @@ String::CPtr String::intern(const void* data, Encoding enc, Size max) {
 }
 
 static String::CPtr booleanToString(const Value& val) {
-    LIBJ_STATIC_SYMBOL_DEF(strTrue, "true");
-    LIBJ_STATIC_SYMBOL_DEF(strFalse, "false");
+    LIBJ_STATIC_SYMBOL_DEF(symTrue, "true");
+    LIBJ_STATIC_SYMBOL_DEF(symFalse, "false");
 
     Boolean b;
     to<Boolean>(val, &b);
-    return b ? strTrue : strFalse;
+    return b ? symTrue : symFalse;
 }
 
 static String::CPtr byteToString(const Value& val) {
@@ -483,7 +483,7 @@ static String::CPtr typeIdToString(const Value& val) {
 }
 
 static String::CPtr objectToString(const Value& val) {
-    LIBJ_STATIC_SYMBOL_DEF(strNull, "null");
+    LIBJ_STATIC_SYMBOL_DEF(symNull, "null");
 
     String::CPtr s = toCPtr<String>(val);
     if (s) return s;
@@ -492,15 +492,15 @@ static String::CPtr objectToString(const Value& val) {
     if (o) {
         return o->toString();
     } else {
-        return strNull;
+        return symNull;
     }
 }
 
 String::CPtr String::valueOf(const Value& val) {
-    LIBJ_STATIC_SYMBOL_DEF(strUndefined, "undefined");
+    LIBJ_STATIC_SYMBOL_DEF(symUndefined, "undefined");
 
     if (val.isUndefined()) {
-        return strUndefined;
+        return symUndefined;
     } else if (val.isPtr() || val.isCPtr()) {
         return objectToString(val);
     } else if (val.type() == Type<Boolean>::id()) {

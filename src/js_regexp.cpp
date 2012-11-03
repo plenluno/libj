@@ -51,8 +51,8 @@ class JsRegExpImpl : public JsRegExp {
     }
 
     JsArray::Ptr exec(String::CPtr str) const {
-        LIBJ_STATIC_SYMBOL_DEF(strIndex, "index");
-        LIBJ_STATIC_SYMBOL_DEF(strInput, "input");
+        LIBJ_STATIC_SYMBOL_DEF(symIndex, "index");
+        LIBJ_STATIC_SYMBOL_DEF(symInput, "input");
 
         if (!str) {
             return JsArray::null();
@@ -76,8 +76,8 @@ class JsRegExpImpl : public JsRegExp {
                 res->add(UNDEFINED);
             }
         }
-        res->setProperty(strInput, str);
-        res->setProperty(strIndex, captures[0]);
+        res->setProperty(symInput, str);
+        res->setProperty(symIndex, captures[0]);
         return res;
     }
 
