@@ -8,13 +8,11 @@
 namespace libj {
 
 struct Symbol {
+    typedef const String::CPtr CPtr;
 
-	typedef const String::CPtr CPtr;
-
-	static CPtr create(const char* str) {
-		return String::intern(str);
-	}
-
+    static CPtr create(const char* str) {
+        return String::intern(str);
+    }
 };
 
 }  // namespace libj
