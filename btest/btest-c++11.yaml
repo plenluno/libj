@@ -6,6 +6,7 @@ error:
     - g++ -I ./include --std=c++0x btest/btest_mutable1.cpp
     - g++ -I ./include --std=c++0x btest/btest_mutable2.cpp
     - g++ -I ./include --std=c++0x btest/btest_mutable3.cpp
+    - g++ -I ./include --std=c++0x btest/btest_symbol.cpp
     - g++ -I ./include --std=c++0x btest/btest_value1.cpp
     - g++ -I ./include --std=c++0x btest/btest_value2.cpp
     - g++ -I ./include --std=c++0x btest/btest_value3.cpp

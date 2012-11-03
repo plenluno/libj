@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include "libj/js_object.h"
+#include "libj/symbol.h"
 
 namespace libj {
 
@@ -43,8 +44,7 @@ class JsObjectImpl : public JsObject {
     }
 
     String::CPtr toString() const {
-        static const String::CPtr strObject =
-            String::intern("[object Object]");
+        LIBJ_STATIC_SYMBOL_DEF(strObject, "[object Object]");
         return strObject;
     }
 

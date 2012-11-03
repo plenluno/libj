@@ -7,6 +7,8 @@
 
 #include "libj/map.h"
 #include "libj/string.h"
+#include "libj/symbol.h"
+
 #include "./glue/cvtutf.h"
 
 namespace libj {
@@ -333,7 +335,7 @@ class StringImpl : public String {
 };
 
 String::CPtr String::create() {
-    static const String::CPtr empty = String::intern(StringImpl::create());
+    LIBJ_STATIC_SYMBOL_DEF(empty, StringImpl::create());
     return empty;
 }
 
@@ -366,8 +368,8 @@ String::CPtr String::intern(const void* data, Encoding enc, Size max) {
 }
 
 static String::CPtr booleanToString(const Value& val) {
-    static const String::CPtr strTrue = String::intern("true");
-    static const String::CPtr strFalse = String::intern("false");
+    LIBJ_STATIC_SYMBOL_DEF(strTrue, "true");
+    LIBJ_STATIC_SYMBOL_DEF(strFalse, "false");
 
     Boolean b;
     to<Boolean>(val, &b);
@@ -481,7 +483,7 @@ static String::CPtr typeIdToString(const Value& val) {
 }
 
 static String::CPtr objectToString(const Value& val) {
-    static const String::CPtr strNull = String::intern("null");
+    LIBJ_STATIC_SYMBOL_DEF(strNull, "null");
 
     String::CPtr s = toCPtr<String>(val);
     if (s) return s;
@@ -495,7 +497,7 @@ static String::CPtr objectToString(const Value& val) {
 }
 
 String::CPtr String::valueOf(const Value& val) {
-    static const String::CPtr strUndefined = String::intern("undefined");
+    LIBJ_STATIC_SYMBOL_DEF(strUndefined, "undefined");
 
     if (val.isUndefined()) {
         return strUndefined;

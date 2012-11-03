@@ -9,6 +9,7 @@
 #include "libj/js_function.h"
 #include "libj/js_object.h"
 #include "libj/string_buffer.h"
+#include "libj/symbol.h"
 
 namespace libj {
 namespace json {
@@ -135,7 +136,7 @@ static String::CPtr collectionToJson(const Value& val) {
 }
 
 String::CPtr stringify(const Value& val) {
-    static const String::CPtr strNull = String::intern("null");
+    LIBJ_STATIC_SYMBOL_DEF(strNull, "null");
 
     if (val.isUndefined()) {
         return String::null();

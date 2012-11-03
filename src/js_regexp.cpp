@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "libj/js_regexp.h"
+#include "libj/symbol.h"
+
 #include "./glue/regexp.h"
 
 namespace libj {
@@ -49,8 +51,8 @@ class JsRegExpImpl : public JsRegExp {
     }
 
     JsArray::Ptr exec(String::CPtr str) const {
-        static const String::CPtr strIndex = String::intern("index");
-        static const String::CPtr strInput = String::intern("input");
+        LIBJ_STATIC_SYMBOL_DEF(strIndex, "index");
+        LIBJ_STATIC_SYMBOL_DEF(strInput, "input");
 
         if (!str) {
             return JsArray::null();
