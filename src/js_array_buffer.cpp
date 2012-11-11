@@ -94,6 +94,19 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return buf64_;
     }
 
+    Boolean shrink(Size length) {
+        if (length > length_) {
+            return false;
+        } else {
+            length_ = length;
+            if (!length) {
+                delete[] buf64_;
+                buf64_ = NULL;
+            }
+            return true;
+        }
+    }
+
     Value slice(Size begin, Size end) const {
         Size len = 0;
         if (begin < end && begin < length_) {

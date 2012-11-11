@@ -370,4 +370,26 @@ TEST(GTestJsArrayBuffer, TestToString) {
     ASSERT_TRUE(s3->equals(e3));
 }
 
+TEST(GTestJsArrayBuffer, TestLength) {
+    JsArrayBuffer::Ptr a = JsArrayBuffer::create(5);
+    ASSERT_EQ(5, a->length());
+}
+
+TEST(GTestJsArrayBuffer, TestShrink) {
+    JsArrayBuffer::Ptr a = JsArrayBuffer::create(5);
+    Byte b;
+    ASSERT_EQ(5, a->length());
+    ASSERT_TRUE(a->getInt8(2, &b));
+    ASSERT_TRUE(a->getInt8(3, &b));
+
+    ASSERT_TRUE(a->shrink(3));
+    ASSERT_EQ(3, a->length());
+    ASSERT_TRUE(a->getInt8(2, &b));
+    ASSERT_FALSE(a->getInt8(3, &b));
+
+    ASSERT_FALSE(a->shrink(5));
+    ASSERT_TRUE(a->shrink(0));
+    ASSERT_TRUE(a->isEmpty());
+}
+
 }   // namespace libj
