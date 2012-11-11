@@ -69,6 +69,9 @@ public: \
     const void* data() const { \
         return B->data(); \
     } \
+    Boolean shrink(Size length) { \
+        return B->shrink(length); \
+    } \
     Boolean getInt8( \
         Size byteOffset, Byte* value) const { \
         return B->getInt8(byteOffset, value); \
