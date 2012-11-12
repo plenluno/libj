@@ -30,6 +30,7 @@ class JsRegExpImpl : public JsRegExp {
         if (impl->re_) {
             return Ptr(impl);
         } else {
+            delete impl;
             return null();
         }
     }
