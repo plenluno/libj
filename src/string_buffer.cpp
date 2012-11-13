@@ -42,7 +42,7 @@ class StringBufferImpl : public StringBuffer {
     Boolean appendCStr(const char* cstr) {
         if (!cstr) return false;
 
-        while (Char c = *cstr++) {
+        while (Char c = static_cast<Char>(*cstr++)) {
             appendChar(c);
         }
         return true;
