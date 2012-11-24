@@ -15,57 +15,29 @@ namespace libj {
 
 class Exception : public std::exception {
  public:
-    Exception(Error::Code code)
-        : err_(Error::create(code))
-        , file_(String::null())
-        , func_(String::null())
-        , line_(0) {}
+    Exception(Error::Code code);
 
-    Exception(String::CPtr message)
-        : err_(Error::create(Error::ANY))
-        , file_(String::null())
-        , func_(String::null())
-        , line_(0) {}
+    Exception(String::CPtr message);
 
-    Exception(Error::Code code, String::CPtr message)
-        : err_(Error::create(code, message))
-        , file_(String::null())
-        , func_(String::null())
-        , line_(0) {}
+    Exception(Error::Code code, String::CPtr message);
 
-    Exception(Error::Code code, const char* file, const char* func, int line)
-        : err_(Error::create(code))
-        , file_(String::create(file))
-        , func_(String::create(func))
-        , line_(line) {}
+    Exception(Error::Code code, const char* file, const char* func, int line);
 
-    virtual ~Exception() throw() {}
+    virtual ~Exception() throw();
 
-    Int code() const {
-        return err_ ? err_->code() : -1;
-    }
+    Int code() const;
 
-    String::CPtr message() const {
-        return err_ ? err_->message() : String::null();
-    }
+    String::CPtr message() const;
 
-    String::CPtr file() const {
-        return file_;
-    }
+    String::CPtr file() const;
 
-    String::CPtr function() const {
-        return func_;
-    }
+    String::CPtr function() const;
 
-    Int line() const {
-        return line_;
-    }
+    Int line() const;
 
  private:
-    Error::CPtr err_;
-    String::CPtr file_;
-    String::CPtr func_;
-    Int line_;
+    class Impl;
+    Impl* impl_;
 };
 
 #define LIBJ_THROW(code) \

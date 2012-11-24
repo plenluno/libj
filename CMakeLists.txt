@@ -74,12 +74,17 @@ set(libj-src
     src/string_buffer.cpp
 )
 
-if(NOT LIBJ_USE_EXCEPTION)
+if(LIBJ_USE_EXCEPTION)
     set(libj-src
-        src/no_exceptions.cpp
+        src/exception.cpp
         ${libj-src}
     )
-endif(NOT LIBJ_USE_EXCEPTION)
+else(LIBJ_USE_EXCEPTION)
+    set(libj-src
+        src/no_exception.cpp
+        ${libj-src}
+    )
+endif(LIBJ_USE_EXCEPTION)
 
 set(libj-deps
     cvtutf
