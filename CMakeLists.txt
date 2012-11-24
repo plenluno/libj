@@ -206,7 +206,6 @@ if(LIBJ_BUILD_GTEST)
         gtest/gtest_js_function.cpp
         gtest/gtest_js_object.cpp
         gtest/gtest_js_regexp.cpp
-        gtest/gtest_js_typed_array.cpp
         gtest/gtest_linked_list.cpp
         gtest/gtest_main.cpp
         gtest/gtest_map.cpp
@@ -217,6 +216,7 @@ if(LIBJ_BUILD_GTEST)
         gtest/gtest_string.cpp
         gtest/gtest_string_buffer.cpp
         gtest/gtest_typed_array_list.cpp
+        gtest/gtest_typed_js_array.cpp
         gtest/gtest_typed_linked_list.cpp
         gtest/gtest_typed_value_holder.cpp
         gtest/gtest_value.cpp
