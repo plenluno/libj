@@ -25,7 +25,7 @@ class JsArray : public ArrayList<I> {
         return a;
     }
 
- 	virtual String::CPtr toString() const {
+    virtual String::CPtr toString() const {
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = this->iterator();
         Boolean first = true;
@@ -46,4 +46,4 @@ class JsArray : public ArrayList<I> {
 }  // namespace detail
 }  // namespace libj
 
-#endif  // LIBJ_DETAIL_ARRAY_LIST_H_
+#endif  // LIBJ_DETAIL_JS_ARRAY_H_

@@ -29,4 +29,4 @@ class LinkedList : public GenericLinkedList<Value, I> {
 }  // namespace detail
 }  // namespace libj
 
-#endif  // LIBJ_DETAIL_ARRAY_LIST_H_
+#endif  // LIBJ_DETAIL_LINKED_LIST_H_
