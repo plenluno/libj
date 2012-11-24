@@ -15,9 +15,6 @@ class LinkedList : LIBJ_LIST(LinkedList)
 #define LIBJ_LINKED_LIST(T) public libj::LinkedList { \
     LIBJ_MUTABLE_DEFS(T, libj::LinkedList)
 
-#define LIBJ_LINKED_LIST_TEMPLATE_DEFS(T) \
-    LIBJ_MUTABLE_TEMPLATE_DEFS(T, libj::LinkedList)
-
 }  // namespace libj
 
 #endif  // LIBJ_LINKED_LIST_H_

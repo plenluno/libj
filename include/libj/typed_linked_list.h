@@ -13,7 +13,7 @@ template<typename T>
 class TypedLinkedList
     : public detail::GenericLinkedList<T, TypedList<T, LinkedList> > {
  public:
-    LIBJ_LINKED_LIST_TEMPLATE_DEFS(TypedLinkedList);
+    LIBJ_MUTABLE_TEMPLATE_DEFS(TypedLinkedList, LinkedList);
 
     static Ptr create() {
         return Ptr(new TypedLinkedList());

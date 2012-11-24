@@ -13,7 +13,7 @@ template<typename T>
 class TypedArrayList
     : public detail::GenericArrayList<T, TypedList<T, ArrayList> > {
  public:
-    LIBJ_ARRAY_LIST_TEMPLATE_DEFS(TypedArrayList);
+    LIBJ_MUTABLE_TEMPLATE_DEFS(TypedArrayList, ArrayList);
 
     static Ptr create() {
         return Ptr(new TypedArrayList());
@@ -46,9 +46,6 @@ class TypedArrayList
         return Ptr(list);
     }
 };
-
-#define LIBJ_TYPED_ARRAY_LIST_TEMPLATE(D, T) public libj::TypedArrayList<T> { \
-    LIBJ_MUTABLE_TEMPLATE_DEFS(D<T>, libj::TypedArrayList<T>)
 
 }  // namespace libj
 
