@@ -48,7 +48,7 @@ class Exception::Impl {
         return func_;
     }
 
-    virtual Int line() const {
+    Int line() const {
         return line_;
     }
 
@@ -72,7 +72,9 @@ Exception::Exception(
     Error::Code code, const char* file, const char* func, int line)
     : impl_(new Impl(code, file, func, line)) {}
 
-Exception::~Exception() throw() {}
+Exception::~Exception() throw() {
+    delete impl_;
+}
 
 Int Exception::code() const {
     return impl_->code();
