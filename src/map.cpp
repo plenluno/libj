@@ -3,7 +3,7 @@
 #include <map>
 
 #include "libj/map.h"
-#include "libj/string.h"
+#include "libj/string_buffer.h"
 
 namespace libj {
 
@@ -23,15 +23,15 @@ class MapImpl : public Map {
         return Ptr(new MapImpl());
     }
 
-    Size size() const {
+    virtual Size size() const {
         return map_.size();
     }
 
-    Boolean containsKey(const Value& key) const {
+    virtual Boolean containsKey(const Value& key) const {
         return map_.find(key) != map_.end();
     }
 
-    Boolean containsValue(const Value& val) const {
+    virtual Boolean containsValue(const Value& val) const {
         for (ValueMap::const_iterator itr = map_.begin();
              itr != map_.end();
              ++itr) {
@@ -41,7 +41,7 @@ class MapImpl : public Map {
         return false;
     }
 
-    Value get(const Value& key) const {
+    virtual Value get(const Value& key) const {
         ValueMap::const_iterator itr = map_.find(key);
         if (itr != map_.end()) {
             return itr->second;
@@ -50,19 +50,19 @@ class MapImpl : public Map {
         }
     }
 
-    Value put(const Value& key, const Value& val) {
+    virtual Value put(const Value& key, const Value& val) {
         Value v = get(key);
         map_[key] = val;
         return v;
     }
 
-    Value remove(const Value& key) {
+    virtual Value remove(const Value& key) {
         Value v = get(key);
         map_.erase(key);
         return v;
     }
 
-    Set::CPtr keySet() const {
+    virtual Set::CPtr keySet() const {
         Set::Ptr s = Set::create();
         for (ValueMap::const_iterator itr = map_.begin();
              itr != map_.end();
@@ -72,11 +72,15 @@ class MapImpl : public Map {
         return s;
     }
 
-    void clear() {
+    virtual void clear() {
         map_.clear();
     }
 
-    String::CPtr toString() const {
+    virtual Boolean isEmpty() const {
+        return size() == 0;
+    }
+
+    virtual String::CPtr toString() const {
         StringBuffer::Ptr sb = StringBuffer::create();
         sb->appendChar('{');
         Boolean first = true;

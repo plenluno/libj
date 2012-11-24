@@ -42,13 +42,6 @@ class JsObject : LIBJ_MAP(JsObject)
 #define LIBJ_JS_OBJECT(T) public libj::JsObject { \
     LIBJ_MUTABLE_DEFS(T, libj::JsObject)
 
-#define LIBJ_JS_OBJECT_IMPL(JO) \
-    LIBJ_MAP_IMPL(JO) \
-public: \
-    String::CPtr toString() const { \
-        return JO->toString(); \
-    }
-
 }  // namespace libj
 
 #endif  // LIBJ_JS_OBJECT_H_

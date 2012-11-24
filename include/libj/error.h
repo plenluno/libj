@@ -30,6 +30,7 @@ class Error : LIBJ_STATUS(Error)
     };
 
     static CPtr create(Code code);
+
     static CPtr create(Code code, String::CPtr msg);
 };
 

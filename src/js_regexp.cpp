@@ -5,6 +5,7 @@
 
 #include "libj/js_regexp.h"
 #include "libj/symbol.h"
+#include "libj/bridge/abstract_js_object.h"
 
 #include "./glue/regexp.h"
 
@@ -23,7 +24,9 @@ static glue::RegExp::U16String toU16String(String::CPtr str) {
 #endif
 }
 
-class JsRegExpImpl : public JsRegExp {
+typedef bridge::AbstractJsObject<JsRegExp> JsRegExpBase;
+
+class JsRegExpImpl : public JsRegExpBase {
  public:
     static Ptr create(String::CPtr pattern, UInt flags) {
         JsRegExpImpl* impl = new JsRegExpImpl(pattern, flags);
@@ -87,12 +90,11 @@ class JsRegExpImpl : public JsRegExp {
     }
 
  private:
-    JsObject::Ptr obj_;
     String::CPtr pattern_;
     glue::RegExp* re_;
 
     JsRegExpImpl(String::CPtr pattern, UInt flags)
-        : obj_(JsObject::create())
+        : JsRegExpBase(JsObject::create())
         , pattern_(pattern)
         , re_(glue::RegExp::create(toU16String(pattern), flags)) {}
 
@@ -100,8 +102,6 @@ class JsRegExpImpl : public JsRegExp {
     ~JsRegExpImpl() {
         delete re_;
     }
-
-    LIBJ_JS_OBJECT_IMPL(obj_);
 };
 
 JsRegExp::Ptr JsRegExp::create(String::CPtr pattern, UInt flags) {

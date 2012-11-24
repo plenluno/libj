@@ -13,6 +13,7 @@ class JsArray
     , LIBJ_ARRAY_LIST(JsArray)
  public:
     static Ptr create();
+
     static Ptr create(ArrayList::CPtr);
 
  public:

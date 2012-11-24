@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include "libj/error.h"
+#include "libj/bridge/abstract_status.h"
 
 namespace libj {
 
@@ -29,15 +30,15 @@ namespace libj {
         msg = MSG_##NAME; \
         break;
 
-class ErrorImpl : public Error {
+typedef bridge::AbstractStatus<Error> ErrorBase;
+
+class ErrorImpl : public ErrorBase {
  private:
     LIBJ_ERROR_MSG_MAP(LIBJ_ERROR_MSG_DECL_GEN)
 
  private:
-    Status::CPtr status_;
-
     ErrorImpl(Int code, String::CPtr msg)
-        : status_(Status::create(code, msg)) {}
+        : ErrorBase(Status::create(code, msg)) {}
 
  public:
     static CPtr create(Code code) {
@@ -53,8 +54,6 @@ class ErrorImpl : public Error {
     static CPtr create(Code code, String::CPtr msg) {
         return CPtr(new ErrorImpl(code, msg));
     }
-
-    LIBJ_STATUS_IMPL(status_);
 };
 
 #define LIBJ_ERROR_MSG_DEF_GEN(NAME, MESSAGE) \

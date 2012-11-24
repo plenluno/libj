@@ -11,6 +11,7 @@ namespace libj {
 class Iterator : LIBJ_MUTABLE(Iterator)
  public:
     virtual Boolean hasNext() const = 0;
+
     virtual Value next() = 0;
 };
 

@@ -2,22 +2,23 @@
 
 #include "libj/exception.h"
 #include "libj/js_array.h"
-#include "libj/js_object.h"
+#include "libj/string_buffer.h"
+#include "libj/bridge/abstract_list.h"
 
 namespace libj {
 
-class JsArrayImpl : public JsArray {
+typedef bridge::AbstractList<JsArray> JsArrayBase;
+
+class JsArrayImpl : public JsArrayBase {
  public:
     static Ptr create() {
         return Ptr(new JsArrayImpl());
     }
 
  private:
-    ArrayList::Ptr ary_;
+    JsArrayImpl() : JsArrayBase(ArrayList::create()) {}
 
-    JsArrayImpl() : ary_(ArrayList::create()) {}
-
-    Value subList(Size from, Size to) const {
+    virtual Value subList(Size from, Size to) const {
         if (to > size() || from > to) {
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         }
@@ -29,7 +30,7 @@ class JsArrayImpl : public JsArray {
         return a;
     }
 
-    String::CPtr toString() const {
+    virtual String::CPtr toString() const {
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = iterator();
         Boolean first = true;
@@ -45,8 +46,6 @@ class JsArrayImpl : public JsArray {
         }
         return sb->toString();
     }
-
-    LIBJ_LIST_IMPL(ary_);
 };
 
 JsArray::Ptr JsArray::create() {

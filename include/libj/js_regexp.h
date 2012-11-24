@@ -21,11 +21,15 @@ class JsRegExp : LIBJ_JS_OBJECT(JsRegExp)
     static Ptr create(String::CPtr pattern, UInt flags = NONE);
 
     virtual Boolean global() const = 0;
+
     virtual Boolean ignoreCase() const = 0;
+
     virtual Boolean multiline() const = 0;
+
     virtual String::CPtr source() const = 0;
 
     virtual JsArray::Ptr exec(String::CPtr str) const = 0;
+
     virtual Boolean test(String::CPtr str) const = 0;
 };
 

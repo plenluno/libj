@@ -9,8 +9,8 @@ namespace libj {
 namespace json {
 
 Value parse(String::CPtr str);
-String::CPtr stringify(const Value& val);
 
+String::CPtr stringify(const Value& val);
 
 }  // namespace json
 }  // namespace libj

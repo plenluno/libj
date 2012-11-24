@@ -15,7 +15,7 @@ class ArrayList : LIBJ_LIST(ArrayList)
 #define LIBJ_ARRAY_LIST(T) public libj::ArrayList { \
     LIBJ_MUTABLE_DEFS(T, libj::ArrayList)
 
-#define LIBJ_ARRAY_LIST_TEMPLATE(T) public libj::ArrayList { \
+#define LIBJ_ARRAY_LIST_TEMPLATE_DEFS(T) \
     LIBJ_MUTABLE_TEMPLATE_DEFS(T, libj::ArrayList)
 
 }  // namespace libj

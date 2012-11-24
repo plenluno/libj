@@ -13,10 +13,15 @@ class StringBuffer : LIBJ_MUTABLE(StringBuffer)
     static Ptr create();
 
     virtual Size length() const = 0;
+
     virtual Char charAt(Size index) const = 0;
+
     virtual Boolean append(const Value& val) = 0;
+
     virtual Boolean appendChar(Char c) = 0;
+
     virtual Boolean appendCStr(const char* cstr) = 0;
+
     virtual Boolean setCharAt(Size index, Char c) = 0;
 };
 

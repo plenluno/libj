@@ -2,22 +2,25 @@
 
 #include <gtest/gtest.h>
 #include <libj/js_object.h>
+#include <libj/bridge/abstract_js_object.h>
 
 namespace libj {
 
 class GTestJsObject : LIBJ_JS_OBJECT(GTestJsObject)
  public:
-    static Ptr create() {
-        return Ptr(new GTestJsObject());
-    }
-
- private:
-    JsObject::Ptr jo_;
-
-    GTestJsObject() : jo_(JsObject::create()) {}
-
-    LIBJ_JS_OBJECT_IMPL(jo_);
+    static Ptr create();
 };
+
+typedef bridge::AbstractJsObject<GTestJsObject> GTestJsObjectBase;
+
+class GTestJsObjectImpl : public GTestJsObjectBase {
+ public:
+    GTestJsObjectImpl() : GTestJsObjectBase(JsObject::create()) {}
+};
+
+GTestJsObject::Ptr GTestJsObject::create() {
+    return GTestJsObject::Ptr(new GTestJsObjectImpl());
+}
 
 TEST(GTestJsObject, TestToString) {
     JsObject::Ptr obj = JsObject::create();

@@ -61,7 +61,7 @@ class Exception : public std::exception {
         return line_;
     }
 
- protected:
+ private:
     Error::CPtr err_;
     String::CPtr file_;
     String::CPtr func_;

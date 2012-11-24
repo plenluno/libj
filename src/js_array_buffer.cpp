@@ -86,15 +86,19 @@ class JsArrayBufferImpl : public JsArrayBuffer {
     }
 
  public:
-    Size length() const {
+    virtual Boolean isEmpty() const {
+        return length() == 0;
+    }
+
+    virtual Size length() const {
         return length_;
     }
 
-    const void* data() const {
+    virtual const void* data() const {
         return buf64_;
     }
 
-    Boolean shrink(Size length) {
+    virtual Boolean shrink(Size length) {
         if (length > length_) {
             return false;
         } else {
@@ -107,7 +111,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    Value slice(Size begin, Size end) const {
+    virtual Value slice(Size begin, Size end) const {
         Size len = 0;
         if (begin < end && begin < length_) {
             if (end >= length_) end = length_;
@@ -122,14 +126,14 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return Ptr(buf);
     }
 
-    Boolean getInt8(Size byteOffset, Byte* value) const {
+    virtual Boolean getInt8(Size byteOffset, Byte* value) const {
         UByte v;
         Boolean ret = getUInt8(byteOffset, &v);
         *value = v;
         return ret;
     }
 
-    Boolean getUInt8(Size byteOffset, UByte* value) const {
+    virtual Boolean getUInt8(Size byteOffset, UByte* value) const {
         if (byteOffset >= length_) {
             return false;
         } else {
@@ -139,7 +143,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    Boolean getInt16(
+    virtual Boolean getInt16(
         Size byteOffset, Short* value, Boolean littleEndian = false) const {
         UShort v;
         Boolean ret = getUInt16(byteOffset, &v, littleEndian);
@@ -147,7 +151,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return ret;
     }
 
-    Boolean getUInt16(
+    virtual Boolean getUInt16(
         Size byteOffset, UShort* value, Boolean littleEndian = false) const {
         if (byteOffset + 1 >= length_) {
             return false;
@@ -157,7 +161,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    Boolean getInt32(
+    virtual Boolean getInt32(
         Size byteOffset, Int* value, Boolean littleEndian = false) const {
         UInt v;
         Boolean ret = getUInt32(byteOffset, &v, littleEndian);
@@ -165,7 +169,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return ret;
     }
 
-    Boolean getUInt32(
+    virtual Boolean getUInt32(
         Size byteOffset, UInt* value, Boolean littleEndian = false) const {
         if (byteOffset + 3 >= length_) {
             return false;
@@ -175,7 +179,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    Boolean getFloat32(
+    virtual Boolean getFloat32(
         Size byteOffset, Float* value, Boolean littleEndian = false) const {
         union {
             Float f;
@@ -186,7 +190,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return ret;
     }
 
-    Boolean getFloat64(
+    virtual Boolean getFloat64(
         Size byteOffset, Double* value, Boolean littleEndian = false) const {
         if (byteOffset + 7 >= length_) {
             return false;
@@ -201,11 +205,11 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    Boolean setInt8(Size byteOffset, Byte value) {
+    virtual Boolean setInt8(Size byteOffset, Byte value) {
         return setUInt8(byteOffset, value);
     }
 
-    Boolean setUInt8(Size byteOffset, UByte value) {
+    virtual Boolean setUInt8(Size byteOffset, UByte value) {
         if (byteOffset >= length_) {
             return false;
         } else {
@@ -215,12 +219,12 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    Boolean setInt16(
+    virtual Boolean setInt16(
         Size byteOffset, Short value, Boolean littleEndian = false) {
         return setUInt16(byteOffset, value, littleEndian);
     }
 
-    Boolean setUInt16(
+    virtual Boolean setUInt16(
         Size byteOffset, UShort value, Boolean littleEndian = false) {
         if (byteOffset + 1 >= length_) {
             return false;
@@ -230,12 +234,12 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    Boolean setInt32(
+    virtual Boolean setInt32(
         Size byteOffset, Int value, Boolean littleEndian = false) {
         return setUInt32(byteOffset, value, littleEndian);
     }
 
-    Boolean setUInt32(
+    virtual Boolean setUInt32(
         Size byteOffset, UInt value, Boolean littleEndian = false) {
         if (byteOffset + 3 >= length_) {
             return false;
@@ -245,7 +249,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    Boolean setFloat32(
+    virtual Boolean setFloat32(
         Size byteOffset, Float value, Boolean littleEndian = false) {
         union {
             Float f;
@@ -255,7 +259,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         return setUInt32(byteOffset, v.i, littleEndian);
     }
 
-    Boolean setFloat64(
+    virtual Boolean setFloat64(
         Size byteOffset, Double value, Boolean littleEndian = false) {
         if (byteOffset + 7 >= length_) {
             return false;
@@ -270,7 +274,7 @@ class JsArrayBufferImpl : public JsArrayBuffer {
         }
     }
 
-    String::CPtr toString() const {
+    virtual String::CPtr toString() const {
         return String::create(buf64_, String::UTF8);
     }
 

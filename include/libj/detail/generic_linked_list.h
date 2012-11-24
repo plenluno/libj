@@ -5,13 +5,13 @@
 
 #include <list>
 
-#include "libj/exception.h"
-#include "libj/value.h"
+#include "./generic_list.h"
 
 namespace libj {
+namespace detail {
 
-template<typename T>
-class GenericLinkedList {
+template<typename T, typename B>
+class GenericLinkedList : public GenericList<T, B> {
  private:
     typedef std::list<T> Container;
     typedef typename Container::iterator Itr;
@@ -20,35 +20,26 @@ class GenericLinkedList {
     typedef typename Container::const_reverse_iterator CRItr;
 
  public:
-    static Boolean convert(const Value& v, T* t) {
-        Boolean result = to<T>(v, t);
-#ifdef LIBJ_USE_EXCEPTION
-        if (!result)
-            LIBJ_THROW(Error::ILLEGAL_TYPE);
-#endif  // LIBJ_USE_EXCEPTION
-        return result;
-    }
-
-    Size size() const {
+    virtual Size size() const {
         return list_.size();
     }
 
-    Boolean add(const Value& v) {
+    virtual Boolean add(const Value& v) {
         T t;
         return convert(v, &t) && addTyped(t);
     }
 
-    Boolean addTyped(const T& t) {
+    virtual Boolean addTyped(const T& t) {
         list_.push_back(t);
         return true;
     }
 
-    Boolean add(Size i, const Value& v) {
+    virtual Boolean add(Size i, const Value& v) {
         T t;
         return convert(v, &t) && addTyped(i, t);
     }
 
-    Boolean addTyped(Size i, const T& t) {
+    virtual Boolean addTyped(Size i, const T& t) {
         if (i > list_.size()) {
             return false;
         } else {
@@ -59,12 +50,12 @@ class GenericLinkedList {
         }
     }
 
-    Boolean set(Size i, const Value& v) {
+    virtual Boolean set(Size i, const Value& v) {
         T t;
         return convert(v, &t) && setTyped(i, t);
     }
 
-    Boolean setTyped(Size i, const T& t) {
+    virtual Boolean setTyped(Size i, const T& t) {
         if (i > list_.size()) {
             return false;
         } else {
@@ -75,7 +66,7 @@ class GenericLinkedList {
         }
     }
 
-    Value get(Size i) const {
+    virtual Value get(Size i) const {
         if (i >= list_.size()) {
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         } else {
@@ -83,7 +74,7 @@ class GenericLinkedList {
         }
     }
 
-    T getTyped(Size i) const {
+    virtual T getTyped(Size i) const {
         if (i >= size()) {
             LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
         } else {
@@ -91,7 +82,7 @@ class GenericLinkedList {
         }
     }
 
-    Value remove(Size i) {
+    virtual Value remove(Size i) {
         if (i >= list_.size()) {
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         } else {
@@ -99,7 +90,7 @@ class GenericLinkedList {
         }
     }
 
-    T removeTyped(Size i) {
+    virtual T removeTyped(Size i) {
         if (i >= list_.size()) {
             LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
         } else {
@@ -107,7 +98,7 @@ class GenericLinkedList {
         }
     }
 
-    Boolean remove(const Value& v) {
+    virtual Boolean remove(const Value& v) {
         for (Itr i = list_.begin(), e = list_.end(); i != e; ++i) {
             if (v.equals(*i)) {
                 list_.erase(i);
@@ -117,7 +108,7 @@ class GenericLinkedList {
         return false;
     }
 
-    Boolean removeTyped(const T& t) {
+    virtual Boolean removeTyped(const T& t) {
         for (Itr i = list_.begin(), e = list_.end(); i != e; ++i) {
             if (*i == t) {
                 list_.erase(i);
@@ -127,13 +118,13 @@ class GenericLinkedList {
         return false;
     }
 
-    void clear() {
+    virtual void clear() {
         list_.clear();
     }
 
-    GenericLinkedList* subList(Size from, Size to) const {
+    virtual Value subList(Size from, Size to) const {
         if (to > size() || from > to) {
-            return NULL;
+            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         }
 
         GenericLinkedList* l = new GenericLinkedList();
@@ -145,18 +136,35 @@ class GenericLinkedList {
                 l->addTyped(*pos);
             }
         }
-        return l;
+        return typename GenericList<T, B>::Ptr(l);
     }
 
-    class Iterator {
+    virtual Iterator::Ptr iterator() const {
+        return Iterator::Ptr(new ObverseIterator(list_));
+    }
+
+    virtual Iterator::Ptr reverseIterator() const {
+        return Iterator::Ptr(new ReverseIterator(list_));
+    }
+
+    virtual typename TypedIterator<T>::Ptr iteratorTyped() const {
+        return typename TypedIterator<T>::Ptr(new TypedObverseIterator(list_));
+    }
+
+    virtual typename TypedIterator<T>::Ptr reverseIteratorTyped() const {
+        return typename TypedIterator<T>::Ptr(new TypedReverseIterator(list_));
+    }
+
+ private:
+    class ObverseIterator : public Iterator {
         friend class GenericLinkedList;
 
      public:
-        Boolean hasNext() const {
+        virtual Boolean hasNext() const {
             return pos_ != end_;
         }
 
-        Value next() {
+        virtual Value next() {
             if (pos_ == end_) {
                 LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
             } else {
@@ -166,38 +174,59 @@ class GenericLinkedList {
             }
         }
 
-        T nextTyped() {
-            if (pos_ == end_) {
-                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
-            }
+        virtual String::CPtr toString() const {
+            return String::create();
         }
 
      private:
         CItr pos_;
         CItr end_;
 
-        Iterator(const Container& list)
+        ObverseIterator(const Container& list)
             : pos_(list.begin())
             , end_(list.end()) {}
     };
 
-    Iterator iterator() const {
-        return Iterator(list_);
-    }
-
-    class ReverseIterator {
+    class TypedObverseIterator : public TypedIterator<T> {
         friend class GenericLinkedList;
 
      public:
-        Boolean hasNext() const {
+        virtual Boolean hasNext() const {
             return pos_ != end_;
         }
 
-        Value next() {
+        virtual T next() {
+            if (pos_ == end_) {
+                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+        virtual String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        CItr pos_;
+        CItr end_;
+
+        TypedObverseIterator(const Container& list)
+            : pos_(list.begin())
+            , end_(list.end()) {}
+    };
+
+    class ReverseIterator : public Iterator {
+        friend class GenericLinkedList;
+
+     public:
+        virtual Boolean hasNext() const {
+            return pos_ != end_;
+        }
+
+        virtual Value next() {
             if (pos_ == end_) {
                 LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
             } else {
@@ -207,14 +236,8 @@ class GenericLinkedList {
             }
         }
 
-        T nextTyped() {
-            if (pos_ == end_) {
-                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
-            }
+        virtual String::CPtr toString() const {
+            return String::create();
         }
 
      private:
@@ -226,11 +249,36 @@ class GenericLinkedList {
             , end_(list.rend()) {}
     };
 
-    ReverseIterator reverseIterator() const {
-        return ReverseIterator(list_);
-    }
+    class TypedReverseIterator : public TypedIterator<T> {
+        friend class GenericLinkedList;
 
-    GenericLinkedList() : list_() {}
+     public:
+        virtual Boolean hasNext() const {
+            return pos_ != end_;
+        }
+
+        virtual T next() {
+            if (pos_ == end_) {
+                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+        virtual String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        CRItr pos_;
+        CRItr end_;
+
+        TypedReverseIterator(const Container& list)
+            : pos_(list.rbegin())
+            , end_(list.rend()) {}
+    };
 
  private:
     Container list_;
@@ -267,6 +315,7 @@ class GenericLinkedList {
     }
 };
 
+}  // namespace detail
 }  // namespace libj
 
 #endif  // LIBJ_DETAIL_GENERIC_LINKED_LIST_H_

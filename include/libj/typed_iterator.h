@@ -11,6 +11,7 @@ template<typename T>
 class TypedIterator : LIBJ_MUTABLE_TEMPLATE(TypedIterator<T>)
  public:
     virtual Boolean hasNext() const = 0;
+
     virtual T next() = 0;
 };
 

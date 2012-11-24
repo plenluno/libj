@@ -24,7 +24,7 @@ class JsTypedArray
         while (itr->hasNext()) {
             Value v = itr->next();
             T t;
-            if (GenericArrayList<T>::convert(v, &t)) {
+            if (detail::convert<T>(v, &t)) {
                 ary->addTyped(t);
             } else {
                 return null();
@@ -33,7 +33,7 @@ class JsTypedArray
         return ary;
     }
 
-    String::CPtr toString() const {
+    virtual String::CPtr toString() const {
         StringBuffer::Ptr sb = StringBuffer::create();
         Iterator::Ptr itr = this->iterator();
         Boolean first = true;
@@ -50,7 +50,7 @@ class JsTypedArray
         return sb->toString();
     }
 
-    Value subList(Size from, Size to) const {
+    virtual Value subList(Size from, Size to) const {
         if (to > this->size() || from > to) {
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
         }
