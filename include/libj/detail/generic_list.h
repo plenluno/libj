@@ -8,8 +8,8 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename B>
-class GenericList : public GenericCollection<T, B> {
+template<typename T, typename I>
+class GenericList : public GenericCollection<T, I> {
  public:
     virtual Size size() const = 0;
 
@@ -28,8 +28,6 @@ class GenericList : public GenericCollection<T, B> {
     virtual Value get(Size i) const = 0;
 
     virtual T getTyped(Size i) const = 0;
-
-    virtual void clear() = 0;
 
     virtual Value remove(Size i) = 0;
 
@@ -100,11 +98,11 @@ class GenericList : public GenericCollection<T, B> {
         }
     }
 
-    virtual Int indexOf(const Value& val) {
+    virtual Int indexOf(const Value& v) {
         Size index = 0;
         Iterator::Ptr itr = iterator();
         while (itr->hasNext()) {
-            if (itr->next().equals(val)) {
+            if (itr->next().equals(v)) {
                 return index;
             }
             index++;
@@ -112,11 +110,11 @@ class GenericList : public GenericCollection<T, B> {
         return -1;
     }
 
-    virtual Int lastIndexOf(const Value& val) {
+    virtual Int lastIndexOf(const Value& v) {
         Size index = size() - 1;
         Iterator::Ptr itr = reverseIterator();
         while (itr->hasNext()) {
-            if (itr->next().equals(val)) {
+            if (itr->next().equals(v)) {
                 return index;
             }
             index--;

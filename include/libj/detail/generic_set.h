@@ -11,8 +11,8 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename B>
-class GenericSet : public GenericCollection<T, B> {
+template<typename T, typename I>
+class GenericSet : public GenericCollection<T, I> {
  private:
     typedef std::set<T> Container;
     typedef typename Container::iterator Itr;

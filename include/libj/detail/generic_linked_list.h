@@ -10,8 +10,8 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename B>
-class GenericLinkedList : public GenericList<T, B> {
+template<typename T, typename I>
+class GenericLinkedList : public GenericList<T, I> {
  private:
     typedef std::list<T> Container;
     typedef typename Container::iterator Itr;
@@ -136,7 +136,7 @@ class GenericLinkedList : public GenericList<T, B> {
                 l->addTyped(*pos);
             }
         }
-        return typename GenericList<T, B>::Ptr(l);
+        return typename GenericList<T, I>::Ptr(l);
     }
 
     virtual Iterator::Ptr iterator() const {
@@ -187,37 +187,6 @@ class GenericLinkedList : public GenericList<T, B> {
             , end_(list.end()) {}
     };
 
-    class TypedObverseIterator : public TypedIterator<T> {
-        friend class GenericLinkedList;
-
-     public:
-        virtual Boolean hasNext() const {
-            return pos_ != end_;
-        }
-
-        virtual T next() {
-            if (pos_ == end_) {
-                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
-            }
-        }
-
-        virtual String::CPtr toString() const {
-            return String::create();
-        }
-
-     private:
-        CItr pos_;
-        CItr end_;
-
-        TypedObverseIterator(const Container& list)
-            : pos_(list.begin())
-            , end_(list.end()) {}
-    };
-
     class ReverseIterator : public Iterator {
         friend class GenericLinkedList;
 
@@ -247,6 +216,37 @@ class GenericLinkedList : public GenericList<T, B> {
         ReverseIterator(const Container& list)
             : pos_(list.rbegin())
             , end_(list.rend()) {}
+    };
+
+    class TypedObverseIterator : public TypedIterator<T> {
+        friend class GenericLinkedList;
+
+     public:
+        virtual Boolean hasNext() const {
+            return pos_ != end_;
+        }
+
+        virtual T next() {
+            if (pos_ == end_) {
+                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+        virtual String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        CItr pos_;
+        CItr end_;
+
+        TypedObverseIterator(const Container& list)
+            : pos_(list.begin())
+            , end_(list.end()) {}
     };
 
     class TypedReverseIterator : public TypedIterator<T> {

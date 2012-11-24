@@ -24,11 +24,11 @@ Boolean convert(const Value& v, T* t) {
     return result;
 }
 
-template<typename T, typename B>
-class GenericCollection : public B {
+template<typename T, typename I>
+class GenericCollection : public I {
  public:
-    typedef LIBJ_PTR_TYPE(B) Ptr;
-    typedef LIBJ_CPTR_TYPE(B) CPtr;
+    typedef LIBJ_PTR_TYPE(I) Ptr;
+    typedef LIBJ_CPTR_TYPE(I) CPtr;
 
     virtual ~GenericCollection() {}
 
