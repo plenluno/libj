@@ -23,18 +23,14 @@ namespace libj {
 
 class Value {
  public:
-    Value()
-        : content(0) {
-    }
+    Value() : content(0) {}
 
     template<typename ValueType>
     Value(const ValueType & value)
-        : content(new holder<ValueType>(value)) {
-    }
+        : content(new holder<ValueType>(value)) {}
 
     Value(const Value & other)
-        : content(other.content ? other.content->clone() : 0) {
-    }
+        : content(other.content ? other.content->clone() : 0) {}
 
     ~Value() {
         delete content;
@@ -98,15 +94,38 @@ class Value {
         }
     }
 
-    Boolean equals(Value val) const {
+    Boolean equals(const Value& val) const {
         return !compareTo(val);
+    }
+
+    Boolean operator==(const Value& val) const {
+        return equals(val);
+    }
+
+    Boolean operator!=(const Value& val) const {
+        return !equals(val);
+    }
+
+    Boolean operator<(const Value& val) const {
+        return compareTo(val) < 0;
+    }
+
+    Boolean operator<=(const Value& val) const {
+        return compareTo(val) <= 0;
+    }
+
+    Boolean operator>(const Value& val) const {
+        return compareTo(val) > 0;
+    }
+
+    Boolean operator>=(const Value& val) const {
+        return compareTo(val) >= 0;
     }
 
  private:
     class placeholder {
      public:
-        virtual ~placeholder() {
-        }
+        virtual ~placeholder() {}
 
      public:
         virtual TypeId type() const = 0;
@@ -132,9 +151,7 @@ class Value {
         Boolean IsCPtr   = Classify<ValueType>::isCPtr>
     class holder : public placeholder {
      public:
-        holder(const ValueType & value)
-            : held(value) {
-        }
+        holder(const ValueType & value) : held(value) {}
 
      public:
         virtual TypeId type() const {
@@ -203,9 +220,7 @@ class Value {
     template<typename ValueType>
     class holder<ValueType, false, false> : public placeholder {
      public:
-        holder(const ValueType & value)
-            : held(value) {
-        }
+        holder(const ValueType & value) : held(value) {}
 
      public:
         virtual TypeId type() const {

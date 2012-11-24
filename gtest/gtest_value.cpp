@@ -611,6 +611,43 @@ TEST(GTestValue, TestEquals) {
     ASSERT_TRUE(v.equals(UNDEFINED));
 }
 
+TEST(GTestValue, TestOperators) {
+    Value x = 1;
+    Value y = 2;
+    ASSERT_TRUE(x < y);
+    ASSERT_TRUE(y > x);
+    ASSERT_TRUE(x <= y);
+    ASSERT_TRUE(y >= x);
+    ASSERT_TRUE(x != y);
+    ASSERT_FALSE(x > y);
+    ASSERT_FALSE(y < x);
+    ASSERT_FALSE(x >= y);
+    ASSERT_FALSE(y <= x);
+    ASSERT_FALSE(x == y);
+
+    x = 1.5;
+    y = 1.5;
+    ASSERT_TRUE(x == y);
+    ASSERT_TRUE(y == x);
+    ASSERT_TRUE(x <= y);
+    ASSERT_TRUE(y <= x);
+    ASSERT_TRUE(x >= y);
+    ASSERT_TRUE(y >= x);
+    ASSERT_FALSE(x < y);
+    ASSERT_FALSE(y < x);
+    ASSERT_FALSE(x > y);
+    ASSERT_FALSE(y > x);
+    ASSERT_FALSE(x != y);
+    ASSERT_FALSE(y != x);
+
+    ASSERT_TRUE(x <= 1.5);
+    ASSERT_TRUE(x == 1.5);
+    ASSERT_TRUE(x >= 1.5);
+    ASSERT_FALSE(x < 1.5);
+    ASSERT_FALSE(x > 1.5);
+    ASSERT_FALSE(x != 1.5);
+}
+
 struct GTestValueStruct {};
 
 TEST(GTestValue, TestType) {
