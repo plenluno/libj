@@ -5,41 +5,24 @@
 
 #include "libj/js_array.h"
 
-#include "./array_list.h"
+#include "./generic_js_array.h"
 
 namespace libj {
 namespace detail {
 
 template<typename I>
-class JsArray : public ArrayList<I> {
+class JsArray : public GenericJsArray<Value, I> {
  public:
-    virtual Value subList(Size from, Size to) const {
-        if (to > this->size() || from > to) {
-            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
-        }
-
-        typename ArrayList<I>::Ptr a = JsArray::create();
-        for (Size i = from; i < to; i++) {
-            a->add(this->get(i));
-        }
-        return a;
+    virtual Boolean add(const Value& v) {
+        return this->addTyped(v);
     }
 
-    virtual String::CPtr toString() const {
-        StringBuffer::Ptr sb = StringBuffer::create();
-        Iterator::Ptr itr = this->iterator();
-        Boolean first = true;
-        while (itr->hasNext()) {
-            Value v = itr->next();
-            if (first) {
-                first = false;
-            } else {
-                sb->appendChar(',');
-            }
-            if (!v.isNull() && !v.isUndefined())
-                sb->append(String::valueOf(v));
-        }
-        return sb->toString();
+    virtual Boolean add(Size i, const Value& v) {
+        return this->addTyped(i, v);
+    }
+
+    virtual Boolean set(Size i, const Value& v) {
+        return this->setTyped(i, v);
     }
 };
 

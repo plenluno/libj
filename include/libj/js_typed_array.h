@@ -4,16 +4,17 @@
 #define LIBJ_JS_TYPED_ARRAY_H_
 
 #include "libj/js_array.h"
-#include "libj/js_property.h"
-#include "libj/typed_array_list.h"
+#include "libj/typed_list.h"
+#include "libj/detail/generic_js_array.h"
 
 namespace libj {
 
 template<typename T>
 class JsTypedArray
-    : public JsPropertyMixin
-    , LIBJ_TYPED_ARRAY_LIST_TEMPLATE(JsTypedArray, T)
+    : public detail::GenericJsArray<T, TypedList<T, JsArray> > {
  public:
+    LIBJ_MUTABLE_TEMPLATE_DEFS(JsTypedArray, JsArray);
+
     static Ptr create() {
         return Ptr(new JsTypedArray());
     }
@@ -31,23 +32,6 @@ class JsTypedArray
             }
         }
         return ary;
-    }
-
-    virtual String::CPtr toString() const {
-        StringBuffer::Ptr sb = StringBuffer::create();
-        Iterator::Ptr itr = this->iterator();
-        Boolean first = true;
-        while (itr->hasNext()) {
-            Value v = itr->next();
-            if (first) {
-                first = false;
-            } else {
-                sb->appendChar(',');
-            }
-            if (!v.isNull() && !v.isUndefined())
-                sb->append(String::valueOf(v));
-        }
-        return sb->toString();
     }
 
     virtual Value subList(Size from, Size to) const {
