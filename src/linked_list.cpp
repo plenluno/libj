@@ -5,7 +5,7 @@
 namespace libj {
 
 LinkedList::Ptr LinkedList::create() {
-    return Ptr(new detail::LinkedList<libj::LinkedList>());
+    return Ptr(new detail::LinkedList<LinkedList>());
 }
 
 }  // namespace libj

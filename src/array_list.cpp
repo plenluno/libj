@@ -5,7 +5,7 @@
 namespace libj {
 
 ArrayList::Ptr ArrayList::create() {
-    return Ptr(new detail::ArrayList<libj::ArrayList>());
+    return Ptr(new detail::ArrayList<ArrayList>());
 }
 
 }  // namespace libj
