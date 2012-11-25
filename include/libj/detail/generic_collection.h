@@ -6,23 +6,14 @@
 #include <vector>
 
 #include "libj/collection.h"
-#include "libj/exception.h"
 #include "libj/iterator.h"
 #include "libj/typed_iterator.h"
 #include "libj/string_buffer.h"
-#include "libj/value.h"
+
+#include "./util.h"
 
 namespace libj {
 namespace detail {
-
-template<typename T>
-Boolean convert(const Value& v, T* t) {
-    Boolean result = to<T>(v, t);
-#ifdef LIBJ_USE_EXCEPTION
-    if (!result) LIBJ_THROW(Error::ILLEGAL_TYPE);
-#endif  // LIBJ_USE_EXCEPTION
-    return result;
-}
 
 template<typename T, typename I>
 class GenericCollection : public I {
