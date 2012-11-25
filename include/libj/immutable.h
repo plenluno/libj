@@ -15,45 +15,16 @@ class Immutable
  public:
     typedef LIBJ_CPTR(Immutable) CPtr;
 
-    static CPtr null() {
-        static LIBJ_NULL_CPTR_DEF(Immutable, nullp);
-        return nullp;
-    }
+    static CPtr null();
 
-    Boolean instanceof(TypeId id) const {
-        return id == Type<Immutable>::id()
-            || Object::instanceof(id);
-    }
+    Boolean instanceof(TypeId id) const;
 };
 
-#define LIBJ_IMMUTABLE_METHODS(T, B) public: \
-    libj::TypeId type() const { \
-        return libj::Type<T>::id(); \
-    } \
-    Boolean instanceof(libj::TypeId id) const { \
-        return id == libj::Type<T>::id() \
-            || B::instanceof(id); \
-    }
+}  // namespace libj
 
-#define LIBJ_IMMUTABLE_DEFS(T, B) public: \
-    typedef LIBJ_CPTR(T) CPtr; \
-    LIBJ_IMMUTABLE_METHODS(T, B) \
-    static CPtr null() { \
-        LIBJ_NULL_CPTR_DEF(T, nullp); \
-        return nullp; \
-    }
-
-#define LIBJ_IMMUTABLE_TEMPLATE_DEFS(T, B) public: \
-    typedef LIBJ_CPTR_TYPE(T) CPtr; \
-    LIBJ_IMMUTABLE_METHODS(T, B) \
-    static CPtr null() { \
-        LIBJ_NULL_CPTR_TYPE_DEF(T, nullp); \
-        return nullp; \
-    }
+#include "./detail/immutable.h"
 
 #define LIBJ_IMMUTABLE(T) public libj::Immutable { \
     LIBJ_IMMUTABLE_DEFS(T, libj::Immutable)
-
-}  // namespace libj
 
 #endif  // LIBJ_IMMUTABLE_H_

@@ -14,51 +14,13 @@ class Singleton
     typedef LIBJ_PTR(Singleton) Ptr;
     typedef LIBJ_CPTR(Singleton) CPtr;
 
-    static Ptr null() {
-        static LIBJ_NULL_PTR_DEF(Singleton, nullp);
-        return nullp;
-    }
+    static Ptr null();
 };
-
-template<typename T>
-class SingletonTmpl
-    : public Singleton {
- public:
-    typedef LIBJ_PTR_TYPE(T) Ptr;
-    typedef LIBJ_CPTR_TYPE(T) CPtr;
-
-    static Ptr null() {
-        static LIBJ_NULL_PTR_TYPE_DEF(T, nullp);
-        return nullp;
-    }
-
-    static Ptr instance() {
-        static T t;
-        LIBJ_SINGLETON_PTR_TYPE_DEF(T, p, &t);
-        return p;
-    }
-
-    TypeId type() const {
-        return Type<T>::id();
-    }
-
-    Boolean instanceof(TypeId id) const {
-        return id == type()
-            || id == Type<Singleton>::id()
-            || Object::instanceof(id);
-    }
-
- protected:
-    SingletonTmpl() {}
-    virtual ~SingletonTmpl() {}
-};
-
-#define LIBJ_SINGLETON(T) public libj::SingletonTmpl<T> { \
-private: \
-    friend class libj::SingletonTmpl<T>; \
-    T() : libj::SingletonTmpl<T>() {} \
-    ~T() {}
 
 }  // namespace libj
+
+#include "./detail/singleton.h"
+
+#define LIBJ_SINGLETON(T) LIBJ_SINGLETON_DEFS(T)
 
 #endif  // LIBJ_SINGLETON_H_

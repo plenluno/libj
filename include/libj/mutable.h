@@ -16,50 +16,19 @@ class Mutable
     typedef LIBJ_PTR(Mutable) Ptr;
     typedef LIBJ_CPTR(Mutable) CPtr;
 
-    static Ptr null() {
-        static LIBJ_NULL_PTR_DEF(Mutable, nullp);
-        return nullp;
-    }
+    static Ptr null();
 
-    Boolean instanceof(TypeId id) const {
-        return id == Type<Mutable>::id()
-            || Object::instanceof(id);
-    }
+    virtual Boolean instanceof(TypeId id) const;
 };
 
-#define LIBJ_MUTABLE_METHODS(T, B) public: \
-    libj::TypeId type() const { \
-        return libj::Type<T >::id(); \
-    } \
-    Boolean instanceof(libj::TypeId id) const { \
-        return id == libj::Type<T >::id() \
-            || B::instanceof(id); \
-    }
+}  // namespace libj
 
-#define LIBJ_MUTABLE_DEFS(T, B) public: \
-    typedef LIBJ_PTR(T) Ptr; \
-    typedef LIBJ_CPTR(T) CPtr; \
-    LIBJ_MUTABLE_METHODS(T, B) \
-    static Ptr null() { \
-        LIBJ_NULL_PTR_DEF(T, nullp); \
-        return nullp; \
-    }
-
-#define LIBJ_MUTABLE_TEMPLATE_DEFS(T, B) public: \
-    typedef LIBJ_PTR_TYPE(T) Ptr; \
-    typedef LIBJ_CPTR_TYPE(T) CPtr; \
-    LIBJ_MUTABLE_METHODS(T, B) \
-    static Ptr null() { \
-        LIBJ_NULL_PTR_TYPE_DEF(T, nullp); \
-        return nullp; \
-    }
+#include "./detail/mutable.h"
 
 #define LIBJ_MUTABLE(T) public libj::Mutable { \
     LIBJ_MUTABLE_DEFS(T, libj::Mutable)
 
 #define LIBJ_MUTABLE_TEMPLATE(T) public libj::Mutable { \
     LIBJ_MUTABLE_TEMPLATE_DEFS(T, libj::Mutable)
-
-}  // namespace libj
 
 #endif  // LIBJ_MUTABLE_H_
