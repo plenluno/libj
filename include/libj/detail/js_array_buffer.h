@@ -3,6 +3,8 @@
 #ifndef LIBJ_DETAIL_JS_ARRAY_BUFFER_H_
 #define LIBJ_DETAIL_JS_ARRAY_BUFFER_H_
 
+#include <algorithm>
+
 #include "libj/endian.h"
 #include "libj/string.h"
 
