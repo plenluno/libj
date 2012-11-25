@@ -60,6 +60,7 @@ set(libj-src
     src/array_list.cpp
     src/console.cpp
     src/constant.cpp
+    src/endian.cpp
     src/error.cpp
     src/json.cpp
     src/js_array.cpp
