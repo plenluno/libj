@@ -146,6 +146,23 @@ class GenericArrayList : public GenericList<T, I> {
         return typename TypedIterator<T>::Ptr(new TypedReverseIterator(vec_));
     }
 
+ public:
+    virtual Boolean hasProperty(const Value& name) const {
+        return false;
+    }
+
+    virtual Value getProperty(const Value& name) const {
+        return UNDEFINED;
+    }
+
+    virtual Value setProperty(const Value& name, const Value& val) {
+        return UNDEFINED;
+    }
+
+    virtual Value deleteProperty(const Value& name) {
+        return UNDEFINED;
+    }
+
  private:
     class ObverseIterator : public Iterator {
         friend class GenericArrayList;

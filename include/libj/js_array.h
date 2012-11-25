@@ -4,17 +4,22 @@
 #define LIBJ_JS_ARRAY_H_
 
 #include "libj/array_list.h"
-#include "libj/js_property.h"
 
 namespace libj {
 
-class JsArray
-    : public JsPropertyMixin
-    , LIBJ_ARRAY_LIST(JsArray)
+class JsArray : LIBJ_ARRAY_LIST(JsArray)
  public:
     static Ptr create();
 
     static Ptr create(ArrayList::CPtr);
+
+    virtual Boolean hasProperty(const Value& name) const = 0;
+
+    virtual Value getProperty(const Value& name) const = 0;
+
+    virtual Value setProperty(const Value& name, const Value& val) = 0;
+
+    virtual Value deleteProperty(const Value& name) = 0;
 
  public:
     template<typename T>

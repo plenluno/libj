@@ -3,6 +3,9 @@
 #ifndef LIBJ_DETAIL_GENERIC_JS_ARRAY_H_
 #define LIBJ_DETAIL_GENERIC_JS_ARRAY_H_
 
+#include "libj/js_object.h"
+
+#include "./js_object.h"
 #include "./generic_array_list.h"
 
 namespace libj {
@@ -39,6 +42,26 @@ class GenericJsArray : public GenericArrayList<T, I> {
         }
         return sb->toString();
     }
+
+ public:
+    virtual Boolean hasProperty(const Value& name) const {
+        return obj_.hasProperty(name);
+    }
+
+    virtual Value getProperty(const Value& name) const {
+        return obj_.getProperty(name);
+    }
+
+    virtual Value setProperty(const Value& name, const Value& val) {
+        return obj_.setProperty(name, val);
+    }
+
+    virtual Value deleteProperty(const Value& name) {
+        return obj_.deleteProperty(name);
+    }
+
+ private:
+    detail::JsObject<libj::JsObject> obj_;
 };
 
 }  // namespace detail

@@ -11,12 +11,28 @@
 namespace libj {
 namespace bridge {
 
-template<typename T>
-class AbstractJsObject : public AbstractMap<T> {
+template<typename I>
+class AbstractJsObject : public AbstractMap<I> {
  public:
-    AbstractJsObject(JsObject::Ptr obj)
+    AbstractJsObject(JsObject::Ptr obj = JsObject::create())
         : AbstractMap<T>(obj)
         , obj_(obj) {}
+
+    virtual Boolean hasProperty(const Value& name) const {
+        return obj_->hasProperty(name);
+    }
+
+    virtual Value getProperty(const Value& name) const {
+        return obj_->getProperty(name);
+    }
+
+    virtual Value setProperty(const Value& name, const Value& val) {
+        return obj_->setProperty(name, val);
+    }
+
+    virtual Value deleteProperty(const Value& name) {
+        return obj_->deleteProperty(name);
+    }
 
     virtual String::CPtr toString() const {
         return obj_->toString();

@@ -11,23 +11,15 @@ class JsObject : LIBJ_MAP(JsObject)
  public:
     static Ptr create();
 
+    virtual Boolean hasProperty(const Value& name) const = 0;
+
+    virtual Value getProperty(const Value& name) const = 0;
+
+    virtual Value setProperty(const Value& name, const Value& val) = 0;
+
+    virtual Value deleteProperty(const Value& name) = 0;
+
  public:
-    Boolean hasProperty(const Value& name) const {
-        return containsKey(name);
-    }
-
-    Value getProperty(const Value& name) const {
-        return get(name);
-    }
-
-    Value setProperty(const Value& name, const Value& val) {
-        return put(name, val);
-    }
-
-    Value deleteProperty(const Value& name) {
-        return remove(name);
-    }
-
     template<typename T>
     typename Type<T>::Ptr getPtr(const Value& name) const {
         return toPtr<T>(get(name));

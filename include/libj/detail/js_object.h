@@ -12,6 +12,7 @@ namespace detail {
 
 template<typename I>
 class JsObject : public Map<I> {
+ public:
     virtual Boolean containsKey(const Value& key) const {
         return Map<I>::containsKey(String::valueOf(key));
     }
@@ -31,6 +32,23 @@ class JsObject : public Map<I> {
     virtual String::CPtr toString() const {
         LIBJ_STATIC_SYMBOL_DEF(symObject, "[object Object]");
         return symObject;
+    }
+
+ public:
+    virtual Boolean hasProperty(const Value& name) const {
+        return containsKey(name);
+    }
+
+    virtual Value getProperty(const Value& name) const {
+        return get(name);
+    }
+
+    virtual Value setProperty(const Value& name, const Value& val) {
+        return put(name, val);
+    }
+
+    virtual Value deleteProperty(const Value& name) {
+        return remove(name);
     }
 };
 
