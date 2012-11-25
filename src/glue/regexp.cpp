@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <iv/aero/aero.h>
 #include <string>
+#include <vector>
 
 #include "./regexp.h"
 
