@@ -11,7 +11,7 @@ namespace detail {
 template<typename I>
 class Status : public I {
  public:
- 	Status(Int code, String::CPtr msg)
+    Status(Int code, String::CPtr msg)
         : code_(code)
         , message_(msg) {}
 
