@@ -3,46 +3,31 @@
 #ifndef LIBJ_SRC_GLUE_REGEXP_H_
 #define LIBJ_SRC_GLUE_REGEXP_H_
 
-#include <string>
 #include <vector>
+
+#include "libj/js_regexp.h"
+#include "libj/string.h"
 
 namespace libj {
 namespace glue {
 
 class RegExp {
  public:
-    typedef std::basic_string<uint16_t> U16String;
+    // see JsRegExp::Flag
+    static RegExp* create(String::CPtr pattern, UInt flags);
 
-    enum Flag {
-        NONE        = 0,
-        GLOBAL      = 1 << 0,
-        IGNORE_CASE = 1 << 1,
-        MULTILINE   = 1 << 2,
-    };
+    virtual ~RegExp() {}
 
-    static RegExp* create(const U16String& pattern, unsigned int flags);
+    virtual Boolean global() const = 0;
 
-    bool global() const;
-    bool ignoreCase() const;
-    bool multiline() const;
+    virtual Boolean ignoreCase() const = 0;
 
-    bool execute(
-        const U16String& str,
+    virtual Boolean multiline() const = 0;
+
+    virtual Boolean execute(
+        String::CPtr str,
         int offset,
-        std::vector<int>& captures) const;
-
- private:
-    U16String pattern_;
-    unsigned int flags_;
-    void* code_;
-
-    RegExp(const U16String& pattern, int flags)
-        : pattern_(pattern)
-        , flags_(flags)
-        , code_(NULL) {}
-
- public:
-     virtual ~RegExp();
+        std::vector<int>& captures) const = 0;
 };
 
 }  // namespace glue

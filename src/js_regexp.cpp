@@ -11,19 +11,6 @@
 
 namespace libj {
 
-static glue::RegExp::U16String toU16String(String::CPtr str) {
-#ifdef LIBJ_USE_CXX11
-    glue::RegExp::U16String s;
-    std::u16string ss = str->toStdU16String();
-    for (size_t i = 0; i < ss.length(); i++) {
-        s.push_back(ss[i]);
-    }
-    return s;
-#else
-    return str->toStdU16String();
-#endif
-}
-
 typedef bridge::AbstractJsObject<JsRegExp> JsRegExpBase;
 
 class JsRegExpImpl : public JsRegExpBase {
@@ -63,7 +50,7 @@ class JsRegExpImpl : public JsRegExpBase {
         }
 
         std::vector<int> captures;
-        if (!re_->execute(toU16String(str), 0, captures)) {
+        if (!re_->execute(str, 0, captures)) {
             return JsArray::null();
         }
 
@@ -96,7 +83,7 @@ class JsRegExpImpl : public JsRegExpBase {
     JsRegExpImpl(String::CPtr pattern, UInt flags)
         : JsRegExpBase(JsObject::create())
         , pattern_(pattern)
-        , re_(glue::RegExp::create(toU16String(pattern), flags)) {}
+        , re_(glue::RegExp::create(pattern, flags)) {}
 
  public:
     ~JsRegExpImpl() {
