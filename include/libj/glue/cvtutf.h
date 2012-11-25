@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef LIBJ_SRC_GLUE_CVTUTF_H_
-#define LIBJ_SRC_GLUE_CVTUTF_H_
+#ifndef LIBJ_GLUE_CVTUTF_H_
+#define LIBJ_GLUE_CVTUTF_H_
 
 #include <string>
 
@@ -27,4 +27,4 @@ std::u16string utf32ToUtf16(const std::u32string& str);
 }  // namespace glue
 }  // namespace libj
 
-#endif  // LIBJ_SRC_GLUE_CVTUTF_H_
+#endif  // LIBJ_GLUE_CVTUTF_H_

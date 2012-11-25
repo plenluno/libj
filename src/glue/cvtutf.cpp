@@ -13,7 +13,7 @@
 #include <iconv.h>
 #include <string>
 
-#include "./cvtutf.h"
+#include "libj/glue/cvtutf.h"
 
 namespace libj {
 namespace glue {

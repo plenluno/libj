@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <string>
 
-#include "../src/glue/cvtutf.h"
+#include "libj/glue/cvtutf.h"
 
 #pragma GCC diagnostic ignored "-Wnarrowing"
 

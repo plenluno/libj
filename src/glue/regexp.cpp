@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "./regexp.h"
+#include "libj/glue/regexp.h"
 
 namespace libj {
 namespace glue {

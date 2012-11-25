@@ -9,8 +9,7 @@
 #include "libj/map.h"
 #include "libj/string.h"
 #include "libj/symbol.h"
-
-#include "./glue/cvtutf.h"
+#include "libj/glue/cvtutf.h"
 
 namespace libj {
 

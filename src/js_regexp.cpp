@@ -5,9 +5,8 @@
 
 #include "libj/js_regexp.h"
 #include "libj/symbol.h"
+#include "libj/glue/regexp.h"
 #include "libj/bridge/abstract_js_object.h"
-
-#include "./glue/regexp.h"
 
 namespace libj {
 
