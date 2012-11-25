@@ -1,6 +1,5 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include <assert.h>
 #include <iv/aero/aero.h>
 #include <string>
 #include <vector>
@@ -12,39 +11,28 @@ namespace glue {
 
 typedef std::basic_string<uint16_t> U16String;
 
-static U16String toU16String(String::CPtr str) {
-#ifdef LIBJ_USE_CXX11
-    U16String s;
-    std::u16string ss = str->toStdU16String();
-    for (size_t i = 0; i < ss.length(); i++) {
-        s.push_back(ss[i]);
-    }
-    return s;
-#else
-    return str->toStdU16String();
-#endif
+static U16String toU16String(const std::string& str) {
+    return U16String(reinterpret_cast<const uint16_t*>(str.c_str()));
 }
 
 class RegExpImpl : public RegExp {
  public:
-    virtual Boolean global() const {
-        return flags_ & JsRegExp::GLOBAL;
+    virtual bool global() const {
+        return flags_ & GLOBAL;
     }
 
-    virtual Boolean ignoreCase() const {
-        return flags_ & JsRegExp::IGNORE_CASE;
+    virtual bool ignoreCase() const {
+        return flags_ & IGNORE_CASE;
     }
 
-    virtual Boolean multiline() const {
-        return flags_ & JsRegExp::MULTILINE;
+    virtual bool multiline() const {
+        return flags_ & MULTILINE;
     }
 
-    virtual Boolean execute(
-        String::CPtr str,
+    virtual bool execute(
+        const std::string& str,
         int offset,
         std::vector<int>& captures) const {
-        if (!str) return false;
-
         static iv::aero::VM vm;
         captures.clear();
         assert(code_);
@@ -56,16 +44,16 @@ class RegExpImpl : public RegExp {
         return res == iv::aero::AERO_SUCCESS;
     }
 
-    Boolean valid() {
+    bool valid() const {
         return !!code_;
     }
 
-    RegExpImpl(const U16String& pattern, UInt flags)
+    RegExpImpl(const U16String& pattern, unsigned flags)
         : flags_(flags)
         , code_(NULL) {
         iv::core::Space space;
-        int fs = (flags & JsRegExp::IGNORE_CASE ? iv::aero::IGNORE_CASE : 0)
-               | (flags & JsRegExp::MULTILINE ? iv::aero::MULTILINE : 0);
+        int fs = (flags & IGNORE_CASE ? iv::aero::IGNORE_CASE : 0)
+               | (flags & MULTILINE ? iv::aero::MULTILINE : 0);
         int error = 0;
         code_ = iv::aero::Compile(&space, pattern, fs, &error);
         if (error) {
@@ -80,13 +68,11 @@ class RegExpImpl : public RegExp {
     }
 
  private:
-    UInt flags_;
+    unsigned flags_;
     iv::aero::Code* code_;
 };
 
-RegExp* RegExp::create(String::CPtr pattern, UInt flags) {
-    if (!pattern) return NULL;
-
+RegExp* RegExp::create(const std::string& pattern, unsigned flags) {
     U16String ptn = toU16String(pattern);
     RegExpImpl* re = new RegExpImpl(ptn, flags);
     if (re->valid()) {
@@ -95,6 +81,10 @@ RegExp* RegExp::create(String::CPtr pattern, UInt flags) {
         delete re;
         return NULL;
     }
+}
+
+RegExp::Encoding RegExp::encoding() {
+    return UTF16;
 }
 
 }  // namespace glue
