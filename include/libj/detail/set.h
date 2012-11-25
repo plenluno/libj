@@ -3,8 +3,6 @@
 #ifndef LIBJ_DETAIL_SET_H_
 #define LIBJ_DETAIL_SET_H_
 
-#include "libj/set.h"
-
 #include "./generic_set.h"
 
 namespace libj {
@@ -14,11 +12,11 @@ template<typename I>
 class Set : public GenericSet<Value, I> {
  public:
     Boolean add(const Value& v) {
-        return this->addTyped(v);
+        return GenericSet<Value, I>::addTyped(v);
     }
 
     Boolean remove(const Value& v) {
-        return this->removeTyped(v);
+        return GenericSet<Value, I>::removeTyped(v);
     }
 };
 

@@ -1,5 +1,6 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#include "Libj/js_array.h"
 #include "libj/detail/js_array.h"
 
 namespace libj {

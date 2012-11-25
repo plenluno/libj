@@ -3,8 +3,6 @@
 #ifndef LIBJ_DETAIL_LINKED_LIST_H_
 #define LIBJ_DETAIL_LINKED_LIST_H_
 
-#include "libj/linked_list.h"
-
 #include "./generic_linked_list.h"
 
 namespace libj {
@@ -14,15 +12,15 @@ template<typename I>
 class LinkedList : public GenericLinkedList<Value, I> {
  public:
     virtual Boolean add(const Value& v) {
-        return this->addTyped(v);
+        return GenericLinkedList<Value, I>::addTyped(v);
     }
 
     virtual Boolean add(Size i, const Value& v) {
-        return this->addTyped(i, v);
+        return GenericLinkedList<Value, I>::addTyped(i, v);
     }
 
     virtual Boolean set(Size i, const Value& v) {
-        return this->setTyped(i, v);
+        return GenericLinkedList<Value, I>::setTyped(i, v);
     }
 };
 
