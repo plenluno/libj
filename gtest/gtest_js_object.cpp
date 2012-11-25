@@ -11,15 +11,10 @@ class GTestJsObject : LIBJ_JS_OBJECT(GTestJsObject)
     static Ptr create();
 };
 
-typedef bridge::AbstractJsObject<GTestJsObject> GTestJsObjectBase;
-
-class GTestJsObjectImpl : public GTestJsObjectBase {
- public:
-    GTestJsObjectImpl() : GTestJsObjectBase(JsObject::create()) {}
-};
+class GTestJsObjectImpl : public bridge::AbstractJsObject<GTestJsObject> {};
 
 GTestJsObject::Ptr GTestJsObject::create() {
-    return GTestJsObject::Ptr(new GTestJsObjectImpl());
+    return Ptr(new GTestJsObjectImpl());
 }
 
 TEST(GTestJsObject, TestToString) {

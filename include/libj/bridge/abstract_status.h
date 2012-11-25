@@ -8,8 +8,8 @@
 namespace libj {
 namespace bridge {
 
-template<typename T>
-class AbstractStatus : public T {
+template<typename I>
+class AbstractStatus : public I {
  public:
     AbstractStatus(Status::CPtr status) : status_(status) {}
 

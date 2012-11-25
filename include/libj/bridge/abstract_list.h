@@ -10,11 +10,11 @@
 namespace libj {
 namespace bridge {
 
-template<typename T>
-class AbstractList : public AbstractCollection<T> {
+template<typename I>
+class AbstractList : public AbstractCollection<I> {
  public:
     AbstractList(List::Ptr list)
-        : AbstractCollection<T>(list)
+        : AbstractCollection<I>(list)
         , list_(list) {}
 
     virtual Boolean add(const Value& v) {

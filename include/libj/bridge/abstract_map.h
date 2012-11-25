@@ -8,10 +8,10 @@
 namespace libj {
 namespace bridge {
 
-template<typename T>
-class AbstractMap : public T {
+template<typename I>
+class AbstractMap : public I {
  public:
-    AbstractMap(Map::Ptr map) : map_(map) {}
+    AbstractMap(Map::Ptr map = Map::create()) : map_(map) {}
 
     virtual void clear() {
         map_->clear();

@@ -8,10 +8,12 @@
 namespace libj {
 namespace bridge {
 
-template<typename T>
-class AbstractJsArrayBuffer : public T {
+template<typename I>
+class AbstractJsArrayBuffer : public I {
  public:
-    AbstractJsArrayBuffer(JsArrayBuffer::Ptr buf) : buf_(buf) {}
+    AbstractJsArrayBuffer(
+        JsArrayBuffer::Ptr buf = JsArrayBuffer::create())
+        : buf_(buf) {}
 
     virtual Size length() const {
         return buf_->length();
