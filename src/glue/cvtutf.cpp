@@ -13,18 +13,15 @@
 #include <iconv.h>
 #include <string>
 
+#include "libj/endian.h"
 #include "libj/glue/cvtutf.h"
 
 namespace libj {
 namespace glue {
 
 static bool isBigEndian() {
-    static union {
-        uint32_t i;
-        uint8_t c[4];
-    } u = { 0x01020304 };
-
-    return u.c[0] == 1;
+    static bool big = endian() == BIG;
+    return big;
 }
 
 static iconv_t iconvOpen(const char* inEnc, UnicodeEncoding outEnc) {
