@@ -15,7 +15,7 @@ template<typename I>
 class AbstractJsObject : public AbstractMap<I> {
  public:
     AbstractJsObject(JsObject::Ptr obj = JsObject::create())
-        : AbstractMap<T>(obj)
+        : AbstractMap<I>(obj)
         , obj_(obj) {}
 
     virtual Boolean hasProperty(const Value& name) const {
