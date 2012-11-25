@@ -18,8 +18,8 @@ namespace detail {
 template<typename T, typename I>
 class GenericCollection : public I {
  public:
-    typedef LIBJ_PTR_TYPE(I) Ptr;
-    typedef LIBJ_CPTR_TYPE(I) CPtr;
+    typedef typename I::Ptr Ptr;
+    typedef typename I::CPtr CPtr;
 
     virtual ~GenericCollection() {}
 
