@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include "libj/error.h"
-#include "libj/bridge/abstract_status.h"
+#include "libj/detail/status.h"
 
 namespace libj {
 
@@ -22,51 +22,28 @@ namespace libj {
     GEN(UNSUPPORTED_VERSION, "Unsupported Version") \
     GEN(UNSUPPORTED_OPERATION, "Unsupported Operation")
 
-#define LIBJ_ERROR_MSG_DECL_GEN(NAME, MESSAGE) \
-    static const String::CPtr MSG_##NAME;
+#define LIBJ_ERROR_MSG_DEF_GEN(NAME, MESSAGE) \
+    const String::CPtr MSG_##NAME = String::create(MESSAGE);
 
 #define LIBJ_ERROR_MSG_CASE_GEN(NAME, MESSAGE) \
     case NAME: \
         msg = MSG_##NAME; \
         break;
 
-typedef bridge::AbstractStatus<Error> ErrorBase;
-
-class ErrorImpl : public ErrorBase {
- private:
-    LIBJ_ERROR_MSG_MAP(LIBJ_ERROR_MSG_DECL_GEN)
-
- private:
-    ErrorImpl(Int code, String::CPtr msg)
-        : ErrorBase(Status::create(code, msg)) {}
-
- public:
-    static CPtr create(Code code) {
-        String::CPtr msg;
-        switch (code) {
-            LIBJ_ERROR_MSG_MAP(LIBJ_ERROR_MSG_CASE_GEN)
-        default:
-            return null();
-        }
-        return CPtr(new ErrorImpl(code, msg));
-    }
-
-    static CPtr create(Code code, String::CPtr msg) {
-        return CPtr(new ErrorImpl(code, msg));
-    }
-};
-
-#define LIBJ_ERROR_MSG_DEF_GEN(NAME, MESSAGE) \
-    const String::CPtr ErrorImpl::MSG_##NAME = String::create(MESSAGE);
-
-LIBJ_ERROR_MSG_MAP(LIBJ_ERROR_MSG_DEF_GEN)
-
 Error::CPtr Error::create(Error::Code code) {
-    return ErrorImpl::create(code);
+    LIBJ_ERROR_MSG_MAP(LIBJ_ERROR_MSG_DEF_GEN);
+
+    String::CPtr msg;
+    switch (code) {
+        LIBJ_ERROR_MSG_MAP(LIBJ_ERROR_MSG_CASE_GEN);
+    default:
+        return null();
+    }
+    return CPtr(new detail::Status<Error>(code, msg));
 }
 
 Error::CPtr Error::create(Error::Code code, String::CPtr msg) {
-    return ErrorImpl::create(code, msg);
+    return CPtr(new detail::Status<Error>(code, msg));
 }
 
 }  // namespace libj
