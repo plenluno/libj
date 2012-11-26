@@ -2,14 +2,13 @@
 
 #include <assert.h>
 #include <stdio.h>
-#include <iv/lv5/third_party/v8_dtoa/conversions.h>
-
 #include <string>
 
 #include "libj/map.h"
 #include "libj/string.h"
 #include "libj/symbol.h"
 #include "libj/glue/cvtutf.h"
+#include "libj/glue/dtoa.h"
 
 namespace libj {
 
@@ -449,22 +448,6 @@ static String::CPtr ulongToString(const Value& val) {
     return String::create(s);
 }
 
-static String::CPtr floatToString(const Value& val) {
-    Float f;
-    to<Float>(val, &f);
-    const Size kLen = 64;
-    char s[kLen];
-    return String::create(v8::internal::DoubleToCString(f, s, kLen));
-}
-
-static String::CPtr doubleToString(const Value& val) {
-    Double d;
-    to<Double>(val, &d);
-    const Size kLen = 64;
-    char s[kLen];
-    return String::create(v8::internal::DoubleToCString(d, s, kLen));
-}
-
 static String::CPtr sizeToString(const Value& val) {
     Size n;
     to<Size>(val, &n);
@@ -481,6 +464,18 @@ static String::CPtr typeIdToString(const Value& val) {
     char s[kLen];
     snprintf(s, kLen, "%zd", t);
     return String::create(s);
+}
+
+static String::CPtr floatToString(const Value& val) {
+    Float f;
+    to<Float>(val, &f);
+    return glue::dtoa::doubleToString(f);
+}
+
+static String::CPtr doubleToString(const Value& val) {
+    Double d;
+    to<Double>(val, &d);
+    return glue::dtoa::doubleToString(d);
 }
 
 static String::CPtr objectToString(const Value& val) {
