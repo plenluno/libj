@@ -114,9 +114,17 @@ set(libj-cflags
     -fno-rtti
 )
 
+set(libj-deps-cflags
+    -fno-rtti
+)
+
 if(LIBJ_USE_CXX11)
     set(libj-cflags
         ${libj-cflags}
+        --std=c++0x
+    )
+    set(libj-deps-cflags
+        ${libj-deps-cflags}
         --std=c++0x
     )
 endif(LIBJ_USE_CXX11)
@@ -129,6 +137,7 @@ if(NOT LIBJ_USE_EXCEPTION)
 endif(NOT LIBJ_USE_EXCEPTION)
 
 string(REPLACE ";" " " libj-cflags "${libj-cflags}")
+string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
 
 # build libraries ----------------------------------------------------------------------------------
 
@@ -146,7 +155,7 @@ add_library(cvtutf STATIC
 )
 
 set_target_properties(cvtutf PROPERTIES
-    COMPILE_FLAGS ${libj-cflags}
+    COMPILE_FLAGS ${libj-deps-cflags}
 )
 
 ## json
@@ -158,7 +167,7 @@ add_library(json STATIC
 )
 
 set_target_properties(json PROPERTIES
-    COMPILE_FLAGS "${libj-cflags}"
+    COMPILE_FLAGS ${libj-deps-cflags}
 )
 
 ## regexp
@@ -185,11 +194,9 @@ add_library(dtoa STATIC
     deps/iv/iv/lv5/third_party/v8_dtoa/v8-dtoa.cc
 )
 
-if(LIBJ_USE_CXX11)
-    set_target_properties(dtoa PROPERTIES
-        COMPILE_FLAGS "--std=c++0x"
-    )
-endif(LIBJ_USE_CXX11)
+set_target_properties(dtoa PROPERTIES
+    COMPILE_FLAGS ${libj-deps-cflags}
+)
 
 ## libj
 add_library(j STATIC
