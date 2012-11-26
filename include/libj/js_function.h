@@ -12,18 +12,43 @@ class JsFunction : LIBJ_FUNCTION(JsFunction)
  public:
     virtual Value operator()(JsArray::Ptr args = JsArray::null()) = 0;
 
- public:
-    Value operator()(ArrayList::Ptr args) {
-        return operator()(JsArray::create(args));
-    }
+    virtual Value operator()(ArrayList::Ptr args);
+
+    virtual Value call();
+
+    virtual Value call(const Value& v1);
+
+    virtual Value call(const Value& v1, const Value& v2);
+
+    virtual Value call(const Value& v1, const Value& v2, const Value& v3);
+
+    virtual Value call(const Value& v1, const Value& v2, const Value& v3,
+                       const Value& v4);
+
+    virtual Value call(const Value& v1, const Value& v2, const Value& v3,
+                       const Value& v4, const Value& v5);
+
+    virtual Value call(const Value& v1, const Value& v2, const Value& v3,
+                       const Value& v4, const Value& v5, const Value& v6);
+
+    virtual Value call(const Value& v1, const Value& v2, const Value& v3,
+                       const Value& v4, const Value& v5, const Value& v6,
+                       const Value& v7);
+
+    virtual Value call(const Value& v1, const Value& v2, const Value& v3,
+                       const Value& v4, const Value& v5, const Value& v6,
+                       const Value& v7, const Value& v8);
+
+    virtual Value call(const Value& v1, const Value& v2, const Value& v3,
+                       const Value& v4, const Value& v5, const Value& v6,
+                       const Value& v7, const Value& v8, const Value& v9);
 };
 
-#define LIBJ_JS_FUNCTION(T) public libj::JsFunction { \
-    LIBJ_MUTABLE_DEFS(T, libj::JsFunction) \
-    String::CPtr toString() const { \
-        return String::create("function " #T "() {}"); \
-    }
-
 }  // namespace libj
+
+#include "./detail/js_function.h"
+
+#define LIBJ_JS_FUNCTION(T) public libj::JsFunction { \
+    LIBJ_JS_FUNCTION_DEFS(T)
 
 #endif  // LIBJ_JS_FUNCTION_H_

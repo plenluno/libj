@@ -34,18 +34,41 @@ class GTestFunctionAdd : LIBJ_FUNCTION(GTestFunctionAdd)
     }
 };
 
+class GTestFunctionAddx2 : public GTestFunctionAdd {
+ public:
+    Value operator()(ArrayList::Ptr args) {
+        Value val = GTestFunctionAdd::operator()(args);
+        Int sum;
+        if (to<Int>(val, &sum)) {
+            return sum * 2;
+        } else {
+            return val;
+        }
+    }
+
+    static Ptr create() {
+        return Ptr(new GTestFunctionAddx2());
+    }
+};
+
 TEST(GTestFunction, TestFunctor) {
     Function::Ptr add = GTestFunctionAdd::create();
+    Function::Ptr addx2 = GTestFunctionAddx2::create();
+
     ArrayList::Ptr args = ArrayList::create();
     args->add(2);
     args->add(3);
     ASSERT_TRUE((*add)(args).equals(5));
+    ASSERT_TRUE((*addx2)(args).equals(10));
 
     ASSERT_TRUE((*add)().instanceof(Type<Error>::id()));
+    ASSERT_TRUE((*addx2)().instanceof(Type<Error>::id()));
 }
 
 TEST(GTestFunction, TestCall) {
     Function::Ptr add = GTestFunctionAdd::create();
+    Function::Ptr addx2 = GTestFunctionAddx2::create();
+
     ASSERT_TRUE(add->call().instanceof(Type<Error>::id()));
     ASSERT_TRUE(add->call(1).equals(1));
     ASSERT_TRUE(add->call(1, 2).equals(3));
@@ -56,6 +79,7 @@ TEST(GTestFunction, TestCall) {
     ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7).equals(28));
     ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7, 8).equals(36));
     ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7, 8, 9).equals(45));
+    ASSERT_TRUE(addx2->call(1, 2, 3, 4, 5, 6, 7, 8, 9).equals(90));
 }
 
 #ifdef LIBJ_USE_SP
