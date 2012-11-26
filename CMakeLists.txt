@@ -157,6 +157,10 @@ add_library(json STATIC
     deps/jsoncpp/src/lib_json/json_writer.cpp
 )
 
+set_target_properties(json PROPERTIES
+    COMPILE_FLAGS "${libj-cflags}"
+)
+
 ## regexp
 add_library(regexp STATIC
     src/glue/regexp.cpp
@@ -164,7 +168,8 @@ add_library(regexp STATIC
 
 if(NOT APPLE OR LIBJ_USE_CXX11)
     set_target_properties(regexp PROPERTIES
-        COMPILE_FLAGS "--std=c++0x")
+        COMPILE_FLAGS "--std=c++0x"
+    )
 endif(NOT APPLE OR LIBJ_USE_CXX11)
 
 ## dtoa
@@ -179,6 +184,12 @@ add_library(dtoa STATIC
     deps/iv/iv/lv5/third_party/v8_dtoa/utils.cc
     deps/iv/iv/lv5/third_party/v8_dtoa/v8-dtoa.cc
 )
+
+if(LIBJ_USE_CXX11)
+    set_target_properties(dtoa PROPERTIES
+        COMPILE_FLAGS "--std=c++0x"
+    )
+endif(LIBJ_USE_CXX11)
 
 ## libj
 add_library(j STATIC
