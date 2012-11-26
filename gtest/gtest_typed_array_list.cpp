@@ -26,6 +26,16 @@ TEST(GTestTypedArrayList, TestCreate2) {
 #endif  // LIBJ_USE_EXCEPTION
 }
 
+TEST(GTestTypedArrayList, TestInstanceOf) {
+    TypedArrayList<Int>::Ptr a = TypedArrayList<Int>::create();
+    ASSERT_TRUE(a->instanceof(Type<TypedArrayList<Int> >::id()));
+    ASSERT_TRUE(a->instanceof(Type<ArrayList>::id()));
+    ASSERT_TRUE(a->instanceof(Type<List>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Collection>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+}
+
 TEST(GTestTypedArrayList, TestAdd) {
     TypedArrayList<String::CPtr>::Ptr ta =
          TypedArrayList<String::CPtr>::create();
@@ -113,6 +123,9 @@ TEST(GTestTypedArrayList, TestShiftTypedAndUnshiftTyped) {
     ASSERT_EQ(7, a->shiftTyped());
     ASSERT_EQ(5, a->shiftTyped());
     ASSERT_TRUE(a->isEmpty());
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(a->shiftTyped());
+#endif
 }
 
 TEST(GTestTypedArrayList, TestPushTypedAndPopTyped) {
@@ -123,6 +136,9 @@ TEST(GTestTypedArrayList, TestPushTypedAndPopTyped) {
     ASSERT_EQ(7, a->popTyped());
     ASSERT_EQ(5, a->popTyped());
     ASSERT_TRUE(a->isEmpty());
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(a->popTyped());
+#endif
 }
 
 TEST(GTestTypedArrayList, TestIteratorTyped) {

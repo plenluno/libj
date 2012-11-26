@@ -26,6 +26,16 @@ TEST(GTestTypedLinkedList, TestCreate2) {
 #endif  // LIBJ_USE_EXCEPTION
 }
 
+TEST(GTestTypedLinkedList, TestInstanceOf) {
+    TypedLinkedList<Int>::Ptr l = TypedLinkedList<Int>::create();
+    ASSERT_TRUE(l->instanceof(Type<TypedLinkedList<Int> >::id()));
+    ASSERT_TRUE(l->instanceof(Type<LinkedList>::id()));
+    ASSERT_TRUE(l->instanceof(Type<List>::id()));
+    ASSERT_TRUE(l->instanceof(Type<Collection>::id()));
+    ASSERT_TRUE(l->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(l->instanceof(Type<Object>::id()));
+}
+
 TEST(GTestTypedLinkedList, TestAdd) {
     TypedLinkedList<String::CPtr>::Ptr tl =
          TypedLinkedList<String::CPtr>::create();
