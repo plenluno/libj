@@ -15,51 +15,15 @@ class TypedJsArray
  public:
     LIBJ_MUTABLE_TEMPLATE_DEFS(TypedJsArray, JsArray);
 
-    static Ptr create() {
-        return Ptr(new TypedJsArray());
-    }
+    static Ptr create();
 
-    static Ptr create(Collection::CPtr c) {
-        Ptr ary(new TypedJsArray());
-        Iterator::Ptr itr = c->iterator();
-        while (itr->hasNext()) {
-            Value v = itr->next();
-            T t;
-            if (detail::convert<T>(v, &t)) {
-                ary->addTyped(t);
-            } else {
-                return null();
-            }
-        }
-        return ary;
-    }
+    static Ptr create(Collection::CPtr c);
 
-    virtual Value subList(Size from, Size to) const {
-        if (to > this->size() || from > to) {
-            LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
-        }
-
-        TypedJsArray* ary(new TypedJsArray());
-        for (Size i = from; i < to; i++) {
-            ary->addTyped(this->getTyped(i));
-        }
-        return Ptr(ary);
-    }
-
-    Ptr subarray(Size from, Size to = NO_POS) const {
-        to = to > this->size() ? this->size() : to;
-        if (from >= to) {
-            return Ptr(new TypedJsArray());
-        }
-
-        TypedJsArray* ary(new TypedJsArray());
-        for (Size i = from; i < to; i++) {
-            ary->addTyped(this->getTyped(i));
-        }
-        return Ptr(ary);
-    }
+    virtual Value subList(Size from, Size to) const;
 };
 
 }  // namespace libj
+
+#include "./detail/typed_js_array.h"
 
 #endif  // LIBJ_TYPED_JS_ARRAY_H_
