@@ -278,6 +278,7 @@ TEST(GTestLinkedList, TestShiftAndUnshift) {
     ASSERT_TRUE(a->shift().equals(7));
     ASSERT_TRUE(a->shift().equals(5));
     ASSERT_TRUE(a->isEmpty());
+    ASSERT_TRUE(a->shift().isUndefined());
 }
 
 TEST(GTestLinkedList, TestPushAndPop) {
@@ -288,6 +289,7 @@ TEST(GTestLinkedList, TestPushAndPop) {
     ASSERT_TRUE(a->pop().equals(7));
     ASSERT_TRUE(a->pop().equals(5));
     ASSERT_TRUE(a->isEmpty());
+    ASSERT_TRUE(a->shift().isUndefined());
 }
 
 TEST(GTestLinkedList, TestIndexOfAndLastIndexOf) {
