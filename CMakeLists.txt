@@ -92,6 +92,7 @@ set(libj-deps
     cvtutf
     dtoa
     json
+    ndtoa
     regexp
 )
 
@@ -184,7 +185,6 @@ endif(NOT APPLE OR LIBJ_USE_CXX11)
 ## dtoa
 add_library(dtoa STATIC
     src/glue/dtoa.cpp
-    deps/iv/iv/lv5/third_party/netlib_dtoa/netlib_dtoa.c
     deps/iv/iv/lv5/third_party/v8_dtoa/checks.cc
     deps/iv/iv/lv5/third_party/v8_dtoa/conversions.cc
     deps/iv/iv/lv5/third_party/v8_dtoa/diy-fp.cc
@@ -196,6 +196,10 @@ add_library(dtoa STATIC
 
 set_target_properties(dtoa PROPERTIES
     COMPILE_FLAGS ${libj-deps-cflags}
+)
+
+add_library(ndtoa STATIC
+    deps/iv/iv/lv5/third_party/netlib_dtoa/netlib_dtoa.c
 )
 
 ## libj
