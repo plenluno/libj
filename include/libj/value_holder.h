@@ -4,29 +4,19 @@
 #define LIBJ_VALUE_HOLDER_H_
 
 #include "libj/mutable.h"
-#include "libj/string.h"
 #include "libj/value.h"
 
 namespace libj {
 
 class ValueHolder : LIBJ_MUTABLE(ValueHolder)
  public:
-    static Ptr create(const Value& val) {
-        return Ptr(new ValueHolder(val));
-    }
+    static Ptr create(const Value& val);
 
-    virtual Value get() const {
-        return val_;
-    }
+    virtual Value get() const = 0;
 
-    virtual void set(const Value& val) {
-        val_ = val;
-    }
+    virtual void set(const Value& val) = 0;
 
-    virtual String::CPtr toString() const {
-        return String::valueOf(val_);
-    }
-
+ public:
     template<typename T>
     typename Type<T>::Ptr getPtr() const {
         return toPtr<T>(get());
@@ -36,11 +26,6 @@ class ValueHolder : LIBJ_MUTABLE(ValueHolder)
     typename Type<T>::CPtr getCPtr() const {
         return toCPtr<T>(get());
     }
-
- private:
-    Value val_;
-
-    ValueHolder(const Value& val) : val_(val) {}
 };
 
 }  // namespace libj

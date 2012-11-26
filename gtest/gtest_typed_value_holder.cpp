@@ -17,17 +17,17 @@ TEST(GTestTypedValueHolder, TestCreate) {
 
 TEST(GTestTypedValueHolder, TestGet) {
     TypedValueHolder<Int>::Ptr h = TypedValueHolder<Int>::create(3);
-    ASSERT_EQ(3, h->get());
+    ASSERT_EQ(3, h->getTyped());
 }
 
 TEST(GTestTypedValueHolder, TestGetPtr) {
     ArrayList::Ptr a = ArrayList::create();
     TypedValueHolder<ArrayList::Ptr>::Ptr h =
         TypedValueHolder<ArrayList::Ptr>::create(a);
-    ASSERT_TRUE(h->get()->equals(a));
+    ASSERT_TRUE(h->getTyped()->equals(a));
 
     ASSERT_TRUE(a->isEmpty());
-    h->get()->add(5);
+    h->getTyped()->add(5);
     ASSERT_TRUE(a->get(0).equals(5));
 }
 
@@ -35,7 +35,7 @@ TEST(GTestTypedValueHolder, TestGetCPtr) {
     String::CPtr s = String::create("abc");
     TypedValueHolder<String::CPtr>::Ptr h =
         TypedValueHolder<String::CPtr>::create(s);
-    ASSERT_TRUE(h->get()->equals(s));
+    ASSERT_TRUE(h->getTyped()->equals(s));
 }
 
 TEST(GTestTypedValueHolder, TestSet) {
@@ -43,8 +43,8 @@ TEST(GTestTypedValueHolder, TestSet) {
     TypedValueHolder<String::CPtr>::Ptr h =
         TypedValueHolder<String::CPtr>::create(s);
 
-    h->set(h->get()->concat(String::create("123")));
-    ASSERT_TRUE(h->get()->equals(String::create("abc123")));
+    h->setTyped(h->getTyped()->concat(String::create("123")));
+    ASSERT_TRUE(h->getTyped()->equals(String::create("abc123")));
 }
 
 class GTestTypedValueHolderIncrement {
@@ -52,7 +52,7 @@ class GTestTypedValueHolderIncrement {
     TypedValueHolder<Int>::Ptr holder;
 
     void inc() {
-        holder->set(holder->get() + 1);
+        holder->setTyped(holder->getTyped() + 1);
     }
 };
 
@@ -64,7 +64,7 @@ TEST(GTestTypedValueHolder, TestSet2) {
     i2.holder = h;
     i1.inc();
     i2.inc();
-    ASSERT_EQ(2, h->get());
+    ASSERT_EQ(2, h->getTyped());
 }
 
 }  // namespace libj

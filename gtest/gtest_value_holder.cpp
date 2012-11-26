@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <libj/array_list.h>
+#include <libj/string.h>
 #include <libj/value_holder.h>
 
 namespace libj {

@@ -3,36 +3,22 @@
 #ifndef LIBJ_TYPED_VALUE_HOLDER_H_
 #define LIBJ_TYPED_VALUE_HOLDER_H_
 
-#include "libj/mutable.h"
-#include "libj/string.h"
+#include "libj/value_holder.h"
+#include "libj/detail/generic_value_holder.h"
 
 namespace libj {
 
 template<typename T>
-class TypedValueHolder : LIBJ_MUTABLE_TEMPLATE(TypedValueHolder)
+class TypedValueHolder
+    : public detail::GenericValueHolder<T, ValueHolder> {
  public:
-    static Ptr create(const T& val) {
-        return Ptr(new TypedValueHolder(val));
-    }
+    LIBJ_MUTABLE_TEMPLATE_DEFS(TypedValueHolder, ValueHolder);
 
-    virtual T get() const {
-        return val_;
-    }
-
-    virtual void set(const T& val) {
-        val_ = val;
-    }
-
-    virtual String::CPtr toString() const {
-        return String::valueOf(val_);
-    }
-
- private:
-    T val_;
-
-    TypedValueHolder(const T& val) : val_(val) {}
+    static Ptr create(const T& val);
 };
 
 }  // namespace libj
+
+#include "./detail/typed_value_holder.h"
 
 #endif  // LIBJ_TYPED_VALUE_HOLDER_H_
