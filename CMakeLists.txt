@@ -73,6 +73,7 @@ set(libj-src
     src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
+    src/value_holder.cpp
 )
 
 if(LIBJ_USE_EXCEPTION)
@@ -89,9 +90,9 @@ endif(LIBJ_USE_EXCEPTION)
 
 set(libj-deps
     cvtutf
-    jsoncpp
+    dtoa
+    json
     regexp
-    v8dtoa
 )
 
 if(APPLE)
@@ -148,8 +149,9 @@ set_target_properties(cvtutf PROPERTIES
     COMPILE_FLAGS ${libj-cflags}
 )
 
-## jsoncpp
-add_library(jsoncpp STATIC
+## json
+add_library(json STATIC
+    src/glue/json.cpp
     deps/jsoncpp/src/lib_json/json_reader.cpp
     deps/jsoncpp/src/lib_json/json_value.cpp
     deps/jsoncpp/src/lib_json/json_writer.cpp
@@ -161,12 +163,13 @@ add_library(regexp STATIC
 )
 
 if(NOT APPLE OR LIBJ_USE_CXX11)
-set_target_properties(regexp PROPERTIES
-    COMPILE_FLAGS "--std=c++0x")
+    set_target_properties(regexp PROPERTIES
+        COMPILE_FLAGS "--std=c++0x")
 endif(NOT APPLE OR LIBJ_USE_CXX11)
 
-## v8dtoa
-add_library(v8dtoa STATIC
+## dtoa
+add_library(dtoa STATIC
+    src/glue/dtoa.cpp
     deps/iv/iv/lv5/third_party/netlib_dtoa/netlib_dtoa.c
     deps/iv/iv/lv5/third_party/v8_dtoa/checks.cc
     deps/iv/iv/lv5/third_party/v8_dtoa/conversions.cc
