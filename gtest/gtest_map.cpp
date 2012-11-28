@@ -46,9 +46,11 @@ TEST(GTestMap, TestPutAndGet) {
     String::CPtr x = String::create("x");
     ASSERT_TRUE(m->put(x, 123).isUndefined());
     ASSERT_TRUE(m->get(x).equals(123));
+    ASSERT_TRUE(m->get(String::create("x")).equals(123));
 
     ASSERT_TRUE(m->put(x, 456).equals(123));
     ASSERT_TRUE(m->get(x).equals(456));
+    ASSERT_TRUE(m->get(String::intern("x")).equals(456));
 }
 
 TEST(GTestMap, TestPutAndGet2) {
