@@ -3,15 +3,15 @@
 #ifndef LIBJ_MUTABLE_H_
 #define LIBJ_MUTABLE_H_
 
-#include "libj/gc_base.h"
-#include "libj/object.h"
+#include <libj/object.h>
+#include <libj/detail/gc_base.h>
 
 namespace libj {
 
 class Mutable
     : public Object
-    , public GCBase
-    , public MutableBase {
+    , public detail::GCBase
+    , public detail::MutableBase {
  public:
     typedef LIBJ_PTR(Mutable) Ptr;
     typedef LIBJ_CPTR(Mutable) CPtr;
@@ -23,7 +23,7 @@ class Mutable
 
 }  // namespace libj
 
-#include "./detail/mutable.h"
+#include <libj/impl/mutable.h>
 
 #define LIBJ_MUTABLE(T) public libj::Mutable { \
     LIBJ_MUTABLE_DEFS(T, libj::Mutable)

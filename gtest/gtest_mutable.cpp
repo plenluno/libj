@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <libj/mutable.h>
 #include <libj/immutable.h>
+#include <libj/cast.h>
 #include <libj/string.h>
 
 namespace libj {
@@ -35,7 +36,7 @@ class GTestMutableX {
 TEST(GTestMutable, TestEBCO) {
     ASSERT_EQ(
         sizeof(GTestMutable),
-        sizeof(GCBase) + sizeof(GTestMutableX));
+        sizeof(detail::GCBase) + sizeof(GTestMutableX));
 }
 
 TEST(GTestMutable, TestSubstitution) {

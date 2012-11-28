@@ -3,15 +3,15 @@
 #ifndef LIBJ_IMMUTABLE_H_
 #define LIBJ_IMMUTABLE_H_
 
-#include "libj/gc_base.h"
-#include "libj/object.h"
+#include <libj/object.h>
+#include <libj/detail/gc_base.h>
 
 namespace libj {
 
 class Immutable
     : public Object
-    , public GCBase
-    , public ImmutableBase {
+    , public detail::GCBase
+    , public detail::ImmutableBase {
  public:
     typedef LIBJ_CPTR(Immutable) CPtr;
 
@@ -22,7 +22,7 @@ class Immutable
 
 }  // namespace libj
 
-#include "./detail/immutable.h"
+#include <libj/impl/immutable.h>
 
 #define LIBJ_IMMUTABLE(T) public libj::Immutable { \
     LIBJ_IMMUTABLE_DEFS(T, libj::Immutable)

@@ -3,13 +3,13 @@
 #ifndef LIBJ_SINGLETON_H_
 #define LIBJ_SINGLETON_H_
 
-#include "libj/object.h"
+#include <libj/object.h>
 
 namespace libj {
 
 class Singleton
     : public Object
-    , public SingletonBase {
+    , public detail::SingletonBase {
  public:
     typedef LIBJ_PTR(Singleton) Ptr;
     typedef LIBJ_CPTR(Singleton) CPtr;
@@ -19,7 +19,7 @@ class Singleton
 
 }  // namespace libj
 
-#include "./detail/singleton.h"
+#include <libj/impl/singleton.h>
 
 #define LIBJ_SINGLETON(T) LIBJ_SINGLETON_DEFS(T)
 

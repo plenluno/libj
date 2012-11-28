@@ -3,16 +3,16 @@
 #ifndef LIBJ_OBJECT_H_
 #define LIBJ_OBJECT_H_
 
-#include "libj/type.h"
-#include "libj/noncopyable.h"
+#include <libj/type.h>
+#include <libj/detail/noncopyable.h>
 
 namespace libj {
 
 class String;
 
 class Object
-    : public ObjectBase
-    , private NonCopyable {
+    : public detail::ObjectBase
+    , private detail::NonCopyable {
  public:
     typedef LIBJ_CPTR(Object) CPtr;
 
@@ -31,6 +31,6 @@ class Object
 
 }  // namespace libj
 
-#include "./detail/object.h"
+#include <libj/impl/object.h>
 
 #endif  // LIBJ_OBJECT_H_

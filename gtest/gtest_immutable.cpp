@@ -35,7 +35,7 @@ class GTestImmutableX {
 TEST(GTestImmutable, TestEBCO) {
     ASSERT_EQ(
         sizeof(GTestImmutable),
-        sizeof(GCBase) + sizeof(GTestImmutableX));
+        sizeof(detail::GCBase) + sizeof(GTestImmutableX));
 }
 
 TEST(GTestImmutable, TestSubstitution) {
