@@ -105,7 +105,7 @@ class String : public I {
             return result;
         }
 
-        String::CPtr other = LIBJ_STATIC_CPTR_CAST(I)(that);
+        CPtr other = LIBJ_STATIC_CPTR_CAST(I)(that);
         Size len1 = this->length();
         Size len2 = other->length();
         Size len = len1 < len2 ? len1 : len2;
@@ -125,7 +125,7 @@ class String : public I {
             return !result;
         }
 
-        String::CPtr other = LIBJ_STATIC_CPTR_CAST(String)(that);
+        CPtr other = LIBJ_STATIC_CPTR_CAST(I)(that);
         if (this->isInterned() && other->isInterned()) {
             return false;
         } else {
