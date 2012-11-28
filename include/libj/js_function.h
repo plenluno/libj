@@ -3,8 +3,8 @@
 #ifndef LIBJ_JS_FUNCTION_H_
 #define LIBJ_JS_FUNCTION_H_
 
-#include "libj/function.h"
-#include "libj/js_array.h"
+#include <libj/function.h>
+#include <libj/js_array.h>
 
 namespace libj {
 
@@ -46,7 +46,7 @@ class JsFunction : LIBJ_FUNCTION(JsFunction)
 
 }  // namespace libj
 
-#include "./detail/js_function.h"
+#include <libj/impl/js_function.h>
 
 #define LIBJ_JS_FUNCTION(T) public libj::JsFunction { \
     LIBJ_JS_FUNCTION_DEFS(T)

@@ -3,7 +3,7 @@
 #ifndef LIBJ_JS_ARRAY_H_
 #define LIBJ_JS_ARRAY_H_
 
-#include "libj/array_list.h"
+#include <libj/array_list.h>
 
 namespace libj {
 
@@ -21,21 +21,18 @@ class JsArray : LIBJ_ARRAY_LIST(JsArray)
 
     virtual Value deleteProperty(const Value& name) = 0;
 
- public:
     template<typename T>
-    typename Type<T>::Ptr getPtr(Size index) const {
-        return toPtr<T>(get(index));
-    }
+    typename Type<T>::Ptr getPtr(Size index) const;
 
     template<typename T>
-    typename Type<T>::CPtr getCPtr(Size index) const {
-        return toCPtr<T>(get(index));
-    }
+    typename Type<T>::CPtr getCPtr(Size index) const;
 };
+
+}  // namespace libj
+
+#include <libj/impl/js_array.h>
 
 #define LIBJ_JS_ARRAY(T) public libj::JsArray { \
     LIBJ_MUTABLE_DEFS(T, libj::JsArray)
-
-}  // namespace libj
 
 #endif  // LIBJ_JS_ARRAY_H_

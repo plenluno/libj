@@ -3,7 +3,7 @@
 #ifndef LIBJ_JS_OBJECT_H_
 #define LIBJ_JS_OBJECT_H_
 
-#include "libj/map.h"
+#include <libj/map.h>
 
 namespace libj {
 
@@ -19,21 +19,18 @@ class JsObject : LIBJ_MAP(JsObject)
 
     virtual Value deleteProperty(const Value& name) = 0;
 
- public:
     template<typename T>
-    typename Type<T>::Ptr getPtr(const Value& name) const {
-        return toPtr<T>(get(name));
-    }
+    typename Type<T>::Ptr getPtr(const Value& name) const;
 
     template<typename T>
-    typename Type<T>::CPtr getCPtr(const Value& name) const {
-        return toCPtr<T>(get(name));
-    }
+    typename Type<T>::CPtr getCPtr(const Value& name) const;
 };
+
+}  // namespace libj
+
+#include <libj/impl/js_object.h>
 
 #define LIBJ_JS_OBJECT(T) public libj::JsObject { \
     LIBJ_MUTABLE_DEFS(T, libj::JsObject)
-
-}  // namespace libj
 
 #endif  // LIBJ_JS_OBJECT_H_

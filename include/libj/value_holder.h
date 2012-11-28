@@ -3,8 +3,8 @@
 #ifndef LIBJ_VALUE_HOLDER_H_
 #define LIBJ_VALUE_HOLDER_H_
 
-#include "libj/mutable.h"
-#include "libj/value.h"
+#include <libj/mutable.h>
+#include <libj/value.h>
 
 namespace libj {
 
@@ -16,18 +16,15 @@ class ValueHolder : LIBJ_MUTABLE(ValueHolder)
 
     virtual void set(const Value& val) = 0;
 
- public:
     template<typename T>
-    typename Type<T>::Ptr getPtr() const {
-        return toPtr<T>(get());
-    }
+    typename Type<T>::Ptr getPtr() const;
 
     template<typename T>
-    typename Type<T>::CPtr getCPtr() const {
-        return toCPtr<T>(get());
-    }
+    typename Type<T>::CPtr getCPtr() const;
 };
 
 }  // namespace libj
+
+#include <libj/impl/value_holder.h>
 
 #endif  // LIBJ_VALUE_HOLDER_H_
