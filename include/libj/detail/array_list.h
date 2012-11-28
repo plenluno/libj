@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_ARRAY_LIST_H_
 #define LIBJ_DETAIL_ARRAY_LIST_H_
 
-#include "./generic_array_list.h"
+#include <libj/detail/generic_array_list.h>
 
 namespace libj {
 namespace detail {
