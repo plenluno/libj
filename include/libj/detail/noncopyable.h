@@ -1,7 +1,10 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef LIBJ_NONCOPYABLE_H_
-#define LIBJ_NONCOPYABLE_H_
+#ifndef LIBJ_DETAIL_NONCOPYABLE_H_
+#define LIBJ_DETAIL_NONCOPYABLE_H_
+
+namespace libj {
+namespace detail {
 
 class NonCopyable {
  protected:
@@ -13,4 +16,7 @@ class NonCopyable {
     const NonCopyable& operator=(const NonCopyable&);
 };
 
-#endif  // LIBJ_NONCOPYABLE_H_
+}  // namespace detail
+}  // namespace libj
+
+#endif  // LIBJ_DETAIL_NONCOPYABLE_H_
