@@ -1,11 +1,12 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef LIBJ_GC_BASE_H_
-#define LIBJ_GC_BASE_H_
+#ifndef LIBJ_DETAIL_GC_BASE_H_
+#define LIBJ_DETAIL_GC_BASE_H_
 
-#include "libj/config.h"
+#include <libj/config.h>
 
 namespace libj {
+namespace detail {
 
 #ifdef LIBJ_USE_BDW_GC
 class GCBase : public gc_cleanup {
@@ -17,6 +18,7 @@ class GCBase {
 };
 #endif
 
+}  // namespace detail
 }  // namespace libj
 
-#endif  // LIBJ_GC_BASE_H_
+#endif  // LIBJ_DETAIL_GC_BASE_H_
