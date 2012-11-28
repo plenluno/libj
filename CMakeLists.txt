@@ -73,6 +73,7 @@ set(libj-src
     src/status.cpp
     src/string.cpp
     src/string_buffer.cpp
+    src/symbol.cpp
     src/value_holder.cpp
 )
 
