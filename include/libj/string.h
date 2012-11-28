@@ -7,6 +7,7 @@
 #include <libj/immutable.h>
 #include <libj/value.h>
 
+#include <stdio.h>
 #include <string>
 
 namespace libj {
