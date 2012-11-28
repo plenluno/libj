@@ -8,6 +8,7 @@
 #include <libj/map.h>
 #include <libj/glue/cvtutf.h>
 
+#include <assert.h>
 #include <string>
 
 namespace libj {
