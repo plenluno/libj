@@ -3,11 +3,11 @@
 #ifndef LIBJ_TYPEDEF_H_
 #define LIBJ_TYPEDEF_H_
 
+#include <libj/config.h>
+
 #include <stddef.h>
 #include <inttypes.h>
 #include <string>
-
-#include "libj/config.h"
 
 #ifndef LIBJ_USE_CXX11
 

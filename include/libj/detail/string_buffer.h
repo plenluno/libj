@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_STRING_BUFFER_H_
 #define LIBJ_DETAIL_STRING_BUFFER_H_
 
-#include "libj/typedef.h"
+#include <libj/typedef.h>
 
 namespace libj {
 namespace detail {

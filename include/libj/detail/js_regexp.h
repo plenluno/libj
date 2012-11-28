@@ -3,14 +3,13 @@
 #ifndef LIBJ_DETAIL_JS_REGEXP_H_
 #define LIBJ_DETAIL_JS_REGEXP_H_
 
+#include <libj/endian.h>
+#include <libj/glue/regexp.h>
+#include <libj/detail/js_object.h>
+
 #include <assert.h>
 #include <string>
 #include <vector>
-
-#include "libj/endian.h"
-#include "libj/glue/regexp.h"
-
-#include "./js_object.h"
 
 namespace libj {
 namespace detail {

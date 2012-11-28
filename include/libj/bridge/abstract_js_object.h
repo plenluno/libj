@@ -3,10 +3,9 @@
 #ifndef LIBJ_BRIDGE_ABSTRACT_JS_OBJECT_H_
 #define LIBJ_BRIDGE_ABSTRACT_JS_OBJECT_H_
 
-#include "libj/js_object.h"
-#include "libj/string.h"
-
-#include "./abstract_map.h"
+#include <libj/js_object.h>
+#include <libj/string.h>
+#include <libj/bridge/abstract_map.h>
 
 namespace libj {
 namespace bridge {

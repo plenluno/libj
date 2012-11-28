@@ -3,9 +3,9 @@
 #ifndef LIBJ_TYPED_ARRAY_LIST_H_
 #define LIBJ_TYPED_ARRAY_LIST_H_
 
-#include "libj/array_list.h"
-#include "libj/typed_list.h"
-#include "libj/detail/generic_array_list.h"
+#include <libj/array_list.h>
+#include <libj/typed_list.h>
+#include <libj/detail/generic_array_list.h>
 
 namespace libj {
 
@@ -24,6 +24,6 @@ class TypedArrayList
 
 }  // namespace libj
 
-#include "./detail/typed_array_list.h"
+#include <libj/impl/typed_array_list.h>
 
 #endif  // LIBJ_TYPED_ARRAY_LIST_H_

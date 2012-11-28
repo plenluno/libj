@@ -3,7 +3,7 @@
 #ifndef LIBJ_CONSOLE_H_
 #define LIBJ_CONSOLE_H_
 
-#include "libj/constant.h"
+#include <libj/constant.h>
 
 namespace libj {
 namespace console {

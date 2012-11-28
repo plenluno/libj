@@ -3,9 +3,9 @@
 #ifndef LIBJ_TYPED_LINKED_LIST_H_
 #define LIBJ_TYPED_LINKED_LIST_H_
 
-#include "libj/linked_list.h"
-#include "libj/typed_list.h"
-#include "libj/detail/generic_linked_list.h"
+#include <libj/linked_list.h>
+#include <libj/typed_list.h>
+#include <libj/detail/generic_linked_list.h>
 
 namespace libj {
 
@@ -24,6 +24,6 @@ class TypedLinkedList
 
 }  // namespace libj
 
-#include "./detail/typed_linked_list.h"
+#include <libj/impl/typed_linked_list.h>
 
 #endif  // LIBJ_TYPED_LINKED_LIST_H_

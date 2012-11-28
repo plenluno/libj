@@ -3,11 +3,11 @@
 #ifndef LIBJ_STRING_H_
 #define LIBJ_STRING_H_
 
-#include <string>
+#include <libj/constant.h>
+#include <libj/immutable.h>
+#include <libj/value.h>
 
-#include "libj/constant.h"
-#include "libj/immutable.h"
-#include "libj/value.h"
+#include <string>
 
 namespace libj {
 

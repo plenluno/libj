@@ -3,9 +3,7 @@
 #ifndef LIBJ_COLLECTION_H_
 #define LIBJ_COLLECTION_H_
 
-#include <vector>
-
-#include "libj/iterator.h"
+#include <libj/iterator.h>
 
 namespace libj {
 

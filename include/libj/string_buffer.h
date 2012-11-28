@@ -3,8 +3,8 @@
 #ifndef LIBJ_STRING_BUFFER_H_
 #define LIBJ_STRING_BUFFER_H_
 
-#include "libj/mutable.h"
-#include "libj/string.h"
+#include <libj/mutable.h>
+#include <libj/string.h>
 
 namespace libj {
 

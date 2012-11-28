@@ -3,8 +3,8 @@
 #ifndef LIBJ_DETAIL_UTIL_H_
 #define LIBJ_DETAIL_UTIL_H_
 
-#include "libj/exception.h"
-#include "libj/value.h"
+#include <libj/exception.h>
+#include <libj/value.h>
 
 namespace libj {
 namespace detail {

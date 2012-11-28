@@ -3,14 +3,13 @@
 #ifndef LIBJ_DETAIL_GENERIC_COLLECTION_H_
 #define LIBJ_DETAIL_GENERIC_COLLECTION_H_
 
+#include <libj/collection.h>
+#include <libj/iterator.h>
+#include <libj/typed_iterator.h>
+#include <libj/string_buffer.h>
+#include <libj/detail/util.h>
+
 #include <vector>
-
-#include "libj/collection.h"
-#include "libj/iterator.h"
-#include "libj/typed_iterator.h"
-#include "libj/string_buffer.h"
-
-#include "./util.h"
 
 namespace libj {
 namespace detail {
@@ -111,7 +110,7 @@ class GenericCollection : public I {
     }
 
     virtual String::CPtr toString() const {
-        StringBuffer::Ptr sb = StringBuffer::create();
+        libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
         sb->appendChar('[');
         Boolean first = true;
         Iterator::Ptr itr = iterator();

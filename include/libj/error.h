@@ -5,7 +5,7 @@
 
 #include <assert.h>
 
-#include "libj/status.h"
+#include <libj/status.h>
 
 namespace libj {
 

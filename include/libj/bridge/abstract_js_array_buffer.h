@@ -3,7 +3,7 @@
 #ifndef LIBJ_BRIDGE_ABSTRACT_JS_ARRAY_BUFFER_H_
 #define LIBJ_BRIDGE_ABSTRACT_JS_ARRAY_BUFFER_H_
 
-#include "libj/js_array_buffer.h"
+#include <libj/js_array_buffer.h>
 
 namespace libj {
 namespace bridge {

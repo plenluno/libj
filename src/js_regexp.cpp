@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/js_regexp.h"
-#include "libj/detail/js_regexp.h"
+#include <libj/js_regexp.h>
+#include <libj/detail/js_regexp.h>
 
 namespace libj {
 

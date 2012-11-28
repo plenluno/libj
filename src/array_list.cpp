@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/array_list.h"
-#include "libj/detail/array_list.h"
+#include <libj/array_list.h>
+#include <libj/detail/array_list.h>
 
 namespace libj {
 

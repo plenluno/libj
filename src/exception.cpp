@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/exception.h"
+#include <libj/exception.h>
 
 #ifdef LIBJ_USE_EXCEPTION
 

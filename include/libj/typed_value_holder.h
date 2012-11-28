@@ -3,8 +3,8 @@
 #ifndef LIBJ_TYPED_VALUE_HOLDER_H_
 #define LIBJ_TYPED_VALUE_HOLDER_H_
 
-#include "libj/value_holder.h"
-#include "libj/detail/generic_value_holder.h"
+#include <libj/value_holder.h>
+#include <libj/detail/generic_value_holder.h>
 
 namespace libj {
 
@@ -19,6 +19,6 @@ class TypedValueHolder
 
 }  // namespace libj
 
-#include "./detail/typed_value_holder.h"
+#include <libj/impl/typed_value_holder.h>
 
 #endif  // LIBJ_TYPED_VALUE_HOLDER_H_

@@ -3,9 +3,9 @@
 #ifndef LIBJ_GLUE_CVTUTF_H_
 #define LIBJ_GLUE_CVTUTF_H_
 
-#include <string>
+#include <libj/typedef.h>
 
-#include "libj/typedef.h"
+#include <string>
 
 namespace libj {
 namespace glue {

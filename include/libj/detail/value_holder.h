@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_VALUE_HOLDER_H_
 #define LIBJ_DETAIL_VALUE_HOLDER_H_
 
-#include "./generic_value_holder.h"
+#include <libj/detail/generic_value_holder.h>
 
 namespace libj {
 namespace detail {

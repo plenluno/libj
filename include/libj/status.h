@@ -3,7 +3,7 @@
 #ifndef LIBJ_STATUS_H_
 #define LIBJ_STATUS_H_
 
-#include "libj/string.h"
+#include <libj/string.h>
 
 namespace libj {
 

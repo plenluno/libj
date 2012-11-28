@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/error.h"
-#include "libj/detail/status.h"
+#include <libj/error.h>
+#include <libj/detail/status.h>
 
 namespace libj {
 

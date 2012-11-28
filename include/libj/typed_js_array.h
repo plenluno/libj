@@ -3,9 +3,9 @@
 #ifndef LIBJ_TYPED_JS_ARRAY_H_
 #define LIBJ_TYPED_JS_ARRAY_H_
 
-#include "libj/js_array.h"
-#include "libj/typed_list.h"
-#include "libj/detail/generic_js_array.h"
+#include <libj/js_array.h>
+#include <libj/typed_list.h>
+#include <libj/detail/generic_js_array.h>
 
 namespace libj {
 
@@ -24,6 +24,6 @@ class TypedJsArray
 
 }  // namespace libj
 
-#include "./detail/typed_js_array.h"
+#include <libj/impl/typed_js_array.h>
 
 #endif  // LIBJ_TYPED_JS_ARRAY_H_

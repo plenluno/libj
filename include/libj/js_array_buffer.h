@@ -3,9 +3,9 @@
 #ifndef LIBJ_JS_ARRAY_BUFFER_H_
 #define LIBJ_JS_ARRAY_BUFFER_H_
 
-#include "libj/constant.h"
-#include "libj/mutable.h"
-#include "libj/value.h"
+#include <libj/constant.h>
+#include <libj/mutable.h>
+#include <libj/value.h>
 
 namespace libj {
 

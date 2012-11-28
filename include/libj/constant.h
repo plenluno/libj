@@ -3,8 +3,8 @@
 #ifndef LIBJ_CONSTANT_H_
 #define LIBJ_CONSTANT_H_
 
-#include "libj/typedef.h"
-#include "libj/value.h"
+#include <libj/typedef.h>
+#include <libj/value.h>
 
 namespace libj {
 

@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/endian.h"
-#include "libj/typedef.h"
+#include <libj/endian.h>
+#include <libj/typedef.h>
 
 namespace libj {
 

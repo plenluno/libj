@@ -7,9 +7,9 @@
 
 #ifdef LIBJ_USE_EXCEPTION
 
-#include <exception>
+#include <libj/string.h>
 
-#include "libj/string.h"
+#include <exception>
 
 namespace libj {
 

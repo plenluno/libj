@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_STATUS_H_
 #define LIBJ_DETAIL_STATUS_H_
 
-#include "libj/symbol.h"
+#include <libj/symbol.h>
 
 namespace libj {
 namespace detail {

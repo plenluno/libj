@@ -3,9 +3,9 @@
 #ifndef LIBJ_DETAIL_GENERIC_ARRAY_LIST_H_
 #define LIBJ_DETAIL_GENERIC_ARRAY_LIST_H_
 
-#include <vector>
+#include <libj/detail/generic_list.h>
 
-#include "./generic_list.h"
+#include <vector>
 
 namespace libj {
 namespace detail {

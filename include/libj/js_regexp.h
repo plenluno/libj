@@ -3,9 +3,9 @@
 #ifndef LIBJ_JS_REGEXP_H_
 #define LIBJ_JS_REGEXP_H_
 
-#include "libj/js_array.h"
-#include "libj/js_object.h"
-#include "libj/string.h"
+#include <libj/js_array.h>
+#include <libj/js_object.h>
+#include <libj/string.h>
 
 namespace libj {
 

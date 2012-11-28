@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/linked_list.h"
-#include "libj/detail/linked_list.h"
+#include <libj/linked_list.h>
+#include <libj/detail/linked_list.h>
 
 namespace libj {
 

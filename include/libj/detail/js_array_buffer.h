@@ -3,10 +3,10 @@
 #ifndef LIBJ_DETAIL_JS_ARRAY_BUFFER_H_
 #define LIBJ_DETAIL_JS_ARRAY_BUFFER_H_
 
-#include <algorithm>
+#include <libj/endian.h>
+#include <libj/string.h>
 
-#include "libj/endian.h"
-#include "libj/string.h"
+#include <algorithm>
 
 namespace libj {
 namespace detail {
@@ -17,7 +17,7 @@ class JsArrayBuffer : public I {
     typedef typename I::Ptr Ptr;
     typedef typename I::CPtr CPtr;
 
-    JsArrayBuffer(Size length = 0)
+    JsArrayBuffer(Size length)
         : length_(length)
         , buf64_(0) {
         if (length) {

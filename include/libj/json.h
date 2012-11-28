@@ -3,7 +3,7 @@
 #ifndef LIBJ_JSON_H_
 #define LIBJ_JSON_H_
 
-#include "libj/string.h"
+#include <libj/string.h>
 
 namespace libj {
 namespace json {

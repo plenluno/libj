@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/map.h"
-#include "libj/detail/map.h"
+#include <libj/map.h>
+#include <libj/detail/map.h>
 
 namespace libj {
 

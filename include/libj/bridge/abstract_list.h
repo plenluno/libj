@@ -3,9 +3,8 @@
 #ifndef LIBJ_BRIDGE_ABSTRACT_LIST_H_
 #define LIBJ_BRIDGE_ABSTRACT_LIST_H_
 
-#include "libj/list.h"
-
-#include "./abstract_collection.h"
+#include <libj/list.h>
+#include <libj/bridge/abstract_collection.h>
 
 namespace libj {
 namespace bridge {

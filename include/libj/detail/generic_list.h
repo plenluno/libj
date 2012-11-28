@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_GENERIC_LIST_H_
 #define LIBJ_DETAIL_GENERIC_LIST_H_
 
-#include "./generic_collection.h"
+#include <libj/detail/generic_collection.h>
 
 namespace libj {
 namespace detail {

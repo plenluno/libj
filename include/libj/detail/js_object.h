@@ -3,9 +3,8 @@
 #ifndef LIBJ_DETAIL_JS_OBJECT_H_
 #define LIBJ_DETAIL_JS_OBJECT_H_
 
-#include "libj/symbol.h"
-
-#include "./map.h"
+#include <libj/symbol.h>
+#include <libj/detail/map.h>
 
 namespace libj {
 namespace detail {

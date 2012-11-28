@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_JS_ARRAY_H_
 #define LIBJ_DETAIL_JS_ARRAY_H_
 
-#include "./generic_js_array.h"
+#include <libj/detail/generic_js_array.h>
 
 namespace libj {
 namespace detail {

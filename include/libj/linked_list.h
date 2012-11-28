@@ -3,7 +3,7 @@
 #ifndef LIBJ_LINKED_LIST_H_
 #define LIBJ_LINKED_LIST_H_
 
-#include "libj/list.h"
+#include <libj/list.h>
 
 namespace libj {
 

@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_LINKED_LIST_H_
 #define LIBJ_DETAIL_LINKED_LIST_H_
 
-#include "./generic_linked_list.h"
+#include <libj/detail/generic_linked_list.h>
 
 namespace libj {
 namespace detail {

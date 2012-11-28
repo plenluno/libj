@@ -3,7 +3,7 @@
 #ifndef LIBJ_FUNCTION_H_
 #define LIBJ_FUNCTION_H_
 
-#include "libj/array_list.h"
+#include <libj/array_list.h>
 
 namespace libj {
 
@@ -43,7 +43,7 @@ class Function : LIBJ_MUTABLE(Function)
 
 }  // namespace libj
 
-#include "./detail/function.h"
+#include <libj/impl/function.h>
 
 #define LIBJ_FUNCTION(T) public libj::Function { \
     LIBJ_MUTABLE_DEFS(T, libj::Function)

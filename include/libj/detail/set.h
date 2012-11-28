@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_SET_H_
 #define LIBJ_DETAIL_SET_H_
 
-#include "./generic_set.h"
+#include <libj/detail/generic_set.h>
 
 namespace libj {
 namespace detail {

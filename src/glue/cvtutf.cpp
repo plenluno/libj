@@ -1,5 +1,8 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
+#include <libj/endian.h>
+#include <libj/glue/cvtutf.h>
+
 // #define LIBJ_CVTUTF_DEBUG
 #ifdef LIBJ_CVTUTF_DEBUG
     #include <stdio.h>
@@ -12,9 +15,6 @@
 #include <errno.h>
 #include <iconv.h>
 #include <string>
-
-#include "libj/endian.h"
-#include "libj/glue/cvtutf.h"
 
 namespace libj {
 namespace glue {

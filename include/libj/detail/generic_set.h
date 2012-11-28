@@ -3,10 +3,10 @@
 #ifndef LIBJ_DETAIL_GENERIC_SET_H_
 #define LIBJ_DETAIL_GENERIC_SET_H_
 
+#include <libj/detail/generic_collection.h>
+
 #include <set>
 #include <utility>
-
-#include "./generic_collection.h"
 
 namespace libj {
 namespace detail {

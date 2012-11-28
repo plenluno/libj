@@ -3,7 +3,7 @@
 #ifndef LIBJ_BRIDGE_ABSTRACT_STATUS_H_
 #define LIBJ_BRIDGE_ABSTRACT_STATUS_H_
 
-#include "libj/status.h"
+#include <libj/status.h>
 
 namespace libj {
 namespace bridge {

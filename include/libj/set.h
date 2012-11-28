@@ -3,7 +3,7 @@
 #ifndef LIBJ_SET_H_
 #define LIBJ_SET_H_
 
-#include "libj/collection.h"
+#include <libj/collection.h>
 
 namespace libj {
 

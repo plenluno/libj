@@ -3,7 +3,7 @@
 #ifndef LIBJ_TYPED_LIST_H_
 #define LIBJ_TYPED_LIST_H_
 
-#include "libj/typed_iterator.h"
+#include <libj/typed_iterator.h>
 
 namespace libj {
 

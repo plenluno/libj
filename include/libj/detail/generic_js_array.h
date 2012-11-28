@@ -3,10 +3,9 @@
 #ifndef LIBJ_DETAIL_GENERIC_JS_ARRAY_H_
 #define LIBJ_DETAIL_GENERIC_JS_ARRAY_H_
 
-#include "libj/js_object.h"
-
-#include "./js_object.h"
-#include "./generic_array_list.h"
+#include <libj/js_object.h>
+#include <libj/detail/js_object.h>
+#include <libj/detail/generic_array_list.h>
 
 namespace libj {
 namespace detail {
@@ -27,7 +26,7 @@ class GenericJsArray : public GenericArrayList<T, I> {
     }
 
     virtual String::CPtr toString() const {
-        StringBuffer::Ptr sb = StringBuffer::create();
+        libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
         Iterator::Ptr itr = this->iterator();
         Boolean first = true;
         while (itr->hasNext()) {

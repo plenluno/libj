@@ -3,11 +3,11 @@
 #ifndef LIBJ_DETAIL_MAP_H_
 #define LIBJ_DETAIL_MAP_H_
 
-#include <map>
+#include <libj/set.h>
+#include <libj/string_buffer.h>
+#include <libj/value.h>
 
-#include "libj/set.h"
-#include "libj/string_buffer.h"
-#include "libj/value.h"
+#include <map>
 
 namespace libj {
 namespace detail {
@@ -77,7 +77,7 @@ class Map : public I {
     }
 
     virtual String::CPtr toString() const {
-        StringBuffer::Ptr sb = StringBuffer::create();
+        libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
         sb->appendChar('{');
         Boolean first = true;
         Set::CPtr keys = keySet();

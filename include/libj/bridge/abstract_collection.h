@@ -3,7 +3,7 @@
 #ifndef LIBJ_BRIDGE_ABSTRACT_COLLECTION_H_
 #define LIBJ_BRIDGE_ABSTRACT_COLLECTION_H_
 
-#include "libj/collection.h"
+#include <libj/collection.h>
 
 namespace libj {
 namespace bridge {
