@@ -3,16 +3,14 @@
 #ifndef LIBJ_SYMBOL_H_
 #define LIBJ_SYMBOL_H_
 
-#include "libj/string.h"
+#include <libj/string.h>
 
 namespace libj {
 
 struct Symbol {
     typedef const String::CPtr CPtr;
 
-    static CPtr create(const char* str) {
-        return String::intern(str);
-    }
+    static CPtr create(const char* str);
 };
 
 }  // namespace libj
