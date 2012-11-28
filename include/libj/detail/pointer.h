@@ -1,20 +1,22 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef LIBJ_POINTER_H_
-#define LIBJ_POINTER_H_
+#ifndef LIBJ_DETAIL_POINTER_H_
+#define LIBJ_DETAIL_POINTER_H_
 
-#include "libj/config.h"
+#include <libj/config.h>
 
 namespace libj {
+namespace detail {
 
 struct NullDeleter {
     void operator()(const void*) const {}
 };
 
+}  // namespace detail
 }  // namespace libj
 
 #define LIBJ_NULL(T) static_cast<T*>(0)
-#define LIBJ_NULL_DELETER libj::NullDeleter()
+#define LIBJ_NULL_DELETER libj::detail::NullDeleter()
 
 #ifdef LIBJ_USE_CXX11
     #define STATIC_POINTER_CAST(T) std::static_pointer_cast<T>
@@ -23,13 +25,11 @@ struct NullDeleter {
 #endif
 
 #ifdef LIBJ_USE_SP
-    #include "libj/shared_ptr.h"
-    #define LIBJ_PTR(T) libj::SharedPtr<T>::Type
-    #define LIBJ_CPTR(T) libj::SharedPtr<const T>::Type
+    #include "libj/detail/shared_ptr.h"
+    #define LIBJ_PTR(T) libj::detail::SharedPtr<T>::Type
+    #define LIBJ_CPTR(T) libj::detail::SharedPtr<const T>::Type
     #define LIBJ_PTR_TYPE(T) typename LIBJ_PTR(T)
     #define LIBJ_CPTR_TYPE(T) typename LIBJ_CPTR(T)
-    #define LIBJ_STATIC_PTR_CAST(T) STATIC_POINTER_CAST(T)
-    #define LIBJ_STATIC_CPTR_CAST(T) STATIC_POINTER_CAST(const T)
     #define LIBJ_NULL_PTR_DEF(T, V) \
         LIBJ_PTR(T) V(LIBJ_NULL(T), LIBJ_NULL_DELETER);
     #define LIBJ_NULL_CPTR_DEF(T, V) \
@@ -45,8 +45,6 @@ struct NullDeleter {
     #define LIBJ_CPTR(T) const T*
     #define LIBJ_PTR_TYPE(T) T*
     #define LIBJ_CPTR_TYPE(T) const T*
-    #define LIBJ_STATIC_PTR_CAST(T) static_cast<T*>
-    #define LIBJ_STATIC_CPTR_CAST(T) static_cast<const T*>
     #define LIBJ_NULL_PTR_DEF(T, V) \
         LIBJ_PTR(T) V(LIBJ_NULL(T));
     #define LIBJ_NULL_CPTR_DEF(T, V) \
@@ -59,4 +57,4 @@ struct NullDeleter {
         LIBJ_PTR_TYPE(T) V(I);
 #endif
 
-#endif  // LIBJ_POINTER_H_
+#endif  // LIBJ_DETAIL_POINTER_H_
