@@ -1,20 +1,20 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef LIBJ_DETAIL_TYPED_ARRAY_LIST_H_
-#define LIBJ_DETAIL_TYPED_ARRAY_LIST_H_
+#ifndef LIBJ_IMPL_TYPED_LINKED_LIST_H_
+#define LIBJ_IMPL_TYPED_LINKED_LIST_H_
 
 namespace libj {
 
 template<typename T>
-typename TypedArrayList<T>::Ptr
-TypedArrayList<T>::create() {
-    return Ptr(new TypedArrayList());
+typename TypedLinkedList<T>::Ptr
+TypedLinkedList<T>::create() {
+    return Ptr(new TypedLinkedList());
 }
 
 template<typename T>
-typename TypedArrayList<T>::Ptr
-TypedArrayList<T>::create(Collection::CPtr c) {
-    Ptr list(new TypedArrayList());
+typename TypedLinkedList<T>::Ptr
+TypedLinkedList<T>::create(Collection::CPtr c) {
+    Ptr list(new TypedLinkedList());
     Iterator::Ptr itr = c->iterator();
     while (itr->hasNext()) {
         Value v = itr->next();
@@ -29,12 +29,12 @@ TypedArrayList<T>::create(Collection::CPtr c) {
 }
 
 template<typename T>
-Value TypedArrayList<T>::subList(Size from, Size to) const {
+Value TypedLinkedList<T>::subList(Size from, Size to) const {
     if (to > this->size() || from > to) {
         LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
     }
 
-    TypedArrayList* list(new TypedArrayList());
+    TypedLinkedList* list(new TypedLinkedList());
     for (Size i = from; i < to; i++) {
         list->addTyped(this->getTyped(i));
     }
@@ -43,4 +43,4 @@ Value TypedArrayList<T>::subList(Size from, Size to) const {
 
 }  // namespace libj
 
-#endif  // LIBJ_DETAIL_TYPED_ARRAY_LIST_H_
+#endif  // LIBJ_IMPL_TYPED_LINKED_LIST_H_

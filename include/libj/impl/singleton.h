@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef LIBJ_DETAIL_SINGLETON_H_
-#define LIBJ_DETAIL_SINGLETON_H_
+#ifndef LIBJ_IMPL_SINGLETON_H_
+#define LIBJ_IMPL_SINGLETON_H_
 
 namespace libj {
 
@@ -50,4 +50,4 @@ private: \
     T() : libj::SingletonTmpl<T>() {} \
     ~T() {}
 
-#endif  // LIBJ_DETAIL_SINGLETON_H_
+#endif  // LIBJ_IMPL_SINGLETON_H_

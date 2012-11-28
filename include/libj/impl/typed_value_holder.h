@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef LIBJ_DETAIL_TYPED_VALUE_HOLDER_H_
-#define LIBJ_DETAIL_TYPED_VALUE_HOLDER_H_
+#ifndef LIBJ_IMPL_TYPED_VALUE_HOLDER_H_
+#define LIBJ_IMPL_TYPED_VALUE_HOLDER_H_
 
 namespace libj {
 
@@ -15,4 +15,4 @@ TypedValueHolder<T>::create(const T& val) {
 
 }  // namespace libj
 
-#endif  // LIBJ_DETAIL_TYPED_VALUE_HOLDER_H_
+#endif  // LIBJ_IMPL_TYPED_VALUE_HOLDER_H_

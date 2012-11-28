@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#ifndef LIBJ_DETAIL_MUTABLE_H_
-#define LIBJ_DETAIL_MUTABLE_H_
+#ifndef LIBJ_IMPL_MUTABLE_H_
+#define LIBJ_IMPL_MUTABLE_H_
 
 namespace libj {
 
@@ -44,4 +44,4 @@ inline Boolean Mutable::instanceof(TypeId id) const {
 
 }  // namespace libj
 
-#endif  // LIBJ_DETAIL_MUTABLE_H_
+#endif  // LIBJ_IMPL_MUTABLE_H_
