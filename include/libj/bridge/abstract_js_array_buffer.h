@@ -15,6 +15,10 @@ class AbstractJsArrayBuffer : public I {
         JsArrayBuffer::Ptr buf = JsArrayBuffer::create())
         : buf_(buf) {}
 
+    virtual Boolean isEmpty() const {
+        return buf_->length() == 0;
+    }
+
     virtual Size length() const {
         return buf_->length();
     }
@@ -25,6 +29,10 @@ class AbstractJsArrayBuffer : public I {
 
     virtual Boolean shrink(Size length) {
         return buf_->shrink(length);
+    }
+
+    virtual Value slice(Size begin = 0, Size end = NO_POS) const {
+        return buf_->slice(begin, end);
     }
 
     virtual Boolean getInt8(Size byteOffset, Byte* value) const {
