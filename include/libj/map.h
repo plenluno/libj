@@ -13,15 +13,15 @@ class Map : LIBJ_MUTABLE(Map)
 
     virtual void clear() = 0;
 
+    virtual Boolean isEmpty() const = 0;
+
     virtual Boolean containsKey(const Value& key) const = 0;
 
     virtual Boolean containsValue(const Value& val) const = 0;
 
-    virtual Value get(const Value& key) const = 0;
-
     virtual Set::CPtr keySet() const = 0;
 
-    virtual Boolean isEmpty() const = 0;
+    virtual Value get(const Value& key) const = 0;
 
     virtual Value put(const Value& key, const Value& val) = 0;
 
