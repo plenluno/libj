@@ -4,6 +4,7 @@
 #define LIBJ_SINGLETON_H_
 
 #include <libj/object.h>
+#include <libj/string.h>
 
 namespace libj {
 
