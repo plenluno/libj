@@ -3,7 +3,7 @@
 #include <libj/constant.h>
 
 int main() {
-    libj::NO_VALUE = 0;
+    libj::UNDEFINED = 0;
 
     return 0;
 }
