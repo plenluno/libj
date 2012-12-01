@@ -51,4 +51,7 @@ class JsFunction : LIBJ_FUNCTION(JsFunction)
 #define LIBJ_JS_FUNCTION(T) public libj::JsFunction { \
     LIBJ_JS_FUNCTION_DEFS(T)
 
+#define LIBJ_JS_FUNCTION_TEMPLATE(T) public libj::JsFunction { \
+    LIBJ_JS_FUNCTION_TEMPLATE_DEFS(T)
+
 #endif  // LIBJ_JS_FUNCTION_H_

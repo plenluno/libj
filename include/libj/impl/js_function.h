@@ -121,10 +121,17 @@ inline Value JsFunction::call(
 
 }  // namespace libj
 
-#define LIBJ_JS_FUNCTION_DEFS(T) \
-    LIBJ_MUTABLE_DEFS(T, libj::JsFunction) \
+#define LIBJ_JS_FUNCTION_TO_STRING(T) \
     String::CPtr toString() const { \
         return String::create("function " #T "() {}"); \
     }
+
+#define LIBJ_JS_FUNCTION_DEFS(T) \
+    LIBJ_MUTABLE_DEFS(T, libj::JsFunction) \
+    LIBJ_JS_FUNCTION_TO_STRING(T)
+
+#define LIBJ_JS_FUNCTION_TEMPLATE_DEFS(T) \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(T, libj::JsFunction) \
+    LIBJ_JS_FUNCTION_TO_STRING()
 
 #endif  // LIBJ_IMPL_JS_FUNCTION_H_
