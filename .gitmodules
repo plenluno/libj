@@ -10,3 +10,6 @@
 [submodule "tools/btest"]
 	path = tools/btest
 	url = https://github.com/plenluno/btest.git
+[submodule "deps/picojson"]
+	path = deps/picojson
+	url = https://github.com/kazuho/picojson.git

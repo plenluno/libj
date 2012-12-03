@@ -6,6 +6,7 @@
 #cmakedefine LIBJ_USE_CXX11
 #cmakedefine LIBJ_USE_BDW_GC
 #cmakedefine LIBJ_USE_EXCEPTION
+#cmakedefine LIBJ_USE_JSONCPP
 
 #ifdef LIBJ_USE_BDW_GC
 #include <gc_cpp.h>

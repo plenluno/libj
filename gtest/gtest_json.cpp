@@ -3,10 +3,12 @@
 #include <gtest/gtest.h>
 #include <float.h>
 #include <libj/array_list.h>
+#include <libj/error.h>
 #include <libj/json.h>
 #include <libj/js_array.h>
 #include <libj/js_object.h>
 #include <libj/map.h>
+#include <libj/string_buffer.h>
 
 namespace libj {
 
@@ -74,7 +76,7 @@ TEST(GTestJson, TestStringify) {
 
 TEST(GTestJson, TestParse) {
     String::CPtr json =
-        String::create("{\"x\":123,\"y\":[3.0,false],\"z\":null}");
+        String::create("{\"x\":123,\"y\":[3.5,false],\"z\":null}");
     Value v = json::parse(json);
     ASSERT_TRUE(v.instanceof(Type<Map>::id()));
 
@@ -97,7 +99,7 @@ TEST(GTestJson, TestParse) {
 
     Double d;
     to<Double>(a0, &d);
-    ASSERT_EQ(3.0, d);
+    ASSERT_EQ(3.5, d);
 
     Value a1 = a->get(1);
     ASSERT_EQ(Type<Boolean>::id(), a1.type());
@@ -108,6 +110,56 @@ TEST(GTestJson, TestParse) {
 
     Value zv = m->get(String::create("z"));
     ASSERT_TRUE(zv.equals(Object::null()));
+}
+
+TEST(GTestJson, TestParseString) {
+    String::CPtr s = String::create("\"\\u0026\"");
+    ASSERT_TRUE(json::parse(s).equals(String::create("&")));
+
+    String::CPtr s1 = String::create("\"\\ud84c\\udfd0\"");
+    String::CPtr s2 = String::create(0x233d0);
+    ASSERT_TRUE(json::parse(s1).equals(s2));
+
+    std::u32string s32;
+    s32 += 0x3042;
+    s32 += 0x2000b;
+    s = String::create(s32);
+    StringBuffer::Ptr sb = StringBuffer::create();
+    sb->appendCStr("\"");
+    sb->append(s);
+    sb->appendCStr("\"");
+    ASSERT_TRUE(json::parse(sb->toString()).equals(s));
+}
+
+TEST(GTestJson, TestParseNumber) {
+    String::CPtr s1 = String::create("1.0");
+    Value v1 = json::parse(s1);
+    ASSERT_EQ(Type<Long>::id(), v1.type());
+    ASSERT_TRUE(v1.equals(static_cast<Long>(1)));
+
+    String::CPtr s2 = String::create("2147483647");
+    Value v2 = json::parse(s2);
+    ASSERT_TRUE(v2.equals(static_cast<Long>(2147483647)));
+
+    String::CPtr s3 = String::create("2147483648");
+    Value v3 = json::parse(s3);
+    ASSERT_TRUE(v3.equals(static_cast<Long>(2147483648)));
+
+    String::CPtr s4 = String::create("-2147483648");
+    Value v4 = json::parse(s4);
+    ASSERT_TRUE(v4.equals(static_cast<Long>(-2147483648)));
+
+    String::CPtr s5 = String::create("-2147483649");
+    Value v5 = json::parse(s5);
+    ASSERT_TRUE(v5.equals(static_cast<Long>(-2147483649)));
+}
+
+TEST(GTestJson, TestParseError) {
+    Value v1 = json::parse(String::null());
+    ASSERT_TRUE(v1.instanceof(Type<Error>::id()));
+
+    Value v2 = json::parse(String::create("\""));
+    ASSERT_TRUE(v2.instanceof(Type<Error>::id()));
 }
 
 TEST(GTestJson, TestEscape) {

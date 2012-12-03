@@ -8,11 +8,13 @@ option(LIBJ_BUILD_GTEST "Build Google tests" OFF)
 option(LIBJ_USE_CXX11 "Use C++11" OFF)
 option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
 option(LIBJ_USE_EXCEPTION "Use exceptions" OFF)
+option(LIBJ_USE_JSONCPP "Use JsonCpp" OFF)
 
 message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
+message(STATUS "LIBJ_USE_JSONCPP=${LIBJ_USE_JSONCPP}")
 
 # find libraries -----------------------------------------------------------------------------------
 
@@ -46,8 +48,19 @@ set(libj-include
     include
     deps
     deps/iv
-    deps/jsoncpp/include
 )
+
+if(LIBJ_USE_JSONCPP)
+    set(libj-include
+        ${libj-include}
+        deps/jsoncpp/include
+    )
+else(LIBJ_USE_JSONCPP)
+    set(libj-include
+        ${libj-include}
+        deps/picojson
+    )
+endif(LIBJ_USE_JSONCPP)
 
 if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_GTEST)
     set(libj-include
@@ -79,15 +92,28 @@ set(libj-src
 
 if(LIBJ_USE_EXCEPTION)
     set(libj-src
-        src/exception.cpp
         ${libj-src}
+        src/exception.cpp
     )
 else(LIBJ_USE_EXCEPTION)
     set(libj-src
-        src/no_exception.cpp
         ${libj-src}
+        src/no_exception.cpp
     )
 endif(LIBJ_USE_EXCEPTION)
+
+set(libj-json-src
+    src/glue/json.cpp
+)
+
+if(LIBJ_USE_JSONCPP)
+    set(libj-json-src
+        ${libj-json-src}
+        deps/jsoncpp/src/lib_json/json_reader.cpp
+        deps/jsoncpp/src/lib_json/json_value.cpp
+        deps/jsoncpp/src/lib_json/json_writer.cpp
+    )
+endif(LIBJ_USE_JSONCPP)
 
 set(libj-deps
     cvtutf
@@ -99,15 +125,15 @@ set(libj-deps
 
 if(APPLE)
     set(libj-deps
-        iconv
         ${libj-deps}
+        iconv
     )
 endif(APPLE)
 
 if(LIBJ_USE_BDW_GC)
     set(libj-deps
-        gc
         ${libj-deps}
+        gc
     )
 endif(LIBJ_USE_BDW_GC)
 
@@ -162,10 +188,7 @@ set_target_properties(cvtutf PROPERTIES
 
 ## json
 add_library(json STATIC
-    src/glue/json.cpp
-    deps/jsoncpp/src/lib_json/json_reader.cpp
-    deps/jsoncpp/src/lib_json/json_value.cpp
-    deps/jsoncpp/src/lib_json/json_writer.cpp
+    ${libj-json-src}
 )
 
 set_target_properties(json PROPERTIES
@@ -227,7 +250,6 @@ if(LIBJ_BUILD_GTEST)
         gtest/gtest_function.cpp
         gtest/gtest_immutable.cpp
         gtest/gtest_json.cpp
-        gtest/gtest_jsoncpp.cpp
         gtest/gtest_js_array.cpp
         gtest/gtest_js_array_buffer.cpp
         gtest/gtest_js_function.cpp
