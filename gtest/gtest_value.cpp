@@ -37,8 +37,9 @@ TEST(GTestValue, TestIsNull) {
     v = 0;
     ASSERT_FALSE(v.isNull());
 
-    v = NULL;
-    ASSERT_FALSE(v.isNull());
+    // same as 'v = 0'
+    // v = NULL;
+    // ASSERT_FALSE(v.isNull());
 
     v = 5;
     ASSERT_FALSE(v.isNull());

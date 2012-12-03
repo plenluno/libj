@@ -139,19 +139,19 @@ TEST(GTestJson, TestParseNumber) {
 
     String::CPtr s2 = String::create("2147483647");
     Value v2 = json::parse(s2);
-    ASSERT_TRUE(v2.equals(static_cast<Long>(2147483647)));
+    ASSERT_TRUE(v2.equals(2147483647LL));
 
     String::CPtr s3 = String::create("2147483648");
     Value v3 = json::parse(s3);
-    ASSERT_TRUE(v3.equals(static_cast<Long>(2147483648)));
+    ASSERT_TRUE(v3.equals(2147483648LL));
 
     String::CPtr s4 = String::create("-2147483648");
     Value v4 = json::parse(s4);
-    ASSERT_TRUE(v4.equals(static_cast<Long>(-2147483648)));
+    ASSERT_TRUE(v4.equals(-2147483648LL));
 
     String::CPtr s5 = String::create("-2147483649");
     Value v5 = json::parse(s5);
-    ASSERT_TRUE(v5.equals(static_cast<Long>(-2147483649)));
+    ASSERT_TRUE(v5.equals(-2147483649LL));
 }
 
 TEST(GTestJson, TestParseError) {
