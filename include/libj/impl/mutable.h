@@ -15,11 +15,13 @@ inline Boolean Mutable::instanceof(TypeId id) const {
         || Object::instanceof(id);
 }
 
+}  // namespace libj
+
 #define LIBJ_MUTABLE_METHODS(T, B) public: \
-    libj::TypeId type() const { \
+    virtual libj::TypeId type() const { \
         return libj::Type<T >::id(); \
     } \
-    Boolean instanceof(libj::TypeId id) const { \
+    virtual Boolean instanceof(libj::TypeId id) const { \
         return id == libj::Type<T >::id() \
             || B::instanceof(id); \
     }
@@ -41,7 +43,5 @@ inline Boolean Mutable::instanceof(TypeId id) const {
         LIBJ_NULL_PTR_TYPE_DEF(T, nullp); \
         return nullp; \
     }
-
-}  // namespace libj
 
 #endif  // LIBJ_IMPL_MUTABLE_H_
