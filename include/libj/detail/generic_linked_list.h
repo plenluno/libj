@@ -3,9 +3,9 @@
 #ifndef LIBJ_DETAIL_GENERIC_LINKED_LIST_H_
 #define LIBJ_DETAIL_GENERIC_LINKED_LIST_H_
 
-#include <list>
+#include <libj/detail/generic_list.h>
 
-#include "./generic_list.h"
+#include <list>
 
 namespace libj {
 namespace detail {

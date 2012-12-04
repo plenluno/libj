@@ -5,7 +5,6 @@
 
 #include <libj/js_array.h>
 #include <libj/js_object.h>
-#include <libj/string.h>
 
 namespace libj {
 

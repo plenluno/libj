@@ -4,7 +4,6 @@
 #define LIBJ_BRIDGE_ABSTRACT_JS_OBJECT_H_
 
 #include <libj/js_object.h>
-#include <libj/string.h>
 #include <libj/bridge/abstract_map.h>
 
 namespace libj {

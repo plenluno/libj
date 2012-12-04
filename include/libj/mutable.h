@@ -4,7 +4,6 @@
 #define LIBJ_MUTABLE_H_
 
 #include <libj/object.h>
-#include <libj/string.h>
 #include <libj/detail/gc_base.h>
 
 namespace libj {

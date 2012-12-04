@@ -3,7 +3,7 @@
 #ifndef LIBJ_BRIDGE_ABSTRACT_MAP_H_
 #define LIBJ_BRIDGE_ABSTRACT_MAP_H_
 
-#include "libj/map.h"
+#include <libj/map.h>
 
 namespace libj {
 namespace bridge {
