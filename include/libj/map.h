@@ -30,9 +30,9 @@ class Map : LIBJ_MUTABLE(Map)
     virtual Size size() const = 0;
 };
 
+}  // namespace libj
+
 #define LIBJ_MAP(T) public libj::Map { \
     LIBJ_MUTABLE_DEFS(T, libj::Map)
-
-}  // namespace libj
 
 #endif  // LIBJ_MAP_H_

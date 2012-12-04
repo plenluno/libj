@@ -5,6 +5,7 @@
 
 #include <libj/constant.h>
 #include <libj/mutable.h>
+#include <libj/string.h>
 #include <libj/value.h>
 
 namespace libj {
@@ -68,9 +69,9 @@ class JsArrayBuffer : LIBJ_MUTABLE(JsArrayBuffer)
         Size byteOffset, Double value, Boolean littleEndian = false) = 0;
 };
 
+}  // namespace libj
+
 #define LIBJ_JS_ARRAY_BUFFER(T) public libj::JsArrayBuffer { \
     LIBJ_MUTABLE_DEFS(T, libj::JsArrayBuffer)
-
-}  // namespace libj
 
 #endif  // LIBJ_JS_ARRAY_BUFFER_H_

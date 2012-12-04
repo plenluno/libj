@@ -3,8 +3,6 @@
 #ifndef LIBJ_ERROR_H_
 #define LIBJ_ERROR_H_
 
-#include <assert.h>
-
 #include <libj/status.h>
 
 namespace libj {
@@ -35,6 +33,10 @@ class Error : LIBJ_STATUS(Error)
     static CPtr create(Code code, String::CPtr msg);
 };
 
+}  // namespace libj
+
+#include <assert.h>
+
 #define LIBJ_ERROR(T) public libj::Error { \
     LIBJ_IMMUTABLE_DEFS(T, libj::Error)
 
@@ -45,7 +47,5 @@ class Error : LIBJ_STATUS(Error)
     #define LIBJ_HANDLE_ERROR(code) \
         return libj::Error::create(code);
 #endif
-
-}  // namespace libj
 
 #endif  // LIBJ_ERROR_H_

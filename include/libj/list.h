@@ -41,9 +41,9 @@ class List : LIBJ_COLLECTION(List)
     virtual Value pop() = 0;
 };
 
+}  // namespace libj
+
 #define LIBJ_LIST(T) public libj::List { \
     LIBJ_MUTABLE_DEFS(T, libj::List)
-
-}  // namespace libj
 
 #endif  // LIBJ_LIST_H_

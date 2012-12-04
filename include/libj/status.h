@@ -22,9 +22,9 @@ class Status : LIBJ_IMMUTABLE(Status)
     virtual String::CPtr message() const = 0;
 };
 
+}  // namespace libj
+
 #define LIBJ_STATUS(T) public libj::Status { \
     LIBJ_IMMUTABLE_DEFS(T, libj::Status)
-
-}  // namespace libj
 
 #endif  // LIBJ_STATUS_H_

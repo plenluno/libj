@@ -4,6 +4,7 @@
 #define LIBJ_COLLECTION_H_
 
 #include <libj/iterator.h>
+#include <libj/string.h>
 
 namespace libj {
 
@@ -32,9 +33,9 @@ class Collection : LIBJ_MUTABLE(Collection)
     virtual Size size() const = 0;
 };
 
+}  // namespace libj
+
 #define LIBJ_COLLECTION(T) public libj::Collection { \
     LIBJ_MUTABLE_DEFS(T, libj::Collection)
-
-}  // namespace libj
 
 #endif  // LIBJ_COLLECTION_H_

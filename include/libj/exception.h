@@ -7,8 +7,6 @@
 
 #ifdef LIBJ_USE_EXCEPTION
 
-#include <libj/string.h>
-
 #include <exception>
 
 namespace libj {
@@ -40,13 +38,13 @@ class Exception : public std::exception {
     Impl* impl_;
 };
 
+}  // namespace libj
+
 #define LIBJ_THROW(code) \
     throw libj::Exception(code, __FILE__, __func__, __LINE__);
 
 #define LIBJ_HANDLE_ERROR(code) \
     LIBJ_THROW(code)
-
-}  // namespace libj
 
 #endif  // LIBJ_USE_EXCEPTION
 
