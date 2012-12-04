@@ -333,7 +333,7 @@ class String : public I {
             }
         }
 
-        virtual String::CPtr toString() const {
+        virtual typename I::CPtr toString() const {
             return I::create();
         }
 
