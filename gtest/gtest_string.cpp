@@ -319,6 +319,21 @@ TEST(GTestString, TestIsInterned) {
     ASSERT_TRUE(interned123->isInterned());
 }
 
+TEST(GTestString, TestIterator) {
+    String::CPtr abc = String::create("abc");
+    TypedIterator<Char>::Ptr itr = abc->iterator();
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_EQ('a', itr->next());
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_EQ('b', itr->next());
+    ASSERT_TRUE(itr->hasNext());
+    ASSERT_EQ('c', itr->next());
+    ASSERT_FALSE(itr->hasNext());
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(itr->next());
+#endif
+}
+
 TEST(GTestString, TestStartsWith) {
     String::CPtr s = String::create("abcde");
     String::CPtr s1 = String::create("abc");

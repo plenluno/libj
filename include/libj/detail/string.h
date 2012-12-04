@@ -5,6 +5,7 @@
 
 #include <libj/cast.h>
 #include <libj/constant.h>
+#include <libj/exception.h>
 #include <libj/map.h>
 #include <libj/glue/cvtutf.h>
 
@@ -227,6 +228,10 @@ class String : public I {
         return interned_;
     }
 
+    virtual TypedIterator<Char>::Ptr iterator() const {
+        return TypedIterator<Char>::Ptr(new CharIterator(str_));
+    }
+
     virtual CPtr toLowerCase() const {
         Size len = length();
         String* s = new String();
@@ -307,6 +312,39 @@ class String : public I {
             return glue::UTF8;
         }
     }
+
+ private:
+    class CharIterator : public TypedIterator<Char> {
+        friend class String;
+        typedef std::u32string::const_iterator CItr;
+
+     public:
+        virtual Boolean hasNext() const {
+            return pos_ != end_;
+        }
+
+        virtual Char next() {
+            if (pos_ == end_) {
+                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+            } else {
+                Char c = *pos_;
+                ++pos_;
+                return c;
+            }
+        }
+
+        virtual String::CPtr toString() const {
+            return I::create();
+        }
+
+     private:
+        CItr pos_;
+        CItr end_;
+
+        CharIterator(const std::u32string& str)
+            : pos_(str.begin())
+            , end_(str.end()) {}
+    };
 
  private:
     std::u32string str_;

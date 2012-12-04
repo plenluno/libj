@@ -5,6 +5,7 @@
 
 #include <libj/constant.h>
 #include <libj/immutable.h>
+#include <libj/typed_iterator.h>
 #include <libj/value.h>
 
 #include <stdio.h>
@@ -65,6 +66,8 @@ class String : LIBJ_IMMUTABLE(String)
     virtual Boolean startsWith(CPtr str, Size from = 0) const = 0;
 
     virtual Boolean endsWith(CPtr str) const = 0;
+
+    virtual TypedIterator<Char>::Ptr iterator() const = 0;
 
     virtual CPtr toLowerCase() const = 0;
 
