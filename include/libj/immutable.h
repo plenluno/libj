@@ -17,7 +17,7 @@ class Immutable
 
     static CPtr null();
 
-    Boolean instanceof(TypeId id) const;
+    virtual Boolean instanceof(TypeId id) const;
 };
 
 }  // namespace libj

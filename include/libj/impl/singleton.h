@@ -27,11 +27,11 @@ class SingletonTmpl : public Singleton {
         return p;
     }
 
-    TypeId type() const {
+    virtual TypeId type() const {
         return Type<T>::id();
     }
 
-    Boolean instanceof(TypeId id) const {
+    virtual Boolean instanceof(TypeId id) const {
         return id == type()
             || id == Type<Singleton>::id()
             || Object::instanceof(id);
@@ -48,6 +48,6 @@ class SingletonTmpl : public Singleton {
 private: \
     friend class libj::SingletonTmpl<T>; \
     T() : libj::SingletonTmpl<T>() {} \
-    ~T() {}
+    virtual ~T() {}
 
 #endif  // LIBJ_IMPL_SINGLETON_H_

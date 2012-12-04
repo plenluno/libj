@@ -122,7 +122,7 @@ inline Value JsFunction::call(
 }  // namespace libj
 
 #define LIBJ_JS_FUNCTION_TO_STRING(T) \
-    String::CPtr toString() const { \
+    virtual String::CPtr toString() const { \
         return String::create("function " #T "() {}"); \
     }
 
