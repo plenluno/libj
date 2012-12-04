@@ -34,20 +34,20 @@ class Type {
  public:
     typedef LIBJ_PTR_TYPE(T) Ptr;
     typedef LIBJ_CPTR_TYPE(T) CPtr;
-    LIBJ_TYPE_ID_DEF;
+    static TypeId id() { LIBJ_RETURN_TYPE_ID; }
 };
 
 template<typename T>
 class Type<T, detail::IMMUTABLE> {
  public:
     typedef LIBJ_CPTR_TYPE(T) CPtr;
-    LIBJ_TYPE_ID_DEF;
+    static TypeId id() { LIBJ_RETURN_TYPE_ID; }
 };
 
 template<typename T>
 class Type<T, detail::PRIMITIVE> {
  public:
-    LIBJ_TYPE_ID_DEF;
+    static TypeId id() { LIBJ_RETURN_TYPE_ID; }
 };
 
 }  // namespace libj

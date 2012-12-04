@@ -38,10 +38,8 @@ class SingletonBase {};
 }  // namespace detail
 }  // namespace libj
 
-#define LIBJ_TYPE_ID_DEF \
-static TypeId id() { \
+#define LIBJ_RETURN_TYPE_ID \
     static char c; \
-    return reinterpret_cast<TypeId>(&c); \
-}
+    return reinterpret_cast<TypeId>(&c);
 
 #endif  // LIBJ_DETAIL_TYPE_H_
