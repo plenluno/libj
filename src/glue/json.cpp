@@ -18,37 +18,43 @@ namespace libj {
 namespace glue {
 namespace json {
 
+static const Double JSON_INTEGER_MAX = +9007199254740991.0;
+static const Double JSON_INTEGER_MIN = -9007199254740991.0;
+
+static Value doubleToValue(Double d) {
+    Double intpart;
+    if (modf(d, &intpart) == 0.0 &&
+        intpart <= JSON_INTEGER_MAX &&
+        intpart >= JSON_INTEGER_MIN) {
+        Long l = static_cast<Long>(intpart);
+        return l;
+    } else {
+        return d;
+    }
+}
+
 #ifdef LIBJ_USE_JSONCPP
 
 static Json::Reader jsonReader;
 
-static Value toLibjValue(const Json::Value& val) {
+static Value convert(const Json::Value& val) {
     if (val.isNull()) {
         return Object::null();
     } else if (val.isBool()) {
         return val.asBool();
     } else if (val.isInt()) {
-        Long i = val.asInt();
-        return i;
+        return static_cast<Long>(val.asInt());
     } else if (val.isUInt()) {
-        Long u = val.asUInt();
-        return u;
+        return static_cast<Long>(val.asUInt());
     } else if (val.isDouble()) {
-        Double d = val.asDouble();
-        Double intpart;
-        if (modf(d, &intpart) == 0.0) {
-            Long l = static_cast<Long>(intpart);
-            return l;
-        } else {
-            return d;
-        }
+        return doubleToValue(val.asDouble());
     } else if (val.isString()) {
         return String::create(val.asCString(), String::UTF8);
     } else if (val.isArray()) {
         JsArray::Ptr a = JsArray::create();
         Size len = val.size();
         for (Size i = 0; i < len; i++) {
-            a->add(toLibjValue(val[static_cast<Json::UInt>(i)]));
+            a->add(convert(val[static_cast<Json::UInt>(i)]));
         }
         return a;
     } else if (val.isObject()) {
@@ -57,7 +63,7 @@ static Value toLibjValue(const Json::Value& val) {
         Size len = ms.size();
         for (Size i = 0; i < len; i++) {
             String::CPtr k = String::create(ms[i].c_str());
-            Value v = toLibjValue(val[ms[i]]);
+            Value v = convert(val[ms[i]]);
             jo->put(k, v);
         }
         return jo;
@@ -72,7 +78,7 @@ Value parse(String::CPtr str) {
     Json::Value root;
     std::istringstream is(str->toStdString());
     if (jsonReader.parse(is, root)) {
-        return toLibjValue(root);
+        return convert(root);
     } else {
         return Error::create(Error::ILLEGAL_ARGUMENT);
     }
@@ -80,20 +86,13 @@ Value parse(String::CPtr str) {
 
 #else
 
-static Value toLibjValue(const picojson::value& val) {
+static Value convert(const picojson::value& val) {
     if (val.is<picojson::null>()) {
         return Object::null();
     } else if (val.is<Boolean>()) {
         return val.get<Boolean>();
     } else if (val.is<Double>()) {
-        Double d = val.get<Double>();
-        Double intpart;
-        if (modf(d, &intpart) == 0.0) {
-            Long l = static_cast<Long>(intpart);
-            return l;
-        } else {
-            return d;
-        }
+        return doubleToValue(val.get<Double>());
     } else if (val.is<std::string>()) {
         std::string s = val.get<std::string>();
         return String::create(s.c_str(), String::UTF8);
@@ -103,7 +102,7 @@ static Value toLibjValue(const picojson::value& val) {
         for (picojson::array::const_iterator i = pa.begin();
              i != pa.end();
              ++i) {
-            ja->add(toLibjValue(*i));
+            ja->add(convert(*i));
         }
         return ja;
     } else if (val.is<picojson::object>()) {
@@ -113,7 +112,7 @@ static Value toLibjValue(const picojson::value& val) {
              i != po.end();
              ++i) {
             String::CPtr k = String::create(i->first.c_str());
-            Value v = toLibjValue(i->second);
+            Value v = convert(i->second);
             jo->put(k, v);
         }
         return jo;
@@ -131,7 +130,7 @@ Value parse(String::CPtr str) {
     std::string err;
     picojson::parse(v, cstr, cstr + s.length(), &err);
     if (err.empty()) {
-        return toLibjValue(v);
+        return convert(v);
     } else {
         return Error::create(Error::ILLEGAL_ARGUMENT);
     }

@@ -135,23 +135,43 @@ TEST(GTestJson, TestParseNumber) {
     String::CPtr s1 = String::create("1.0");
     Value v1 = json::parse(s1);
     ASSERT_EQ(Type<Long>::id(), v1.type());
-    ASSERT_TRUE(v1.equals(static_cast<Long>(1)));
+    ASSERT_TRUE(v1.equals(1LL));
 
-    String::CPtr s2 = String::create("2147483647");
+    String::CPtr s2 = String::create("9007199254740990");
     Value v2 = json::parse(s2);
-    ASSERT_TRUE(v2.equals(2147483647LL));
+    ASSERT_TRUE(v2.equals(9007199254740990LL));
 
-    String::CPtr s3 = String::create("2147483648");
+    String::CPtr s3 = String::create("9007199254740991");
     Value v3 = json::parse(s3);
-    ASSERT_TRUE(v3.equals(2147483648LL));
+    ASSERT_TRUE(v3.equals(9007199254740991LL));
 
-    String::CPtr s4 = String::create("-2147483648");
+    String::CPtr s4 = String::create("9007199254740992");
     Value v4 = json::parse(s4);
-    ASSERT_TRUE(v4.equals(-2147483648LL));
+    ASSERT_TRUE(v4.equals(9007199254740992.0));
 
-    String::CPtr s5 = String::create("-2147483649");
+    String::CPtr s5 = String::create("9007199254740993");
     Value v5 = json::parse(s5);
-    ASSERT_TRUE(v5.equals(-2147483649LL));
+    ASSERT_TRUE(v5.equals(9007199254740992.0));
+
+    String::CPtr s6 = String::create("-9007199254740990");
+    Value v6 = json::parse(s6);
+    ASSERT_TRUE(v6.equals(-9007199254740990LL));
+
+    String::CPtr s7 = String::create("-9007199254740991");
+    Value v7 = json::parse(s7);
+    ASSERT_TRUE(v7.equals(-9007199254740991LL));
+
+    String::CPtr s8 = String::create("-9007199254740992");
+    Value v8 = json::parse(s8);
+    ASSERT_TRUE(v8.equals(-9007199254740992.0));
+
+    String::CPtr s9 = String::create("-9007199254740993");
+    Value v9 = json::parse(s9);
+    ASSERT_TRUE(v9.equals(-9007199254740992.0));
+
+    String::CPtr s10 = String::create("1.7976931348623157e+308");
+    Value v10 = json::parse(s10);
+    ASSERT_TRUE(v10.equals(1.7976931348623157e+308));
 }
 
 TEST(GTestJson, TestParseError) {
