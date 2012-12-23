@@ -6,7 +6,6 @@
 #include <libj/detail/generic_collection.h>
 
 #include <set>
-#include <utility>
 
 namespace libj {
 namespace detail {

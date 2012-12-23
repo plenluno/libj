@@ -6,8 +6,6 @@
 #include <libj/endian.h>
 #include <libj/string.h>
 
-#include <algorithm>
-
 namespace libj {
 namespace detail {
 

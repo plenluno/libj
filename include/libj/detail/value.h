@@ -17,7 +17,6 @@
     #include <boost/type_traits/remove_const.hpp>
     #include <boost/type_traits/remove_reference.hpp>
 #endif
-#include <algorithm>
 
 namespace libj {
 namespace detail {
