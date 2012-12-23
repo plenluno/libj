@@ -2,7 +2,6 @@
 
 #include <gtest/gtest.h>
 #include <libj/error.h>
-#include <libj/js_array.h>
 #include <libj/js_function.h>
 
 namespace libj {
