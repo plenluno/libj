@@ -23,14 +23,15 @@ message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
 
 # find libraries -----------------------------------------------------------------------------------
 
+find_library(PTHREAD pthread REQUIRED)
+if(NOT EXISTS ${PTHREAD})
+    message(FATAL_ERROR "libpthread not found.")
+endif()
+
 if(LIBJ_BUILD_GTEST)
     find_library(GTEST gtest REQUIRED)
     if(NOT EXISTS ${GTEST})
         message(FATAL_ERROR "libgtest not found.")
-    endif()
-    find_library(PTHREAD pthread REQUIRED)
-    if(NOT EXISTS ${PTHREAD})
-        message(FATAL_ERROR "libpthread not found.")
     endif()
 endif(LIBJ_BUILD_GTEST)
 
@@ -132,6 +133,7 @@ if(LIBJ_USE_BDW_GC)
     set(libj-deps
         ${libj-deps}
         gc
+        pthread
     )
 endif(LIBJ_USE_BDW_GC)
 
