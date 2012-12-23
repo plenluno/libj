@@ -326,6 +326,7 @@ class String : public I {
         virtual Char next() {
             if (pos_ == end_) {
                 LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+                return 0;
             } else {
                 Char c = *pos_;
                 ++pos_;

@@ -53,8 +53,7 @@ class GenericList : public GenericCollection<T, I> {
     }
 
     virtual Value shift() {
-        Size len = size();
-        if (len) {
+        if (size()) {
             return remove(static_cast<Size>(0));
         } else {
             return UNDEFINED;
@@ -62,12 +61,10 @@ class GenericList : public GenericCollection<T, I> {
     }
 
     virtual T shiftTyped() {
-        Size len = size();
-        if (len) {
-            return removeTyped(static_cast<Size>(0));
-        } else {
+        if (!size()) {
             LIBJ_THROW(Error::EMPTY_COLLECTION);
         }
+        return removeTyped(static_cast<Size>(0));
     }
 
     virtual Size unshift(const Value& val) {
@@ -101,11 +98,10 @@ class GenericList : public GenericCollection<T, I> {
 
     virtual T popTyped() {
         Size len = size();
-        if (len) {
-            return removeTyped(len - 1);
-        } else {
+        if (!len) {
             LIBJ_THROW(Error::EMPTY_COLLECTION);
         }
+        return removeTyped(len - 1);
     }
 
     virtual Int indexOf(const Value& v) {

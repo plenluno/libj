@@ -77,9 +77,8 @@ class GenericLinkedList : public GenericList<T, I> {
     virtual T getTyped(Size i) const {
         if (i >= size()) {
             LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
-        } else {
-            return getAux(i);
         }
+        return getAux(i);
     }
 
     virtual Value remove(Size i) {
@@ -93,9 +92,8 @@ class GenericLinkedList : public GenericList<T, I> {
     virtual T removeTyped(Size i) {
         if (i >= list_.size()) {
             LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
-        } else {
-            return removeAux(i);
         }
+        return removeAux(i);
     }
 
     virtual Boolean remove(const Value& v) {
@@ -198,11 +196,11 @@ class GenericLinkedList : public GenericList<T, I> {
         virtual Value next() {
             if (pos_ == end_) {
                 LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
             }
+
+            T t = *pos_;
+            ++pos_;
+            return t;
         }
 
         virtual String::CPtr toString() const {
@@ -229,11 +227,11 @@ class GenericLinkedList : public GenericList<T, I> {
         virtual T next() {
             if (pos_ == end_) {
                 LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
             }
+
+            T t = *pos_;
+            ++pos_;
+            return t;
         }
 
         virtual String::CPtr toString() const {
@@ -260,11 +258,11 @@ class GenericLinkedList : public GenericList<T, I> {
         virtual T next() {
             if (pos_ == end_) {
                 LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
             }
+
+            T t = *pos_;
+            ++pos_;
+            return t;
         }
 
         virtual String::CPtr toString() const {

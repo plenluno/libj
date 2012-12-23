@@ -97,11 +97,11 @@ class GenericSet : public GenericCollection<T, I> {
         virtual T next() {
             if (pos_ == end_) {
                 LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
             }
+
+            T t = *pos_;
+            ++pos_;
+            return t;
         }
 
         virtual String::CPtr toString() const {
