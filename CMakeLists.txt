@@ -2,28 +2,26 @@ cmake_minimum_required(VERSION 2.8)
 
 project(libj)
 
+include(CMakeDependentOption)
+
 # options ------------------------------------------------------------------------------------------
 
-option(LIBJ_BUILD_GTEST "Build Google tests" OFF)
 option(LIBJ_USE_CXX11 "Use C++11" OFF)
 option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
-option(LIBJ_USE_EXCEPTION "Use exceptions" OFF)
+option(LIBJ_USE_EXCEPTION "Use Exceptions" OFF)
 option(LIBJ_USE_JSONCPP "Use JsonCpp" OFF)
+option(LIBJ_BUILD_GTEST "Build Google Tests" OFF)
 
-message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
-message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
+cmake_dependent_option(LIBJ_BUILD_BDW_GC "Build BDW-GC" ON "LIBJ_USE_BDW_GC" OFF)
+
 message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
+message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 message(STATUS "LIBJ_USE_JSONCPP=${LIBJ_USE_JSONCPP}")
+message(STATUS "LIBJ_BUILD_BDW_GC=${LIBJ_BUILD_BDW_GC}")
+message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
 
 # find libraries -----------------------------------------------------------------------------------
-
-if(LIBJ_USE_BDW_GC)
-    find_library(GC gc REQUIRED)
-    if(NOT EXISTS ${GC})
-        message(FATAL_ERROR "libgc not found.")
-    endif()
-endif(LIBJ_USE_BDW_GC)
 
 if(LIBJ_BUILD_GTEST)
     find_library(GTEST gtest REQUIRED)
@@ -42,7 +40,7 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h.in
     ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h )
 
-# set variables ------------------------------------------------------------------------------------
+# variables ----------------------------------------------------------------------------------------
 
 set(libj-include
     include
@@ -225,6 +223,19 @@ set_target_properties(dtoa PROPERTIES
 add_library(ndtoa STATIC
     deps/iv/iv/lv5/third_party/netlib_dtoa/netlib_dtoa.c
 )
+
+## bdw-gc
+if(LIBJ_BUILD_BDW_GC)
+    add_custom_command(
+        TARGET json PRE_BUILD
+        COMMAND rsync -av ${CMAKE_CURRENT_LIST_DIR}/deps/bdwgc ${CMAKE_BINARY_DIR}/deps/
+        COMMAND rsync -av ${CMAKE_CURRENT_LIST_DIR}/deps/libatomic_ops ${CMAKE_BINARY_DIR}/deps/bdwgc/
+        COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./autogen.sh
+        COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./configure
+        COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && make
+        COMMAND ln -sf ${CMAKE_BINARY_DIR}/deps/bdwgc/.libs/libgc.a ${CMAKE_BINARY_DIR}/libgc.a
+    )
+endif(LIBJ_BUILD_BDW_GC)
 
 ## libj
 add_library(j STATIC

@@ -13,3 +13,9 @@
 [submodule "deps/picojson"]
 	path = deps/picojson
 	url = https://github.com/kazuho/picojson.git
+[submodule "deps/bdwgc"]
+	path = deps/bdwgc
+	url = https://github.com/ivmai/bdwgc.git
+[submodule "deps/libatomic_ops"]
+	path = deps/libatomic_ops
+	url = https://github.com/ivmai/libatomic_ops.git
