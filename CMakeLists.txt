@@ -89,6 +89,13 @@ set(libj-src
     src/value_holder.cpp
 )
 
+if(LIBJ_USE_CXX11)
+    set(libj-src
+        ${libj-src}
+        src/js_closure.cpp
+    )
+endif(LIBJ_USE_CXX11)
+
 if(LIBJ_USE_EXCEPTION)
     set(libj-src
         ${libj-src}
@@ -113,6 +120,43 @@ if(LIBJ_USE_JSONCPP)
         deps/jsoncpp/src/lib_json/json_writer.cpp
     )
 endif(LIBJ_USE_JSONCPP)
+
+set(libj-gtest-src
+    gtest/gtest_array_list.cpp
+    gtest/gtest_console.cpp
+    gtest/gtest_cvtutf.cpp
+    gtest/gtest_error.cpp
+    gtest/gtest_function.cpp
+    gtest/gtest_immutable.cpp
+    gtest/gtest_json.cpp
+    gtest/gtest_js_array.cpp
+    gtest/gtest_js_array_buffer.cpp
+    gtest/gtest_js_function.cpp
+    gtest/gtest_js_object.cpp
+    gtest/gtest_js_regexp.cpp
+    gtest/gtest_linked_list.cpp
+    gtest/gtest_main.cpp
+    gtest/gtest_map.cpp
+    gtest/gtest_mutable.cpp
+    gtest/gtest_set.cpp
+    gtest/gtest_singleton.cpp
+    gtest/gtest_status.cpp
+    gtest/gtest_string.cpp
+    gtest/gtest_string_buffer.cpp
+    gtest/gtest_typed_array_list.cpp
+    gtest/gtest_typed_js_array.cpp
+    gtest/gtest_typed_linked_list.cpp
+    gtest/gtest_typed_value_holder.cpp
+    gtest/gtest_value.cpp
+    gtest/gtest_value_holder.cpp
+)
+
+if(LIBJ_USE_CXX11)
+    set(libj-gtest-src
+        ${libj-gtest-src}
+        gtest/gtest_js_closure.cpp
+    )
+endif(LIBJ_USE_CXX11)
 
 set(libj-deps
     cvtutf
@@ -256,33 +300,7 @@ set_target_properties(j PROPERTIES
 
 if(LIBJ_BUILD_GTEST)
     add_executable(libj-gtest
-        gtest/gtest_array_list.cpp
-        gtest/gtest_console.cpp
-        gtest/gtest_cvtutf.cpp
-        gtest/gtest_error.cpp
-        gtest/gtest_function.cpp
-        gtest/gtest_immutable.cpp
-        gtest/gtest_json.cpp
-        gtest/gtest_js_array.cpp
-        gtest/gtest_js_array_buffer.cpp
-        gtest/gtest_js_function.cpp
-        gtest/gtest_js_object.cpp
-        gtest/gtest_js_regexp.cpp
-        gtest/gtest_linked_list.cpp
-        gtest/gtest_main.cpp
-        gtest/gtest_map.cpp
-        gtest/gtest_mutable.cpp
-        gtest/gtest_set.cpp
-        gtest/gtest_singleton.cpp
-        gtest/gtest_status.cpp
-        gtest/gtest_string.cpp
-        gtest/gtest_string_buffer.cpp
-        gtest/gtest_typed_array_list.cpp
-        gtest/gtest_typed_js_array.cpp
-        gtest/gtest_typed_linked_list.cpp
-        gtest/gtest_typed_value_holder.cpp
-        gtest/gtest_value.cpp
-        gtest/gtest_value_holder.cpp
+        ${libj-gtest-src}
     )
     target_link_libraries(libj-gtest
         gtest
