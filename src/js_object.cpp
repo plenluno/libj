@@ -1,7 +1,7 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
-#include "libj/js_object.h"
-#include "libj/detail/js_object.h"
+#include <libj/js_object.h>
+#include <libj/detail/js_object.h>
 
 namespace libj {
 
