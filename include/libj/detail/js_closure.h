@@ -5,6 +5,8 @@
 
 #include <libj/js_array.h>
 
+#ifdef LIBJ_USE_CXX11
+
 namespace libj {
 namespace detail {
 
@@ -25,5 +27,7 @@ class JsClosure : public I {
 
 }  // namespace detail
 }  // namespace libj
+
+#endif  // LIBJ_USE_CXX11
 
 #endif  // LIBJ_DETAIL_JS_CLOSURE_H_

@@ -9,21 +9,21 @@ namespace libj {
 TEST(GTestJsClosure, TestClosure) {
     JsClosure::Ptr add = JsClosure::create(
         [] (JsArray::Ptr args) -> Value {
-            if (!args) {
+        if (!args) {
+            return Error::create(Error::ILLEGAL_ARGUMENT);
+        }
+
+        Int sum = 0;
+        for (Size i = 0; i < args->length(); i++) {
+            int x;
+            if (to<Int>(args->get(i), &x)) {
+                sum += x;
+            } else {
                 return Error::create(Error::ILLEGAL_ARGUMENT);
             }
-
-            Int sum = 0;
-            for (Size i = 0; i < args->length(); i++) {
-                int x;
-                if (to<Int>(args->get(i), &x)) {
-                    sum += x;
-                } else {
-                    return Error::create(Error::ILLEGAL_ARGUMENT);
-                }
-            }
-            return sum;
-        });
+        }
+        return sum;
+    });
 
     JsArray::Ptr args = JsArray::create();
     args->add(3);
@@ -48,8 +48,8 @@ TEST(GTestJsClosure, TestClosure2) {
 
     JsClosure::Ptr concat = JsClosure::create(
         [abc, xyz] (JsArray::Ptr args) -> Value {
-            return abc->concat(xyz);
-        });
+        return abc->concat(xyz);
+    });
 
     ASSERT_TRUE(concat->call().equals(String::create("abcxyz")));
 }
