@@ -309,11 +309,11 @@ if(LIBJ_BUILD_GTEST)
     )
     if(LIBJ_USE_CXX11)
         set_target_properties(libj-gtest PROPERTIES
-            COMPILE_FLAGS "-Wall --std=c++0x -fpermissive"
+            COMPILE_FLAGS "-Wall -fpermissive --std=c++0x"
         )
     else(LIBJ_USE_CXX11)
         set_target_properties(libj-gtest PROPERTIES
-            COMPILE_FLAGS "-Wall"
+            COMPILE_FLAGS "-Wall -fpermissive"
         )
     endif(LIBJ_USE_CXX11)
 endif(LIBJ_BUILD_GTEST)
