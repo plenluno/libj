@@ -8,8 +8,8 @@
 namespace libj {
 namespace bridge {
 
-template<typename T>
-class AbstractCollection : public T {
+template<typename I>
+class AbstractCollection : public I {
  public:
     AbstractCollection(Collection::Ptr c) : collection_(c) {}
 
