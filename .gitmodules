@@ -19,3 +19,6 @@
 [submodule "deps/libatomic_ops"]
 	path = deps/libatomic_ops
 	url = https://github.com/ivmai/libatomic_ops.git
+[submodule "deps/googletest"]
+	path = deps/googletest
+	url = https://github.com/liquid-mirror/googletest.git

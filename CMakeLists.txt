@@ -21,28 +21,9 @@ message(STATUS "LIBJ_USE_JSONCPP=${LIBJ_USE_JSONCPP}")
 message(STATUS "LIBJ_BUILD_BDW_GC=${LIBJ_BUILD_BDW_GC}")
 message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
 
-# find libraries -----------------------------------------------------------------------------------
-
-find_library(PTHREAD pthread REQUIRED)
-if(NOT EXISTS ${PTHREAD})
-    message(FATAL_ERROR "libpthread not found.")
-endif()
-
-if(LIBJ_BUILD_GTEST)
-    find_library(GTEST gtest REQUIRED)
-    if(NOT EXISTS ${GTEST})
-        message(FATAL_ERROR "libgtest not found.")
-    endif()
-endif(LIBJ_BUILD_GTEST)
-
-# configure ----------------------------------------------------------------------------------------
-
-CONFIGURE_FILE(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h )
-
 # variables ----------------------------------------------------------------------------------------
 
+## libj-include
 set(libj-include
     include
     deps
@@ -61,6 +42,12 @@ else(LIBJ_USE_JSONCPP)
     )
 endif(LIBJ_USE_JSONCPP)
 
+if(LIBJ_BUILD_GTEST)
+    set(libj-includd
+        deps/googletest/include
+    )
+endif(LIBJ_BUILD_GTEST)
+
 if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_GTEST)
     set(libj-include
         ${libj-include}
@@ -68,6 +55,7 @@ if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_GTEST)
     )
 endif(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_GTEST)
 
+## libj-src
 set(libj-src
     src/array_list.cpp
     src/console.cpp
@@ -108,6 +96,7 @@ else(LIBJ_USE_EXCEPTION)
     )
 endif(LIBJ_USE_EXCEPTION)
 
+## libj-json-src
 set(libj-json-src
     src/glue/json.cpp
 )
@@ -121,6 +110,7 @@ if(LIBJ_USE_JSONCPP)
     )
 endif(LIBJ_USE_JSONCPP)
 
+## libj-gtest-src
 set(libj-gtest-src
     gtest/gtest_array_list.cpp
     gtest/gtest_console.cpp
@@ -158,6 +148,7 @@ if(LIBJ_USE_CXX11)
     )
 endif(LIBJ_USE_CXX11)
 
+## libj-deps
 set(libj-deps
     cvtutf
     dtoa
@@ -181,22 +172,15 @@ if(LIBJ_USE_BDW_GC)
     )
 endif(LIBJ_USE_BDW_GC)
 
+## libj-cflags
 set(libj-cflags
     -Wall
-    -fno-rtti
-)
-
-set(libj-deps-cflags
     -fno-rtti
 )
 
 if(LIBJ_USE_CXX11)
     set(libj-cflags
         ${libj-cflags}
-        --std=c++0x
-    )
-    set(libj-deps-cflags
-        ${libj-deps-cflags}
         --std=c++0x
     )
 endif(LIBJ_USE_CXX11)
@@ -209,7 +193,54 @@ if(NOT LIBJ_USE_EXCEPTION)
 endif(NOT LIBJ_USE_EXCEPTION)
 
 string(REPLACE ";" " " libj-cflags "${libj-cflags}")
+
+## libj-deps-cflags
+set(libj-deps-cflags
+    -fno-rtti
+)
+
+if(LIBJ_USE_CXX11)
+    set(libj-deps-cflags
+        ${libj-deps-cflags}
+        --std=c++0x
+    )
+endif(LIBJ_USE_CXX11)
+
 string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
+
+## libj-gtest-cflags
+set(libj-deps-cflags
+    -Wall
+)
+
+if(NOT APPLE)
+    set(libj-gtest-cflags
+        ${libj-gtest-cflags}
+        -fpermissive
+    )
+endif(NOT APPLE)
+
+if(LIBJ_USE_CXX11)
+    set(libj-gtest-cflags
+        ${libj-gtest-cflags}
+        --std=c++0x
+    )
+endif(LIBJ_USE_CXX11)
+
+string(REPLACE ";" " " libj-gtest-cflags "${libj-gtest-cflags}")
+
+# configure ----------------------------------------------------------------------------------------
+
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h )
+
+# find libraries -----------------------------------------------------------------------------------
+
+find_library(PTHREAD pthread REQUIRED)
+if(NOT EXISTS ${PTHREAD})
+    message(FATAL_ERROR "libpthread not found.")
+endif()
 
 # build libraries ----------------------------------------------------------------------------------
 
@@ -299,21 +330,21 @@ set_target_properties(j PROPERTIES
 # build gtests -------------------------------------------------------------------------------------
 
 if(LIBJ_BUILD_GTEST)
+    add_subdirectory(
+        deps/googletest
+    )
+
     add_executable(libj-gtest
         ${libj-gtest-src}
     )
+
     target_link_libraries(libj-gtest
         gtest
         j
         pthread
     )
-    if(LIBJ_USE_CXX11)
-        set_target_properties(libj-gtest PROPERTIES
-            COMPILE_FLAGS "-Wall -fpermissive --std=c++0x"
-        )
-    else(LIBJ_USE_CXX11)
-        set_target_properties(libj-gtest PROPERTIES
-            COMPILE_FLAGS "-Wall -fpermissive"
-        )
-    endif(LIBJ_USE_CXX11)
+
+    set_target_properties(libj-gtest PROPERTIES
+        COMPILE_FLAGS "${libj-gtest-cflags}"
+    )
 endif(LIBJ_BUILD_GTEST)
