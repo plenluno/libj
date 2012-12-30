@@ -10,7 +10,8 @@ option(LIBJ_USE_CXX11 "Use C++11" OFF)
 option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
 option(LIBJ_USE_EXCEPTION "Use Exceptions" OFF)
 option(LIBJ_USE_JSONCPP "Use JsonCpp" OFF)
-option(LIBJ_BUILD_GTEST "Build Google Tests" OFF)
+option(LIBJ_BUILD_GTEST "Build Google Test" OFF)
+option(LIBJ_BUILD_TESTS "Build Tests" OFF)
 
 cmake_dependent_option(LIBJ_BUILD_BDW_GC "Build BDW-GC" ON "LIBJ_USE_BDW_GC" OFF)
 
@@ -20,6 +21,7 @@ message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 message(STATUS "LIBJ_USE_JSONCPP=${LIBJ_USE_JSONCPP}")
 message(STATUS "LIBJ_BUILD_BDW_GC=${LIBJ_BUILD_BDW_GC}")
 message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
+message(STATUS "LIBJ_BUILD_TESTS=${LIBJ_BUILD_TESTS}")
 
 # variables ----------------------------------------------------------------------------------------
 
@@ -48,12 +50,12 @@ if(LIBJ_BUILD_GTEST)
     )
 endif(LIBJ_BUILD_GTEST)
 
-if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_GTEST)
+if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_TESTS)
     set(libj-include
         ${libj-include}
         deps/boost-svn
     )
-endif(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_GTEST)
+endif(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_TESTS)
 
 ## libj-src
 set(libj-src
@@ -110,8 +112,8 @@ if(LIBJ_USE_JSONCPP)
     )
 endif(LIBJ_USE_JSONCPP)
 
-## libj-gtest-src
-set(libj-gtest-src
+## libj-test-src
+set(libj-test-src
     gtest/gtest_array_list.cpp
     gtest/gtest_console.cpp
     gtest/gtest_cvtutf.cpp
@@ -142,8 +144,8 @@ set(libj-gtest-src
 )
 
 if(LIBJ_USE_CXX11)
-    set(libj-gtest-src
-        ${libj-gtest-src}
+    set(libj-test-src
+        ${libj-test-src}
         gtest/gtest_js_closure.cpp
     )
 endif(LIBJ_USE_CXX11)
@@ -208,26 +210,26 @@ endif(LIBJ_USE_CXX11)
 
 string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
 
-## libj-gtest-cflags
-set(libj-gtest-cflags
+## libj-test-cflags
+set(libj-test-cflags
     -Wall
 )
 
 if(NOT APPLE)
-    set(libj-gtest-cflags
-        ${libj-gtest-cflags}
+    set(libj-test-cflags
+        ${libj-test-cflags}
         -fpermissive
     )
 endif(NOT APPLE)
 
 if(LIBJ_USE_CXX11)
-    set(libj-gtest-cflags
-        ${libj-gtest-cflags}
+    set(libj-test-cflags
+        ${libj-test-cflags}
         --std=c++0x
     )
 endif(LIBJ_USE_CXX11)
 
-string(REPLACE ";" " " libj-gtest-cflags "${libj-gtest-cflags}")
+string(REPLACE ";" " " libj-test-cflags "${libj-test-cflags}")
 
 # configure ----------------------------------------------------------------------------------------
 
@@ -327,31 +329,26 @@ set_target_properties(j PROPERTIES
     COMPILE_FLAGS "${libj-cflags}"
 )
 
-# build gtests -------------------------------------------------------------------------------------
+# build tests --------------------------------------------------------------------------------------
 
 if(LIBJ_BUILD_GTEST)
-    if(NOT APPLE)
-        add_custom_command(
-            TARGET j PRE_BUILD
-            COMMAND cd ${CMAKE_CURRENT_LIST_DIR}/deps/googletest && git checkout release-1.6.0
-        )
-    endif(NOT APPLE)
-
     add_subdirectory(
         deps/googletest
     )
+endif(LIBJ_BUILD_GTEST)
 
-    add_executable(libj-gtest
-        ${libj-gtest-src}
+if(LIBJ_BUILD_TESTS)
+    add_executable(libj-test
+        ${libj-test-src}
     )
 
-    target_link_libraries(libj-gtest
+    target_link_libraries(libj-test
         gtest
         j
         pthread
     )
 
-    set_target_properties(libj-gtest PROPERTIES
-        COMPILE_FLAGS "${libj-gtest-cflags}"
+    set_target_properties(libj-test PROPERTIES
+        COMPILE_FLAGS "${libj-test-cflags}"
     )
-endif(LIBJ_BUILD_GTEST)
+endif(LIBJ_BUILD_TESTS)
