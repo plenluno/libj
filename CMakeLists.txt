@@ -330,6 +330,13 @@ set_target_properties(j PROPERTIES
 # build gtests -------------------------------------------------------------------------------------
 
 if(LIBJ_BUILD_GTEST)
+    if(NOT APPLE)
+        add_custom_command(
+            TARGET j PRE_BUILD
+            COMMAND cd ${CMAKE_CURRENT_LIST_DIR}/deps/googletest && git checkout release-1.6.0
+        )
+    endif(NOT APPLE)
+
     add_subdirectory(
         deps/googletest
     )
