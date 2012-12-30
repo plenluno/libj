@@ -209,7 +209,7 @@ endif(LIBJ_USE_CXX11)
 string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
 
 ## libj-gtest-cflags
-set(libj-deps-cflags
+set(libj-gtest-cflags
     -Wall
 )
 
