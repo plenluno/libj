@@ -23,12 +23,12 @@ class JsDataView : public I {
         Size byteOffset,
         Size byteLength)
         : buffer_(LIBJ_STATIC_PTR_CAST(JsArrayBuffer)(buffer))
-        , byteOffset_(byteOffset)
-        , byteLength_(byteLength) {
+        , offset_(byteOffset)
+        , length_(byteLength) {
         assert(buffer_);
-        assert(byteOffset_ <= buffer_->byteLength());
-        assert(byteLength_ <= buffer_->byteLength());
-        assert(byteOffset_ + byteLength_ <= buffer_->byteLength());
+        assert(offset_ <= buffer_->byteLength());
+        assert(length_ <= buffer_->byteLength());
+        assert(offset_ + length_ <= buffer_->byteLength());
     }
 
     virtual libj::JsArrayBuffer::Ptr buffer() const {
@@ -36,100 +36,116 @@ class JsDataView : public I {
     }
 
     virtual Size byteOffset() const {
-        return byteOffset_;
+        return offset_;
     }
 
     virtual Size byteLength() const {
-        return byteLength_;
+        return length_;
     }
 
     virtual Boolean getInt8(Size byteOffset, Byte* value) const {
-        return buffer_->getInt8(byteOffset, value);
+        Size offset = offset_ + byteOffset;
+        return buffer_->getInt8(offset, value);
     }
 
     virtual Boolean getUint8(Size byteOffset, UByte* value) const {
-        return buffer_->getUint8(byteOffset, value);
+        Size offset = offset_ + byteOffset;
+        return buffer_->getUint8(offset, value);
     }
 
     virtual Boolean getInt16(
         Size byteOffset, Short* value, Boolean littleEndian = false) const {
-        return buffer_->getInt16(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->getInt16(offset, value, littleEndian);
     }
 
     virtual Boolean getUint16(
         Size byteOffset, UShort* value, Boolean littleEndian = false) const {
-        return buffer_->getUint16(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->getUint16(offset, value, littleEndian);
     }
 
     virtual Boolean getInt32(
         Size byteOffset, Int* value, Boolean littleEndian = false) const {
-        return buffer_->getInt32(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->getInt32(offset, value, littleEndian);
     }
 
     virtual Boolean getUint32(
         Size byteOffset, UInt* value, Boolean littleEndian = false) const {
-        return buffer_->getUint32(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->getUint32(offset, value, littleEndian);
     }
 
     virtual Boolean getFloat32(
         Size byteOffset, Float* value, Boolean littleEndian = false) const {
-        return buffer_->getFloat32(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->getFloat32(offset, value, littleEndian);
     }
 
     virtual Boolean getFloat64(
         Size byteOffset, Double* value, Boolean littleEndian = false) const {
-        return buffer_->getFloat64(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->getFloat64(offset, value, littleEndian);
     }
 
     virtual Boolean setInt8(Size byteOffset, Byte value) {
-        return buffer_->setInt8(byteOffset, value);
+        Size offset = offset_ + byteOffset;
+        return buffer_->setInt8(offset, value);
     }
 
     virtual Boolean setUint8(Size byteOffset, UByte value) {
-        return buffer_->setUint8(byteOffset, value);
+        Size offset = offset_ + byteOffset;
+        return buffer_->setUint8(offset, value);
     }
 
     virtual Boolean setInt16(
         Size byteOffset, Short value, Boolean littleEndian = false) {
-        return buffer_->setInt16(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->setInt16(offset, value, littleEndian);
     }
 
     virtual Boolean setUint16(
         Size byteOffset, UShort value, Boolean littleEndian = false) {
-        return buffer_->setUint16(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->setUint16(offset, value, littleEndian);
     }
 
     virtual Boolean setInt32(
         Size byteOffset, Int value, Boolean littleEndian = false) {
-        return buffer_->setInt32(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->setInt32(offset, value, littleEndian);
     }
 
     virtual Boolean setUint32(
         Size byteOffset, UInt value, Boolean littleEndian = false) {
-        return buffer_->setUint32(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->setUint32(offset, value, littleEndian);
     }
 
     virtual Boolean setFloat32(
         Size byteOffset, Float value, Boolean littleEndian = false) {
-        return buffer_->setFloat32(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->setFloat32(offset, value, littleEndian);
     }
 
     virtual Boolean setFloat64(
         Size byteOffset, Double value, Boolean littleEndian = false) {
-        return buffer_->setFloat64(byteOffset, value, littleEndian);
+        Size offset = offset_ + byteOffset;
+        return buffer_->setFloat64(offset, value, littleEndian);
     }
 
     virtual String::CPtr toString() const {
         return String::create(
-            static_cast<const Byte*>(buffer_->data()) + byteOffset_,
+            static_cast<const Byte*>(buffer_->data()) + offset_,
             String::UTF8,
-            byteLength_);
+            length_);
     }
 
  private:
     JsArrayBuffer::Ptr buffer_;
-    Size byteOffset_;
-    Size byteLength_;
+    Size offset_;
+    Size length_;
 };
 
 }  // namespace detail

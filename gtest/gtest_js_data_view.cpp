@@ -76,6 +76,21 @@ TEST(GTestJsDataView, TestByteOffset) {
     ASSERT_EQ(2, d->byteOffset());
 }
 
+TEST(GTestJsDataView, TestBuffer) {
+    JsDataView::Ptr d = JsDataView::create(3);
+    d->setInt8(1, 5);
+
+    JsArrayBuffer::Ptr a = d->buffer();
+    JsDataView::Ptr d2 = JsDataView::create(a, 1, 2);
+    Byte b;
+    ASSERT_TRUE(d2->getInt8(0, &b));
+    ASSERT_EQ(5, b);
+
+    ASSERT_TRUE(d2->setInt8(0, 3));
+    ASSERT_TRUE(d->getInt8(1, &b));
+    ASSERT_EQ(3, b);
+}
+
 TEST(GTestJsDataView, TestInt8) {
     JsDataView::Ptr d = JsDataView::create(20);
     for (Size i = 0; i < d->byteLength(); i++) {
