@@ -9,7 +9,7 @@ namespace libj {
 
 class JsDataView : LIBJ_JS_ARRAY_BUFFER_VIEW(JsDataView)
  public:
-    static Ptr create(Size length = 0);
+    static Ptr create(Size length);
 
     static Ptr create(
         JsArrayBuffer::Ptr buffer,

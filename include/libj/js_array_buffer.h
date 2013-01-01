@@ -10,7 +10,7 @@ namespace libj {
 
 class JsArrayBuffer : LIBJ_MUTABLE(JsArrayBuffer)
  public:
-    static Ptr create(Size length = 0);
+    static Ptr create(Size length);
 
     virtual const void* data() const = 0;
 

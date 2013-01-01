@@ -11,7 +11,7 @@
 namespace libj {
 
 TEST(GTestJsDataView, TestCreate) {
-    JsDataView::Ptr d = JsDataView::create();
+    JsDataView::Ptr d = JsDataView::create(0);
     ASSERT_TRUE(!!d);
 
     d = JsDataView::create(1);
@@ -410,5 +410,7 @@ TEST(GTestJsDataView, TestToString) {
     String::CPtr e3 = String::create(c3, String::UTF8);
     ASSERT_TRUE(s3->equals(e3));
 }
+
+
 
 }   // namespace libj
