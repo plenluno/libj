@@ -1,20 +1,17 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_JS_ARRAY_BUFFER_H_
 #define LIBJ_DETAIL_JS_ARRAY_BUFFER_H_
 
 #include <libj/endian.h>
 #include <libj/string.h>
+#include <libj/js_array_buffer.h>
 
 namespace libj {
 namespace detail {
 
-template<typename I>
-class JsArrayBuffer : public I {
+class JsArrayBuffer : LIBJ_JS_ARRAY_BUFFER(JsArrayBuffer)
  public:
-    typedef typename I::Ptr Ptr;
-    typedef typename I::CPtr CPtr;
-
     JsArrayBuffer(Size length)
         : length_(length)
         , buf64_(0) {
@@ -31,32 +28,15 @@ class JsArrayBuffer : public I {
         delete[] buf64_;
     }
 
-    virtual Boolean isEmpty() const {
-        return length() == 0;
-    }
-
-    virtual Size length() const {
-        return length_;
-    }
-
     virtual const void* data() const {
         return buf64_;
     }
 
-    virtual Boolean shrink(Size length) {
-        if (length > length_) {
-            return false;
-        } else {
-            length_ = length;
-            if (!length) {
-                delete[] buf64_;
-                buf64_ = NULL;
-            }
-            return true;
-        }
+    virtual Size byteLength() const {
+        return length_;
     }
 
-    virtual Value slice(Size begin, Size end) const {
+    virtual libj::JsArrayBuffer::Ptr slice(Size begin, Size end) const {
         Size len = 0;
         if (begin < end && begin < length_) {
             if (end >= length_) end = length_;
@@ -71,14 +51,19 @@ class JsArrayBuffer : public I {
         return Ptr(buf);
     }
 
-    virtual Boolean getInt8(Size byteOffset, Byte* value) const {
+    virtual String::CPtr toString() const {
+        return String::create(buf64_, String::UTF8);
+    }
+
+ public:
+    Boolean getInt8(Size byteOffset, Byte* value) const {
         UByte v;
-        Boolean ret = getUInt8(byteOffset, &v);
+        Boolean ret = getUint8(byteOffset, &v);
         *value = v;
         return ret;
     }
 
-    virtual Boolean getUInt8(Size byteOffset, UByte* value) const {
+    Boolean getUint8(Size byteOffset, UByte* value) const {
         if (byteOffset >= length_) {
             return false;
         } else {
@@ -88,15 +73,15 @@ class JsArrayBuffer : public I {
         }
     }
 
-    virtual Boolean getInt16(
+    Boolean getInt16(
         Size byteOffset, Short* value, Boolean littleEndian = false) const {
         UShort v;
-        Boolean ret = getUInt16(byteOffset, &v, littleEndian);
+        Boolean ret = getUint16(byteOffset, &v, littleEndian);
         *value = v;
         return ret;
     }
 
-    virtual Boolean getUInt16(
+    Boolean getUint16(
         Size byteOffset, UShort* value, Boolean littleEndian = false) const {
         if (byteOffset + 1 >= length_) {
             return false;
@@ -106,15 +91,15 @@ class JsArrayBuffer : public I {
         }
     }
 
-    virtual Boolean getInt32(
+    Boolean getInt32(
         Size byteOffset, Int* value, Boolean littleEndian = false) const {
         UInt v;
-        Boolean ret = getUInt32(byteOffset, &v, littleEndian);
+        Boolean ret = getUint32(byteOffset, &v, littleEndian);
         *value = v;
         return ret;
     }
 
-    virtual Boolean getUInt32(
+    Boolean getUint32(
         Size byteOffset, UInt* value, Boolean littleEndian = false) const {
         if (byteOffset + 3 >= length_) {
             return false;
@@ -124,37 +109,37 @@ class JsArrayBuffer : public I {
         }
     }
 
-    virtual Boolean getFloat32(
+    Boolean getFloat32(
         Size byteOffset, Float* value, Boolean littleEndian = false) const {
         union {
+            UInt ui;
             Float f;
-            UInt i;
         } v;
-        Boolean ret =  getUInt32(byteOffset, &v.i, littleEndian);
+        Boolean ret =  getUint32(byteOffset, &v.ui, littleEndian);
         *value = v.f;
         return ret;
     }
 
-    virtual Boolean getFloat64(
+    Boolean getFloat64(
         Size byteOffset, Double* value, Boolean littleEndian = false) const {
         if (byteOffset + 7 >= length_) {
             return false;
         } else {
             union {
-                ULong i;
-                Double f;
+                ULong ul;
+                Double d;
             } v;
-            v.i = load<ULong>(byteOffset, littleEndian);
-            *value = v.f;
+            v.ul = load<ULong>(byteOffset, littleEndian);
+            *value = v.d;
             return true;
         }
     }
 
-    virtual Boolean setInt8(Size byteOffset, Byte value) {
-        return setUInt8(byteOffset, value);
+    Boolean setInt8(Size byteOffset, Byte value) {
+        return setUint8(byteOffset, value);
     }
 
-    virtual Boolean setUInt8(Size byteOffset, UByte value) {
+    Boolean setUint8(Size byteOffset, UByte value) {
         if (byteOffset >= length_) {
             return false;
         } else {
@@ -164,12 +149,12 @@ class JsArrayBuffer : public I {
         }
     }
 
-    virtual Boolean setInt16(
+    Boolean setInt16(
         Size byteOffset, Short value, Boolean littleEndian = false) {
-        return setUInt16(byteOffset, value, littleEndian);
+        return setUint16(byteOffset, value, littleEndian);
     }
 
-    virtual Boolean setUInt16(
+    Boolean setUint16(
         Size byteOffset, UShort value, Boolean littleEndian = false) {
         if (byteOffset + 1 >= length_) {
             return false;
@@ -179,12 +164,12 @@ class JsArrayBuffer : public I {
         }
     }
 
-    virtual Boolean setInt32(
+    Boolean setInt32(
         Size byteOffset, Int value, Boolean littleEndian = false) {
-        return setUInt32(byteOffset, value, littleEndian);
+        return setUint32(byteOffset, value, littleEndian);
     }
 
-    virtual Boolean setUInt32(
+    Boolean setUint32(
         Size byteOffset, UInt value, Boolean littleEndian = false) {
         if (byteOffset + 3 >= length_) {
             return false;
@@ -194,33 +179,29 @@ class JsArrayBuffer : public I {
         }
     }
 
-    virtual Boolean setFloat32(
+    Boolean setFloat32(
         Size byteOffset, Float value, Boolean littleEndian = false) {
         union {
+            UInt ui;
             Float f;
-            UInt i;
         } v;
         v.f = value;
-        return setUInt32(byteOffset, v.i, littleEndian);
+        return setUint32(byteOffset, v.ui, littleEndian);
     }
 
-    virtual Boolean setFloat64(
+    Boolean setFloat64(
         Size byteOffset, Double value, Boolean littleEndian = false) {
         if (byteOffset + 7 >= length_) {
             return false;
         } else {
             union {
-                Double f;
-                ULong i;
+                ULong ul;
+                Double d;
             } v;
-            v.f = value;
-            store<ULong>(byteOffset, v.i, littleEndian);
+            v.d = value;
+            store<ULong>(byteOffset, v.ul, littleEndian);
             return true;
         }
-    }
-
-    virtual String::CPtr toString() const {
-        return String::create(buf64_, String::UTF8);
     }
 
  private:

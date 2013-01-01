@@ -12,6 +12,7 @@ option(LIBJ_USE_EXCEPTION "Use Exceptions" OFF)
 option(LIBJ_USE_JSONCPP "Use JsonCpp" OFF)
 option(LIBJ_BUILD_GTEST "Build Google Test" OFF)
 option(LIBJ_BUILD_TESTS "Build Tests" OFF)
+option(LIBJ_DEPRECATED "Deprecated" OFF)
 
 cmake_dependent_option(LIBJ_BUILD_BDW_GC "Build BDW-GC" ON "LIBJ_USE_BDW_GC" OFF)
 
@@ -67,6 +68,7 @@ set(libj-src
     src/json.cpp
     src/js_array.cpp
     src/js_array_buffer.cpp
+    src/js_data_view.cpp
     src/js_object.cpp
     src/js_regexp.cpp
     src/linked_list.cpp
@@ -123,6 +125,7 @@ set(libj-test-src
     gtest/gtest_json.cpp
     gtest/gtest_js_array.cpp
     gtest/gtest_js_array_buffer.cpp
+    gtest/gtest_js_data_view.cpp
     gtest/gtest_js_function.cpp
     gtest/gtest_js_object.cpp
     gtest/gtest_js_regexp.cpp
