@@ -9,7 +9,7 @@ namespace libj {
 
 class JsArrayBufferView : LIBJ_MUTABLE(JsArrayBufferView)
  public:
-    virtual JsArrayBuffer::Ptr buffer() const = 0; 
+    virtual JsArrayBuffer::Ptr buffer() const = 0;
 
     virtual Size byteOffset() const = 0;
 

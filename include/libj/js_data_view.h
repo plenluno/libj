@@ -16,18 +16,18 @@ class JsDataView : LIBJ_JS_ARRAY_BUFFER_VIEW(JsDataView)
         Size byteOffset = NO_SIZE,
         Size byteLength = NO_SIZE);
 
-	virtual Boolean getInt8(
-		Size byteOffset,
-		Byte* value) const = 0;
+    virtual Boolean getInt8(
+        Size byteOffset,
+        Byte* value) const = 0;
 
     virtual Boolean getUint8(
-    	Size byteOffset,
-    	UByte* value) const = 0;
+        Size byteOffset,
+        UByte* value) const = 0;
 
     virtual Boolean getInt16(
-    	Size byteOffset,
-    	Short* value,
-    	Boolean littleEndian = false) const = 0;
+        Size byteOffset,
+        Short* value,
+        Boolean littleEndian = false) const = 0;
 
     virtual Boolean getUint16(
         Size byteOffset,
@@ -55,12 +55,12 @@ class JsDataView : LIBJ_JS_ARRAY_BUFFER_VIEW(JsDataView)
         Boolean littleEndian = false) const = 0;
 
     virtual Boolean setInt8(
-    	Size byteOffset,
-    	Byte value) = 0;
+        Size byteOffset,
+        Byte value) = 0;
 
     virtual Boolean setUint8(
-    	Size byteOffset,
-    	UByte value) = 0;
+        Size byteOffset,
+        UByte value) = 0;
 
     virtual Boolean setInt16(
         Size byteOffset,

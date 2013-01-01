@@ -135,4 +135,4 @@ class JsDataView : public I {
 }  // namespace detail
 }  // namespace libj
 
-#endif  // LIBJ_DETAIL_JS_ARRAY_BUFFER_H_
+#endif  // LIBJ_DETAIL_JS_DATA_VIEW_H_
