@@ -7,7 +7,7 @@
 namespace libj {
 
 TEST(GTestJsArrayBuffer, TestCreate) {
-    JsArrayBuffer::Ptr a = JsArrayBuffer::create(0);
+    JsArrayBuffer::Ptr a = JsArrayBuffer::create();
     ASSERT_TRUE(!!a);
     ASSERT_FALSE(a->data());
 
