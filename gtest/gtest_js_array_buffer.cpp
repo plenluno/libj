@@ -17,7 +17,7 @@ TEST(GTestJsArrayBuffer, TestCreate) {
 }
 
 TEST(GTestJsArrayBuffer, TestByteLength) {
-    JsArrayBuffer::Ptr a = JsArrayBuffer::create(0);
+    JsArrayBuffer::Ptr a = JsArrayBuffer::create();
     ASSERT_EQ(0, a->byteLength());
 
     a = JsArrayBuffer::create(100);
