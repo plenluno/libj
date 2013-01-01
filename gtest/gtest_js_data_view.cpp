@@ -59,7 +59,7 @@ TEST(GTestJsDataView, TestByteLength) {
 }
 
 TEST(GTestJsDataView, TestByteOffset) {
-    JsDataView::Ptr d = JsDataView::create(0);
+    JsDataView::Ptr d = JsDataView::create();
     ASSERT_EQ(0, d->byteOffset());
 
     d = JsDataView::create(100);
