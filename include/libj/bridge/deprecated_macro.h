@@ -3,6 +3,10 @@
 #ifndef LIBJ_BRIDGE_DEPRECATED_MACRO_H_
 #define LIBJ_BRIDGE_DEPRECATED_MACRO_H_
 
+#include <libj/config.h>
+
+#ifdef LIBJ_DEPRECATED
+
 #define LIBJ_STATUS_IMPL(S) \
 public: \
     Int code() const { \
@@ -179,5 +183,7 @@ public: \
     String::CPtr toString() const { \
         return B->toString(); \
     }
+
+#endif  // LIBJ_DEPRECATED
 
 #endif  // LIBJ_BRIDGE_DEPRECATED_MACRO_H_

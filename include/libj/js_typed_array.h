@@ -3,9 +3,14 @@
 #ifndef LIBJ_JS_TYPED_ARRAY_H_
 #define LIBJ_JS_TYPED_ARRAY_H_
 
+#include <libj/config.h>
+
+#ifdef LIBJ_DEPRECATED
+
 #include <libj/typed_js_array.h>
 
-// for compatibility
 #define JsTypedArray TypedJsArray
+
+#endif  // LIBJ_DEPRECATED
 
 #endif  // LIBJ_JS_TYPED_ARRAY_H_
