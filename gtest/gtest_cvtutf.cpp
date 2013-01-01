@@ -1,9 +1,9 @@
 // Copyright (c) 2012 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
-#include <string>
+#include <libj/glue/cvtutf.h>
 
-#include "libj/glue/cvtutf.h"
+#include <string>
 
 #pragma GCC diagnostic ignored "-Wnarrowing"
 
