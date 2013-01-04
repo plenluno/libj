@@ -6,23 +6,25 @@ include(CMakeDependentOption)
 
 # options ------------------------------------------------------------------------------------------
 
+option(LIBJ_USE_BDWGC "Use BDW-GC" OFF)
 option(LIBJ_USE_CXX11 "Use C++11" OFF)
-option(LIBJ_USE_BDW_GC "Use BDW-GC" OFF)
 option(LIBJ_USE_EXCEPTION "Use Exceptions" OFF)
 option(LIBJ_USE_JSONCPP "Use JsonCpp" OFF)
+option(LIBJ_USE_THREAD "Use Threads" ON)
 option(LIBJ_BUILD_GTEST "Build Google Test" OFF)
-option(LIBJ_BUILD_TESTS "Build Tests" OFF)
+option(LIBJ_BUILD_TEST "Build Tests" OFF)
 option(LIBJ_DEPRECATED "Deprecated" OFF)
 
-cmake_dependent_option(LIBJ_BUILD_BDW_GC "Build BDW-GC" ON "LIBJ_USE_BDW_GC" OFF)
+cmake_dependent_option(LIBJ_BUILD_BDWGC "Build BDW-GC" ON "LIBJ_USE_BDWGC" OFF)
 
-message(STATUS "LIBJ_USE_BDW_GC=${LIBJ_USE_BDW_GC}")
+message(STATUS "LIBJ_USE_BDWGC=${LIBJ_USE_BDWGC}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 message(STATUS "LIBJ_USE_JSONCPP=${LIBJ_USE_JSONCPP}")
-message(STATUS "LIBJ_BUILD_BDW_GC=${LIBJ_BUILD_BDW_GC}")
+message(STATUS "LIBJ_USE_THREAD=${LIBJ_USE_THREAD}")
+message(STATUS "LIBJ_BUILD_BDWGC=${LIBJ_BUILD_BDWGC}")
 message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
-message(STATUS "LIBJ_BUILD_TESTS=${LIBJ_BUILD_TESTS}")
+message(STATUS "LIBJ_BUILD_TEST=${LIBJ_BUILD_TEST}")
 
 # variables ----------------------------------------------------------------------------------------
 
@@ -51,12 +53,12 @@ if(LIBJ_BUILD_GTEST)
     )
 endif(LIBJ_BUILD_GTEST)
 
-if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_TESTS)
+if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_TEST)
     set(libj-include
         ${libj-include}
         deps/boost-svn
     )
-endif(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_TESTS)
+endif(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_TEST)
 
 ## libj-src
 set(libj-src
@@ -87,6 +89,13 @@ if(LIBJ_USE_CXX11)
         src/js_closure.cpp
     )
 endif(LIBJ_USE_CXX11)
+
+if(LIBJ_USE_THREAD)
+    set(libj-src
+        ${libj-src}
+        src/thread.cpp
+    )
+endif(LIBJ_USE_THREAD)
 
 if(LIBJ_USE_EXCEPTION)
     set(libj-src
@@ -153,12 +162,20 @@ if(LIBJ_USE_CXX11)
     )
 endif(LIBJ_USE_CXX11)
 
+if(LIBJ_USE_THREAD)
+    set(libj-test-src
+        ${libj-test-src}
+        gtest/gtest_thread.cpp
+    )
+endif(LIBJ_USE_THREAD)
+
 ## libj-deps
 set(libj-deps
     cvtutf
     dtoa
     json
     ndtoa
+    pthread
     regexp
 )
 
@@ -169,13 +186,12 @@ if(APPLE)
     )
 endif(APPLE)
 
-if(LIBJ_USE_BDW_GC)
+if(LIBJ_USE_BDWGC)
     set(libj-deps
         ${libj-deps}
         gc
-        pthread
     )
-endif(LIBJ_USE_BDW_GC)
+endif(LIBJ_USE_BDWGC)
 
 ## libj-cflags
 set(libj-cflags
@@ -307,7 +323,7 @@ add_library(ndtoa STATIC
 )
 
 ## bdw-gc
-if(LIBJ_BUILD_BDW_GC)
+if(LIBJ_BUILD_BDWGC)
     add_custom_command(
         TARGET json PRE_BUILD
         COMMAND rsync -av ${CMAKE_CURRENT_LIST_DIR}/deps/bdwgc ${CMAKE_BINARY_DIR}/deps/
@@ -317,7 +333,7 @@ if(LIBJ_BUILD_BDW_GC)
         COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && make
         COMMAND ln -sf ${CMAKE_BINARY_DIR}/deps/bdwgc/.libs/libgc.a ${CMAKE_BINARY_DIR}/libgc.a
     )
-endif(LIBJ_BUILD_BDW_GC)
+endif(LIBJ_BUILD_BDWGC)
 
 ## libj
 add_library(j STATIC
@@ -340,7 +356,7 @@ if(LIBJ_BUILD_GTEST)
     )
 endif(LIBJ_BUILD_GTEST)
 
-if(LIBJ_BUILD_TESTS)
+if(LIBJ_BUILD_TEST)
     add_executable(libj-test
         ${libj-test-src}
     )
@@ -354,4 +370,4 @@ if(LIBJ_BUILD_TESTS)
     set_target_properties(libj-test PROPERTIES
         COMPILE_FLAGS "${libj-test-cflags}"
     )
-endif(LIBJ_BUILD_TESTS)
+endif(LIBJ_BUILD_TEST)
