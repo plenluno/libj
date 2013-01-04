@@ -8,6 +8,7 @@
 #include <libj/exception.h>
 #include <libj/map.h>
 #include <libj/glue/cvtutf.h>
+#include <libj/detail/mutex.h>
 
 #include <assert.h>
 #include <string>
@@ -275,6 +276,9 @@ class String : public I {
  public:
     static CPtr intern(CPtr str) {
         static const Map::Ptr symbols = Map::create();
+#ifdef LIBJ_USE_THREAD
+        static detail::Mutex mutex;
+#endif
 
         if (!str || str->isInterned()) return str;
 
@@ -288,8 +292,15 @@ class String : public I {
             for (Size i = 0; i < len; i++) {
                 s->str_.push_back(str->charAt(i));
             }
+
             CPtr sp(s);
+#ifdef LIBJ_USE_THREAD
+            mutex.lock();
             symbols->put(sp, sp);
+            mutex.unlock();
+#else
+            symbols->put(sp, sp);
+#endif
             return sp;
         }
     }
