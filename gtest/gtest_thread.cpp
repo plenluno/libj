@@ -6,7 +6,6 @@
 #include <libj/status.h>
 #include <libj/thread.h>
 
-#include <stdlib.h>
 #include <unistd.h>
 
 namespace libj {
@@ -16,7 +15,7 @@ class GTestThreadFunc : LIBJ_JS_FUNCTION(GTestThreadFunc)
     GTestThreadFunc(UInt id) : id_(id) {}
 
     Value operator()(JsArray::Ptr args) {
-        sleep(rand() % 2);
+        sleep(id_ % 2);
         console::log("run %d", id_);
         return Status::OK;
     }
