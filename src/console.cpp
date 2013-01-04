@@ -5,6 +5,7 @@
 #include <libj/json.h>
 #include <libj/map.h>
 #include <libj/string.h>
+#include <libj/detail/mutex.h>
 
 #include <assert.h>
 #include <stdio.h>
@@ -22,8 +23,30 @@ static Boolean isPrintable(Level level) {
     return level != OFF && logLevel <= level;
 }
 
+#ifdef LIBJ_USE_THREAD
+    static detail::Mutex mutex;
+
+    static Boolean lock() {
+        return mutex.lock();
+    }
+
+    static Boolean unlock() {
+        return mutex.unlock();
+    }
+#else
+    static Boolean lock() {
+        return true;
+    }
+
+    static Boolean unlock() {
+        return true;
+    }
+#endif  // LIBJ_USE_THREAD
+
 void setLevel(Level level) {
+    lock();
     logLevel = level;
+    unlock();
 }
 
 static Color foreDebug   = DEFAULT;
@@ -140,6 +163,7 @@ static const char* back(Level level) {
 }
 
 void setForegroundColor(Level level, Color color) {
+    lock();
     switch (level) {
     case DEBUG:
         foreDebug = color;
@@ -159,9 +183,11 @@ void setForegroundColor(Level level, Color color) {
     case OFF:
         break;
     }
+    unlock();
 }
 
 void setBackgroundColor(Level level, Color color) {
+    lock();
     switch (level) {
     case DEBUG:
         backDebug = color;
@@ -181,6 +207,7 @@ void setBackgroundColor(Level level, Color color) {
     case OFF:
         break;
     }
+    unlock();
 }
 
 #define LIBJ_VFPRINTF(LEVEL, OUT, FMT) \
@@ -210,7 +237,9 @@ void printf(Level level, const char* fmt, ...) {
         assert(false);
     }
 
+    lock();
     LIBJ_VFPRINTF(level, out, fmt);
+    unlock();
 }
 
 static String::CPtr toString(const Value& val) {
@@ -279,8 +308,10 @@ void printv(
 #define LIBJ_PRINTLN(LEVEL, OUT, FMT) \
     if (!isPrintable(LEVEL)) return; \
     if (FMT) { \
+        lock(); \
         LIBJ_VFPRINTF(LEVEL, OUT, FMT) \
         fprintf(OUT, "\n"); \
+        unlock(); \
         return; \
     }
 
