@@ -6,6 +6,9 @@
 #include <libj/status.h>
 #include <libj/thread.h>
 
+#include <stdlib.h>
+#include <unistd.h>
+
 namespace libj {
 
 class GTestThreadFunc : LIBJ_JS_FUNCTION(GTestThreadFunc)
@@ -13,6 +16,7 @@ class GTestThreadFunc : LIBJ_JS_FUNCTION(GTestThreadFunc)
     GTestThreadFunc(UInt id) : id_(id) {}
 
     Value operator()(JsArray::Ptr args) {
+        sleep(rand() % 2);
         console::log("run %d", id_);
         return Status::OK;
     }
@@ -29,8 +33,13 @@ TEST(GTestThread, TestCreate) {
     ASSERT_TRUE(!!th);
 }
 
+TEST(GTestThread, TestStart) {
+    Thread::Ptr th = Thread::create(Function::Ptr(new GTestThreadFunc(9)));
+    th->start();
+}
+
 TEST(GTestThread, TestStartAndJoin) {
-    const Size n = 10;
+    const Size n = 9;
 
     JsArray::Ptr threads = JsArray::create();
     for (Size i = 0; i < n; i++) {

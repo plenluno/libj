@@ -3,6 +3,7 @@
 #ifndef LIBJ_DETAIL_THREAD_H_
 #define LIBJ_DETAIL_THREAD_H_
 
+#include <assert.h>
 #include <pthread.h>
 
 namespace libj {
@@ -13,12 +14,23 @@ class Thread : public I {
  public:
     Thread(Function::Ptr func) : func_(func) {}
 
+    virtual ~Thread() {
+        if (isAlive()) {
+            int r = pthread_detach(thread_);
+            assert(!r);
+        }
+    }
+
     virtual void start() {
-        pthread_create(&thread_, NULL, &Thread::run, this);
+        FunctionHolder* holder = new FunctionHolder(func_);
+        pthread_create(&thread_, NULL, &Thread::run, holder);
     }
 
     virtual void join() {
-        pthread_join(thread_, NULL);
+        if (isAlive()) {
+            int r = pthread_join(thread_, NULL);
+            assert(!r);
+        }
     }
 
     virtual String::CPtr toString() const {
@@ -27,10 +39,22 @@ class Thread : public I {
     }
 
  private:
+    class FunctionHolder {
+     public:
+        FunctionHolder(Function::Ptr f) : func(f) {}
+
+        Function::Ptr func;
+    };
+
     static void* run(void* arg) {
-        Thread* self = static_cast<Thread*>(arg);
-        (*self->func_)();
+        FunctionHolder* holder = static_cast<FunctionHolder*>(arg);
+        (*holder->func)();
+        delete holder;
         return NULL;
+    }
+
+    Boolean isAlive() const {
+        return !pthread_kill(thread_, 0);
     }
 
     pthread_t thread_;
