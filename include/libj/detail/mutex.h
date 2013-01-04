@@ -3,6 +3,11 @@
 #ifndef LIBJ_DETAIL_MUTEX_H_
 #define LIBJ_DETAIL_MUTEX_H_
 
+#include <libj/config.h>
+
+#ifdef LIBJ_USE_THREAD
+
+#include <assert.h>
 #include <pthread.h>
 
 namespace libj {
@@ -33,5 +38,7 @@ class Mutex {
 
 }  // namespace detail
 }  // namespace libj
+
+#endif  // LIBJ_USE_THREAD
 
 #endif  // LIBJ_DETAIL_MUTEX_H_
