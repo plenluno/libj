@@ -15,7 +15,7 @@ class GTestThreadFunc : LIBJ_JS_FUNCTION(GTestThreadFunc)
     GTestThreadFunc(UInt id) : id_(id) {}
 
     Value operator()(JsArray::Ptr args) {
-        sleep(id_ % 2);
+        usleep(100000 * (id_ % 5));
         console::log("run %d", id_);
         return Status::OK;
     }
