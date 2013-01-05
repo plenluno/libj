@@ -16,6 +16,7 @@ class Thread : public libj::Thread {
  public:
     Thread(Function::Ptr func)
         : thread_(0)
+        , started_(false)
         , func_(func) {}
 
     virtual ~Thread() {
@@ -28,6 +29,7 @@ class Thread : public libj::Thread {
     virtual void start() {
         FunctionHolder* holder = new FunctionHolder(func_);
         pthread_create(&thread_, NULL, &Thread::run, holder);
+        started_ = true;
     }
 
     virtual void join() {
@@ -58,10 +60,11 @@ class Thread : public libj::Thread {
     }
 
     Boolean isAlive() const {
-        return !pthread_kill(thread_, 0);
+        return started_ && !pthread_kill(thread_, 0);
     }
 
     pthread_t thread_;
+    Boolean started_;
     Function::Ptr func_;
 };
 
