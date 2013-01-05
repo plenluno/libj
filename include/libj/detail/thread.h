@@ -4,6 +4,7 @@
 #define LIBJ_DETAIL_THREAD_H_
 
 #include <libj/thread.h>
+#include <libj/exception.h>
 
 #include <assert.h>
 #include <pthread.h>
@@ -16,26 +17,31 @@ class Thread : public libj::Thread {
  public:
     Thread(Function::Ptr func)
         : thread_(0)
-        , started_(false)
+        , start_(false)
+        , finish_(false)
         , func_(func) {}
 
     virtual ~Thread() {
         if (isAlive()) {
             int r = pthread_detach(thread_);
             assert(!r);
+            finish_ = true;
         }
     }
 
     virtual void start() {
+        if (start_) LIBJ_THROW(Error::ILLEGAL_STATE);
+
         FunctionHolder* holder = new FunctionHolder(func_);
         pthread_create(&thread_, NULL, &Thread::run, holder);
-        started_ = true;
+        start_ = true;
     }
 
     virtual void join() {
         if (isAlive()) {
             int r = pthread_join(thread_, NULL);
             assert(!r);
+            finish_ = true;
         }
     }
 
@@ -60,11 +66,12 @@ class Thread : public libj::Thread {
     }
 
     Boolean isAlive() const {
-        return started_ && !pthread_kill(thread_, 0);
+        return start_ && !finish_;
     }
 
     pthread_t thread_;
-    Boolean started_;
+    Boolean start_;
+    Boolean finish_;
     Function::Ptr func_;
 };
 
