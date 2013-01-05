@@ -12,7 +12,9 @@ namespace detail {
 template<typename I>
 class Thread : public I {
  public:
-    Thread(Function::Ptr func) : func_(func) {}
+    Thread(Function::Ptr func)
+        : thread_(0)
+        , func_(func) {}
 
     virtual ~Thread() {
         if (isAlive()) {
