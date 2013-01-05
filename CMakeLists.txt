@@ -93,6 +93,7 @@ endif(LIBJ_USE_CXX11)
 if(LIBJ_USE_THREAD)
     set(libj-src
         ${libj-src}
+        src/concurrent_linked_queue.cpp
         src/thread.cpp
     )
 endif(LIBJ_USE_THREAD)
@@ -165,6 +166,7 @@ endif(LIBJ_USE_CXX11)
 if(LIBJ_USE_THREAD)
     set(libj-test-src
         ${libj-test-src}
+        gtest/gtest_concurrent_linked_queue.cpp
         gtest/gtest_thread.cpp
     )
 endif(LIBJ_USE_THREAD)
