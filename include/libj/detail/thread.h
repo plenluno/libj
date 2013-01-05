@@ -3,14 +3,15 @@
 #ifndef LIBJ_DETAIL_THREAD_H_
 #define LIBJ_DETAIL_THREAD_H_
 
+#include <libj/thread.h>
+
 #include <assert.h>
 #include <pthread.h>
 
 namespace libj {
 namespace detail {
 
-template<typename I>
-class Thread : public I {
+class Thread : public libj::Thread {
  public:
     Thread(Function::Ptr func)
         : thread_(0)
