@@ -7,8 +7,6 @@
 #include <libj/error.h>
 #include <libj/thread.h>
 
-#include <unistd.h>
-
 namespace libj {
 
 TEST(GTestConcurrentLinkedQueue, TestAddAndRemove) {
@@ -87,7 +85,6 @@ class GTestCLQConsumer : LIBJ_JS_FUNCTION(GTestCLQConsumer)
     }
 
     Value operator()(JsArray::Ptr args) {
-        usleep(10000);
         while (!queue_->poll().isUndefined()) {
             count_++;
         }
@@ -102,6 +99,8 @@ class GTestCLQConsumer : LIBJ_JS_FUNCTION(GTestCLQConsumer)
 TEST(GTestConcurrentLinkedQueue, TestThreadSafe) {
     ConcurrentLinkedQueue::Ptr q = ConcurrentLinkedQueue::create();
 
+    Thread::Ptr p0 = Thread::create(
+        Function::Ptr(new GTestCLQProducer(q, 100000)));
     Thread::Ptr p1 = Thread::create(
         Function::Ptr(new GTestCLQProducer(q, 100000)));
     Thread::Ptr p2 = Thread::create(
@@ -112,19 +111,22 @@ TEST(GTestConcurrentLinkedQueue, TestThreadSafe) {
     Thread::Ptr c1 = Thread::create(cf1);
     Thread::Ptr c2 = Thread::create(cf2);
 
+    p0->start();
+    p0->join();
+
     p1->start();
     p2->start();
     c1->start();
-    c2->start();
+    // c2->start();
 
     p1->join();
     p2->join();
     c1->join();
-    c2->join();
+    // c2->join();
 
-    console::log("consumer1: %d", cf1->count());
-    console::log("consumer2: %d", cf2->count());
-    ASSERT_EQ(200000, cf1->count() + cf2->count());
+    // console::log("consumer1: %d", cf1->count());
+    // console::log("consumer2: %d", cf2->count());
+    ASSERT_EQ(300000, cf1->count() + cf2->count());
 }
 
 }  // namespace libj
