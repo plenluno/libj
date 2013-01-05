@@ -28,7 +28,11 @@ TEST(GTestConcurrentLinkedQueue, TestAddAndRemove) {
     }
     ASSERT_TRUE(q->isEmpty());
 
+#ifdef LIBJ_USE_EXCEPTION
+    ASSERT_ANY_THROW(q->remove());
+#else
     ASSERT_EQ(Error::NO_SUCH_ELEMENT, toCPtr<Error>(q->remove())->code());
+#endif
 }
 
 TEST(GTestConcurrentLinkedQueue, TestOfferAndPoll) {
