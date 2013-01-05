@@ -33,10 +33,8 @@ class ConcurrentLinkedQueue : public GenericCollection<Value, I> {
     }
 
     virtual void clear() {
-        while (!queue_.empty()) {
-            Value v;
-            queue_.pop(v);
-        }
+        Value v;
+        while (queue_.pop(v)) {}
     }
 
     virtual Value element() const {
@@ -68,22 +66,17 @@ class ConcurrentLinkedQueue : public GenericCollection<Value, I> {
     }
 
     virtual Value poll() {
-        if (queue_.empty()) {
-            return UNDEFINED;
-        } else {
-            Value v;
-            queue_.pop(v);
-            return v;
-        }
+        Value v;
+        queue_.pop(v);
+        return v;
     }
 
     virtual Value remove() {
-        if (queue_.empty()) {
-            LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
-        } else {
-            Value v;
-            queue_.pop(v);
+        Value v;
+        if (queue_.pop(v)) {
             return v;
+        } else {
+            LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
         }
     }
 
