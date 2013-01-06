@@ -282,7 +282,14 @@ class String : public I {
 
         if (!str || str->isInterned()) return str;
 
-        CPtr sym = toCPtr<I>(symbols->get(str));
+        CPtr sym;
+#ifdef LIBJ_USE_THREAD
+        mutex.lock();
+        sym = toCPtr<I>(symbols->get(str));
+        mutex.unlock();
+#else
+        sym = toCPtr<I>(symbols->get(str));
+#endif
         if (sym) {
             return sym;
         } else {
