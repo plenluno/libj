@@ -10,7 +10,7 @@
 namespace libj {
 
 TEST(GTestConcurrentLinkedQueue, TestAddAndRemove) {
-    const Size n = 10000;
+    const Size n = 1000;
 
     ConcurrentLinkedQueue::Ptr q = ConcurrentLinkedQueue::create();
     ASSERT_TRUE(q->isEmpty());
@@ -34,7 +34,7 @@ TEST(GTestConcurrentLinkedQueue, TestAddAndRemove) {
 }
 
 TEST(GTestConcurrentLinkedQueue, TestOfferAndPoll) {
-    const Size n = 10000;
+    const Size n = 1000;
 
     ConcurrentLinkedQueue::Ptr q = ConcurrentLinkedQueue::create();
     ASSERT_TRUE(q->isEmpty());
@@ -100,11 +100,11 @@ TEST(GTestConcurrentLinkedQueue, TestThreadSafe) {
     ConcurrentLinkedQueue::Ptr q = ConcurrentLinkedQueue::create();
 
     Thread::Ptr p1 = Thread::create(
-        Function::Ptr(new GTestCLQProducer(q, 10000)));
-    Thread::Ptr p2 = Thread::create(
-        Function::Ptr(new GTestCLQProducer(q, 10000)));
-    Thread::Ptr p3 = Thread::create(
         Function::Ptr(new GTestCLQProducer(q, 1000)));
+    Thread::Ptr p2 = Thread::create(
+        Function::Ptr(new GTestCLQProducer(q, 1000)));
+    Thread::Ptr p3 = Thread::create(
+        Function::Ptr(new GTestCLQProducer(q, 100)));
 
     GTestCLQConsumer::Ptr cf1(new GTestCLQConsumer(q));
     GTestCLQConsumer::Ptr cf2(new GTestCLQConsumer(q));
@@ -132,7 +132,7 @@ TEST(GTestConcurrentLinkedQueue, TestThreadSafe) {
     // console::log("consumer1: %d", cf1->count());
     // console::log("consumer2: %d", cf2->count());
     // console::log("consumer3: %d", cf3->count());
-    ASSERT_EQ(21000, cf1->count() + cf2->count() + cf3->count());
+    ASSERT_EQ(2100, cf1->count() + cf2->count() + cf3->count());
 }
 
 }  // namespace libj
