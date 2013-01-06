@@ -6,6 +6,8 @@
 #include <libj/exception.h>
 #include <libj/detail/generic_collection.h>
 
+#ifdef LIBJ_USE_LOCKFREE
+
 #include <boost/lockfree/queue.hpp>
 
 namespace libj {
@@ -100,5 +102,95 @@ class ConcurrentLinkedQueue : public GenericCollection<Value, I> {
 
 }  // namespace detail
 }  // namespace libj
+
+#else  // LIBJ_USE_LOCKFREE
+
+#include <libj/detail/linked_list.h>
+#include <libj/detail/mutex.h>
+
+namespace libj {
+namespace detail {
+
+template<typename I>
+class ConcurrentLinkedQueue : public LinkedList<I> {
+ public:
+    virtual Boolean add(const Value& v) {
+        mutex_.lock();
+        Boolean res = LinkedList<I>::add(v);
+        mutex_.unlock();
+        return res;
+    }
+
+    virtual Boolean addTyped(const Value& v) {
+        return add(v);
+    }
+
+    virtual void clear() {
+        mutex_.lock();
+        LinkedList<I>::clear();
+        mutex_.unlock();
+    }
+
+    virtual Value element() const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return UNDEFINED;
+    }
+
+    virtual Iterator::Ptr iterator() const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return Iterator::null();
+    }
+
+    virtual TypedIterator<Value>::Ptr iteratorTyped() const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return TypedIterator<Value>::null();
+    }
+
+    virtual Boolean offer(const Value& v) {
+        return add(v);
+    }
+
+    virtual Value peek() const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return UNDEFINED;
+    }
+
+    virtual Value poll() {
+        mutex_.lock();
+        Value v = LinkedList<I>::poll();
+        mutex_.unlock();
+        return v;
+    }
+
+    virtual Value remove() {
+        if (!LinkedList<I>::size()) {
+            LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+        } else {
+            return poll();
+        }
+    }
+
+    virtual Value remove(Size i) {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return UNDEFINED;
+    }
+
+    virtual Boolean remove(const Value& v) {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return false;
+    }
+
+    virtual Boolean removeTyped(const Value& v) {
+        return remove(v);
+    }
+
+ private:
+    mutable Mutex mutex_;
+};
+
+}  // namespace detail
+}  // namespace libj
+
+#endif  // LIBJ_USE_LOCKFREE
 
 #endif  // LIBJ_DETAIL_CONCURRENT_LINKED_QUEUE_H_

@@ -10,10 +10,10 @@ namespace libj {
 namespace detail {
 
 template<typename T>
-Boolean convert(const Value& v, T* t) {
+Boolean convert(const Value& v, T* t, Boolean throwable = true) {
     Boolean result = to<T>(v, t);
 #ifdef LIBJ_USE_EXCEPTION
-    if (!result) LIBJ_THROW(Error::ILLEGAL_TYPE);
+    if (!result && throwable) LIBJ_THROW(Error::ILLEGAL_TYPE);
 #endif  // LIBJ_USE_EXCEPTION
     return result;
 }

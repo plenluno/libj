@@ -99,34 +99,40 @@ class GTestCLQConsumer : LIBJ_JS_FUNCTION(GTestCLQConsumer)
 TEST(GTestConcurrentLinkedQueue, TestThreadSafe) {
     ConcurrentLinkedQueue::Ptr q = ConcurrentLinkedQueue::create();
 
-    Thread::Ptr p0 = Thread::create(
-        Function::Ptr(new GTestCLQProducer(q, 100000)));
     Thread::Ptr p1 = Thread::create(
-        Function::Ptr(new GTestCLQProducer(q, 100000)));
+        Function::Ptr(new GTestCLQProducer(q, 10000)));
     Thread::Ptr p2 = Thread::create(
-        Function::Ptr(new GTestCLQProducer(q, 100000)));
+        Function::Ptr(new GTestCLQProducer(q, 10000)));
+    Thread::Ptr p3 = Thread::create(
+        Function::Ptr(new GTestCLQProducer(q, 1000)));
 
     GTestCLQConsumer::Ptr cf1(new GTestCLQConsumer(q));
     GTestCLQConsumer::Ptr cf2(new GTestCLQConsumer(q));
+    GTestCLQConsumer::Ptr cf3(new GTestCLQConsumer(q));
     Thread::Ptr c1 = Thread::create(cf1);
     Thread::Ptr c2 = Thread::create(cf2);
-
-    p0->start();
-    p0->join();
+    Thread::Ptr c3 = Thread::create(cf3);
 
     p1->start();
     p2->start();
-    c1->start();
-    // c2->start();
 
     p1->join();
     p2->join();
+
+    p3->start();
+    c1->start();
+    c2->start();
+    c3->start();
+
+    p3->join();
     c1->join();
-    // c2->join();
+    c2->join();
+    c3->join();
 
     // console::log("consumer1: %d", cf1->count());
     // console::log("consumer2: %d", cf2->count());
-    ASSERT_EQ(300000, cf1->count() + cf2->count());
+    // console::log("consumer3: %d", cf3->count());
+    ASSERT_EQ(21000, cf1->count() + cf2->count() + cf3->count());
 }
 
 }  // namespace libj

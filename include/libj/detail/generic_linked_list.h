@@ -50,6 +50,11 @@ class GenericLinkedList : public GenericList<T, I> {
         }
     }
 
+    virtual Boolean offer(const Value& v) {
+        T t;
+        return convert(v, &t, false) && addTyped(t);
+    }
+
     virtual Boolean set(Size i, const Value& v) {
         T t;
         return convert(v, &t) && setTyped(i, t);
@@ -79,6 +84,38 @@ class GenericLinkedList : public GenericList<T, I> {
             LIBJ_THROW(Error::INDEX_OUT_OF_BOUNDS);
         }
         return getAux(i);
+    }
+
+    virtual Value element() const {
+        if (!list_.size()) {
+            LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+        } else {
+            return getAux(0);
+        }
+    }
+
+    virtual Value peek() const {
+        if (!list_.size()) {
+            return UNDEFINED;
+        } else {
+            return getAux(0);
+        }
+    }
+
+    virtual Value poll() {
+        if (!list_.size()) {
+            return UNDEFINED;
+        } else {
+            return removeAux(0);
+        }
+    }
+
+    virtual Value remove() {
+        if (!list_.size()) {
+            LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+        } else {
+            return removeAux(0);
+        }
     }
 
     virtual Value remove(Size i) {
