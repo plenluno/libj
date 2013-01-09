@@ -9,6 +9,7 @@ include(CMakeDependentOption)
 option(LIBJ_USE_BDWGC "Use BDW-GC" OFF)
 option(LIBJ_USE_CXX11 "Use C++11" OFF)
 option(LIBJ_USE_EXCEPTION "Use Exceptions" OFF)
+option(LIBJ_USE_JSCRE "Use JSCRE" OFF)
 option(LIBJ_USE_JSONCPP "Use JsonCpp" OFF)
 option(LIBJ_USE_THREAD "Use Threads" ON)
 option(LIBJ_BUILD_GTEST "Build Google Test" OFF)
@@ -20,6 +21,7 @@ cmake_dependent_option(LIBJ_BUILD_BDWGC "Build BDW-GC" ON "LIBJ_USE_BDWGC" OFF)
 message(STATUS "LIBJ_USE_BDWGC=${LIBJ_USE_BDWGC}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
+message(STATUS "LIBJ_USE_JSCRE=${LIBJ_USE_JSCRE}")
 message(STATUS "LIBJ_USE_JSONCPP=${LIBJ_USE_JSONCPP}")
 message(STATUS "LIBJ_USE_THREAD=${LIBJ_USE_THREAD}")
 message(STATUS "LIBJ_BUILD_BDWGC=${LIBJ_BUILD_BDWGC}")
@@ -34,6 +36,13 @@ set(libj-include
     deps
     deps/iv
 )
+
+if(LIBJ_USE_JSCRE)
+    set(libj-include
+        ${libj-include}
+        deps/jscre
+    )
+endif(LIBJ_USE_JSCRE)
 
 if(LIBJ_USE_JSONCPP)
     set(libj-include
@@ -195,6 +204,13 @@ if(LIBJ_USE_BDWGC)
     )
 endif(LIBJ_USE_BDWGC)
 
+if(LIBJ_USE_JSCRE)
+    set(libj-deps
+        ${libj-deps}
+        jscre
+    )
+endif(LIBJ_USE_JSCRE)
+
 ## libj-cflags
 set(libj-cflags
     -Wall
@@ -292,6 +308,11 @@ add_library(json STATIC
 set_target_properties(json PROPERTIES
     COMPILE_FLAGS ${libj-deps-cflags}
 )
+
+## jscre
+if(LIBJ_USE_JSCRE)
+    add_subdirectory(deps/jscre)
+endif(LIBJ_USE_JSCRE)
 
 ## regexp
 add_library(regexp STATIC
