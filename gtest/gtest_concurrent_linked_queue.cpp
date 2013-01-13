@@ -132,6 +132,7 @@ TEST(GTestConcurrentLinkedQueue, TestThreadSafe) {
     // console::log("consumer1: %d", cf1->count());
     // console::log("consumer2: %d", cf2->count());
     // console::log("consumer3: %d", cf3->count());
+    ASSERT_TRUE(q->isEmpty());
     ASSERT_EQ(2100, cf1->count() + cf2->count() + cf3->count());
 }
 

@@ -4,9 +4,10 @@
 #define LIBJ_DETAIL_CONCURRENT_LINKED_QUEUE_H_
 
 #include <libj/exception.h>
-#include <libj/detail/generic_collection.h>
 
 #ifdef LIBJ_USE_LOCKFREE
+
+#include <libj/detail/generic_collection.h>
 
 #include <boost/lockfree/queue.hpp>
 
@@ -106,7 +107,7 @@ class ConcurrentLinkedQueue : public GenericCollection<Value, I> {
 #else  // LIBJ_USE_LOCKFREE
 
 #include <libj/detail/linked_list.h>
-#include <libj/detail/mutex.h>
+#include <libj/detail/scoped_lock.h>
 
 namespace libj {
 namespace detail {
@@ -115,10 +116,8 @@ template<typename I>
 class ConcurrentLinkedQueue : public LinkedList<I> {
  public:
     virtual Boolean add(const Value& v) {
-        mutex_.lock();
-        Boolean res = LinkedList<I>::add(v);
-        mutex_.unlock();
-        return res;
+        ScopedLock lock(&mutex_);
+        return LinkedList<I>::add(v);
     }
 
     virtual Boolean addTyped(const Value& v) {
@@ -126,14 +125,17 @@ class ConcurrentLinkedQueue : public LinkedList<I> {
     }
 
     virtual void clear() {
-        mutex_.lock();
+        ScopedLock lock(&mutex_);
         LinkedList<I>::clear();
-        mutex_.unlock();
     }
 
     virtual Value element() const {
-        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
-        return UNDEFINED;
+        ScopedLock lock(const_cast<Mutex*>(&mutex_));
+        if (LinkedList<I>::size()) {
+            return LinkedList<I>::get(0);
+        } else {
+            LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+        }
     }
 
     virtual Iterator::Ptr iterator() const {
@@ -151,22 +153,25 @@ class ConcurrentLinkedQueue : public LinkedList<I> {
     }
 
     virtual Value peek() const {
-        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
-        return UNDEFINED;
+        ScopedLock lock(const_cast<Mutex*>(&mutex_));
+        if (LinkedList<I>::size()) {
+            return LinkedList<I>::get(0);
+        } else {
+            return UNDEFINED;
+        }
     }
 
     virtual Value poll() {
-        mutex_.lock();
-        Value v = LinkedList<I>::poll();
-        mutex_.unlock();
-        return v;
+        ScopedLock lock(&mutex_);
+        return LinkedList<I>::poll();
     }
 
     virtual Value remove() {
-        if (!LinkedList<I>::size()) {
-            LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+        ScopedLock lock(&mutex_);
+        if (LinkedList<I>::size()) {
+            return LinkedList<I>::poll();
         } else {
-            return poll();
+            LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
         }
     }
 

@@ -10,15 +10,6 @@ namespace libj {
 class ConcurrentLinkedQueue : LIBJ_QUEUE(ConcurrentLinkedQueue)
  public:
     static Ptr create();
-
-    // Only suport the following methods:
-    // virtual Boolean add(const Value& val) = 0;
-    // virtual Boolean addAll(CPtr collection) = 0;
-    // virtual void clear() = 0;
-    // virtual Boolean isEmpty() const = 0;
-    // virtual Boolean offer(const Value& val) = 0;
-    // virtual Value poll() = 0;
-    // virtual Value remove() = 0;
 };
 
 }  // namespace libj
