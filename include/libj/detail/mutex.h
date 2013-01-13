@@ -3,9 +3,7 @@
 #ifndef LIBJ_DETAIL_MUTEX_H_
 #define LIBJ_DETAIL_MUTEX_H_
 
-#include <libj/config.h>
-
-#ifdef LIBJ_USE_THREAD
+#include <libj/detail/noncopyable.h>
 
 #include <assert.h>
 #include <pthread.h>
@@ -13,7 +11,9 @@
 namespace libj {
 namespace detail {
 
-class Mutex {
+class Condition;
+
+class Mutex : private NonCopyable {
  public:
     Mutex() {
         pthread_mutex_init(&mutex_, NULL);
@@ -34,11 +34,11 @@ class Mutex {
 
  private:
     pthread_mutex_t mutex_;
+
+    friend class Condition;
 };
 
 }  // namespace detail
 }  // namespace libj
-
-#endif  // LIBJ_USE_THREAD
 
 #endif  // LIBJ_DETAIL_MUTEX_H_
