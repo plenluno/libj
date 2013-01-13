@@ -110,6 +110,10 @@ class GenericLinkedList : public GenericList<T, I> {
         }
     }
 
+    virtual void put(const Value& v) {
+        offer(v);
+    }
+
     virtual Value remove() {
         if (!list_.size()) {
             LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
@@ -151,6 +155,10 @@ class GenericLinkedList : public GenericList<T, I> {
             }
         }
         return false;
+    }
+
+    virtual Value take() {
+        return poll();
     }
 
     virtual void clear() {
