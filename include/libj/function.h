@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_FUNCTION_H_
 #define LIBJ_FUNCTION_H_
@@ -47,5 +47,8 @@ class Function : LIBJ_MUTABLE(Function)
 
 #define LIBJ_FUNCTION(T) public libj::Function { \
     LIBJ_MUTABLE_DEFS(T, libj::Function)
+
+#define LIBJ_FUNCTION_TEMPLATE(T) public libj::Function { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(T, libj::Function)
 
 #endif  // LIBJ_FUNCTION_H_
