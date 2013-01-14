@@ -26,6 +26,7 @@ class Error : LIBJ_STATUS(Error)
         UNSUPPORTED_VERSION,
         UNSUPPORTED_OPERATION,
         EMPTY_COLLECTION,
+        REJECTED_EXECUTION,
     };
 
     static CPtr create(Code code);
