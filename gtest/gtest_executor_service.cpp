@@ -6,6 +6,7 @@
 #include <libj/executor_service.h>
 #include <libj/js_function.h>
 #include <libj/status.h>
+#include <libj/concurrent_linked_queue.h>
 
 #include <unistd.h>
 
@@ -25,32 +26,32 @@ class GTestESTask : LIBJ_JS_FUNCTION(GTestESTask)
  public:
     GTestESTask(
         UInt n,
-        JsArray::Ptr a)
+        ConcurrentLinkedQueue::Ptr q)
         : n_(n)
-        , ary_(a) {}
+        , q_(q) {}
 
     Value operator()(JsArray::Ptr args) {
         usleep(100000 * (n_ % 5));
-        ary_->add(n_);
+        q_->offer(n_);
         console::printf(console::NORMAL, "task %d\n", n_);
         return Status::OK;
     }
 
  private:
     UInt n_;
-    JsArray::Ptr ary_;
+    ConcurrentLinkedQueue::Ptr q_;
 };
 
 TEST(GTestExecutorService, TestExecuteAndAwaitTermination) {
     ExecutorService::Ptr es = executors::createFixedThreadPool(3);
     const Size n = 10;
-    JsArray::Ptr ary = JsArray::create();
+    ConcurrentLinkedQueue::Ptr q = ConcurrentLinkedQueue::create();
     for (Size i = 0; i < n; i++) {
-        es->execute(JsFunction::Ptr(new GTestESTask(i, ary)));
+        es->execute(JsFunction::Ptr(new GTestESTask(i, q)));
     }
     es->shutdown();
     ASSERT_TRUE(es->awaitTermination());
-    ASSERT_EQ(n, ary->length());
+    ASSERT_EQ(n, q->size());
 }
 
 }  // namespace libj
