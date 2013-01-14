@@ -1,3 +1,5 @@
+# Copyright (c) 2012-2013 Plenluno All rights reserved.
+
 cmake_minimum_required(VERSION 2.8)
 
 project(libj)
@@ -104,6 +106,7 @@ if(LIBJ_USE_THREAD)
         ${libj-src}
         src/blocking_linked_queue.cpp
         src/concurrent_linked_queue.cpp
+        src/executors.cpp
         src/thread.cpp
     )
 endif(LIBJ_USE_THREAD)
@@ -178,6 +181,7 @@ if(LIBJ_USE_THREAD)
         ${libj-test-src}
         gtest/gtest_blocking_linked_queue.cpp
         gtest/gtest_concurrent_linked_queue.cpp
+        gtest/gtest_executor_service.cpp
         gtest/gtest_thread.cpp
     )
 endif(LIBJ_USE_THREAD)
