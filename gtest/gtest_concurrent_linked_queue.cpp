@@ -61,7 +61,7 @@ class GTestCLQProducer : LIBJ_JS_FUNCTION(GTestCLQProducer)
         : max_(max)
         , queue_(q) {}
 
-    Value operator()(JsArray::Ptr args) {
+    virtual Value operator()(JsArray::Ptr args) {
         for (Size i = 0; i < max_; i++) {
             queue_->offer(i);
         }
@@ -84,7 +84,7 @@ class GTestCLQConsumer : LIBJ_JS_FUNCTION(GTestCLQConsumer)
         return count_;
     }
 
-    Value operator()(JsArray::Ptr args) {
+    virtual Value operator()(JsArray::Ptr args) {
         while (!queue_->poll().isUndefined()) {
             count_++;
         }

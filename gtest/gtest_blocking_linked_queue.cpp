@@ -83,7 +83,7 @@ class GTestBLQProducer : LIBJ_JS_FUNCTION(GTestBLQProducer)
         : max_(max)
         , queue_(q) {}
 
-    Value operator()(JsArray::Ptr args) {
+    virtual Value operator()(JsArray::Ptr args) {
         for (Size i = 0; i < max_; i++) {
             queue_->put(i);
         }
@@ -108,7 +108,7 @@ class GTestBLQConsumer : LIBJ_JS_FUNCTION(GTestBLQConsumer)
         return count_;
     }
 
-    Value operator()(JsArray::Ptr args) {
+    virtual Value operator()(JsArray::Ptr args) {
         while (count_ < max_) {
             queue_->take();
             count_++;
