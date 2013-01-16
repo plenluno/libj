@@ -12,7 +12,7 @@ namespace detail {
 template<typename I>
 class BlockingLinkedQueue : public BlockingQueue<LinkedList<I> > {
  public:
-    BlockingLinkedQueue(Size capacity = 0)  // '0' means unlimited
+    BlockingLinkedQueue(Size capacity)
         : BlockingQueue<LinkedList<I> >(capacity) {}
 };
 

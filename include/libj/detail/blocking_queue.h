@@ -13,7 +13,7 @@ namespace detail {
 template<typename I>
 class BlockingQueue : public I {
  public:
-    BlockingQueue(Size capacity = 0)  // '0' means unlimited
+    BlockingQueue(Size capacity)
         : capacity_(capacity) {}
 
     virtual Boolean add(const Value& v) {
@@ -134,7 +134,7 @@ class BlockingQueue : public I {
 
  private:
     Boolean isFull() const {
-        return !!capacity_ && I::size() == capacity_;
+        return capacity_ != NO_SIZE && I::size() >= capacity_;
     }
 
  private:
