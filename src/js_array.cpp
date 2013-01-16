@@ -12,7 +12,7 @@ JsArray::Ptr JsArray::create() {
 JsArray::Ptr JsArray::create(ArrayList::CPtr list) {
     if (!list) return null();
 
-    JsArray::Ptr ary(JsArray::create());
+    JsArray::Ptr ary = JsArray::create();
     ary->addAll(list);
     return ary;
 }
