@@ -115,18 +115,17 @@ TEST(GTestConcurrentLinkedQueue, TestThreadSafe) {
 
     p1->start();
     p2->start();
-
-    p1->join();
-    p2->join();
-
     p3->start();
     c1->start();
     c2->start();
-    c3->start();
 
+    p1->join();
+    p2->join();
     p3->join();
     c1->join();
     c2->join();
+
+    c3->start();
     c3->join();
 
     // console::log("consumer1: %d", cf1->count());
