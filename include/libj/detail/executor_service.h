@@ -3,10 +3,10 @@
 #ifndef LIBJ_DETAIL_EXECUTOR_SERVICE_H_
 #define LIBJ_DETAIL_EXECUTOR_SERVICE_H_
 
-#include <libj/thread.h>
 #include <libj/console.h>
 #include <libj/function.h>
 #include <libj/exception.h>
+#include <libj/thread_factory.h>
 #include <libj/blocking_linked_queue.h>
 #include <libj/detail/scoped_lock.h>
 
@@ -16,16 +16,19 @@ namespace detail {
 template<typename I>
 class ExecutorService : public I {
  public:
-    ExecutorService(Size numThreads)
+    ExecutorService(
+        Size numThreads,
+        ThreadFactory::Ptr threadFactory)
         : shutdown_(false)
         , workers_(ArrayList::create())
         , threads_(ArrayList::create())
         , channel_(BlockingLinkedQueue::create()) {
+        assert(threadFactory);
         for (Size i = 0; i < numThreads; i++) {
             typename Worker::Ptr worker(new Worker(channel_));
             workers_->add(worker);
 
-            Thread::Ptr thread = Thread::create(worker);
+            Thread::Ptr thread = threadFactory->createThread(worker);
             threads_->add(thread);
             thread->start();
         }

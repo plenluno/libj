@@ -4,13 +4,19 @@
 #define LIBJ_EXECUTORS_H_
 
 #include <libj/executor_service.h>
+#include <libj/thread_factory.h>
 
 namespace libj {
 namespace executors {
 
-ExecutorService::Ptr createFixedThreadPool(Size numThreads);
+ThreadFactory::Ptr defaultThreadFactory();
 
-ExecutorService::Ptr createSingleThreadExecutor();
+ExecutorService::Ptr createFixedThreadPool(
+    Size numThreads,
+    ThreadFactory::Ptr threadFactory = defaultThreadFactory());
+
+ExecutorService::Ptr createSingleThreadExecutor(
+    ThreadFactory::Ptr threadFactory = defaultThreadFactory());
 
 }  // namespace executors
 }  // namespace libj
