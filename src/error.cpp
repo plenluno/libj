@@ -37,7 +37,7 @@ Error::CPtr Error::create(Error::Code code) {
     switch (code) {
         LIBJ_ERROR_MSG_MAP(LIBJ_ERROR_MSG_CASE_GEN);
     default:
-        return null();
+        msg = String::null();
     }
     return CPtr(new detail::Status<Error>(code, msg));
 }
