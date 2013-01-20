@@ -7,6 +7,8 @@
 
 #ifdef LIBJ_USE_CXX11
 
+#include <functional>
+
 namespace libj {
 
 typedef std::function<Value(JsArray::Ptr)> JsLambda;
