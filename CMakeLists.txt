@@ -35,8 +35,8 @@ message(STATUS "LIBJ_BUILD_TEST=${LIBJ_BUILD_TEST}")
 ## libj-include
 set(libj-include
     include
-    deps
     deps/iv
+    deps/boost-svn
 )
 
 if(LIBJ_USE_JSCRE)
@@ -58,19 +58,19 @@ else(LIBJ_USE_JSONCPP)
     )
 endif(LIBJ_USE_JSONCPP)
 
+if(LIBJ_BUILD_BDWGC)
+    set(libj-include
+        ${libj-include}
+        deps/bdwgc/include
+    )
+endif(LIBJ_BUILD_BDWGC)
+
 if(LIBJ_BUILD_GTEST)
     set(libj-include
         ${libj-include}
         deps/googletest/include
     )
 endif(LIBJ_BUILD_GTEST)
-
-if(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_TEST)
-    set(libj-include
-        ${libj-include}
-        deps/boost-svn
-    )
-endif(NOT LIBJ_USE_CXX11 OR LIBJ_BUILD_TEST)
 
 ## libj-src
 set(libj-src
@@ -280,13 +280,6 @@ string(REPLACE ";" " " libj-test-cflags "${libj-test-cflags}")
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h.in
     ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h )
-
-# find libraries -----------------------------------------------------------------------------------
-
-find_library(PTHREAD pthread REQUIRED)
-if(NOT EXISTS ${PTHREAD})
-    message(FATAL_ERROR "libpthread not found.")
-endif()
 
 # build libraries ----------------------------------------------------------------------------------
 
