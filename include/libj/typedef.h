@@ -6,7 +6,7 @@
 #include <libj/config.h>
 
 #include <stddef.h>
-#include <inttypes.h>
+#include <boost/cstdint.hpp>
 #include <string>
 
 #ifndef LIBJ_USE_CXX11
