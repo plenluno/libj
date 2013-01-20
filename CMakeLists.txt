@@ -59,7 +59,8 @@ else(LIBJ_USE_JSONCPP)
 endif(LIBJ_USE_JSONCPP)
 
 if(LIBJ_BUILD_GTEST)
-    set(libj-includd
+    set(libj-include
+        ${libj-include}
         deps/googletest/include
     )
 endif(LIBJ_BUILD_GTEST)
