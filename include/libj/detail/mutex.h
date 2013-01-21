@@ -3,15 +3,42 @@
 #ifndef LIBJ_DETAIL_MUTEX_H_
 #define LIBJ_DETAIL_MUTEX_H_
 
+#include <libj/config.h>
 #include <libj/detail/noncopyable.h>
 
-#include <assert.h>
-#include <pthread.h>
+#ifdef LIBJ_USE_CXX11
+    #include <mutex>
+#else
+    #include <assert.h>
+    #include <pthread.h>
+#endif
 
 namespace libj {
 namespace detail {
 
 class Condition;
+
+#ifdef LIBJ_USE_CXX11
+
+class Mutex : private NonCopyable {
+ public:
+    Boolean lock() {
+        mutex_.lock();
+        return true;
+    }
+
+    Boolean unlock() {
+        mutex_.unlock();
+        return false;
+    }
+
+ private:
+    std::mutex mutex_;
+
+    friend class Condition;
+};
+
+#else  // LIBJ_USE_CXX11
 
 class Mutex : private NonCopyable {
  public:
@@ -37,6 +64,8 @@ class Mutex : private NonCopyable {
 
     friend class Condition;
 };
+
+#endif  // LIBJ_USE_CXX11
 
 }  // namespace detail
 }  // namespace libj
