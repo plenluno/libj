@@ -5,8 +5,35 @@
 
 #include <libj/detail/mutex.h>
 
+#ifdef LIBJ_USE_CXX11
+    #include <condition_variable>
+#endif
+
 namespace libj {
 namespace detail {
+
+#ifdef LIBJ_USE_CXX11
+
+class Condition : private NonCopyable {
+ public:
+    void notify() {
+        cond_.notify_one();
+    }
+
+    void notifyAll() {
+        cond_.notify_all();
+    }
+
+    void wait(Mutex* mutex) {
+        std::unique_lock<std::mutex> lock(mutex->mutex_);
+        cond_.wait(lock);
+    }
+
+ private:
+    std::condition_variable cond_;
+};
+
+#else  // LIBJ_USE_CXX11
 
 class Condition : private NonCopyable {
  public:
@@ -33,6 +60,8 @@ class Condition : private NonCopyable {
  private:
     pthread_cond_t cond_;
 };
+
+#endif  // LIBJ_USE_CXX11
 
 }  // namespace detail
 }  // namespace libj
