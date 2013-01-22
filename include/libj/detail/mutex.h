@@ -29,7 +29,7 @@ class Mutex : private NonCopyable {
 
     Boolean unlock() {
         mutex_.unlock();
-        return false;
+        return true;
     }
 
  private:
