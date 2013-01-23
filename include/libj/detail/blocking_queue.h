@@ -13,8 +13,7 @@ namespace detail {
 template<typename I>
 class BlockingQueue : public I {
  public:
-    BlockingQueue(Size capacity)
-        : capacity_(capacity) {}
+    BlockingQueue(Size capacity) : capacity_(capacity) {}
 
     virtual Boolean add(const Value& v) {
         if (offer(v)) {
@@ -30,13 +29,13 @@ class BlockingQueue : public I {
     }
 
     virtual void clear() {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         I::clear();
         notFull_.notifyAll();
     }
 
     virtual Value element() const {
-        ScopedLock lock(const_cast<Mutex*>(&mutex_));
+        ScopedLock lock(mutex_);
         if (I::size()) {
             return I::get(0);
         } else {
@@ -55,7 +54,7 @@ class BlockingQueue : public I {
     }
 
     virtual Boolean offer(const Value& v) {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         if (isFull()) {
             return false;
         } else {
@@ -67,7 +66,7 @@ class BlockingQueue : public I {
     }
 
     virtual Value peek() const {
-        ScopedLock lock(const_cast<Mutex*>(&mutex_));
+        ScopedLock lock(mutex_);
         if (I::size()) {
             return I::get(0);
         } else {
@@ -76,7 +75,7 @@ class BlockingQueue : public I {
     }
 
     virtual Value poll() {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         if (I::size()) {
             Value v = I::poll();
             notFull_.notifyAll();
@@ -87,9 +86,9 @@ class BlockingQueue : public I {
     }
 
     virtual void put(const Value& v) {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         while (isFull()) {
-            notFull_.wait(&mutex_);
+            notFull_.wait(lock);
         }
 
         I::add(v);
@@ -97,7 +96,7 @@ class BlockingQueue : public I {
     }
 
     virtual Value remove() {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         if (I::size()) {
             Value v = I::poll();
             notFull_.notifyAll();
@@ -122,9 +121,9 @@ class BlockingQueue : public I {
     }
 
     virtual Value take() {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         while (!I::size()) {
-            notEmpty_.wait(&mutex_);
+            notEmpty_.wait(lock);
         }
 
         Value v = I::poll();
@@ -139,7 +138,7 @@ class BlockingQueue : public I {
 
  private:
     Size capacity_;
-    Mutex mutex_;
+    mutable Mutex mutex_;
     Condition notEmpty_;
     Condition notFull_;
 };

@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_CONDITION_H_
 #define LIBJ_DETAIL_CONDITION_H_
 
-#include <libj/detail/mutex.h>
+#include <libj/detail/scoped_lock.h>
 
 #ifdef LIBJ_USE_CXX11
     #include <condition_variable>
@@ -24,9 +24,8 @@ class Condition : private NonCopyable {
         cond_.notify_all();
     }
 
-    void wait(Mutex* mutex) {
-        std::unique_lock<std::mutex> lock(mutex->mutex_);
-        cond_.wait(lock);
+    void wait(ScopedLock& lock) {
+        cond_.wait(lock.lock_);
     }
 
  private:
@@ -53,8 +52,8 @@ class Condition : private NonCopyable {
         pthread_cond_broadcast(&cond_);
     }
 
-    void wait(Mutex* mutex) {
-        pthread_cond_wait(&cond_, &(mutex->mutex_));
+    void wait(ScopedLock& lock) {
+        pthread_cond_wait(&cond_, &(lock.mutex_.mutex_));
     }
 
  private:

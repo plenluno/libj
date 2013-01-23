@@ -16,9 +16,9 @@
 namespace libj {
 namespace detail {
 
-class Condition;
-
 #ifdef LIBJ_USE_CXX11
+
+class ScopedLock;
 
 class Mutex : private NonCopyable {
  public:
@@ -35,10 +35,12 @@ class Mutex : private NonCopyable {
  private:
     std::mutex mutex_;
 
-    friend class Condition;
+    friend class ScopedLock;
 };
 
 #else  // LIBJ_USE_CXX11
+
+class Condition;
 
 class Mutex : private NonCopyable {
  public:

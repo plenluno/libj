@@ -116,7 +116,7 @@ template<typename I>
 class ConcurrentLinkedQueue : public LinkedList<I> {
  public:
     virtual Boolean add(const Value& v) {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         return LinkedList<I>::add(v);
     }
 
@@ -125,12 +125,12 @@ class ConcurrentLinkedQueue : public LinkedList<I> {
     }
 
     virtual void clear() {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         LinkedList<I>::clear();
     }
 
     virtual Value element() const {
-        ScopedLock lock(const_cast<Mutex*>(&mutex_));
+        ScopedLock lock(mutex_);
         if (LinkedList<I>::size()) {
             return LinkedList<I>::get(0);
         } else {
@@ -153,7 +153,7 @@ class ConcurrentLinkedQueue : public LinkedList<I> {
     }
 
     virtual Value peek() const {
-        ScopedLock lock(const_cast<Mutex*>(&mutex_));
+        ScopedLock lock(mutex_);
         if (LinkedList<I>::size()) {
             return LinkedList<I>::get(0);
         } else {
@@ -162,12 +162,12 @@ class ConcurrentLinkedQueue : public LinkedList<I> {
     }
 
     virtual Value poll() {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         return LinkedList<I>::poll();
     }
 
     virtual Value remove() {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
         if (LinkedList<I>::size()) {
             return LinkedList<I>::poll();
         } else {

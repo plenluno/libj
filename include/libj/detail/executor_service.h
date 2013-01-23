@@ -53,7 +53,7 @@ class ExecutorService : public I {
     }
 
     virtual Boolean execute(Function::Ptr task) {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
 
         if (isShutdown()) {
 #ifdef LIBJ_USE_EXCEPTION
@@ -83,7 +83,7 @@ class ExecutorService : public I {
     }
 
     virtual void shutdown() {
-        ScopedLock lock(&mutex_);
+        ScopedLock lock(mutex_);
 
         if (isShutdown()) return;
 

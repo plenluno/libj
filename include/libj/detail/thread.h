@@ -6,12 +6,76 @@
 #include <libj/thread.h>
 #include <libj/exception.h>
 
-#include <assert.h>
-#include <pthread.h>
-#include <signal.h>
+#ifdef LIBJ_USE_CXX11
+    #include <thread>
+#else
+    #include <assert.h>
+    #include <pthread.h>
+    #include <signal.h>
+#endif
 
 namespace libj {
 namespace detail {
+
+class FunctionHolder {
+ public:
+    FunctionHolder(Function::Ptr f) : func_(f) {}
+
+    void operator()() {
+        (*func_)();
+    }
+
+ private:
+    Function::Ptr func_;
+};
+
+#ifdef LIBJ_USE_CXX11
+
+class Thread : public libj::Thread {
+ public:
+    Thread(Function::Ptr func)
+        : thread_(NULL)
+        , finish_(false)
+        , func_(func) {}
+
+    virtual ~Thread() {
+        if (isAlive()) {
+            thread_->detach();
+        }
+        delete thread_;
+    }
+
+    virtual void start() {
+        if (thread_) {
+            LIBJ_THROW(Error::ILLEGAL_STATE);
+        } else {
+            FunctionHolder holder(func_);
+            thread_ = new std::thread(holder);
+        }
+    }
+
+    virtual void join() {
+        if (isAlive()) {
+            thread_->join();
+            finish_ = true;
+        }
+    }
+
+    virtual String::CPtr toString() const {
+        return String::create();
+    }
+
+ private:
+    Boolean isAlive() const {
+        return thread_ && !finish_;
+    }
+
+    std::thread* thread_;
+    Boolean finish_;
+    Function::Ptr func_;
+};
+
+#else  // LIBJ_USE_CXX11
 
 class Thread : public libj::Thread {
  public:
@@ -25,7 +89,6 @@ class Thread : public libj::Thread {
         if (isAlive()) {
             int r = pthread_detach(thread_);
             assert(!r);
-            finish_ = true;
         }
     }
 
@@ -46,21 +109,13 @@ class Thread : public libj::Thread {
     }
 
     virtual String::CPtr toString() const {
-        // TODO(plenluno): implement
         return String::create();
     }
 
  private:
-    class FunctionHolder {
-     public:
-        FunctionHolder(Function::Ptr f) : func(f) {}
-
-        Function::Ptr func;
-    };
-
     static void* run(void* arg) {
         FunctionHolder* holder = static_cast<FunctionHolder*>(arg);
-        (*holder->func)();
+        (*holder)();
         delete holder;
         return NULL;
     }
@@ -74,6 +129,8 @@ class Thread : public libj::Thread {
     Boolean finish_;
     Function::Ptr func_;
 };
+
+#endif  // LIBJ_USE_CXX11
 
 }  // namespace detail
 }  // namespace libj
