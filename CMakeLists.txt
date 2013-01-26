@@ -219,38 +219,50 @@ if(LIBJ_USE_JSCRE)
 endif(LIBJ_USE_JSCRE)
 
 ## libj-cflags
-set(libj-cflags
-    -Wall
-    -fno-rtti
-)
-
-if(LIBJ_USE_CXX11)
+if(UNIX)
     set(libj-cflags
-        ${libj-cflags}
-        --std=c++0x
+        -Wall
+        -fno-rtti
     )
-endif(LIBJ_USE_CXX11)
 
-if(NOT LIBJ_USE_EXCEPTION)
+    if(LIBJ_USE_CXX11)
+        set(libj-cflags
+            ${libj-cflags}
+            --std=c++0x
+        )
+    endif(LIBJ_USE_CXX11)
+
+    if(NOT LIBJ_USE_EXCEPTION)
+        set(libj-cflags
+            ${libj-cflags}
+            -fno-exceptions
+        )
+    endif(NOT LIBJ_USE_EXCEPTION)
+else(UNIX)
     set(libj-cflags
-        ${libj-cflags}
-        -fno-exceptions
+        /W4
     )
-endif(NOT LIBJ_USE_EXCEPTION)
+endif(UNIX)
 
 string(REPLACE ";" " " libj-cflags "${libj-cflags}")
 
 ## libj-deps-cflags
-set(libj-deps-cflags
-    -fno-rtti
-)
-
-if(LIBJ_USE_CXX11)
+if(UNIX)
     set(libj-deps-cflags
-        ${libj-deps-cflags}
-        --std=c++0x
+        -fno-rtti
     )
-endif(LIBJ_USE_CXX11)
+
+    if(LIBJ_USE_CXX11)
+        set(libj-deps-cflags
+            ${libj-deps-cflags}
+            --std=c++0x
+        )
+    endif(LIBJ_USE_CXX11)
+else(UNIX)
+    set(libj-deps-cflags
+        /W1
+    )
+endif(UNIX)
 
 string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
 
@@ -319,11 +331,11 @@ add_library(regexp STATIC
     src/glue/regexp.cpp
 )
 
-if(NOT APPLE OR LIBJ_USE_CXX11)
+if(UNIX AND (NOT APPLE OR LIBJ_USE_CXX11))
     set_target_properties(regexp PROPERTIES
         COMPILE_FLAGS "--std=c++0x"
     )
-endif(NOT APPLE OR LIBJ_USE_CXX11)
+endif(UNIX AND (NOT APPLE OR LIBJ_USE_CXX11))
 
 ## dtoa
 add_library(dtoa STATIC
