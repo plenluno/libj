@@ -5,6 +5,10 @@
 #include <libj/glue/dtoa.h>
 #include <libj/detail/string.h>
 
+#ifdef LIBJ_PF_WINDOWS
+    #define snprintf _snprintf
+#endif
+
 namespace libj {
 
 String::CPtr String::create() {

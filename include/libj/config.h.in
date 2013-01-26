@@ -12,9 +12,13 @@
 #cmakedefine LIBJ_DEPRECATED
 
 #ifdef LIBJ_USE_BDW_GC
-#include <gc_cpp.h>
+    #include <gc_cpp.h>
 #else
-#define LIBJ_USE_SP
+    #define LIBJ_USE_SP
+#endif
+
+#ifdef _WIN32
+    #define LIBJ_PF_WINDOWS
 #endif
 
 #endif  // LIBJ_CONFIG_H_
