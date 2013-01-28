@@ -332,6 +332,12 @@ if(NOT LIBJ_USE_ICONV)
     add_library(convertutf STATIC
         deps/convertutf/ConvertUTF.cpp
     )
+
+    if(LIBJ_USE_CXX11)
+        set_target_properties(convertutf PROPERTIES
+            COMPILE_FLAGS "--std=c++0x"
+        )
+    endif(LIBJ_USE_CXX11)
 endif(NOT LIBJ_USE_ICONV)
 
 ## json
