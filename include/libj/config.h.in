@@ -6,6 +6,7 @@
 #cmakedefine LIBJ_USE_BDWGC
 #cmakedefine LIBJ_USE_CXX11
 #cmakedefine LIBJ_USE_EXCEPTION
+#cmakedefine LIBJ_USE_ICONV
 #cmakedefine LIBJ_USE_JSCRE
 #cmakedefine LIBJ_USE_JSONCPP
 #cmakedefine LIBJ_USE_THREAD

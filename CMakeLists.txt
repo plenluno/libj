@@ -11,6 +11,7 @@ include(CMakeDependentOption)
 option(LIBJ_USE_BDWGC "Use BDW-GC" OFF)
 option(LIBJ_USE_CXX11 "Use C++11" OFF)
 option(LIBJ_USE_EXCEPTION "Use Exceptions" OFF)
+option(LIBJ_USE_ICONV "Use iconv" OFF)
 option(LIBJ_USE_JSCRE "Use JSCRE" OFF)
 option(LIBJ_USE_JSONCPP "Use JsonCpp" OFF)
 option(LIBJ_USE_THREAD "Use Threads" ON)
@@ -23,6 +24,7 @@ cmake_dependent_option(LIBJ_BUILD_BDWGC "Build BDW-GC" ON "LIBJ_USE_BDWGC" OFF)
 message(STATUS "LIBJ_USE_BDWGC=${LIBJ_USE_BDWGC}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
+message(STATUS "LIBJ_USE_ICONV=${LIBJ_USE_ICONV}")
 message(STATUS "LIBJ_USE_JSCRE=${LIBJ_USE_JSCRE}")
 message(STATUS "LIBJ_USE_JSONCPP=${LIBJ_USE_JSONCPP}")
 message(STATUS "LIBJ_USE_THREAD=${LIBJ_USE_THREAD}")
@@ -57,6 +59,13 @@ else(LIBJ_USE_JSONCPP)
         deps/picojson
     )
 endif(LIBJ_USE_JSONCPP)
+
+if(NOT LIBJ_USE_ICONV)
+    set(libj-include
+        ${libj-include}
+        deps/convertutf
+    )
+endif(NOT LIBJ_USE_ICONV)
 
 if(LIBJ_BUILD_BDWGC)
     set(libj-include
@@ -197,12 +206,19 @@ set(libj-deps
     regexp
 )
 
-if(APPLE)
+if(LIBJ_USE_ICONV)
+    if(APPLE)
+        set(libj-deps
+            ${libj-deps}
+            iconv
+        )
+    endif(APPLE)
+else(LIBJ_USE_ICONV)
     set(libj-deps
         ${libj-deps}
-        iconv
+        convertutf
     )
-endif(APPLE)
+endif(LIBJ_USE_ICONV)
 
 if(LIBJ_USE_BDWGC)
     set(libj-deps
@@ -311,6 +327,12 @@ add_library(cvtutf STATIC
 set_target_properties(cvtutf PROPERTIES
     COMPILE_FLAGS ${libj-deps-cflags}
 )
+
+if(NOT LIBJ_USE_ICONV)
+    add_library(convertutf STATIC
+        deps/convertutf/ConvertUTF.cpp
+    )
+endif(NOT LIBJ_USE_ICONV)
 
 ## json
 add_library(json STATIC
