@@ -317,7 +317,7 @@ static char16_t swapUtf16(char16_t c16) {
 
 static char32_t swapUtf32(char32_t c32) {
     uint32_t u32 = static_cast<uint32_t>(c32);
-    u32 = ((u32 << 8) & 0xFF00FF00) | ((u32 >> 8) & 0xFF00FF); 
+    u32 = ((u32 << 8) & 0xFF00FF00) | ((u32 >> 8) & 0xFF00FF);
     return (u32 << 16) | (u32 >> 16);
 }
 
