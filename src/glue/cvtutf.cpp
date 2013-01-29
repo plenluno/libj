@@ -9,12 +9,9 @@
 #ifdef LIBJ_USE_ICONV
     #include <errno.h>
     #include <iconv.h>
-    #include <stdio.h>
 #else
     #include <ConvertUTF.h>
 #endif
-
-#include <string>
 
 namespace libj {
 namespace glue {
@@ -36,8 +33,8 @@ std::u32string utf16ToUtf32(const std::u16string& str) {
 
 #ifdef LIBJ_USE_ICONV
 
-// #define LIBJ_CVTUTF_DEBUG
 #ifdef LIBJ_CVTUTF_DEBUG
+    #include <stdio.h>
     #define ICONV iconvDebug
 #else
     #define ICONV iconv
@@ -314,50 +311,28 @@ static Boolean needsSwap(UnicodeEncoding enc) {
 }
 
 static char16_t swapUtf16(char16_t c16) {
-    assert(sizeof(unsigned char) == 1 && sizeof(char16_t) == 2);
-    union {
-        char16_t c16;
-        unsigned char c8[2];
-    } u;
-    u.c16 = c16;
-    unsigned char tmp = u.c8[0];
-    u.c8[0] = u.c8[1];
-    u.c8[1] = tmp;
-    return u.c16;
+    uint16_t u16 = static_cast<uint16_t>(c16);
+    return (u16 << 8) | (u16 >> 8);
 }
 
 static char32_t swapUtf32(char32_t c32) {
-    assert(sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
-    union {
-        char32_t c32;
-        unsigned char c8[4];
-    } u;
-    u.c32 = c32;
-    unsigned char tmp0 = u.c8[0];
-    unsigned char tmp1 = u.c8[1];
-    u.c8[0] = u.c8[3];
-    u.c8[1] = u.c8[2];
-    u.c8[2] = tmp1;
-    u.c8[3] = tmp0;
-    return u.c32;
+    uint32_t u32 = static_cast<uint32_t>(c32);
+    u32 = ((u32 << 8) & 0xFF00FF00) | ((u32 >> 8) & 0xFF00FF); 
+    return (u32 << 16) | (u32 >> 16);
 }
 
 static size_t findUtf8End(
     const unsigned char* start,
     size_t max,
     const unsigned char** end) {
-    assert(start && end);
-    assert(sizeof(unsigned char) == 1);
-
     size_t n = 0;
     const unsigned char* pos = start;
-    while (n < max) {
+    for (; n < max; n++) {
         unsigned char c = *pos;
-        if (c == 0) {
-            break;
-        } else {
+        if (c) {
             pos += getNumBytesForUTF8(c);
-            n++;
+        } else {
+            break;
         }
     }
     *end = pos;
@@ -370,8 +345,6 @@ static size_t findUtf16End(
     size_t max,
     const char16_t** end,
     std::u16string** swaped) {
-    assert(start && end && swaped);
-
     if (!max) {
         *end = start;
         *swaped = NULL;
@@ -387,11 +360,9 @@ static size_t findUtf16End(
 
     size_t n = 0;
     const char16_t* pos = start;
-    while (n < max) {
+    for (; n < max; n++) {
         char16_t c16 = *pos;
-        if (c16 == 0) {
-            break;
-        } else {
+        if (c16) {
             if (swap) {
                 c16 = swapUtf16(c16);
                 **swaped += c16;
@@ -400,14 +371,12 @@ static size_t findUtf16End(
 
             if (isSurrogatePair(c16)) {
                 if (swap) {
-                    c16 = *pos;
-                    c16 = swapUtf16(c16);
-                    **swaped += c16;
+                    **swaped += swapUtf16(*pos);
                 }
                 pos++;
             }
-
-            n++;
+        } else {
+            break;
         }
     }
     *end = pos;
@@ -417,6 +386,8 @@ static size_t findUtf16End(
 static std::u32string utf8ToUtf32(
     const unsigned char* data,
     size_t max) {
+    assert(data && sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
+
     const unsigned char* end;
     size_t n = findUtf8End(data, max, &end);
     if (!n) return std::u32string();
@@ -444,10 +415,15 @@ static std::u32string utf16ToUtf32(
     const char16_t* data,
     UnicodeEncoding enc,
     size_t max) {
+    assert(data && sizeof(char16_t) == 2 && sizeof(char32_t) == 4);
+
     const char16_t* end;
     std::u16string* u16s;
     size_t n = findUtf16End(data, enc, max, &end, &u16s);
-    if (!n) return std::u32string();
+    if (!n) {
+        delete u16s;
+        return std::u32string();
+    }
 
     const char16_t* sourceStart;
     const char16_t* sourceEnd;
@@ -484,30 +460,29 @@ static std::u32string utf32ToUtf32(
 
     if (!max) return std::u32string();
 
-    Boolean swap = needsSwap(enc);
-
     std::u32string u32s;
     size_t n = 0;
     const char32_t* pos = data;
-    while (n < max) {
+    Boolean swap = needsSwap(enc);
+    for (; n < max; n++, pos++) {
         char32_t c32 = *pos;
-        if (c32 == 0) {
-            break;
-        } else {
+        if (c32) {
             if (swap) c32 = swapUtf32(c32);
             if (c32 <= UNI_MAX_LEGAL_UTF32) {
                 u32s += c32;
-                pos++;
-                n++;
             } else {
                 break;
             }
+        } else {
+            break;
         }
     }
     return u32s;
 }
 
 static std::string utf32ToUtf8(const std::u32string& str) {
+    assert(sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
+
     if (!str.length()) return std::string();
 
     const char32_t* sourceStart = str.c_str();
@@ -531,6 +506,8 @@ static std::string utf32ToUtf8(const std::u32string& str) {
 }
 
 std::u16string utf32ToUtf16(const std::u32string& str) {
+    assert(sizeof(char16_t) == 2 && sizeof(char32_t) == 4);
+
     if (!str.length()) return std::u16string();
 
     const char32_t* sourceStart = str.c_str();
@@ -561,9 +538,12 @@ static std::string toStdString(
     size_t len = str.length();
     for (size_t i = 0; i < len; i++) {
         char16_t c16 = str[i];
-        if (!c16) break;
-        if (swap) c16 = swapUtf16(c16);
-        u16s += c16;
+        if (c16) {
+            if (swap) c16 = swapUtf16(c16);
+            u16s += c16;
+        } else {
+            break;
+        }
     }
     u16s += static_cast<char16_t>(0);
     return std::string(
@@ -579,10 +559,12 @@ static std::string toStdString(
     size_t len = str.length();
     for (size_t i = 0; i < len; i++) {
         char32_t c32 = str[i];
-        if (!c32) break;
-        if (swap) c32 = swapUtf32(c32);
-        // if (c32 > UNI_MAX_LEGAL_UTF32) break;
-        u32s += c32;
+        if (c32 > 0 && c32 <= UNI_MAX_LEGAL_UTF32) {
+            if (swap) c32 = swapUtf32(c32);
+            u32s += c32;
+        } else {
+            break;
+        }
     }
     u32s += static_cast<char32_t>(0);
     return std::string(
