@@ -32,11 +32,15 @@ class GTestImmutableX {
     virtual int x() { return 0; }
 };
 
+#ifndef LIBJ_PF_WINDOWS
+
 TEST(GTestImmutable, TestEBCO) {
     ASSERT_EQ(
-        sizeof(GTestImmutable),
-        sizeof(detail::GCBase) + sizeof(GTestImmutableX));
+        sizeof(detail::GCBase) + sizeof(GTestImmutableX),
+        sizeof(GTestImmutable));
 }
+
+#endif
 
 TEST(GTestImmutable, TestSubstitution) {
     GTestImmutable::CPtr p = GTestImmutable::create();

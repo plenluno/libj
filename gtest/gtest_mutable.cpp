@@ -33,11 +33,15 @@ class GTestMutableX {
     virtual int x() { return 0; }
 };
 
+#ifndef LIBJ_PF_WINDOWS
+
 TEST(GTestMutable, TestEBCO) {
     ASSERT_EQ(
-        sizeof(GTestMutable),
-        sizeof(detail::GCBase) + sizeof(GTestMutableX));
+        sizeof(detail::GCBase) + sizeof(GTestMutableX),
+        sizeof(GTestMutable));
 }
+
+#endif
 
 TEST(GTestMutable, TestSubstitution) {
     GTestMutable::Ptr p = GTestMutable::create();

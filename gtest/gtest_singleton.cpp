@@ -19,9 +19,13 @@ class GTestSingletonX {
     virtual int x() { return 0; }
 };
 
+#ifndef LIBJ_PF_WINDOWS
+
 TEST(GTestSingleton, TestEBCO) {
-    ASSERT_EQ(sizeof(GTestSingleton), sizeof(GTestSingletonX));
+    ASSERT_EQ(sizeof(GTestSingletonX), sizeof(GTestSingleton));
 }
+
+#endif
 
 TEST(GTestSingleton, TestSubstitution) {
     GTestSingleton::Ptr p = GTestSingleton::instance();
