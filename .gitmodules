@@ -28,3 +28,6 @@
 [submodule "deps/jscre"]
 	path = deps/jscre
 	url = https://github.com/plenluno/jscre.git
+[submodule "deps/convertutf"]
+	path = deps/convertutf
+	url = https://github.com/plenluno/convertutf.git
