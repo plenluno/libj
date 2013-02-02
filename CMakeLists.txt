@@ -77,6 +77,7 @@ endif(LIBJ_BUILD_BDWGC)
 if(LIBJ_BUILD_GTEST)
     set(libj-include
         ${libj-include}
+        deps/googletest
         deps/googletest/include
     )
 endif(LIBJ_BUILD_GTEST)
@@ -202,9 +203,15 @@ set(libj-deps
     dtoa
     json
     ndtoa
-    pthread
     regexp
 )
+
+if(UNIX)
+    set(libj-deps
+        ${libj-deps}
+        pthread
+    )
+endif(UNIX)
 
 if(LIBJ_USE_ICONV)
     if(APPLE)
@@ -233,6 +240,19 @@ if(LIBJ_USE_JSCRE)
         jscre
     )
 endif(LIBJ_USE_JSCRE)
+
+## libj-test-deps
+set(libj-test-deps
+    gtest
+    j
+)
+
+if(UNIX)
+    set(libj-test-deps
+        ${libj-test-deps}
+        pthread
+    )
+endif(UNIX)
 
 ## libj-cflags
 if(UNIX)
@@ -283,23 +303,29 @@ endif(UNIX)
 string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
 
 ## libj-test-cflags
-set(libj-test-cflags
-    -Wall
-)
-
-if(NOT APPLE)
+if(UNIX)
     set(libj-test-cflags
-        ${libj-test-cflags}
-        -fpermissive
+        -Wall
     )
-endif(NOT APPLE)
 
-if(LIBJ_USE_CXX11)
+    if(NOT APPLE)
+        set(libj-test-cflags
+            ${libj-test-cflags}
+            -fpermissive
+        )
+    endif(NOT APPLE)
+
+    if(LIBJ_USE_CXX11)
+        set(libj-test-cflags
+            ${libj-test-cflags}
+            --std=c++0x
+        )
+    endif(LIBJ_USE_CXX11)
+else(UNIX)
     set(libj-test-cflags
-        ${libj-test-cflags}
-        --std=c++0x
+        /D_VARIADIC_MAX=10
     )
-endif(LIBJ_USE_CXX11)
+endif(UNIX)
 
 string(REPLACE ";" " " libj-test-cflags "${libj-test-cflags}")
 
@@ -351,7 +377,9 @@ set_target_properties(json PROPERTIES
 
 ## jscre
 if(LIBJ_USE_JSCRE)
-    add_subdirectory(deps/jscre)
+    add_subdirectory(
+        deps/jscre
+    )
 endif(LIBJ_USE_JSCRE)
 
 ## regexp
@@ -414,9 +442,19 @@ set_target_properties(j PROPERTIES
 # build tests --------------------------------------------------------------------------------------
 
 if(LIBJ_BUILD_GTEST)
-    add_subdirectory(
-        deps/googletest
-    )
+    if(UNIX)
+        add_subdirectory(
+            deps/googletest
+        )
+    else(UNIX)
+        add_library(gtest STATIC
+            deps/googletest/src/gtest-all.cc
+        )
+
+        set_target_properties(gtest PROPERTIES
+            COMPILE_FLAGS "/D_VARIADIC_MAX=10"
+        )
+    endif(UNIX)
 endif(LIBJ_BUILD_GTEST)
 
 if(LIBJ_BUILD_TEST)
@@ -425,9 +463,7 @@ if(LIBJ_BUILD_TEST)
     )
 
     target_link_libraries(libj-test
-        gtest
-        j
-        pthread
+        ${libj-test-deps}
     )
 
     set_target_properties(libj-test PROPERTIES
