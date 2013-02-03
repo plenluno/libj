@@ -33,7 +33,7 @@ class Exception::Impl {
         , line_(line) {}
 
     Int code() const {
-        return err_ ? err_->code() : -1;
+        return err_ ? err_->code() : Error::ANY;
     }
 
     String::CPtr message() const {
