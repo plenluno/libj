@@ -132,6 +132,6 @@ inline Value JsFunction::call(
 
 #define LIBJ_JS_FUNCTION_TEMPLATE_DEFS(T) \
     LIBJ_MUTABLE_TEMPLATE_DEFS(T, libj::JsFunction) \
-    LIBJ_JS_FUNCTION_TO_STRING()
+    LIBJ_JS_FUNCTION_TO_STRING(T)
 
 #endif  // LIBJ_IMPL_JS_FUNCTION_H_
