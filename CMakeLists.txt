@@ -359,11 +359,11 @@ if(NOT LIBJ_USE_ICONV)
         deps/convertutf/ConvertUTF.cpp
     )
 
-    if(LIBJ_USE_CXX11)
+    if(UNIX AND LIBJ_USE_CXX11)
         set_target_properties(convertutf PROPERTIES
             COMPILE_FLAGS "--std=c++0x"
         )
-    endif(LIBJ_USE_CXX11)
+    endif(UNIX AND LIBJ_USE_CXX11)
 endif(NOT LIBJ_USE_ICONV)
 
 ## json
