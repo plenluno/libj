@@ -20,6 +20,8 @@
 
 #ifdef _WIN32
     #define LIBJ_PF_WINDOWS
+#else
+    #define LIBJ_PF_UNIX
 #endif
 
 #endif  // LIBJ_CONFIG_H_
