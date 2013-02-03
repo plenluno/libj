@@ -40,8 +40,13 @@ class Exception : public std::exception {
 
 }  // namespace libj
 
-#define LIBJ_THROW(code) \
-    throw libj::Exception(code, __FILE__, __func__, __LINE__);
+#ifdef LIBJ_PF_WINDOWS
+    #define LIBJ_THROW(code) \
+        throw libj::Exception(code, __FILE__, __FUNCTION__, __LINE__);
+#else
+    #define LIBJ_THROW(code) \
+        throw libj::Exception(code, __FILE__, __func__, __LINE__);
+#endif
 
 #define LIBJ_HANDLE_ERROR(code) \
     LIBJ_THROW(code)
