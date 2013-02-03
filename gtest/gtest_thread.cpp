@@ -6,7 +6,12 @@
 #include <libj/status.h>
 #include <libj/thread.h>
 
-#include <unistd.h>
+#ifdef LIBJ_PF_WINDOWS
+	#include <Windows.h>
+	#define usleep(useconds) Sleep(useconds)
+#else
+	#include <unistd.h>
+#endif
 
 namespace libj {
 
