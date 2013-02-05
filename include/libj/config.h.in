@@ -12,7 +12,7 @@
 #cmakedefine LIBJ_USE_THREAD
 #cmakedefine LIBJ_DEPRECATED
 
-#ifdef LIBJ_USE_BDW_GC
+#ifdef LIBJ_USE_BDWGC
     #include <gc_cpp.h>
 #else
     #define LIBJ_USE_SP
