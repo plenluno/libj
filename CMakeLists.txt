@@ -6,20 +6,22 @@ project(libj)
 
 include(CMakeDependentOption)
 
-# options ------------------------------------------------------------------------------------------
+# options ----------------------------------------------------------------------
 
-option(LIBJ_USE_BDWGC "Use BDW-GC" OFF)
-option(LIBJ_USE_CXX11 "Use C++11" OFF)
-option(LIBJ_USE_EXCEPTION "Use Exceptions" OFF)
-option(LIBJ_USE_ICONV "Use iconv" OFF)
-option(LIBJ_USE_JSCRE "Use JSCRE" OFF)
-option(LIBJ_USE_JSONCPP "Use JsonCpp" OFF)
-option(LIBJ_USE_THREAD "Use Threads" ON)
-option(LIBJ_BUILD_GTEST "Build Google Test" OFF)
-option(LIBJ_BUILD_TEST "Build Tests" OFF)
-option(LIBJ_DEPRECATED "Deprecated" OFF)
+option(LIBJ_USE_BDWGC     "Use BDW-GC"        OFF)
+option(LIBJ_USE_CXX11     "Use C++11"         OFF)
+option(LIBJ_USE_EXCEPTION "Use Exceptions"    OFF)
+option(LIBJ_USE_ICONV     "Use iconv"         OFF)
+option(LIBJ_USE_JSCRE     "Use JSCRE"         OFF)
+option(LIBJ_USE_JSONCPP   "Use JsonCpp"       OFF)
+option(LIBJ_USE_THREAD    "Use Threads"       ON)
+option(LIBJ_BUILD_GTEST   "Build Google Test" OFF)
+option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
+option(LIBJ_DEPRECATED    "Deprecated"        OFF)
 
-cmake_dependent_option(LIBJ_BUILD_BDWGC "Build BDW-GC" ON "LIBJ_USE_BDWGC" OFF)
+cmake_dependent_option(LIBJ_BUILD_BDWGC
+    "Build BDW-GC" ON "LIBJ_USE_BDWGC" OFF
+)
 
 message(STATUS "LIBJ_USE_BDWGC=${LIBJ_USE_BDWGC}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
@@ -32,7 +34,7 @@ message(STATUS "LIBJ_BUILD_BDWGC=${LIBJ_BUILD_BDWGC}")
 message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
 message(STATUS "LIBJ_BUILD_TEST=${LIBJ_BUILD_TEST}")
 
-# variables ----------------------------------------------------------------------------------------
+# variables --------------------------------------------------------------------
 
 ## libj-include
 set(libj-include
@@ -329,13 +331,13 @@ endif(UNIX)
 
 string(REPLACE ";" " " libj-test-cflags "${libj-test-cflags}")
 
-# configure ----------------------------------------------------------------------------------------
+# configure --------------------------------------------------------------------
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h.in
     ${CMAKE_CURRENT_SOURCE_DIR}/include/libj/config.h )
 
-# build libraries ----------------------------------------------------------------------------------
+# build libraries --------------------------------------------------------------
 
 include_directories(
     ${libj-include}
@@ -387,11 +389,11 @@ add_library(regexp STATIC
     src/glue/regexp.cpp
 )
 
-if(UNIX AND (NOT APPLE OR LIBJ_USE_CXX11))
+if(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
     set_target_properties(regexp PROPERTIES
         COMPILE_FLAGS "--std=c++0x"
     )
-endif(UNIX AND (NOT APPLE OR LIBJ_USE_CXX11))
+endif(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
 
 ## dtoa
 add_library(dtoa STATIC
@@ -417,12 +419,18 @@ add_library(ndtoa STATIC
 if(LIBJ_BUILD_BDWGC)
     add_custom_command(
         TARGET json PRE_BUILD
-        COMMAND rsync -av ${CMAKE_CURRENT_LIST_DIR}/deps/bdwgc ${CMAKE_BINARY_DIR}/deps/
-        COMMAND rsync -av ${CMAKE_CURRENT_LIST_DIR}/deps/libatomic_ops ${CMAKE_BINARY_DIR}/deps/bdwgc/
+        COMMAND rsync -av
+            ${CMAKE_CURRENT_LIST_DIR}/deps/bdwgc
+            ${CMAKE_BINARY_DIR}/deps/
+        COMMAND rsync -av
+            ${CMAKE_CURRENT_LIST_DIR}/deps/libatomic_ops
+            ${CMAKE_BINARY_DIR}/deps/bdwgc/
         COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./autogen.sh
         COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./configure
         COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && make
-        COMMAND ln -sf ${CMAKE_BINARY_DIR}/deps/bdwgc/.libs/libgc.a ${CMAKE_BINARY_DIR}/libgc.a
+        COMMAND ln -sf
+            ${CMAKE_BINARY_DIR}/deps/bdwgc/.libs/libgc.a
+            ${CMAKE_BINARY_DIR}/libgc.a
     )
 endif(LIBJ_BUILD_BDWGC)
 
@@ -439,7 +447,7 @@ set_target_properties(j PROPERTIES
     COMPILE_FLAGS "${libj-cflags}"
 )
 
-# build tests --------------------------------------------------------------------------------------
+# build tests ------------------------------------------------------------------
 
 if(LIBJ_BUILD_GTEST)
     if(UNIX)
