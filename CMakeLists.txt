@@ -17,7 +17,6 @@ option(LIBJ_USE_JSONCPP   "Use JsonCpp"       OFF)
 option(LIBJ_USE_THREAD    "Use Threads"       ON)
 option(LIBJ_BUILD_GTEST   "Build Google Test" OFF)
 option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
-option(LIBJ_DEPRECATED    "Deprecated"        OFF)
 
 cmake_dependent_option(LIBJ_BUILD_BDWGC
     "Build BDW-GC" ON

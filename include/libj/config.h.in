@@ -10,7 +10,6 @@
 #cmakedefine LIBJ_USE_JSCRE
 #cmakedefine LIBJ_USE_JSONCPP
 #cmakedefine LIBJ_USE_THREAD
-#cmakedefine LIBJ_DEPRECATED
 
 #ifdef LIBJ_USE_BDWGC
     #include <gc_cpp.h>
