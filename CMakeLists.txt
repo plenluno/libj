@@ -20,7 +20,8 @@ option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
 option(LIBJ_DEPRECATED    "Deprecated"        OFF)
 
 cmake_dependent_option(LIBJ_BUILD_BDWGC
-    "Build BDW-GC" ON "LIBJ_USE_BDWGC" OFF
+    "Build BDW-GC" ON
+    "LIBJ_USE_BDWGC" OFF
 )
 
 message(STATUS "LIBJ_USE_BDWGC=${LIBJ_USE_BDWGC}")
