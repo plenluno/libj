@@ -7,6 +7,7 @@
 #include <libj/constant.h>
 #include <libj/exception.h>
 #include <libj/map.h>
+#include <libj/string.h>
 #include <libj/glue/cvtutf.h>
 #include <libj/detail/mutex.h>
 
@@ -16,12 +17,26 @@
 namespace libj {
 namespace detail {
 
-template<typename I>
-class String : public I {
- public:
-    typedef typename I::CPtr CPtr;
-    typedef typename I::Encoding Encoding;
+glue::UnicodeEncoding convertStrEncoding(libj::String::Encoding enc) {
+    switch (enc) {
+    case libj::String::UTF8:
+        return glue::UTF8;
+    case libj::String::UTF16BE:
+        return glue::UTF16BE;
+    case libj::String::UTF16LE:
+        return glue::UTF16LE;
+    case libj::String::UTF32BE:
+        return glue::UTF32BE;
+    case libj::String::UTF32LE:
+        return glue::UTF32LE;
+    default:
+        assert(false);
+        return glue::UTF8;
+    }
+}
 
+class String : public libj::String {
+ public:
     String()
         : str_()
         , interned_(false) {}
@@ -50,7 +65,7 @@ class String : public I {
         const void* data,
         Encoding enc,
         Size max)
-        : str_(glue::toUtf32(data, convertEncoding(enc), max))
+        : str_(glue::toUtf32(data, convertStrEncoding(enc), max))
         , interned_(false) {}
 
     virtual Size length() const {
@@ -67,7 +82,7 @@ class String : public I {
 
     virtual CPtr substring(Size from) const {
         if (from > length()) {
-            return I::null();
+            return libj::String::null();
         } else if (from == 0) {
             return toString();
         } else {
@@ -78,7 +93,7 @@ class String : public I {
     virtual CPtr substring(Size from, Size to) const {
         Size len = length();
         if (from > len || to > len || from > to) {
-            return I::null();
+            return libj::String::null();
         } else if (from == 0 && to == len) {
             return toString();
         } else {
@@ -107,7 +122,7 @@ class String : public I {
             return result;
         }
 
-        CPtr other = LIBJ_STATIC_CPTR_CAST(I)(that);
+        CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
         Size len1 = this->length();
         Size len2 = other->length();
         Size len = len1 < len2 ? len1 : len2;
@@ -127,7 +142,7 @@ class String : public I {
             return !result;
         }
 
-        CPtr other = LIBJ_STATIC_CPTR_CAST(I)(that);
+        CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
         if (this->isInterned() && other->isInterned()) {
             return false;
         } else {
@@ -270,7 +285,7 @@ class String : public I {
     }
 
     virtual std::string toStdString(Encoding enc) const {
-        return glue::fromUtf32(str_, convertEncoding(enc));
+        return glue::fromUtf32(str_, convertStrEncoding(enc));
     }
 
  public:
@@ -285,10 +300,10 @@ class String : public I {
         CPtr sym;
 #ifdef LIBJ_USE_THREAD
         mutex.lock();
-        sym = toCPtr<I>(symbols->get(str));
+        sym = toCPtr<libj::String>(symbols->get(str));
         mutex.unlock();
 #else
-        sym = toCPtr<I>(symbols->get(str));
+        sym = toCPtr<libj::String>(symbols->get(str));
 #endif
         if (sym) {
             return sym;
@@ -313,25 +328,6 @@ class String : public I {
     }
 
  private:
-    static glue::UnicodeEncoding convertEncoding(Encoding enc) {
-        switch (enc) {
-        case I::UTF8:
-            return glue::UTF8;
-        case I::UTF16BE:
-            return glue::UTF16BE;
-        case I::UTF16LE:
-            return glue::UTF16LE;
-        case I::UTF32BE:
-            return glue::UTF32BE;
-        case I::UTF32LE:
-            return glue::UTF32LE;
-        default:
-            assert(false);
-            return glue::UTF8;
-        }
-    }
-
- private:
     class CharIterator : public TypedIterator<Char> {
         friend class String;
         typedef std::u32string::const_iterator CItr;
@@ -352,8 +348,8 @@ class String : public I {
             }
         }
 
-        virtual typename I::CPtr toString() const {
-            return I::create();
+        virtual libj::String::CPtr toString() const {
+            return libj::String::create();
         }
 
      private:

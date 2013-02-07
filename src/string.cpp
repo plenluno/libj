@@ -12,32 +12,32 @@
 namespace libj {
 
 String::CPtr String::create() {
-    static const CPtr empty(intern(CPtr(new detail::String<String>())));
+    static const CPtr empty(intern(CPtr(new detail::String())));
     return empty;
 }
 
 String::CPtr String::create(Char c, Size n) {
-    return CPtr(new detail::String<String>(c, n));
+    return CPtr(new detail::String(c, n));
 }
 
 String::CPtr String::create(const std::u16string& s16) {
-    return CPtr(new detail::String<String>(s16));
+    return CPtr(new detail::String(s16));
 }
 
 String::CPtr String::create(const std::u32string& s32) {
-    return CPtr(new detail::String<String>(s32));
+    return CPtr(new detail::String(s32));
 }
 
 String::CPtr String::create(const void* data, Encoding enc, Size max) {
     if (data) {
-        return CPtr(new detail::String<String>(data, enc, max));
+        return CPtr(new detail::String(data, enc, max));
     } else {
         return null();
     }
 }
 
 String::CPtr String::intern(String::CPtr str) {
-    return detail::String<String>::intern(str);
+    return detail::String::intern(str);
 }
 
 String::CPtr String::intern(const void* data, Encoding enc, Size max) {
