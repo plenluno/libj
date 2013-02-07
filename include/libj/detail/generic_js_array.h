@@ -4,7 +4,6 @@
 #define LIBJ_DETAIL_GENERIC_JS_ARRAY_H_
 
 #include <libj/js_object.h>
-#include <libj/detail/js_object.h>
 #include <libj/detail/generic_array_list.h>
 
 namespace libj {
@@ -13,6 +12,8 @@ namespace detail {
 template<typename T, typename I>
 class GenericJsArray : public GenericArrayList<T, I> {
  public:
+    GenericJsArray() : obj_(libj::JsObject::null()) {}
+
     virtual Value subList(Size from, Size to) const {
         if (to > this->size() || from > to) {
             LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
@@ -44,23 +45,38 @@ class GenericJsArray : public GenericArrayList<T, I> {
 
  public:
     virtual Boolean hasProperty(const Value& name) const {
-        return obj_.hasProperty(name);
+        if (obj_) {
+            return obj_->hasProperty(name);
+        } else {
+            return false;
+        }
     }
 
     virtual Value getProperty(const Value& name) const {
-        return obj_.getProperty(name);
+        if (obj_) {
+            return obj_->getProperty(name);
+        } else {
+            return UNDEFINED;
+        }
     }
 
     virtual Value setProperty(const Value& name, const Value& val) {
-        return obj_.setProperty(name, val);
+        if (!obj_) {
+            obj_ = libj::JsObject::create();
+        }
+        return obj_->setProperty(name, val);
     }
 
     virtual Value deleteProperty(const Value& name) {
-        return obj_.deleteProperty(name);
+        if (obj_) {
+            return obj_->deleteProperty(name);
+        } else {
+            return UNDEFINED;
+        }
     }
 
  private:
-    detail::JsObject<libj::JsObject> obj_;
+    libj::JsObject::Ptr obj_;
 };
 
 }  // namespace detail
