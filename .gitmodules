@@ -28,3 +28,6 @@
 [submodule "deps/convertutf"]
 	path = deps/convertutf
 	url = https://github.com/plenluno/convertutf.git
+[submodule "deps/bdwgc"]
+	path = deps/bdwgc
+	url = https://github.com/plenluno/bdwgc.git
