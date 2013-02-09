@@ -1,3 +1,4 @@
+*:deps/boost-svn/boost/cstdint.hpp
 *:deps/boost-svn/boost/type_traits/is_array.hpp
 *:deps/boost-svn/boost/type_traits/is_class.hpp
 *:deps/boost-svn/boost/type_traits/detail/cv_traits_impl.hpp
