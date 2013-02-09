@@ -417,21 +417,27 @@ add_library(ndtoa STATIC
 
 ## bdw-gc
 if(LIBJ_BUILD_BDWGC)
-    add_custom_command(
-        TARGET json PRE_BUILD
-        COMMAND rsync -av
-            ${CMAKE_CURRENT_LIST_DIR}/deps/bdwgc
-            ${CMAKE_BINARY_DIR}/deps/
-        COMMAND rsync -av
-            ${CMAKE_CURRENT_LIST_DIR}/deps/libatomic_ops
-            ${CMAKE_BINARY_DIR}/deps/bdwgc/
-        COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./autogen.sh
-        COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./configure
-        COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && make
-        COMMAND ln -sf
-            ${CMAKE_BINARY_DIR}/deps/bdwgc/.libs/libgc.a
-            ${CMAKE_BINARY_DIR}/libgc.a
-    )
+    if(LIBJ_USE_THREAD)
+        add_custom_command(
+            TARGET json PRE_BUILD
+            COMMAND rsync -av
+                ${CMAKE_CURRENT_LIST_DIR}/deps/bdwgc
+                ${CMAKE_BINARY_DIR}/deps/
+            COMMAND rsync -av
+                ${CMAKE_CURRENT_LIST_DIR}/deps/libatomic_ops
+                ${CMAKE_BINARY_DIR}/deps/bdwgc/
+            COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./autogen.sh
+            COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./configure
+            COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && make
+            COMMAND ln -sf
+                ${CMAKE_BINARY_DIR}/deps/bdwgc/.libs/libgc.a
+                ${CMAKE_BINARY_DIR}/libgc.a
+        )
+    else(LIBJ_USE_THREAD)
+        add_subdirectory(
+            deps/bdwgc
+        )
+    endif(LIBJ_USE_THREAD)
 endif(LIBJ_BUILD_BDWGC)
 
 ## libj
