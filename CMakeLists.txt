@@ -38,10 +38,12 @@ message(STATUS "LIBJ_BUILD_TEST=${LIBJ_BUILD_TEST}")
 
 # variables --------------------------------------------------------------------
 
-# release
-set(CMAKE_CXX_FLAGS_RELEASE
-    "-Wno-unused-parameter"
-)
+## release flags
+if(UNIX)
+    set(CMAKE_CXX_FLAGS_RELEASE
+        "-Wno-unused-parameter"
+    )
+endif(UNIX)
 
 ## libj-include
 set(libj-include
