@@ -171,12 +171,32 @@ static inline iconv_t iconvOpen(UnicodeEncoding inEnc, const char* outEnc) {
     return cd;
 }
 
+static inline iconv_t iconvOpenFromUtf16(UnicodeEncoding outEnc) {
+    const char* inEnc;
+    if (isBigEndian()) {
+        inEnc = "UTF-16BE";
+    } else {
+        inEnc = "UTF-16LE";
+    }
+    return iconvOpen(inEnc, outEnc);
+}
+
 static inline iconv_t iconvOpenFromUtf32(UnicodeEncoding outEnc) {
     const char* inEnc;
     if (isBigEndian()) {
         inEnc = "UTF-32BE";
     } else {
         inEnc = "UTF-32LE";
+    }
+    return iconvOpen(inEnc, outEnc);
+}
+
+static inline iconv_t iconvOpenToUtf16(UnicodeEncoding inEnc) {
+    const char* outEnc;
+    if (isBigEndian()) {
+        outEnc = "UTF-16BE";
+    } else {
+        outEnc = "UTF-16LE";
     }
     return iconvOpen(inEnc, outEnc);
 }
@@ -286,6 +306,46 @@ std::string fromUtf8(const std::string& str, UnicodeEncoding enc) {
     return s;
 }
 
+std::string fromUtf16(const std::u16string& str, UnicodeEncoding enc) {
+    assert(sizeof(char) == 1 && sizeof(char16_t) == 2);
+
+    std::string s;
+    iconv_t cd = iconvOpenFromUtf16(enc);
+    char* inBuf = reinterpret_cast<char*>(const_cast<char16_t*>(str.c_str()));
+    size_t inLen = str.length();
+    for (size_t i = 0; i < inLen;) {
+        size_t byteLen;
+        if (isBigEndian()) {
+            byteLen = byteLengthAt(inBuf, UTF16BE);
+        } else {
+            byteLen = byteLengthAt(inBuf, UTF16LE);
+        }
+        assert(byteLen);
+        size_t inBytesLeft = byteLen;
+        char c8[8];
+        char* outBuf = c8;
+        size_t outBytesLeft = 8;
+        ICONV(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft);
+        assert(outBytesLeft < 8);
+        size_t outLen = 8 - outBytesLeft;
+        for (size_t j = 0; j < outLen; j++) {
+            s += c8[j];
+        }
+        i += byteLen >> 1;
+    }
+    if (enc == UTF16BE || enc == UTF16LE) {
+        for (int i = 0; i < 2; i++) {
+            s += static_cast<char>(0);
+        }
+    } else if (enc == UTF32BE || enc == UTF32LE) {
+        for (int i = 0; i < 4; i++) {
+            s += static_cast<char>(0);
+        }
+    }
+    iconvClose(cd);
+    return s;
+}
+
 std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc) {
     assert(sizeof(char) == 1 && sizeof(char32_t) == 4);
 
@@ -355,6 +415,42 @@ std::string toUtf8(
 
     if (n) *n = i;
     return s8;
+}
+
+std::u16string toUtf16(const void* data, UnicodeEncoding enc, size_t max) {
+    assert(sizeof(char) == 1 && sizeof(char16_t) == 2);
+
+    if (!data) return std::u16string();
+
+    std::u16string s16;
+    iconv_t cd = iconvOpenToUtf16(enc);
+    char* inBuf = static_cast<char*>(const_cast<void*>(data));
+    for (size_t i = 0; i < max; i++) {
+        size_t inBytesLeft = byteLengthAt(inBuf, enc);
+        if (!inBytesLeft) break;
+
+        union {
+            char16_t c16[2];
+            char c8[4];
+        } u;
+        char* outBuf = u.c8;
+        size_t outBytesLeft = 4;
+        ICONV(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft);
+        if (outBytesLeft == 4) {
+            break;
+        } else if (outBytesLeft == 2) {
+            if (u.c16[0]) {
+                s16 += u.c16[0];
+            } else {
+                break;
+            }
+        } else {
+            s16 += u.c16[0];
+            s16 += u.c16[1];
+        }
+    }
+    iconvClose(cd);
+    return s16;
 }
 
 std::u32string toUtf32(const void* data, UnicodeEncoding enc, size_t max) {
@@ -598,7 +694,11 @@ static std::u16string utf8ToUtf16(
         targetEnd,
         strictConversion);
 
-    std::u16string u16s(out, targetStart - out);
+    num = targetStart - out;
+#ifdef LIBJ_USE_UTF16
+    num = num < max ? num : max;
+#endif
+    std::u16string u16s(out, num);
     delete[] out;
     return u16s;
 }
@@ -673,6 +773,30 @@ static std::string utf16ToUtf8(
     delete u16s;
     delete[] out;
     return u8s;
+}
+
+static std::u16string utf16ToUtf16(
+    const char16_t* data,
+    UnicodeEncoding enc,
+    size_t max) {
+    assert(data);
+
+    if (!max) return std::u16string();
+
+    std::u16string u16s;
+    size_t n = 0;
+    const char16_t* pos = data;
+    bool swap = needsSwap(enc);
+    for (; n < max; n++, pos++) {
+        char16_t c16 = *pos;
+        if (c16) {
+            if (swap) c16 = swapChar16(c16);
+            u16s += c16;
+        } else {
+            break;
+        }
+    }
+    return u16s;
 }
 
 static std::u32string utf16ToUtf32(
@@ -760,6 +884,54 @@ static std::string utf32ToUtf8(
     return u8s;
 }
 
+static std::u16string utf32ToUtf16(
+    const char32_t* data,
+    UnicodeEncoding enc,
+    size_t max,
+    size_t* n = NULL) {
+    assert(data && sizeof(char16_t) == 2 && sizeof(char32_t) == 4);
+
+    const char32_t* end;
+    std::u32string* u32s;
+    size_t num = findUtf32End(data, enc, max, &end, &u32s);
+    if (n) *n = num;
+    if (!num) {
+        delete u32s;
+        return std::u16string();
+    }
+
+    const char32_t* sourceStart;
+    const char32_t* sourceEnd;
+    if (u32s) {
+        sourceStart = u32s->c_str();
+        sourceEnd = sourceStart + u32s->length();
+    } else {
+        sourceStart = data;
+        sourceEnd = end;
+    }
+
+    num *= 2;
+    char16_t* out = new char16_t[num];
+    char16_t* targetStart = out;
+    char16_t* targetEnd = out + num;
+
+    ConvertUTF32toUTF16(
+        &sourceStart,
+        sourceEnd,
+        &targetStart,
+        targetEnd,
+        strictConversion);
+
+    num = targetStart - out;
+#ifdef LIBJ_USE_UTF16
+    num = num < max ? num : max;
+#endif
+    std::u16string u16s(reinterpret_cast<const char16_t*>(out), num);
+    delete u32s;
+    delete[] out;
+    return u16s;
+}
+
 static std::u32string utf32ToUtf32(
     const char32_t* data,
     UnicodeEncoding enc,
@@ -807,28 +979,11 @@ static std::string utf32ToUtf8(const std::u32string& str) {
 }
 
 std::u16string utf32ToUtf16(const std::u32string& str) {
-    assert(sizeof(char16_t) == 2 && sizeof(char32_t) == 4);
-
-    if (!str.length()) return std::u16string();
-
-    const char32_t* sourceStart = str.c_str();
-    const char32_t* sourceEnd = sourceStart + str.length();
-
-    size_t n = str.length() * 2;
-    char16_t* out = new char16_t[n];
-    char16_t* targetStart = out;
-    char16_t* targetEnd = out + n;
-
-    ConvertUTF32toUTF16(
-        &sourceStart,
-        sourceEnd,
-        &targetStart,
-        targetEnd,
-        strictConversion);
-
-    std::u16string u16s(reinterpret_cast<char16_t*>(out), targetStart - out);
-    delete[] out;
-    return u16s;
+    if (isBigEndian()) {
+        return utf32ToUtf16(str.c_str(), UTF32BE, -1);
+    } else {
+        return utf32ToUtf16(str.c_str(), UTF32LE, -1);
+    }
 }
 
 static std::string toStdString(
@@ -965,6 +1120,21 @@ std::string fromUtf8(const std::string& str, UnicodeEncoding enc) {
     }
 }
 
+std::string fromUtf16(const std::u16string& str, UnicodeEncoding enc) {
+    const unsigned char* cstr =
+        reinterpret_cast<const unsigned char*>(str.c_str());
+    switch (enc) {
+    case UTF8:
+        return utf16ToUtf8(str);
+    case UTF16BE:
+    case UTF16LE:
+        return toStdString(str, enc);
+    case UTF32BE:
+    case UTF32LE:
+        return toStdString(utf16ToUtf32(str), enc);
+    }
+}
+
 std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc) {
     switch (enc) {
     case UTF8:
@@ -989,6 +1159,20 @@ std::string toUtf8(
     case UTF32BE:
     case UTF32LE:
         return utf32ToUtf8(static_cast<const char32_t*>(data), enc, max, n);
+    }
+}
+
+std::u16string toUtf16(
+    const void* data, UnicodeEncoding enc, size_t max) {
+    switch (enc) {
+    case UTF8:
+        return utf8ToUtf16(static_cast<const unsigned char*>(data), max);
+    case UTF16BE:
+    case UTF16LE:
+        return utf16ToUtf16(static_cast<const char16_t*>(data), enc, max);
+    case UTF32BE:
+    case UTF32LE:
+        return utf32ToUtf16(static_cast<const char32_t*>(data), enc, max);
     }
 }
 

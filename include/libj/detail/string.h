@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_STRING_H_
 #define LIBJ_DETAIL_STRING_H_
@@ -8,6 +8,7 @@
 #include <libj/exception.h>
 #include <libj/map.h>
 #include <libj/string.h>
+#include <libj/typed_iterator.h>
 #include <libj/glue/cvtutf.h>
 #include <libj/detail/mutex.h>
 
@@ -37,7 +38,77 @@ glue::UnicodeEncoding convertStrEncoding(libj::String::Encoding enc) {
 }
 
 class String : public libj::String {
+    typedef TypedIterator<Char> Iterator;
+
+#ifdef LIBJ_USE_UTF16
+
+    typedef std::u16string ustring;
+
+ public:
+    String(const std::u16string& s16)
+        : str_(s16)
+        , interned_(false) {}
+
+    String(const std::u32string& s32)
+        : str_(glue::utf32ToUtf16(s32))
+        , interned_(false) {}
+
+    String(
+        const void* data,
+        Encoding enc,
+        Size max)
+        : str_(glue::toUtf16(data, convertStrEncoding(enc), max))
+        , interned_(false) {}
+
+    virtual std::u16string toStdU16String() const {
+        return str_;
+    }
+
+    virtual std::u32string toStdU32String() const {
+        return glue::utf16ToUtf32(str_);
+    }
+
+    virtual std::string toStdString(Encoding enc) const {
+        return glue::fromUtf16(str_, convertStrEncoding(enc));
+    }
+
+#endif  // LIBJ_USE_UTF16
+
 #ifdef LIBJ_USE_UTF32
+
+    typedef std::u32string ustring;
+
+ public:
+    String(const std::u16string& s16)
+        : str_(glue::utf16ToUtf32(s16))
+        , interned_(false) {}
+
+    String(const std::u32string& s32)
+        : str_(s32)
+        , interned_(false) {}
+
+    String(
+        const void* data,
+        Encoding enc,
+        Size max)
+        : str_(glue::toUtf32(data, convertStrEncoding(enc), max))
+        , interned_(false) {}
+
+    virtual std::u16string toStdU16String() const {
+        return glue::utf32ToUtf16(str_);
+    }
+
+    virtual std::u32string toStdU32String() const {
+        return str_;
+    }
+
+    virtual std::string toStdString(Encoding enc) const {
+        return glue::fromUtf32(str_, convertStrEncoding(enc));
+    }
+
+#endif  // LIBJ_USE_UTF32
+
+#if defined(LIBJ_USE_UTF16) || defined(LIBJ_USE_UTF32)
 
  public:
     String()
@@ -48,27 +119,12 @@ class String : public libj::String {
         : str_(n, c)
         , interned_(false) {}
 
-    String(const std::u16string& s16)
-        : str_(glue::utf16ToUtf32(s16))
-        , interned_(false) {}
-
-    String(const std::u32string& s32)
-        : str_(s32)
-        , interned_(false) {}
-
     String(const String& other)
         : str_(other.str_)
         , interned_(false) {}
 
     String(const String& other, Size pos, Size count = NO_POS)
         : str_(other.str_, pos, count)
-        , interned_(false) {}
-
-    String(
-        const void* data,
-        Encoding enc,
-        Size max)
-        : str_(glue::toUtf32(data, convertStrEncoding(enc), max))
         , interned_(false) {}
 
     virtual Size length() const {
@@ -145,6 +201,8 @@ class String : public libj::String {
     }
 
     virtual Boolean startsWith(CPtr other, Size from) const {
+        if (!other) return false;
+
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < from + len2) {
@@ -160,6 +218,8 @@ class String : public libj::String {
     }
 
     virtual Boolean endsWith(CPtr other) const {
+        if (!other) return false;
+
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < len2) {
@@ -185,8 +245,10 @@ class String : public libj::String {
         return NO_POS;
     }
 
+    // TODO(plenluno): make it more efficient
     virtual Size indexOf(CPtr other, Size from) const {
-        // TODO(plenluno): make it more efficient
+        if (!other) return NO_POS;
+
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < from + len2) {
@@ -204,8 +266,10 @@ class String : public libj::String {
 
     virtual Size lastIndexOf(Char c, Size from) const {
         Size len = length();
-        if (len == 0)
+        if (len == 0) {
             return NO_POS;
+        }
+
         from = from < len ? from : len - 1;
         for (Size i = from; ; i--) {
             if (charAt(i) == c) {
@@ -217,8 +281,10 @@ class String : public libj::String {
         return NO_POS;
     }
 
+    // TODO(plenluno): make it more efficient
     virtual Size lastIndexOf(CPtr other, Size from) const {
-        // TODO(plenluno): make it more efficient
+        if (!other) return NO_POS;
+
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < len2) {
@@ -267,22 +333,10 @@ class String : public libj::String {
         return CPtr(new String(*this));
     }
 
-    virtual std::u16string toStdU16String() const {
-        return glue::utf32ToUtf16(str_);
-    }
-
-    virtual std::u32string toStdU32String() const {
-        return str_;
-    }
-
-    virtual std::string toStdString(Encoding enc) const {
-        return glue::fromUtf32(str_, convertStrEncoding(enc));
-    }
-
  private:
-    class CharIterator : public TypedIterator<Char> {
+    class CharIterator : public Iterator {
         friend class String;
-        typedef std::u32string::const_iterator CItr;
+        typedef ustring::const_iterator CItr;
 
      public:
         virtual Boolean hasNext() const {
@@ -308,15 +362,21 @@ class String : public libj::String {
         CItr pos_;
         CItr end_;
 
-        CharIterator(const std::u32string& str)
+        CharIterator(const ustring& str)
             : pos_(str.begin())
             , end_(str.end()) {}
+
+        CharIterator(const CharIterator* itr)
+            : pos_(itr->pos_)
+            , end_(itr->end_) {}
     };
 
  private:
-    std::u32string str_;
+    ustring str_;
 
-#else  // LIBJ_USE_UTF32
+#endif  // defined(LIBJ_USE_UTF16) || defined(LIBJ_USE_UTF32)
+
+#ifdef LIBJ_USE_UTF8
 
  public:
     String()
@@ -398,12 +458,13 @@ class String : public libj::String {
             return result;
         }
 
-        CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
+        CPtr thatStr = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
+        const String* other = static_cast<const String*>(&(*thatStr));
         Size len1 = this->length();
         Size len2 = other->length();
         Size len = len1 < len2 ? len1 : len2;
-        TypedIterator<Char>::Ptr itr1 = this->iterator();
-        TypedIterator<Char>::Ptr itr2 = other->iterator();
+        Iterator::Ptr itr1 = this->iterator();
+        Iterator::Ptr itr2 = other->iterator();
         for (Size i = 0; i < len; i++) {
             assert(itr1->hasNext() && itr2->hasNext());
             Char c1 = itr1->next();
@@ -422,7 +483,8 @@ class String : public libj::String {
             return !result;
         }
 
-        CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
+        CPtr thatStr = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
+        const String* other = static_cast<const String*>(&(*thatStr));
         if (this->isInterned() && other->isInterned()) {
             return false;
         } else {
@@ -430,8 +492,8 @@ class String : public libj::String {
             if (other->length() != len) {
                 return false;
             } else {
-                TypedIterator<Char>::Ptr itr1 = this->iterator();
-                TypedIterator<Char>::Ptr itr2 = other->iterator();
+                Iterator::Ptr itr1 = this->iterator();
+                Iterator::Ptr itr2 = other->iterator();
                 for (Size i = 0; i < len; i++) {
                     assert(itr1->hasNext() && itr2->hasNext());
                     Char c1 = itr1->next();
@@ -446,6 +508,8 @@ class String : public libj::String {
     }
 
     virtual Boolean startsWith(CPtr other, Size from) const {
+        if (!other) return false;
+
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < from + len2) {
@@ -466,6 +530,8 @@ class String : public libj::String {
     }
 
     virtual Boolean endsWith(CPtr other) const {
+        if (!other) return false;
+
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < len2) {
@@ -489,7 +555,7 @@ class String : public libj::String {
         if (from >= length_) return NO_POS;
 
         Size i = 0;
-        TypedIterator<Char>::Ptr itr = iterator();
+        Iterator::Ptr itr = iterator();
         for (; i < from; i++) {
             itr->next();
         }
@@ -503,8 +569,10 @@ class String : public libj::String {
         return NO_POS;
     }
 
+    // TODO(plenluno): make it more efficient
     virtual Size indexOf(CPtr other, Size from) const {
-        // TODO(plenluno): make it more efficient
+        if (!other) return NO_POS;
+
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < from + len2) {
@@ -551,8 +619,10 @@ class String : public libj::String {
         return NO_POS;
     }
 
+    // TODO(plenluno): make it more efficient
     virtual Size lastIndexOf(CPtr other, Size from) const {
-        // TODO(plenluno): make it more efficient
+        if (!other) return NO_POS;
+
         Size len1 = this->length();
         Size len2 = other->length();
         if (len1 < len2) {
@@ -648,7 +718,7 @@ class String : public libj::String {
     }
 
  private:
-    class CharIterator : public TypedIterator<Char> {
+    class CharIterator : public Iterator {
         friend class String;
 
      public:
@@ -678,6 +748,10 @@ class String : public libj::String {
         CharIterator(const std::string& str)
             : pos_(str.c_str())
             , end_(pos_ + str.length()) {}
+
+        CharIterator(const CharIterator* itr)
+            : pos_(itr->pos_)
+            , end_(itr->end_) {}
     };
 
     static const char* advance(const char* utf8, Size n) {
@@ -708,7 +782,9 @@ class String : public libj::String {
     std::string str_;
     Size length_;
 
-#endif  // LIBJ_USE_UTF32
+    #define UNSUPPORTED_OPERATIONS
+
+#endif  // LIBJ_USE_UTF8
 
  public:
     virtual CPtr substring(Size from) const {
@@ -734,10 +810,6 @@ class String : public libj::String {
 
     virtual Boolean isEmpty() const {
         return length() == 0;
-    }
-
-    virtual TypedIterator<Char>::Ptr iterator() const {
-        return TypedIterator<Char>::Ptr(new CharIterator(str_));
     }
 
  public:
@@ -781,6 +853,60 @@ class String : public libj::String {
 
  private:
     Boolean interned_;
+
+#ifdef UNSUPPORTED_OPERATIONS
+
+ public:
+    virtual Iterator::Ptr iterator() const {
+        return Iterator::Ptr(new CharIterator(str_));
+    }
+
+    virtual CPtr substring(Iterator::CPtr from) const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return String::null();
+    }
+
+    virtual CPtr substring(Iterator::CPtr from, Iterator::CPtr to) const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return String::null();
+    }
+
+    virtual Iterator::Ptr findFirstOf(Char c, Iterator::CPtr from) const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return Iterator::null();
+    }
+
+    virtual Iterator::Ptr findFirstOf(CPtr srt, Iterator::CPtr from) const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return Iterator::null();
+    }
+
+    virtual Iterator::Ptr findLastOf(Char c, Iterator::CPtr from) const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return Iterator::null();
+    }
+
+    virtual Iterator::Ptr findLastOf(CPtr srt, Iterator::CPtr from) const {
+        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        return Iterator::null();
+    }
+
+    virtual Boolean startsWith(CPtr other, Iterator::CPtr from) const {
+        if (!other || !from) return false;
+
+        const String* that = static_cast<const String*>(&(*other));
+        Iterator::Ptr itr1(new CharIterator(
+            static_cast<const CharIterator*>(&(*from))));
+        Iterator::Ptr itr2 = that->iterator();
+        while (itr2->hasNext()) {
+            if (!itr1->hasNext() || itr1->next() != itr2->next()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+#endif  // UNSUPPORTED_OPERATIONS
 };
 
 }  // namespace detail

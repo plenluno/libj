@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPEDEF_H_
 #define LIBJ_TYPEDEF_H_
@@ -38,9 +38,14 @@ typedef float Float;
 typedef double Double;
 typedef char16_t Char16;
 typedef char32_t Char32;
-typedef Char32 Char;
 typedef size_t Size;
 typedef uintptr_t TypeId;
+
+#ifdef LIBJ_USE_UTF32
+    typedef Char32 Char;
+#else
+    typedef Char16 Char;
+#endif
 
 }  // namespace libj
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_STRING_BUFFER_H_
 #define LIBJ_DETAIL_STRING_BUFFER_H_
@@ -26,7 +26,11 @@ class StringBuffer : public I {
     virtual Boolean append(const Value& val) {
         String::CPtr s = String::valueOf(val);
         if (s) {
+#ifdef LIBJ_USE_UTF32
             buf_.append(s->toStdU32String());
+#else
+            buf_.append(s->toStdU16String());
+#endif
             return true;
         } else {
             return false;
@@ -61,7 +65,11 @@ class StringBuffer : public I {
     }
 
  private:
+#ifdef LIBJ_USE_UTF32
     std::u32string buf_;
+#else
+    std::u16string buf_;
+#endif
 };
 
 }  // namespace detail

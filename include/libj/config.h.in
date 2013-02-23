@@ -10,7 +10,7 @@
 #cmakedefine LIBJ_USE_JSCRE
 #cmakedefine LIBJ_USE_JSONCPP
 #cmakedefine LIBJ_USE_THREAD
-#cmakedefine LIBJ_USE_UTF8
+#cmakedefine LIBJ_USE_UTF32
 
 #ifdef LIBJ_USE_BDWGC
     #include <gc_cpp.h>
@@ -18,8 +18,8 @@
     #define LIBJ_USE_SP
 #endif
 
-#ifndef LIBJ_USE_UTF8
-    #define LIBJ_USE_UTF32
+#ifndef LIBJ_USE_UTF32
+    #define LIBJ_USE_UTF16
 #endif
 
 #ifdef _WIN32

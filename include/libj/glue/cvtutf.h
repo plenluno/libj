@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_GLUE_CVTUTF_H_
 #define LIBJ_GLUE_CVTUTF_H_
@@ -30,6 +30,10 @@ std::string fromUtf8(
     const std::string& str,
     UnicodeEncoding enc);
 
+std::string fromUtf16(
+    const std::u16string& str,
+    UnicodeEncoding enc);
+
 std::string fromUtf32(
     const std::u32string& str,
     UnicodeEncoding enc);
@@ -39,6 +43,11 @@ std::string toUtf8(
     UnicodeEncoding enc,
     size_t max,
     size_t* n = NULL);
+
+std::u16string toUtf16(
+    const void* data,
+    UnicodeEncoding enc,
+    size_t max);
 
 std::u32string toUtf32(
     const void* data,

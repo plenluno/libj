@@ -4,6 +4,7 @@
 #define LIBJ_DETAIL_BLOCKING_QUEUE_H_
 
 #include <libj/exception.h>
+#include <libj/typed_iterator.h>
 #include <libj/detail/condition.h>
 #include <libj/detail/scoped_lock.h>
 

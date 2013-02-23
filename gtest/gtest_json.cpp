@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <float.h>
@@ -117,7 +117,14 @@ TEST(GTestJson, TestParseString) {
     ASSERT_TRUE(json::parse(s).equals(String::create("&")));
 
     String::CPtr s1 = String::create("\"\\ud84c\\udfd0\"");
+#ifdef LIBJ_USE_UTF32
     String::CPtr s2 = String::create(0x233d0);
+#else
+    std::u16string s16;
+    s16 += static_cast<char16_t>(0xd84c);
+    s16 += static_cast<char16_t>(0xdfd0);
+    String::CPtr s2 = String::create(s16);
+#endif
     ASSERT_TRUE(json::parse(s1).equals(s2));
 
     std::u32string s32;
