@@ -3,9 +3,12 @@
 #ifndef LIBJ_PLATFORM_WINDOWS_H_
 #define LIBJ_PLATFORM_WINDOWS_H_
 
+#include <direct.h>
 #include <Windows.h>
 
 #define __func__ __FUNCTION__
+
+#define getcwd _getcwd
 
 #define snprintf _snprintf
 
