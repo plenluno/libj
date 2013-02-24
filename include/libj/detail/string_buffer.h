@@ -6,6 +6,8 @@
 #include <libj/this.h>
 #include <libj/string_buffer.h>
 
+#include <assert.h>
+
 namespace libj {
 namespace detail {
 
