@@ -19,26 +19,26 @@ namespace console {
 
 static Level logLevel = DEBUG;
 
-static Boolean isPrintable(Level level) {
+static inline Boolean isPrintable(Level level) {
     return level != OFF && logLevel <= level;
 }
 
 #ifdef LIBJ_USE_THREAD
     static detail::Mutex mutex;
 
-    static Boolean lock() {
+    static inline Boolean lock() {
         return mutex.lock();
     }
 
-    static Boolean unlock() {
+    static inline Boolean unlock() {
         return mutex.unlock();
     }
 #else
-    static Boolean lock() {
+    static inline Boolean lock() {
         return true;
     }
 
-    static Boolean unlock() {
+    static inline Boolean unlock() {
         return true;
     }
 #endif  // LIBJ_USE_THREAD
@@ -60,7 +60,7 @@ static Color backWarning = DEFAULT;
 static Color foreError   = DEFAULT;
 static Color backError   = DEFAULT;
 
-static const char* fore(Color color) {
+static inline const char* fore(Color color) {
     switch (color) {
     case DEFAULT:
         return "";
@@ -86,7 +86,7 @@ static const char* fore(Color color) {
     }
 }
 
-static const char* back(Color color) {
+static inline const char* back(Color color) {
     switch (color) {
     case DEFAULT:
         return "";
@@ -112,7 +112,7 @@ static const char* back(Color color) {
     }
 }
 
-static const char* fore(Level level) {
+static inline const char* fore(Level level) {
     Color color;
     switch (level) {
     case DEBUG:
@@ -137,7 +137,7 @@ static const char* fore(Level level) {
     return fore(color);
 }
 
-static const char* back(Level level) {
+static inline const char* back(Level level) {
     Color color;
     switch (level) {
     case DEBUG:
@@ -160,6 +160,40 @@ static const char* back(Level level) {
         break;
     }
     return back(color);
+}
+
+static inline Color getForegroundColor(Level level) {
+    switch (level) {
+    case DEBUG:
+        return foreDebug;
+    case INFO:
+        return foreInfo;
+    case NORMAL:
+        return foreNormal;
+    case WARNING:
+        return foreWarning;
+    case ERROR:
+        return foreError;
+    case OFF:
+        return DEFAULT;
+    }
+}
+
+static inline Color getBackgroundColor(Level level) {
+    switch (level) {
+    case DEBUG:
+        return backDebug;
+    case INFO:
+        return backInfo;
+    case NORMAL:
+        return backNormal;
+    case WARNING:
+        return backWarning;
+    case ERROR:
+        return backError;
+    case OFF:
+        return DEFAULT;
+    }
 }
 
 void setForegroundColor(Level level, Color color) {
@@ -216,8 +250,8 @@ void setBackgroundColor(Level level, Color color) {
     fprintf(OUT, fore(LEVEL)); \
     fprintf(OUT, back(LEVEL)); \
     vfprintf(OUT, FMT, argp); \
-    fprintf(OUT, "\033[0m"); \
-    fprintf(OUT, "\033[0m");
+    if (getForegroundColor(LEVEL) != DEFAULT) fprintf(OUT, "\033[0m"); \
+    if (getBackgroundColor(LEVEL) != DEFAULT) fprintf(OUT, "\033[0m");
 
 void printf(Level level, const char* fmt, ...) {
     if (!isPrintable(level)) return;
