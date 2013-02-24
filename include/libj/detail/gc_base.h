@@ -18,12 +18,12 @@ class GCBase : public gc_cleanup {
 
 #else  // LIBJ_USE_BDWGC
 
-#ifdef LIBJ_USE_CXX11
-    #include <memory>
-    #define LIBJ_ENABLE_THIS(T) std::enable_shared_from_this<T>
-#else
+#ifndef LIBJ_USE_CXX11
     #include <boost/enable_shared_from_this.hpp>
     #define LIBJ_ENABLE_THIS(T) boost::enable_shared_from_this<T>
+#else
+    #include <memory>
+    #define LIBJ_ENABLE_THIS(T) std::enable_shared_from_this<T>
 #endif
 
 namespace libj {
