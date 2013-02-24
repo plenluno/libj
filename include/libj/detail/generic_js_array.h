@@ -35,7 +35,7 @@ class GenericJsArray : public GenericArrayList<T, I> {
             if (first) {
                 first = false;
             } else {
-                sb->appendChar(',');
+                sb->append(',');
             }
             if (!v.isNull() && !v.isUndefined())
                 sb->append(String::valueOf(v));
