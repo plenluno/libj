@@ -7,8 +7,7 @@
 #include <libj/thread.h>
 
 #ifdef LIBJ_PF_WINDOWS
-    #include <Windows.h>
-    #define usleep(useconds) Sleep(useconds)
+    #include <libj/platform/windows.h>
 #else
     #include <unistd.h>
 #endif

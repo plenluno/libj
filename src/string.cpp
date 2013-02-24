@@ -6,7 +6,7 @@
 #include <libj/detail/string.h>
 
 #ifdef LIBJ_PF_WINDOWS
-    #define snprintf _snprintf
+    #include <libj/platform/windows.h>
 #endif
 
 namespace libj {
