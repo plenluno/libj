@@ -3,13 +3,15 @@
 #ifndef LIBJ_DETAIL_STRING_BUFFER_H_
 #define LIBJ_DETAIL_STRING_BUFFER_H_
 
-#include <libj/typedef.h>
+#include <libj/this.h>
+#include <libj/string_buffer.h>
+
+#include <assert.h>
 
 namespace libj {
 namespace detail {
 
-template<typename I>
-class StringBuffer : public I {
+class StringBuffer : public libj::StringBuffer {
  public:
     virtual Size length() const {
         return buf_.length();
@@ -23,7 +25,7 @@ class StringBuffer : public I {
         }
     }
 
-    virtual Boolean append(const Value& val) {
+    virtual Ptr append(const Value& val) {
         String::CPtr s = String::valueOf(val);
         if (s) {
 #ifdef LIBJ_USE_UTF32
@@ -31,24 +33,25 @@ class StringBuffer : public I {
 #else
             buf_.append(s->toStdU16String());
 #endif
-            return true;
+            return LIBJ_THIS_PTR(libj::StringBuffer);
         } else {
-            return false;
+            assert(false);
+            return appendCStr("null");
         }
     }
 
-    virtual Boolean appendChar(Char c) {
+    virtual Ptr appendChar(Char c) {
         buf_.push_back(c);
-        return true;
+        return LIBJ_THIS_PTR(libj::StringBuffer);
     }
 
-    virtual Boolean appendCStr(const char* cstr) {
-        if (!cstr) return false;
+    virtual Ptr appendCStr(const char* cstr) {
+        if (!cstr) return appendCStr("null");
 
         while (Char c = static_cast<Char>(*cstr++)) {
-            appendChar(c);
+            buf_.push_back(c);
         }
-        return true;
+        return LIBJ_THIS_PTR(libj::StringBuffer);
     }
 
     virtual Boolean setCharAt(Size index, Char c) {
