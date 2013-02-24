@@ -5,8 +5,10 @@
 
 #include <Windows.h>
 
-#define snprintf _snprintf
-#define usleep(useconds) Sleep(useconds)
 #define __func__ __FUNCTION__
+
+#define snprintf _snprintf
+
+#define usleep(useconds) Sleep(useconds/1000)
 
 #endif  // LIBJ_PLATFORM_WINDOWS_H_
