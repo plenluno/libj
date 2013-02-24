@@ -95,17 +95,17 @@ TEST(GTestStringBuffer, TestAppendManyTimes) {
 
 TEST(GTestStringBuffer, TestAppendChar) {
     StringBuffer::Ptr sb = StringBuffer::create();
-    ASSERT_EQ(sb, sb->append('a'));
-    ASSERT_EQ(sb, sb->append('1'));
+    ASSERT_TRUE(sb->appendChar('a'));
+    ASSERT_TRUE(sb->appendChar('1'));
     ASSERT_TRUE(sb->toString()->equals(String::create("a1")));
 }
 
 TEST(GTestStringBuffer, TestAppendCStr) {
     StringBuffer::Ptr sb = StringBuffer::create();
-    ASSERT_EQ(sb, sb->append("abc"));
-    ASSERT_EQ(sb, sb->append(static_cast<const char*>(NULL)));
-    ASSERT_EQ(sb, sb->append("123"));
-    ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
+    ASSERT_TRUE(sb->appendCStr("abc"));
+    ASSERT_FALSE(sb->appendCStr(NULL));
+    ASSERT_TRUE(sb->appendCStr("123"));
+    ASSERT_TRUE(sb->toString()->equals(String::create("abc123")));
 }
 
 #ifdef LIBJ_USE_SP

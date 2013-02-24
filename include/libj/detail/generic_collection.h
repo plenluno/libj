@@ -111,7 +111,7 @@ class GenericCollection : public I {
 
     virtual String::CPtr toString() const {
         libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
-        sb->append('[');
+        sb->appendChar('[');
         Boolean first = true;
         Iterator::Ptr itr = iterator();
         while (itr->hasNext()) {
@@ -119,11 +119,11 @@ class GenericCollection : public I {
             if (first) {
                 first = false;
             } else {
-                sb->append(", ");
+                sb->appendCStr(", ");
             }
             sb->append(String::valueOf(v));
         }
-        sb->append(']');
+        sb->appendChar(']');
         return sb->toString();
     }
 };

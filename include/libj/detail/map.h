@@ -78,7 +78,7 @@ class Map : public I {
 
     virtual String::CPtr toString() const {
         libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
-        sb->append('{');
+        sb->appendChar('{');
         Boolean first = true;
         Set::CPtr keys = keySet();
         Iterator::Ptr itr = keys->iterator();
@@ -87,13 +87,13 @@ class Map : public I {
             if (first) {
                 first = false;
             } else {
-                sb->append(", ");
+                sb->appendCStr(", ");
             }
             sb->append(String::valueOf(v));
-            sb->append('=');
+            sb->appendChar('=');
             sb->append(String::valueOf(get(v)));
         }
-        sb->append('}');
+        sb->appendChar('}');
         return sb->toString();
     }
 

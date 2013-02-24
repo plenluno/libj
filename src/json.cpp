@@ -17,36 +17,36 @@ Value parse(String::CPtr str) {
 static String::CPtr stringToJson(const Value& val) {
     String::CPtr s = toCPtr<String>(val);
     StringBuffer::Ptr result = StringBuffer::create();
-    result->append('"');
+    result->appendChar('"');
     for (Size i = 0; i < s->length(); i++) {
         Char c = s->charAt(i);
         switch (c) {
         case '\b':
-            result->append("\\b");
+            result->appendCStr("\\b");
             break;
         case '\t':
-            result->append("\\t");
+            result->appendCStr("\\t");
             break;
         case '\n':
-            result->append("\\n");
+            result->appendCStr("\\n");
             break;
         case '\r':
-            result->append("\\r");
+            result->appendCStr("\\r");
             break;
         case '"':
-            result->append("\\\"");
+            result->appendCStr("\\\"");
             break;
         case '\\':
-            result->append("\\\\");
+            result->appendCStr("\\\\");
             break;
         case '\0':
         case '\v':
             return String::null();
         default:
-            result->append(c);
+            result->appendChar(c);
         }
     }
-    result->append('"');
+    result->appendChar('"');
     return result->toString();
 }
 
@@ -55,20 +55,20 @@ static String::CPtr mapToJson(const Value& val) {
     Set::CPtr ks = m->keySet();
     Iterator::Ptr itr = ks->iterator();
     StringBuffer::Ptr result = StringBuffer::create();
-    result->append('{');
+    result->appendChar('{');
     while (itr->hasNext()) {
         Value k = itr->next();
         Value v = m->get(k);
         if (k.instanceof(Type<String>::id()) &&
             !v.isUndefined()) {
             if (result->length() > 1)
-                result->append(',');
+                result->appendChar(',');
             result->append(stringToJson(k));
-            result->append(':');
+            result->appendChar(':');
             result->append(json::stringify(v));
         }
     }
-    result->append('}');
+    result->appendChar('}');
     return result->toString();
 }
 
@@ -76,14 +76,14 @@ static String::CPtr collectionToJson(const Value& val) {
     Collection::CPtr a = toCPtr<Collection>(val);
     Iterator::Ptr itr = a->iterator();
     StringBuffer::Ptr result = StringBuffer::create();
-    result->append('[');
+    result->appendChar('[');
     while (itr->hasNext()) {
         Value v = itr->next();
         if (result->length() > 1)
-            result->append(',');
+            result->appendChar(',');
         result->append(json::stringify(v));
     }
-    result->append(']');
+    result->appendChar(']');
     return result->toString();
 }
 

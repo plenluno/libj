@@ -132,7 +132,9 @@ TEST(GTestJson, TestParseString) {
     s32 += 0x2000b;
     s = String::create(s32);
     StringBuffer::Ptr sb = StringBuffer::create();
-    sb->append("\"")->append(s)->append("\"");
+    sb->appendCStr("\"");
+    sb->append(s);
+    sb->appendCStr("\"");
     ASSERT_TRUE(json::parse(sb->toString()).equals(s));
 }
 
