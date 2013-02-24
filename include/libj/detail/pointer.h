@@ -25,7 +25,8 @@ struct NullDeleter {
 #endif
 
 #ifdef LIBJ_USE_SP
-    #include "libj/detail/shared_ptr.h"
+    #include <libj/detail/shared_ptr.h>
+    #define LIBJ_THIS shared_from_this()
     #define LIBJ_PTR(T) libj::detail::SharedPtr<T>::Type
     #define LIBJ_CPTR(T) libj::detail::SharedPtr<const T>::Type
     #define LIBJ_PTR_TYPE(T) typename LIBJ_PTR(T)
@@ -41,6 +42,7 @@ struct NullDeleter {
     #define LIBJ_SINGLETON_PTR_TYPE_DEF(T, V, I) \
         LIBJ_PTR_TYPE(T) V(I, LIBJ_NULL_DELETER);
 #else
+    #define LIBJ_THIS this
     #define LIBJ_PTR(T) T*
     #define LIBJ_CPTR(T) const T*
     #define LIBJ_PTR_TYPE(T) T*

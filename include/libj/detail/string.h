@@ -8,6 +8,7 @@
 #include <libj/exception.h>
 #include <libj/map.h>
 #include <libj/string.h>
+#include <libj/this.h>
 #include <libj/typed_iterator.h>
 #include <libj/glue/cvtutf.h>
 #include <libj/detail/mutex.h>
@@ -327,10 +328,6 @@ class String : public libj::String {
             s->str_ += c;
         }
         return CPtr(s);
-    }
-
-    virtual CPtr toString() const {
-        return CPtr(new String(*this));
     }
 
  private:
@@ -701,10 +698,6 @@ class String : public libj::String {
         return CPtr(s);
     }
 
-    virtual CPtr toString() const {
-        return CPtr(new String(*this));
-    }
-
     virtual std::u16string toStdU16String() const {
         return glue::utf8ToUtf16(str_);
     }
@@ -787,6 +780,10 @@ class String : public libj::String {
 #endif  // LIBJ_USE_UTF8
 
  public:
+    virtual Boolean isEmpty() const {
+        return length() == 0;
+    }
+
     virtual CPtr substring(Size from) const {
         if (from > length()) {
             return libj::String::null();
@@ -808,8 +805,8 @@ class String : public libj::String {
         }
     }
 
-    virtual Boolean isEmpty() const {
-        return length() == 0;
+    virtual CPtr toString() const {
+        return LIBJ_THIS_CPTR(String);
     }
 
  public:

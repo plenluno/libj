@@ -3,11 +3,17 @@
 #ifndef LIBJ_IMPL_IMMUTABLE_H_
 #define LIBJ_IMPL_IMMUTABLE_H_
 
+#include <libj/cast.h>
+
 namespace libj {
 
 inline Immutable::CPtr Immutable::null() {
     static LIBJ_NULL_CPTR_DEF(Immutable, nullp);
     return nullp;
+}
+
+inline Immutable::CPtr Immutable::self() const {
+    return LIBJ_STATIC_CPTR_CAST(Immutable)(LIBJ_THIS);
 }
 
 inline Boolean Immutable::instanceof(TypeId id) const {

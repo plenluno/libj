@@ -3,11 +3,17 @@
 #ifndef LIBJ_IMPL_MUTABLE_H_
 #define LIBJ_IMPL_MUTABLE_H_
 
+#include <libj/cast.h>
+
 namespace libj {
 
 inline Mutable::Ptr Mutable::null() {
     static LIBJ_NULL_PTR_DEF(Mutable, nullp);
     return nullp;
+}
+
+inline Mutable::Ptr Mutable::self() {
+    return LIBJ_STATIC_PTR_CAST(Mutable)(LIBJ_THIS);
 }
 
 inline Boolean Mutable::instanceof(TypeId id) const {

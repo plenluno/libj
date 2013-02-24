@@ -18,6 +18,8 @@ class Mutable
 
     static Ptr null();
 
+    virtual Ptr self();
+
     virtual Boolean instanceof(TypeId id) const;
 };
 

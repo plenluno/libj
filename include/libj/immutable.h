@@ -17,6 +17,8 @@ class Immutable
 
     static CPtr null();
 
+    virtual CPtr self() const;
+
     virtual Boolean instanceof(TypeId id) const;
 };
 
