@@ -128,6 +128,7 @@ if(LIBJ_USE_THREAD)
         ${libj-src}
         src/blocking_linked_queue.cpp
         src/concurrent_linked_queue.cpp
+        src/concurrent_map.cpp
         src/executors.cpp
         src/thread.cpp
     )
@@ -203,6 +204,7 @@ if(LIBJ_USE_THREAD)
         ${libj-test-src}
         gtest/gtest_blocking_linked_queue.cpp
         gtest/gtest_concurrent_linked_queue.cpp
+        gtest/gtest_concurrent_map.cpp
         gtest/gtest_executor_service.cpp
         gtest/gtest_thread.cpp
     )

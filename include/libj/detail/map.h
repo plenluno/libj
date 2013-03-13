@@ -47,13 +47,13 @@ class Map : public I {
     }
 
     virtual Value put(const Value& key, const Value& val) {
-        Value v = get(key);
+        Value v = Map::get(key);
         map_[key] = val;
         return v;
     }
 
     virtual Value remove(const Value& key) {
-        Value v = get(key);
+        Value v = Map::get(key);
         map_.erase(key);
         return v;
     }
@@ -73,14 +73,14 @@ class Map : public I {
     }
 
     virtual Boolean isEmpty() const {
-        return size() == 0;
+        return map_.size() == 0;
     }
 
     virtual String::CPtr toString() const {
         libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
         sb->appendChar('{');
         Boolean first = true;
-        Set::CPtr keys = keySet();
+        Set::CPtr keys = Map::keySet();
         Iterator::Ptr itr = keys->iterator();
         while (itr->hasNext()) {
             Value v = itr->next();
@@ -91,7 +91,7 @@ class Map : public I {
             }
             sb->append(String::valueOf(v));
             sb->appendChar('=');
-            sb->append(String::valueOf(get(v)));
+            sb->append(String::valueOf(Map::get(v)));
         }
         sb->appendChar('}');
         return sb->toString();

@@ -6,12 +6,16 @@
 #include <libj/cast.h>
 #include <libj/constant.h>
 #include <libj/exception.h>
-#include <libj/map.h>
 #include <libj/string.h>
 #include <libj/this.h>
 #include <libj/typed_iterator.h>
 #include <libj/glue/cvtutf.h>
-#include <libj/detail/mutex.h>
+
+#ifdef LIBJ_USE_THREAD
+    #include <libj/concurrent_map.h>
+#else
+    #include <libj/map.h>
+#endif
 
 #include <assert.h>
 #include <string>
@@ -811,21 +815,15 @@ class String : public libj::String {
 
  public:
     static CPtr intern(CPtr str) {
-        static const Map::Ptr symbols = Map::create();
 #ifdef LIBJ_USE_THREAD
-        static detail::Mutex mutex;
+        static const ConcurrentMap::Ptr symbols = ConcurrentMap::create();
+#else
+        static const Map::Ptr symbols = Map::create();
 #endif
 
         if (!str || str->isInterned()) return str;
 
-        CPtr sym;
-#ifdef LIBJ_USE_THREAD
-        mutex.lock();
-        sym = toCPtr<libj::String>(symbols->get(str));
-        mutex.unlock();
-#else
-        sym = toCPtr<libj::String>(symbols->get(str));
-#endif
+        CPtr sym = toCPtr<libj::String>(symbols->get(str));
         if (sym) {
             return sym;
         } else {
@@ -833,13 +831,7 @@ class String : public libj::String {
             s->interned_ = true;
 
             CPtr sp(s);
-#ifdef LIBJ_USE_THREAD
-            mutex.lock();
             symbols->put(sp, sp);
-            mutex.unlock();
-#else
-            symbols->put(sp, sp);
-#endif
             return sp;
         }
     }
