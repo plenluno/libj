@@ -130,7 +130,7 @@ static inline const char* fore(Level level) {
     case ERROR:
         color = foreError;
         break;
-    case OFF:
+    default:  // case OFF:
         color = DEFAULT;
         break;
     }
@@ -155,7 +155,7 @@ static inline const char* back(Level level) {
     case ERROR:
         color = backError;
         break;
-    case OFF:
+    default:  // case OFF:
         color = DEFAULT;
         break;
     }
@@ -174,7 +174,7 @@ static inline Color getForegroundColor(Level level) {
         return foreWarning;
     case ERROR:
         return foreError;
-    case OFF:
+    default:  // case OFF:
         return DEFAULT;
     }
 }
@@ -191,7 +191,7 @@ static inline Color getBackgroundColor(Level level) {
         return backWarning;
     case ERROR:
         return backError;
-    case OFF:
+    default:  // case OFF:
         return DEFAULT;
     }
 }
@@ -214,7 +214,8 @@ void setForegroundColor(Level level, Color color) {
     case ERROR:
         foreError = color;
         break;
-    case OFF:
+    default:  // case OFF:
+        assert(false);
         break;
     }
     unlock();
@@ -238,7 +239,8 @@ void setBackgroundColor(Level level, Color color) {
     case ERROR:
         backError = color;
         break;
-    case OFF:
+    default:  // case OFF:
+        assert(false);
         break;
     }
     unlock();
