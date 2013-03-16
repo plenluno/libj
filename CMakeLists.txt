@@ -126,6 +126,8 @@ endif(LIBJ_USE_CXX11)
 if(LIBJ_USE_THREAD)
     set(libj-src
         ${libj-src}
+        src/atomic_integer.cpp
+        src/atomic_long.cpp
         src/blocking_linked_queue.cpp
         src/concurrent_linked_queue.cpp
         src/concurrent_map.cpp
@@ -202,6 +204,8 @@ endif(LIBJ_USE_CXX11)
 if(LIBJ_USE_THREAD)
     set(libj-test-src
         ${libj-test-src}
+        gtest/gtest_atomic_integer.cpp
+        gtest/gtest_atomic_long.cpp
         gtest/gtest_blocking_linked_queue.cpp
         gtest/gtest_concurrent_linked_queue.cpp
         gtest/gtest_concurrent_map.cpp
