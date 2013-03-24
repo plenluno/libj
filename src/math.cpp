@@ -3,10 +3,11 @@
 #include <libj/math.h>
 #include <libj/constant.h>
 
+#include <cmath>
+#include <limits>
+
 #include <iv/xorshift.h>
 #include <iv/random_generator.h>
-
-#include <cmath>
 
 namespace libj {
 namespace math {
