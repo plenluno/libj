@@ -14,6 +14,10 @@ extern const Size NO_SIZE;
 
 extern const Char NO_CHAR;
 
+extern const Double INFINITY;
+
+extern const Double QUIET_NAN;
+
 extern const Value UNDEFINED;
 
 }  // namespace libj
