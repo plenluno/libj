@@ -108,6 +108,7 @@ set(libj-src
     src/js_regexp.cpp
     src/linked_list.cpp
     src/map.cpp
+    src/math.cpp
     src/set.cpp
     src/status.cpp
     src/string.cpp
