@@ -12,6 +12,22 @@
 namespace libj {
 namespace math {
 
+const Double E = M_E;
+
+const Double LN10 = M_LN10;
+
+const Double LN2 = M_LN2;
+
+const Double LOG10E = M_LOG10E;
+
+const Double LOG2E = M_LOG2E;
+
+const Double PI = M_PI;
+
+const Double SQRT1_2 = M_SQRT1_2;
+
+const Double SQRT2 = M_SQRT2;
+
 Double abs(Double x) {
     return std::abs(x);
 }
