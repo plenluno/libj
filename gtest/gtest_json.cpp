@@ -196,6 +196,6 @@ TEST(GTestJson, TestEscape) {
     ASSERT_TRUE(s->equals(str));
     s = json::stringify(str);
     ASSERT_TRUE(s->equals(json));
-};
+}
 
 }  // namespace libj
