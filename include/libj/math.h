@@ -6,6 +6,16 @@
 #include <libj/typedef.h>
 
 namespace libj {
+
+Boolean isNaN(Double x);
+
+Boolean isFinite(Double x);
+
+Boolean isInfinite(Double x);
+
+}  // namespace libj
+
+namespace libj {
 namespace math {
 
 extern const Double E;

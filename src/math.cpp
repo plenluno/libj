@@ -14,6 +14,22 @@
 #endif
 
 namespace libj {
+
+Boolean isNaN(Double x) {
+    return std::isnan(x);
+}
+
+Boolean isFinite(Double x) {
+    return !std::isnan(x) && !std::isinf(x);
+}
+
+Boolean isInfinite(Double x) {
+    return std::isinf(x);
+}
+
+}  // namespace libj
+
+namespace libj {
 namespace math {
 
 const Double E = M_E;
