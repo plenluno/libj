@@ -181,6 +181,7 @@ set(libj-test-src
     gtest/gtest_linked_list.cpp
     gtest/gtest_main.cpp
     gtest/gtest_map.cpp
+    gtest/gtest_math.cpp
     gtest/gtest_mutable.cpp
     gtest/gtest_set.cpp
     gtest/gtest_singleton.cpp
