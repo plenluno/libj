@@ -59,10 +59,8 @@ class String : public libj::String {
         , interned_(false) {}
 
     String(
-        const void* data,
-        Encoding enc,
-        Size max)
-        : str_(glue::toUtf16(data, convertStrEncoding(enc), max))
+        const void* data, Encoding enc, Size len, Size max)
+        : str_(glue::toUtf16(data, convertStrEncoding(enc), len, max))
         , interned_(false) {}
 
     virtual std::u16string toStdU16String() const {
@@ -93,10 +91,8 @@ class String : public libj::String {
         , interned_(false) {}
 
     String(
-        const void* data,
-        Encoding enc,
-        Size max)
-        : str_(glue::toUtf32(data, convertStrEncoding(enc), max))
+        const void* data, Encoding enc, Size len, Size max)
+        : str_(glue::toUtf32(data, convertStrEncoding(enc), len, max))
         , interned_(false) {}
 
     virtual std::u16string toStdU16String() const {

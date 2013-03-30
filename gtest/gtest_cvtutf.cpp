@@ -13,76 +13,76 @@ namespace glue {
 TEST(GTestCvtUtf, TestUtf8ToUtf32) {
     std::u32string s32;
     char s1[] = { 0xe3, 0x81, 0x82, 0x00 };
-    s32 = toUtf32(s1, UTF8, 0);
+    s32 = toUtf32(s1, UTF8, -1, 0);
     ASSERT_EQ(0, s32.length());
-    s32 = toUtf32(s1, UTF8, 1);
+    s32 = toUtf32(s1, UTF8, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
-    s32 = toUtf32(s1, UTF8, -1);
+    s32 = toUtf32(s1, UTF8, -1, -1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
 
     char s2[] = { 0xe3, 0x81, 0x82 };
-    s32 = toUtf32(s2, UTF8, 1);
+    s32 = toUtf32(s2, UTF8, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
 
     char s3[] = { 0xe3, 0x81, 0x00 };
-    s32 = toUtf32(s3, UTF8, 1);
+    s32 = toUtf32(s3, UTF8, -1, 1);
     ASSERT_EQ(0, s32.length());
 }
 
 TEST(GTestCvtUtf, TestUtf16BEToUtf32) {
     std::u32string s32;
     char s1[] = { 0x30, 0x42, 0x00, 0x00 };
-    s32 = toUtf32(s1, UTF16BE, 0);
+    s32 = toUtf32(s1, UTF16BE, -1, 0);
     ASSERT_EQ(0, s32.length());
-    s32 = toUtf32(s1, UTF16BE, 1);
+    s32 = toUtf32(s1, UTF16BE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
-    s32 = toUtf32(s1, UTF16BE, -1);
+    s32 = toUtf32(s1, UTF16BE, -1, -1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
 
     char s2[] = { 0x30, 0x42 };
-    s32 = toUtf32(s2, UTF16BE, 1);
+    s32 = toUtf32(s2, UTF16BE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
 
     char s3[] = { 0xd8, 0x40, 0xdc, 0x0b };
-    s32 = toUtf32(s3, UTF16BE, 1);
+    s32 = toUtf32(s3, UTF16BE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x2000b, s32[0]);
 
     char s4[] = { 0xdf, 0xff, 0xdf, 0xff };
-    s32 = toUtf32(s4, UTF16BE, 1);
+    s32 = toUtf32(s4, UTF16BE, -1, 1);
     ASSERT_EQ(0, s32.length());
 }
 
 TEST(GTestCvtUtf, TestUtf16LEToUtf32) {
     std::u32string s32;
     char s1[] = { 0x42, 0x30, 0x00, 0x00 };
-    s32 = toUtf32(s1, UTF16LE, 0);
+    s32 = toUtf32(s1, UTF16LE, -1, 0);
     ASSERT_EQ(0, s32.length());
-    s32 = toUtf32(s1, UTF16LE, 1);
+    s32 = toUtf32(s1, UTF16LE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
-    s32 = toUtf32(s1, UTF16LE, -1);
+    s32 = toUtf32(s1, UTF16LE, -1, -1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
 
     char s2[] = { 0x42, 0x30 };
-    s32 = toUtf32(s2, UTF16LE, 1);
+    s32 = toUtf32(s2, UTF16LE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x3042, s32[0]);
 
     char s3[] = { 0x40, 0xd8, 0x0b, 0xdc };
-    s32 = toUtf32(s3, UTF16LE, 1);
+    s32 = toUtf32(s3, UTF16LE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x2000b, s32[0]);
 
     char s4[] = { 0xff, 0xdf, 0xff, 0xdf };
-    s32 = toUtf32(s4, UTF16LE, 1);
+    s32 = toUtf32(s4, UTF16LE, -1, 1);
     ASSERT_EQ(0, s32.length());
 }
 
@@ -92,24 +92,24 @@ TEST(GTestCvtUtf, TestUtf32BEToUtf32) {
         0x00, 0x02, 0x00, 0x0b,
         0x00, 0x00, 0x00, 0x00
     };
-    s32 = toUtf32(s1, UTF32BE, 0);
+    s32 = toUtf32(s1, UTF32BE, -1, 0);
     ASSERT_EQ(0, s32.length());
-    s32 = toUtf32(s1, UTF32BE, 1);
+    s32 = toUtf32(s1, UTF32BE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x2000b, s32[0]);
-    s32 = toUtf32(s1, UTF32BE, -1);
+    s32 = toUtf32(s1, UTF32BE, -1, -1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x2000b, s32[0]);
 
     char s2[] = {
         0x00, 0x02, 0x00, 0x0b
     };
-    s32 = toUtf32(s2, UTF32BE, 1);
+    s32 = toUtf32(s2, UTF32BE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x2000b, s32[0]);
 
     char s3[] = { 0xff, 0xff, 0xff, 0xff };
-    s32 = toUtf32(s3, UTF32BE, 1);
+    s32 = toUtf32(s3, UTF32BE, -1, 1);
     ASSERT_EQ(0, s32.length());
 }
 
@@ -119,24 +119,24 @@ TEST(GTestCvtUtf, TestUtf32LEToUtf32) {
         0x0b, 0x00, 0x02, 0x00,
         0x00, 0x00, 0x00, 0x00
     };
-    s32 = toUtf32(s1, UTF32LE, 0);
+    s32 = toUtf32(s1, UTF32LE, -1, 0);
     ASSERT_EQ(0, s32.length());
-    s32 = toUtf32(s1, UTF32LE, 1);
+    s32 = toUtf32(s1, UTF32LE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x2000b, s32[0]);
-    s32 = toUtf32(s1, UTF32LE, -1);
+    s32 = toUtf32(s1, UTF32LE, -1, -1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x2000b, s32[0]);
 
     char s2[] = {
         0x0b, 0x00, 0x02, 0x00
     };
-    s32 = toUtf32(s2, UTF32LE, 1);
+    s32 = toUtf32(s2, UTF32LE, -1, 1);
     ASSERT_EQ(1, s32.length());
     ASSERT_EQ(0x2000b, s32[0]);
 
     char s3[] = { 0xff, 0xff, 0xff, 0xff };
-    s32 = toUtf32(s3, UTF32LE, 1);
+    s32 = toUtf32(s3, UTF32LE, -1, 1);
     ASSERT_EQ(0, s32.length());
 }
 

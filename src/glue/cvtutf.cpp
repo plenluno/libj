@@ -96,9 +96,9 @@ std::string utf16ToUtf8(const std::u16string& str, size_t* n) {
     assert(sizeof(char16_t) == 2);
 
     if (isBigEndian()) {
-        return toUtf8(str.c_str(), UTF16BE, -1, n);
+        return toUtf8(str.c_str(), UTF16BE, -1, -1, n);
     } else {
-        return toUtf8(str.c_str(), UTF16LE, -1, n);
+        return toUtf8(str.c_str(), UTF16LE, -1, -1, n);
     }
 }
 
@@ -106,9 +106,9 @@ std::u32string utf16ToUtf32(const std::u16string& str) {
     assert(sizeof(char16_t) == 2);
 
     if (isBigEndian()) {
-        return toUtf32(str.c_str(), UTF16BE, -1);
+        return toUtf32(str.c_str(), UTF16BE, -1, -1);
     } else {
-        return toUtf32(str.c_str(), UTF16LE, -1);
+        return toUtf32(str.c_str(), UTF16LE, -1, -1);
     }
 }
 
@@ -381,8 +381,24 @@ std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc) {
     return s;
 }
 
+static inline size_t dataLength(size_t byteLen, UnicodeEncoding enc) {
+    switch (enc) {
+    case UTF8:
+        return byteLen;
+    case UTF16BE:
+    case UTF16LE:
+        return byteLen >> 1;
+    case UTF32BE:
+    case UTF32LE:
+        return byteLen >> 2;
+    default:
+        assert(false);
+        return 0;
+    }
+}
+
 std::string toUtf8(
-    const void* data, UnicodeEncoding enc, size_t max, size_t* n) {
+    const void* data, UnicodeEncoding enc, size_t len, size_t max, size_t* n) {
     assert(sizeof(char) == 1);
 
     if (!data) return std::string();
@@ -391,11 +407,14 @@ std::string toUtf8(
     iconv_t cd = iconvOpen(enc, "UTF-8");
     char* inBuf = static_cast<char*>(const_cast<void*>(data));
     size_t i = 0;
+    size_t l = 0;
     for (; i < max; i++) {
         size_t byteLen = byteLengthAt(inBuf, enc);
-        size_t inBytesLeft = byteLen;
-        if (!inBytesLeft) break;
+        if (!byteLen) break;
+        l += dataLength(byteLen, enc);
+        if (l > len) break;
 
+        size_t inBytesLeft = byteLen;
         char buf[7];
         char* outBuf = buf;
         size_t outBytesLeft = 7;
@@ -417,7 +436,8 @@ std::string toUtf8(
     return s8;
 }
 
-std::u16string toUtf16(const void* data, UnicodeEncoding enc, size_t max) {
+std::u16string toUtf16(
+    const void* data, UnicodeEncoding enc, size_t len, size_t max) {
     assert(sizeof(char) == 1 && sizeof(char16_t) == 2);
 
     if (!data) return std::u16string();
@@ -425,9 +445,12 @@ std::u16string toUtf16(const void* data, UnicodeEncoding enc, size_t max) {
     std::u16string s16;
     iconv_t cd = iconvOpenToUtf16(enc);
     char* inBuf = static_cast<char*>(const_cast<void*>(data));
+    size_t l = 0;
     for (size_t i = 0; i < max; i++) {
         size_t inBytesLeft = byteLengthAt(inBuf, enc);
         if (!inBytesLeft) break;
+        l += dataLength(inBytesLeft, enc);
+        if (l > len) break;
 
         union {
             char16_t c16[2];
@@ -453,7 +476,8 @@ std::u16string toUtf16(const void* data, UnicodeEncoding enc, size_t max) {
     return s16;
 }
 
-std::u32string toUtf32(const void* data, UnicodeEncoding enc, size_t max) {
+std::u32string toUtf32(
+    const void* data, UnicodeEncoding enc, size_t len, size_t max) {
     assert(sizeof(char) == 1 && sizeof(char32_t) == 4);
 
     if (!data) return std::u32string();
@@ -461,9 +485,12 @@ std::u32string toUtf32(const void* data, UnicodeEncoding enc, size_t max) {
     std::u32string s32;
     iconv_t cd = iconvOpenToUtf32(enc);
     char* inBuf = static_cast<char*>(const_cast<void*>(data));
+    size_t l = 0;
     for (size_t i = 0; i < max; i++) {
         size_t inBytesLeft = byteLengthAt(inBuf, enc);
         if (!inBytesLeft) break;
+        l += dataLength(inBytesLeft, enc);
+        if (l > len) break;
 
         union {
             char32_t c32;
@@ -557,14 +584,22 @@ std::u16string utf32ToUtf16(const std::u32string& str) {
 
 static size_t findUtf8End(
     const unsigned char* start,
+    size_t len,
     size_t max,
     const unsigned char** end) {
+    size_t l = 0;
     size_t n = 0;
     const unsigned char* pos = start;
     for (; n < max; n++) {
         unsigned char c = *pos;
         if (c) {
-            pos += getNumBytesForUTF8(c);
+            size_t inc = getNumBytesForUTF8(c);
+            l += inc;
+            if (l <= len) {
+                pos += inc;
+            } else {
+                break;
+            }
         } else {
             break;
         }
@@ -576,10 +611,11 @@ static size_t findUtf8End(
 static size_t findUtf16End(
     const char16_t* start,
     UnicodeEncoding enc,
+    size_t len,
     size_t max,
     const char16_t** end,
     std::u16string** swaped) {
-    if (!max) {
+    if (!len || !max) {
         *end = start;
         *swaped = NULL;
         return 0;
@@ -592,22 +628,26 @@ static size_t findUtf16End(
         *swaped = NULL;
     }
 
+    size_t l = 0;
     size_t n = 0;
     const char16_t* pos = start;
     for (; n < max; n++) {
         char16_t c16 = *pos;
         if (c16) {
-            if (swap) {
-                c16 = swapChar16(c16);
-                **swaped += c16;
-            }
-            pos++;
-
-            if (isSurrogatePair(c16)) {
+            if (swap) c16 = swapChar16(c16);
+            bool surrogate = isSurrogatePair(c16);
+            size_t inc = surrogate ? 2 : 1;
+            l += inc;
+            if (l <= len) {
                 if (swap) {
-                    **swaped += swapChar16(*pos);
+                    **swaped += c16;
+                    if (surrogate) {
+                        **swaped += swapChar16(*(pos + 1));
+                    }
                 }
-                pos++;
+                pos += inc;
+            } else {
+                break;
             }
         } else {
             break;
@@ -620,9 +660,11 @@ static size_t findUtf16End(
 static size_t findUtf32End(
     const char32_t* start,
     UnicodeEncoding enc,
+    size_t len,
     size_t max,
     const char32_t** end,
     std::u32string** swaped) {
+    max = len < max ? len : max;
     if (!max) {
         *end = start;
         *swaped = NULL;
@@ -656,12 +698,13 @@ static size_t findUtf32End(
 
 static std::string utf8ToUtf8(
     const unsigned char* data,
+    size_t len,
     size_t max,
     size_t* n = NULL) {
     assert(data && sizeof(unsigned char) == 1);
 
     const unsigned char* end;
-    size_t num = findUtf8End(data, max, &end);
+    size_t num = findUtf8End(data, len, max, &end);
     if (n) *n = num;
     if (!num) return std::string();
 
@@ -670,12 +713,13 @@ static std::string utf8ToUtf8(
 
 static std::u16string utf8ToUtf16(
     const unsigned char* data,
+    size_t len,
     size_t max,
     size_t* n = NULL) {
     assert(data && sizeof(unsigned char) == 1 && sizeof(char16_t) == 2);
 
     const unsigned char* end;
-    size_t num = findUtf8End(data, max, &end);
+    size_t num = findUtf8End(data, len, max, &end);
     if (n) *n = num;
     if (!num) return std::u16string();
 
@@ -695,9 +739,6 @@ static std::u16string utf8ToUtf16(
         strictConversion);
 
     num = targetStart - out;
-#ifdef LIBJ_USE_UTF16
-    num = num < max ? num : max;
-#endif
     std::u16string u16s(out, num);
     delete[] out;
     return u16s;
@@ -705,11 +746,12 @@ static std::u16string utf8ToUtf16(
 
 static std::u32string utf8ToUtf32(
     const unsigned char* data,
+    size_t len,
     size_t max) {
     assert(data && sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
 
     const unsigned char* end;
-    size_t n = findUtf8End(data, max, &end);
+    size_t n = findUtf8End(data, len, max, &end);
     if (!n) return std::u32string();
 
     const unsigned char* sourceStart = data;
@@ -734,13 +776,14 @@ static std::u32string utf8ToUtf32(
 static std::string utf16ToUtf8(
     const char16_t* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max,
     size_t* n = NULL) {
     assert(data && sizeof(unsigned char) == 1 && sizeof(char16_t) == 2);
 
     const char16_t* end;
     std::u16string* u16s;
-    size_t num = findUtf16End(data, enc, max, &end, &u16s);
+    size_t num = findUtf16End(data, enc, len, max, &end, &u16s);
     if (n) *n = num;
     if (!num) {
         delete u16s;
@@ -778,20 +821,33 @@ static std::string utf16ToUtf8(
 static std::u16string utf16ToUtf16(
     const char16_t* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max) {
     assert(data);
-
-    if (!max) return std::u16string();
+    if (!len || !max) return std::u16string();
 
     std::u16string u16s;
-    size_t n = 0;
-    const char16_t* pos = data;
     bool swap = needsSwap(enc);
-    for (; n < max; n++, pos++) {
+    const char16_t* pos = data;
+    size_t l = 0;
+    for (size_t n = 0; n < max; n++) {
         char16_t c16 = *pos;
         if (c16) {
             if (swap) c16 = swapChar16(c16);
-            u16s += c16;
+            bool surrogate = isSurrogatePair(c16);
+            size_t inc = surrogate ? 2 : 1;
+            l += inc;
+            if (l <= len) {
+                u16s += c16;
+                if (surrogate) {
+                    c16 = *(pos + 1);
+                    if (swap) c16 = swapChar16(c16);
+                    u16s += c16;
+                }
+                pos += inc;
+            } else {
+                break;
+            }
         } else {
             break;
         }
@@ -802,12 +858,13 @@ static std::u16string utf16ToUtf16(
 static std::u32string utf16ToUtf32(
     const char16_t* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max) {
     assert(data && sizeof(char16_t) == 2 && sizeof(char32_t) == 4);
 
     const char16_t* end;
     std::u16string* u16s;
-    size_t n = findUtf16End(data, enc, max, &end, &u16s);
+    size_t n = findUtf16End(data, enc, len, max, &end, &u16s);
     if (!n) {
         delete u16s;
         return std::u32string();
@@ -843,13 +900,14 @@ static std::u32string utf16ToUtf32(
 static std::string utf32ToUtf8(
     const char32_t* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max,
     size_t* n = NULL) {
     assert(data && sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
 
     const char32_t* end;
     std::u32string* u32s;
-    size_t num = findUtf32End(data, enc, max, &end, &u32s);
+    size_t num = findUtf32End(data, enc, len, max, &end, &u32s);
     if (n) *n = num;
     if (!num) {
         delete u32s;
@@ -887,13 +945,14 @@ static std::string utf32ToUtf8(
 static std::u16string utf32ToUtf16(
     const char32_t* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max,
     size_t* n = NULL) {
     assert(data && sizeof(char16_t) == 2 && sizeof(char32_t) == 4);
 
     const char32_t* end;
     std::u32string* u32s;
-    size_t num = findUtf32End(data, enc, max, &end, &u32s);
+    size_t num = findUtf32End(data, enc, len, max, &end, &u32s);
     if (n) *n = num;
     if (!num) {
         delete u32s;
@@ -923,9 +982,6 @@ static std::u16string utf32ToUtf16(
         strictConversion);
 
     num = targetStart - out;
-#ifdef LIBJ_USE_UTF16
-    num = num < max ? num : max;
-#endif
     std::u16string u16s(reinterpret_cast<const char16_t*>(out), num);
     delete u32s;
     delete[] out;
@@ -935,9 +991,10 @@ static std::u16string utf32ToUtf16(
 static std::u32string utf32ToUtf32(
     const char32_t* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max) {
     assert(data);
-
+    max = len < max ? len : max;
     if (!max) return std::u32string();
 
     std::u32string u32s;
@@ -963,26 +1020,26 @@ static std::u32string utf32ToUtf32(
 std::u16string utf8ToUtf16(const std::string& str, size_t* n) {
     if (isBigEndian()) {
         return utf8ToUtf16(
-            reinterpret_cast<const unsigned char*>(str.c_str()), -1, n);
+            reinterpret_cast<const unsigned char*>(str.c_str()), -1, -1, n);
     } else {
         return utf8ToUtf16(
-            reinterpret_cast<const unsigned char*>(str.c_str()), -1, n);
+            reinterpret_cast<const unsigned char*>(str.c_str()), -1, -1, n);
     }
 }
 
 static std::string utf32ToUtf8(const std::u32string& str) {
     if (isBigEndian()) {
-        return utf32ToUtf8(str.c_str(), UTF32BE, -1);
+        return utf32ToUtf8(str.c_str(), UTF32BE, -1, -1);
     } else {
-        return utf32ToUtf8(str.c_str(), UTF32LE, -1);
+        return utf32ToUtf8(str.c_str(), UTF32LE, -1, -1);
     }
 }
 
 std::u16string utf32ToUtf16(const std::u32string& str) {
     if (isBigEndian()) {
-        return utf32ToUtf16(str.c_str(), UTF32BE, -1);
+        return utf32ToUtf16(str.c_str(), UTF32BE, -1, -1);
     } else {
-        return utf32ToUtf16(str.c_str(), UTF32LE, -1);
+        return utf32ToUtf16(str.c_str(), UTF32LE, -1, -1);
     }
 }
 
@@ -1113,10 +1170,10 @@ std::string fromUtf8(const std::string& str, UnicodeEncoding enc) {
         return str;
     case UTF16BE:
     case UTF16LE:
-        return toStdString(utf8ToUtf16(cstr, -1), enc);
+        return toStdString(utf8ToUtf16(cstr, -1, -1), enc);
     case UTF32BE:
     case UTF32LE:
-        return toStdString(utf8ToUtf32(cstr, -1), enc);
+        return toStdString(utf8ToUtf32(cstr, -1, -1), enc);
     }
 }
 
@@ -1149,43 +1206,47 @@ std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc) {
 }
 
 std::string toUtf8(
-    const void* data, UnicodeEncoding enc, size_t max, size_t* n) {
+    const void* data, UnicodeEncoding enc, size_t len, size_t max, size_t* n) {
     switch (enc) {
     case UTF8:
-        return utf8ToUtf8(static_cast<const unsigned char*>(data), max, n);
+        return utf8ToUtf8(
+            static_cast<const unsigned char*>(data), len, max, n);
     case UTF16BE:
     case UTF16LE:
-        return utf16ToUtf8(static_cast<const char16_t*>(data), enc, max, n);
+        return utf16ToUtf8(
+            static_cast<const char16_t*>(data), enc, len, max, n);
     case UTF32BE:
     case UTF32LE:
-        return utf32ToUtf8(static_cast<const char32_t*>(data), enc, max, n);
+        return utf32ToUtf8(
+            static_cast<const char32_t*>(data), enc, len, max, n);
     }
 }
 
 std::u16string toUtf16(
-    const void* data, UnicodeEncoding enc, size_t max) {
+    const void* data, UnicodeEncoding enc, size_t len, size_t max) {
     switch (enc) {
     case UTF8:
-        return utf8ToUtf16(static_cast<const unsigned char*>(data), max);
+        return utf8ToUtf16(static_cast<const unsigned char*>(data), len, max);
     case UTF16BE:
     case UTF16LE:
-        return utf16ToUtf16(static_cast<const char16_t*>(data), enc, max);
+        return utf16ToUtf16(static_cast<const char16_t*>(data), enc, len, max);
     case UTF32BE:
     case UTF32LE:
-        return utf32ToUtf16(static_cast<const char32_t*>(data), enc, max);
+        return utf32ToUtf16(static_cast<const char32_t*>(data), enc, len, max);
     }
 }
 
-std::u32string toUtf32(const void* data, UnicodeEncoding enc, size_t max) {
+std::u32string toUtf32(
+    const void* data, UnicodeEncoding enc, size_t len, size_t max) {
     switch (enc) {
     case UTF8:
-        return utf8ToUtf32(static_cast<const unsigned char*>(data), max);
+        return utf8ToUtf32(static_cast<const unsigned char*>(data), len, max);
     case UTF16BE:
     case UTF16LE:
-        return utf16ToUtf32(static_cast<const char16_t*>(data), enc, max);
+        return utf16ToUtf32(static_cast<const char16_t*>(data), enc, len, max);
     case UTF32BE:
     case UTF32LE:
-        return utf32ToUtf32(static_cast<const char32_t*>(data), enc, max);
+        return utf32ToUtf32(static_cast<const char32_t*>(data), enc, len, max);
     }
 }
 

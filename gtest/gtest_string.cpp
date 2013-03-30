@@ -7,13 +7,15 @@
 
 namespace libj {
 
-TEST(GTestString, TestCreate) {
+TEST(GTestString, TestCreate1) {
     String::CPtr s1 = String::create("abc");
     String::CPtr s2 = String::create("abcde", String::UTF8, 3);
+    String::CPtr s3 = String::create("abcde", String::UTF8, NO_SIZE, 3);
     ASSERT_TRUE(s1->equals(s2));
+    ASSERT_TRUE(s1->equals(s3));
 }
 
-TEST(GTestString, TestCreate0) {
+TEST(GTestString, TestCreate2) {
     // single byte characters
     const int8_t  a8[]  = "abcde";
     const int16_t a16be[] = {
@@ -34,7 +36,7 @@ TEST(GTestString, TestCreate0) {
         0x00000063, 0x00000064,
         0x00000065, 0x00000000
     };
-    String::CPtr s1 = String::create(a8, String::UTF8);
+    String::CPtr s1 = String::create(a8,    String::UTF8);
     String::CPtr s2 = String::create(a16be, String::UTF16BE);
     String::CPtr s3 = String::create(a16le, String::UTF16LE);
     String::CPtr s4 = String::create(a32be, String::UTF32BE);
@@ -81,7 +83,7 @@ TEST(GTestString, TestCreateUtf1) {
         0x00000800, 0x0000ffff, 0x00010000, 0x0010ffff,
         0
     };
-    String::CPtr s1 = String::create(u8, String::UTF8);
+    String::CPtr s1 = String::create(u8,    String::UTF8);
     String::CPtr s2 = String::create(u16be, String::UTF16BE);
     String::CPtr s3 = String::create(u16le, String::UTF16LE);
     String::CPtr s4 = String::create(u32be, String::UTF32BE);
@@ -92,13 +94,46 @@ TEST(GTestString, TestCreateUtf1) {
     ASSERT_TRUE(s4->equals(s5));
     ASSERT_TRUE(s5->equals(s1));
 
-    // chop at specified position
+    ASSERT_EQ(0, String::create(u8, String::UTF8, 0)->length());
+    ASSERT_EQ(1, String::create(u8, String::UTF8, 1)->length());
+    ASSERT_EQ(2, String::create(u8, String::UTF8, 2)->length());
+    ASSERT_EQ(2, String::create(u8, String::UTF8, 3)->length());
+    ASSERT_EQ(3, String::create(u8, String::UTF8, 4)->length());
+
+#ifdef LIBJ_USE_UTF16
+    ASSERT_EQ(6, String::create(u16be, String::UTF16BE, 6)->length());
+    ASSERT_EQ(6, String::create(u16be, String::UTF16BE, 7)->length());
+    ASSERT_EQ(8, String::create(u16be, String::UTF16BE, 8)->length());
+
+    ASSERT_EQ(6, String::create(u32le, String::UTF32LE, 6)->length());
+    ASSERT_EQ(8, String::create(u32le, String::UTF32LE, 7)->length());
+#else
+    ASSERT_EQ(6, String::create(u16be, String::UTF16BE, 6)->length());
+    ASSERT_EQ(6, String::create(u16be, String::UTF16BE, 7)->length());
+    ASSERT_EQ(7, String::create(u16be, String::UTF16BE, 8)->length());
+
+    ASSERT_EQ(6, String::create(u32le, String::UTF32LE, 6)->length());
+    ASSERT_EQ(7, String::create(u32le, String::UTF32LE, 7)->length());
+#endif
+
+    for (int len = 0; len <= 10; len++) {
+        String::CPtr s1 = String::create(u16be, String::UTF16BE, len);
+        String::CPtr s2 = String::create(u16le, String::UTF16LE, len);
+        ASSERT_TRUE(s1->equals(s2));
+    }
+
     for (int len = 0; len <= 8; len++) {
-        String::CPtr s1 = String::create(u8, String::UTF8, len);
-        String::CPtr s2 = String::create(u16be, String::UTF16BE, len);
-        String::CPtr s3 = String::create(u16le, String::UTF16LE, len);
-        String::CPtr s4 = String::create(u32be, String::UTF32BE, len);
-        String::CPtr s5 = String::create(u32le, String::UTF32LE, len);
+        String::CPtr s1 = String::create(u32be, String::UTF32BE, len);
+        String::CPtr s2 = String::create(u32le, String::UTF32LE, len);
+        ASSERT_TRUE(s1->equals(s2));
+    }
+
+    for (int len = 0; len <= 8; len++) {
+        String::CPtr s1 = String::create(u8,    String::UTF8,    NO_SIZE, len);
+        String::CPtr s2 = String::create(u16be, String::UTF16BE, NO_SIZE, len);
+        String::CPtr s3 = String::create(u16le, String::UTF16LE, NO_SIZE, len);
+        String::CPtr s4 = String::create(u32be, String::UTF32BE, NO_SIZE, len);
+        String::CPtr s5 = String::create(u32le, String::UTF32LE, NO_SIZE, len);
         ASSERT_TRUE(s1->equals(s2));
         ASSERT_TRUE(s2->equals(s3));
         ASSERT_TRUE(s3->equals(s4));

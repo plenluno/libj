@@ -41,17 +41,20 @@ std::string fromUtf32(
 std::string toUtf8(
     const void* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max,
     size_t* n = NULL);
 
 std::u16string toUtf16(
     const void* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max);
 
 std::u32string toUtf32(
     const void* data,
     UnicodeEncoding enc,
+    size_t len,
     size_t max);
 
 std::string utf16ToUtf8(const std::u16string& str, size_t* n = NULL);

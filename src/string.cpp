@@ -28,9 +28,10 @@ String::CPtr String::create(const std::u32string& s32) {
     return CPtr(new detail::String(s32));
 }
 
-String::CPtr String::create(const void* data, Encoding enc, Size max) {
+String::CPtr String::create(
+    const void* data, Encoding enc, Size len, Size max) {
     if (data) {
-        return CPtr(new detail::String(data, enc, max));
+        return CPtr(new detail::String(data, enc, len, max));
     } else {
         return null();
     }
@@ -40,8 +41,9 @@ String::CPtr String::intern(String::CPtr str) {
     return detail::String::intern(str);
 }
 
-String::CPtr String::intern(const void* data, Encoding enc, Size max) {
-    return intern(String::create(data, enc, max));
+String::CPtr String::intern(
+    const void* data, Encoding enc, Size len, Size max) {
+    return intern(String::create(data, enc, len, max));
 }
 
 static String::CPtr booleanToString(const Value& val) {

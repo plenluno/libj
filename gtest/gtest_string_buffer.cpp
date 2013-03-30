@@ -53,7 +53,7 @@ TEST(GTestStringBuffer, TestToString2) {
     String::CPtr s3 = String::create("456");
     String::CPtr e0 = String::create("");
     String::CPtr e1 = s1;
-    String::CPtr e2 = String::create(u8, String::UTF8, 8);
+    String::CPtr e2 = String::create(u8, String::UTF8, NO_SIZE, 8);
     String::CPtr e3 = String::create(u8, String::UTF8);
 
     ASSERT_EQ(0, sb->length());
