@@ -590,7 +590,7 @@ static size_t findUtf8End(
     size_t l = 0;
     size_t n = 0;
     const unsigned char* pos = start;
-    for (; n < max; n++) {
+    for (; l < len && n < max; n++) {
         unsigned char c = *pos;
         if (c) {
             size_t inc = getNumBytesForUTF8(c);
@@ -631,7 +631,7 @@ static size_t findUtf16End(
     size_t l = 0;
     size_t n = 0;
     const char16_t* pos = start;
-    for (; n < max; n++) {
+    for (; l < len && n < max; n++) {
         char16_t c16 = *pos;
         if (c16) {
             if (swap) c16 = swapChar16(c16);
