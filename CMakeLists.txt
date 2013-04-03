@@ -104,6 +104,7 @@ set(libj-src
     src/js_array.cpp
     src/js_array_buffer.cpp
     src/js_data_view.cpp
+    src/js_date.cpp
     src/js_object.cpp
     src/js_regexp.cpp
     src/linked_list.cpp
@@ -175,6 +176,7 @@ set(libj-test-src
     gtest/gtest_js_array.cpp
     gtest/gtest_js_array_buffer.cpp
     gtest/gtest_js_data_view.cpp
+    gtest/gtest_js_date.cpp
     gtest/gtest_js_function.cpp
     gtest/gtest_js_object.cpp
     gtest/gtest_js_regexp.cpp
