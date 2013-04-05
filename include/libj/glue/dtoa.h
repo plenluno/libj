@@ -1,15 +1,15 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_GLUE_DTOA_H_
 #define LIBJ_GLUE_DTOA_H_
 
-#include <libj/string.h>
+#include <stddef.h>
 
 namespace libj {
 namespace glue {
 namespace dtoa {
 
-String::CPtr doubleToString(Double d);
+void doubleToString(double d, char* buf, size_t len);
 
 }  // namespace dtoa
 }  // namespace glue

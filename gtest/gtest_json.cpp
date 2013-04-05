@@ -74,6 +74,29 @@ TEST(GTestJson, TestStringify) {
         ->equals(String::create("[3,null,false]")));
 }
 
+TEST(GTestJson, TestRecursiveStringify) {
+    Map::Ptr m = Map::create();
+    m->put(String::create("x"), 123);
+    m->put(String::create("y"), ArrayList::create());
+
+    JsObject::Ptr jo = JsObject::create();
+    jo->put(3, false);
+    jo->put(Object::null(), m);
+    ASSERT_TRUE(json::stringify(jo)->equals(
+        String::create("{\"3\":false,\"null\":{\"x\":123,\"y\":[]}}")));
+
+    ArrayList::Ptr a = ArrayList::create();
+    a->add(3);
+    a->add(m);
+
+    JsArray::Ptr ja = JsArray::create();
+    ja->add(UNDEFINED);
+    ja->add(Object::null());
+    ja->add(a);
+    ASSERT_TRUE(json::stringify(ja)->equals(
+        String::create("[null,null,[3,{\"x\":123,\"y\":[]}]]")));
+}
+
 TEST(GTestJson, TestParse) {
     String::CPtr json =
         String::create("{\"x\":123,\"y\":[3.5,false],\"z\":null}");

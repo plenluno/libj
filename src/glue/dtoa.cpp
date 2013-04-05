@@ -17,10 +17,8 @@ namespace libj {
 namespace glue {
 namespace dtoa {
 
-String::CPtr doubleToString(Double d) {
-    const Size kLen = 64;
-    char s[kLen];
-    return String::create(v8::internal::DoubleToCString(d, s, kLen));
+void doubleToString(double d, char* buf, size_t len) {
+    v8::internal::DoubleToCString(d, buf, len);
 }
 
 }  // namespace dtoa
