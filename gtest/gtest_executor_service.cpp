@@ -37,7 +37,7 @@ class GTestESTask : LIBJ_JS_FUNCTION(GTestESTask)
     Value operator()(JsArray::Ptr args) {
         usleep(100000 * (n_ % 3));
         q_->offer(n_);
-        console::printf(console::NORMAL, "task %d\n", n_);
+        console::log("task %d", n_);
         return Status::OK;
     }
 

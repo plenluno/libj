@@ -20,11 +20,11 @@ TEST(GTestConsole, TestLogFunctions) {
 TEST(GTestConsole, TestSetForegroundColor) {
     // no assert
 
-    setForegroundColor(NORMAL, DEFAULT);
-    setForegroundColor(DEBUG, BLACK);
-    setForegroundColor(INFO, RED);
-    setForegroundColor(WARNING, GREEN);
-    setForegroundColor(ERROR, YELLOW);
+    setForegroundColor(LEVEL_NORMAL,  COLOR_DEFAULT);
+    setForegroundColor(LEVEL_DEBUG,   COLOR_BLACK);
+    setForegroundColor(LEVEL_INFO,    COLOR_RED);
+    setForegroundColor(LEVEL_WARNING, COLOR_GREEN);
+    setForegroundColor(LEVEL_ERROR,   COLOR_YELLOW);
 
     log("log");
     debug("debug");
@@ -32,21 +32,21 @@ TEST(GTestConsole, TestSetForegroundColor) {
     warn("warn");
     error("error");
 
-    setForegroundColor(NORMAL, DEFAULT);
-    setForegroundColor(DEBUG, DEFAULT);
-    setForegroundColor(INFO, DEFAULT);
-    setForegroundColor(WARNING, DEFAULT);
-    setForegroundColor(ERROR, DEFAULT);
+    setForegroundColor(LEVEL_NORMAL,  COLOR_DEFAULT);
+    setForegroundColor(LEVEL_DEBUG,   COLOR_DEFAULT);
+    setForegroundColor(LEVEL_INFO,    COLOR_DEFAULT);
+    setForegroundColor(LEVEL_WARNING, COLOR_DEFAULT);
+    setForegroundColor(LEVEL_ERROR,   COLOR_DEFAULT);
 }
 
 TEST(GTestConsole, TestSetBackgroundColor) {
     // no assert
 
-    setBackgroundColor(NORMAL, DEFAULT);
-    setBackgroundColor(DEBUG, BLUE);
-    setBackgroundColor(INFO, MAGENTA);
-    setBackgroundColor(WARNING, CYAN);
-    setBackgroundColor(ERROR, WHITE);
+    setBackgroundColor(LEVEL_NORMAL,  COLOR_DEFAULT);
+    setBackgroundColor(LEVEL_DEBUG,   COLOR_BLUE);
+    setBackgroundColor(LEVEL_INFO,    COLOR_MAGENTA);
+    setBackgroundColor(LEVEL_WARNING, COLOR_CYAN);
+    setBackgroundColor(LEVEL_ERROR,   COLOR_WHITE);
 
     log(String::create("log"));
     debug(String::create("debug"));
@@ -54,18 +54,18 @@ TEST(GTestConsole, TestSetBackgroundColor) {
     warn(String::create("warn"));
     error(String::create("error"));
 
-    setBackgroundColor(NORMAL, DEFAULT);
-    setBackgroundColor(DEBUG, DEFAULT);
-    setBackgroundColor(INFO, DEFAULT);
-    setBackgroundColor(WARNING, DEFAULT);
-    setBackgroundColor(ERROR, DEFAULT);
+    setBackgroundColor(LEVEL_NORMAL,  COLOR_DEFAULT);
+    setBackgroundColor(LEVEL_DEBUG,   COLOR_DEFAULT);
+    setBackgroundColor(LEVEL_INFO,    COLOR_DEFAULT);
+    setBackgroundColor(LEVEL_WARNING, COLOR_DEFAULT);
+    setBackgroundColor(LEVEL_ERROR,   COLOR_DEFAULT);
 }
 
 TEST(TestConsole, TestPrintf) {
     // no assert
 
-    printf(INFO, "%d %d %d\n", 1, 2, 3);
-    printf(DEBUG, "%s\n", "printf");
+    printf(LEVEL_INFO, "%d %d %d\n", 1, 2, 3);
+    printf(LEVEL_DEBUG, "%s\n", "printf");
 }
 
 TEST(TestConsole, TestPrintv) {
@@ -74,8 +74,8 @@ TEST(TestConsole, TestPrintv) {
     Value a = 1;
     Value b = 2;
     Value c = 3;
-    printv(NORMAL, "%v %v %v\n", a, b, c);
-    printv(ERROR, "%v\n", String::create("printv"));
+    printv(LEVEL_NORMAL, "%v %v %v\n", a, b, c);
+    printv(LEVEL_ERROR, "%v\n", String::create("printv"));
 }
 
 TEST(TestConsole, TestAmbibuous0) {
@@ -89,14 +89,14 @@ TEST(TestConsole, TestAmbibuous0) {
 }
 
 TEST(TestConsole, TestSetLevel) {
-    setLevel(NORMAL);
+    setLevel(LEVEL_NORMAL);
     ASSERT_FALSE(info(String::create("info")));
     ASSERT_TRUE(log(String::create("log")));
 
-    setLevel(OFF);
+    setLevel(LEVEL_OFF);
     ASSERT_FALSE(error(String::create("error")));
 
-    setLevel(DEBUG);
+    setLevel(LEVEL_DEBUG);
 }
 
 }  // namespace console

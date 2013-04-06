@@ -17,10 +17,10 @@
 namespace libj {
 namespace console {
 
-static Level logLevel = DEBUG;
+static Level logLevel = LEVEL_DEBUG;
 
 static inline Boolean isPrintable(Level level) {
-    return level != OFF && logLevel <= level;
+    return level != LEVEL_OFF && logLevel <= level;
 }
 
 #ifdef LIBJ_USE_THREAD
@@ -49,36 +49,36 @@ void setLevel(Level level) {
     unlock();
 }
 
-static Color foreDebug   = DEFAULT;
-static Color backDebug   = DEFAULT;
-static Color foreInfo    = DEFAULT;
-static Color backInfo    = DEFAULT;
-static Color foreNormal  = DEFAULT;
-static Color backNormal  = DEFAULT;
-static Color foreWarning = DEFAULT;
-static Color backWarning = DEFAULT;
-static Color foreError   = DEFAULT;
-static Color backError   = DEFAULT;
+static Color foreDebug   = COLOR_DEFAULT;
+static Color backDebug   = COLOR_DEFAULT;
+static Color foreInfo    = COLOR_DEFAULT;
+static Color backInfo    = COLOR_DEFAULT;
+static Color foreNormal  = COLOR_DEFAULT;
+static Color backNormal  = COLOR_DEFAULT;
+static Color foreWarning = COLOR_DEFAULT;
+static Color backWarning = COLOR_DEFAULT;
+static Color foreError   = COLOR_DEFAULT;
+static Color backError   = COLOR_DEFAULT;
 
 static inline const char* fore(Color color) {
     switch (color) {
-    case DEFAULT:
+    case COLOR_DEFAULT:
         return "";
-    case BLACK:
+    case COLOR_BLACK:
         return "\033[30m";
-    case RED:
+    case COLOR_RED:
         return "\033[31m";
-    case GREEN:
+    case COLOR_GREEN:
         return "\033[32m";
-    case YELLOW:
+    case COLOR_YELLOW:
         return "\033[33m";
-    case BLUE:
+    case COLOR_BLUE:
         return "\033[34m";
-    case MAGENTA:
+    case COLOR_MAGENTA:
         return "\033[35m";
-    case CYAN:
+    case COLOR_CYAN:
         return "\033[36m";
-    case WHITE:
+    case COLOR_WHITE:
         return "\033[37m";
     default:
         assert(false);
@@ -88,23 +88,23 @@ static inline const char* fore(Color color) {
 
 static inline const char* back(Color color) {
     switch (color) {
-    case DEFAULT:
+    case COLOR_DEFAULT:
         return "";
-    case BLACK:
+    case COLOR_BLACK:
         return "\033[40m";
-    case RED:
+    case COLOR_RED:
         return "\033[41m";
-    case GREEN:
+    case COLOR_GREEN:
         return "\033[42m";
-    case YELLOW:
+    case COLOR_YELLOW:
         return "\033[43m";
-    case BLUE:
+    case COLOR_BLUE:
         return "\033[44m";
-    case MAGENTA:
+    case COLOR_MAGENTA:
         return "\033[45m";
-    case CYAN:
+    case COLOR_CYAN:
         return "\033[46m";
-    case WHITE:
+    case COLOR_WHITE:
         return "\033[47m";
     default:
         assert(false);
@@ -115,23 +115,24 @@ static inline const char* back(Color color) {
 static inline const char* fore(Level level) {
     Color color;
     switch (level) {
-    case DEBUG:
+    case LEVEL_DEBUG:
         color = foreDebug;
         break;
-    case INFO:
+    case LEVEL_INFO:
         color = foreInfo;
         break;
-    case NORMAL:
+    case LEVEL_NORMAL:
         color = foreNormal;
         break;
-    case WARNING:
+    case LEVEL_WARNING:
         color = foreWarning;
         break;
-    case ERROR:
+    case LEVEL_ERROR:
         color = foreError;
         break;
-    default:  // case OFF:
-        color = DEFAULT;
+    default:  // case LEVEL_OFF:
+        assert(false);
+        color = COLOR_DEFAULT;
         break;
     }
     return fore(color);
@@ -140,23 +141,24 @@ static inline const char* fore(Level level) {
 static inline const char* back(Level level) {
     Color color;
     switch (level) {
-    case DEBUG:
+    case LEVEL_DEBUG:
         color = backDebug;
         break;
-    case INFO:
+    case LEVEL_INFO:
         color = backInfo;
         break;
-    case NORMAL:
+    case LEVEL_NORMAL:
         color = backNormal;
         break;
-    case WARNING:
+    case LEVEL_WARNING:
         color = backWarning;
         break;
-    case ERROR:
+    case LEVEL_ERROR:
         color = backError;
         break;
-    default:  // case OFF:
-        color = DEFAULT;
+    default:  // case LEVEL_OFF:
+        assert(false);
+        color = COLOR_DEFAULT;
         break;
     }
     return back(color);
@@ -164,58 +166,59 @@ static inline const char* back(Level level) {
 
 static inline Color getForegroundColor(Level level) {
     switch (level) {
-    case DEBUG:
+    case LEVEL_DEBUG:
         return foreDebug;
-    case INFO:
+    case LEVEL_INFO:
         return foreInfo;
-    case NORMAL:
+    case LEVEL_NORMAL:
         return foreNormal;
-    case WARNING:
+    case LEVEL_WARNING:
         return foreWarning;
-    case ERROR:
+    case LEVEL_ERROR:
         return foreError;
-    default:  // case OFF:
-        return DEFAULT;
+    default:  // case LEVEL_OFF:
+        assert(false);
+        return COLOR_DEFAULT;
     }
 }
 
 static inline Color getBackgroundColor(Level level) {
     switch (level) {
-    case DEBUG:
+    case LEVEL_DEBUG:
         return backDebug;
-    case INFO:
+    case LEVEL_INFO:
         return backInfo;
-    case NORMAL:
+    case LEVEL_NORMAL:
         return backNormal;
-    case WARNING:
+    case LEVEL_WARNING:
         return backWarning;
-    case ERROR:
+    case LEVEL_ERROR:
         return backError;
-    default:  // case OFF:
-        return DEFAULT;
+    default:  // case LEVEL_OFF:
+        assert(false);
+        return COLOR_DEFAULT;
     }
 }
 
 void setForegroundColor(Level level, Color color) {
     lock();
     switch (level) {
-    case DEBUG:
+    case LEVEL_DEBUG:
         foreDebug = color;
         break;
-    case INFO:
+    case LEVEL_INFO:
         foreInfo = color;
         break;
-    case NORMAL:
+    case LEVEL_NORMAL:
         foreNormal = color;
         break;
-    case WARNING:
+    case LEVEL_WARNING:
         foreWarning = color;
         break;
-    case ERROR:
+    case LEVEL_ERROR:
         foreError = color;
         break;
-    default:  // case OFF:
-        assert(false);
+    default:  // case LEVEL_OFF:
         break;
     }
     unlock();
@@ -224,23 +227,22 @@ void setForegroundColor(Level level, Color color) {
 void setBackgroundColor(Level level, Color color) {
     lock();
     switch (level) {
-    case DEBUG:
+    case LEVEL_DEBUG:
         backDebug = color;
         break;
-    case INFO:
+    case LEVEL_INFO:
         backInfo = color;
         break;
-    case NORMAL:
+    case LEVEL_NORMAL:
         backNormal = color;
         break;
-    case WARNING:
+    case LEVEL_WARNING:
         backWarning = color;
         break;
-    case ERROR:
+    case LEVEL_ERROR:
         backError = color;
         break;
-    default:  // case OFF:
-        assert(false);
+    default:  // case LEVEL_OFF:
         break;
     }
     unlock();
@@ -252,24 +254,24 @@ void setBackgroundColor(Level level, Color color) {
     fprintf(OUT, fore(LEVEL)); \
     fprintf(OUT, back(LEVEL)); \
     vfprintf(OUT, FMT, argp); \
-    if (getForegroundColor(LEVEL) != DEFAULT) fprintf(OUT, "\033[0m"); \
-    if (getBackgroundColor(LEVEL) != DEFAULT) fprintf(OUT, "\033[0m");
+    if (getForegroundColor(LEVEL) != COLOR_DEFAULT) fprintf(OUT, "\033[0m"); \
+    if (getBackgroundColor(LEVEL) != COLOR_DEFAULT) fprintf(OUT, "\033[0m");
 
 void printf(Level level, const char* fmt, ...) {
     if (!isPrintable(level)) return;
 
     FILE* out = 0;
     switch (level) {
-    case DEBUG:
-    case INFO:
-    case NORMAL:
+    case LEVEL_DEBUG:
+    case LEVEL_INFO:
+    case LEVEL_NORMAL:
         out = stdout;
         break;
-    case WARNING:
-    case ERROR:
+    case LEVEL_WARNING:
+    case LEVEL_ERROR:
         out = stderr;
         break;
-    case OFF:
+    case LEVEL_OFF:
         assert(false);
     }
 
@@ -352,32 +354,32 @@ void printv(
     }
 
 void log(const char* fmt, ...) {
-    LIBJ_PRINTLN(NORMAL, stdout, fmt);
+    LIBJ_PRINTLN(LEVEL_NORMAL, stdout, fmt);
     if (!fmt) { log(static_cast<Value>(0)); }
 }
 
 void debug(const char* fmt, ...) {
-    LIBJ_PRINTLN(DEBUG, stdout, fmt);
+    LIBJ_PRINTLN(LEVEL_DEBUG, stdout, fmt);
     if (!fmt) { debug(static_cast<Value>(0)); }
 }
 
 void info(const char* fmt, ...) {
-    LIBJ_PRINTLN(INFO, stdout, fmt);
+    LIBJ_PRINTLN(LEVEL_INFO, stdout, fmt);
     if (!fmt) { info(static_cast<Value>(0)); }
 }
 
 void warn(const char* fmt, ...) {
-    LIBJ_PRINTLN(WARNING, stderr, fmt);
+    LIBJ_PRINTLN(LEVEL_WARNING, stderr, fmt);
     if (!fmt) { warn(static_cast<Value>(0)); }
 }
 
 void error(const char* fmt, ...) {
-    LIBJ_PRINTLN(ERROR, stderr, fmt);
+    LIBJ_PRINTLN(LEVEL_ERROR, stderr, fmt);
     if (!fmt) { error(static_cast<Value>(0)); }
 }
 
 Boolean log(const Value& val) {
-    if (val.isUndefined() || !isPrintable(NORMAL))
+    if (val.isUndefined() || !isPrintable(LEVEL_NORMAL))
         return false;
 
     String::CPtr s = toString(val);
@@ -390,7 +392,7 @@ Boolean log(const Value& val) {
 }
 
 Boolean debug(const Value& val) {
-    if (val.isUndefined() || !isPrintable(DEBUG))
+    if (val.isUndefined() || !isPrintable(LEVEL_DEBUG))
         return false;
 
     String::CPtr s = toString(val);
@@ -403,7 +405,7 @@ Boolean debug(const Value& val) {
 }
 
 Boolean info(const Value& val) {
-    if (val.isUndefined() || !isPrintable(INFO))
+    if (val.isUndefined() || !isPrintable(LEVEL_INFO))
         return false;
 
     String::CPtr s = toString(val);
@@ -416,7 +418,7 @@ Boolean info(const Value& val) {
 }
 
 Boolean warn(const Value& val) {
-    if (val.isUndefined() || !isPrintable(WARNING))
+    if (val.isUndefined() || !isPrintable(LEVEL_WARNING))
         return false;
 
     String::CPtr s = toString(val);
@@ -429,7 +431,7 @@ Boolean warn(const Value& val) {
 }
 
 Boolean error(const Value& val) {
-    if (val.isUndefined() || !isPrintable(ERROR))
+    if (val.isUndefined() || !isPrintable(LEVEL_ERROR))
         return false;
 
     String::CPtr s = toString(val);

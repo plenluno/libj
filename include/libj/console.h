@@ -9,24 +9,24 @@ namespace libj {
 namespace console {
 
 enum Level {
-    DEBUG,
-    INFO,
-    NORMAL,
-    WARNING,
-    ERROR,
-    OFF,
+    LEVEL_DEBUG,
+    LEVEL_INFO,
+    LEVEL_NORMAL,
+    LEVEL_WARNING,
+    LEVEL_ERROR,
+    LEVEL_OFF,
 };
 
 enum Color {
-    DEFAULT,
-    BLACK,
-    RED,
-    GREEN,
-    YELLOW,
-    BLUE,
-    MAGENTA,
-    CYAN,
-    WHITE,
+    COLOR_DEFAULT,
+    COLOR_BLACK,
+    COLOR_RED,
+    COLOR_GREEN,
+    COLOR_YELLOW,
+    COLOR_BLUE,
+    COLOR_MAGENTA,
+    COLOR_CYAN,
+    COLOR_WHITE,
 };
 
 Boolean log(const Value& val);
