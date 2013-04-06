@@ -6,6 +6,10 @@
 #include <libj/js_date.h>
 #include <libj/detail/js_object.h>
 
+#if defined(LIBJ_PF_UNIX) && !defined(LIBJ_USE_CXX11)
+    #define IV_OS_BSD
+#endif
+
 #include <iv/date_utils.h>
 #include <iv/date_parser.h>
 
