@@ -5,6 +5,7 @@
 
 #include <direct.h>
 #include <float.h>
+#include <WinSock2.h>
 #include <Windows.h>
 
 #define _USE_MATH_DEFINES
