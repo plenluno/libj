@@ -4,9 +4,6 @@
 [submodule "deps/boost-svn"]
 	path = deps/boost-svn
 	url = https://github.com/plenluno/boost-svn.git
-[submodule "deps/iv"]
-	path = deps/iv
-	url = https://github.com/Constellation/iv.git
 [submodule "tools/btest"]
 	path = tools/btest
 	url = https://github.com/plenluno/btest.git
