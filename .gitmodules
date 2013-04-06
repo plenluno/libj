@@ -28,3 +28,6 @@
 [submodule "deps/bdwgc"]
 	path = deps/bdwgc
 	url = https://github.com/plenluno/bdwgc.git
+[submodule "deps/iv"]
+	path = deps/iv
+	url = https://github.com/plenluno/iv.git
