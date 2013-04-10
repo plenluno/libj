@@ -10,7 +10,47 @@
 namespace libj {
 namespace detail {
 
-class GCBase : public gc_cleanup {
+class GCBase : virtual public gc {
+ public:
+    GCBase() {
+        GC_finalization_proc oldProc;
+        void* oldData;
+        void* base = GC_base(this);
+        if (base) {
+            GC_register_finalizer_no_order(
+                base,
+                cleanup,
+                reinterpret_cast<void*>(
+                    reinterpret_cast<char*>(this) -
+                    reinterpret_cast<char*>(base)),
+                &oldProc,
+                &oldData);
+            if (oldProc) {
+                GC_register_finalizer_no_order(
+                    base,
+                    oldProc,
+                    oldData,
+                    NULL,
+                    NULL);
+            }
+        }
+    }
+
+    virtual ~GCBase() {
+        GC_register_finalizer_no_order(
+            GC_base(this),
+            NULL,
+            NULL,
+            NULL,
+            NULL);
+    }
+
+ private:
+    static void GC_cdecl cleanup(void* obj, void* displ) {
+        (reinterpret_cast<GCBase*>(
+            reinterpret_cast<char*>(obj) +
+            reinterpret_cast<ptrdiff_t>(displ)))->~GCBase();
+    }
 };
 
 }  // namespace detail
