@@ -236,12 +236,12 @@ set(libj-deps
     regexp
 )
 
-if(UNIX)
+if(UNIX AND NOT ANDROID)
     set(libj-deps
         ${libj-deps}
         pthread
     )
-endif(UNIX)
+endif(UNIX AND NOT ANDROID)
 
 if(LIBJ_USE_ICONV)
     if(APPLE)
@@ -278,12 +278,12 @@ set(libj-test-deps
     j
 )
 
-if(UNIX)
+if(UNIX AND NOT ANDROID)
     set(libj-test-deps
         ${libj-test-deps}
         pthread
     )
-endif(UNIX)
+endif(UNIX AND NOT ANDROID)
 
 ## libj-cflags
 if(UNIX)
