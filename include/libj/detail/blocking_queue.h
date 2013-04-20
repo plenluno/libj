@@ -6,7 +6,8 @@
 #include <libj/exception.h>
 #include <libj/typed_iterator.h>
 #include <libj/detail/condition.h>
-#include <libj/detail/scoped_lock.h>
+
+#include <assert.h>
 
 namespace libj {
 namespace detail {
@@ -59,10 +60,13 @@ class BlockingQueue : public I {
         if (isFull()) {
             return false;
         } else {
-            Boolean success = I::add(v);
-            assert(success);
-            notEmpty_.notifyAll();
-            return true;
+            if (I::add(v)) {
+                notEmpty_.notifyAll();
+                return true;
+            } else {
+                assert(false);
+                return false;
+            }
         }
     }
 
