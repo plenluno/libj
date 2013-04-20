@@ -24,6 +24,8 @@ inline Boolean convert(const Value& v, T* t, Boolean throwable = true) {
 }
 
 inline void booleanToString(const Value& val, char* buf, Size len) {
+    if (len < 6) return;
+
     Boolean b;
     to<Boolean>(val, &b);
     if (b) {

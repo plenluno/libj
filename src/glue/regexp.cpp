@@ -26,15 +26,15 @@ class RegExpBase : public RegExp {
     RegExpBase(unsigned flags) : flags_(flags) {}
 
     virtual bool global() const {
-        return flags_ & GLOBAL;
+        return !!(flags_ & GLOBAL);
     }
 
     virtual bool ignoreCase() const {
-        return flags_ & IGNORE_CASE;
+        return !!(flags_ & IGNORE_CASE);
     }
 
     virtual bool multiline() const {
-        return flags_ & MULTILINE;
+        return !!(flags_ & MULTILINE);
     }
 
  protected:

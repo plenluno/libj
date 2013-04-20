@@ -304,14 +304,9 @@ void printv(
     std::string format(fmt);
     Size count = 0;
     size_t pos = 0;
-    while (1) {
-        pos = format.find("%v", pos);
-        if (pos == std::string::npos) {
-            break;
-        } else {
-            format.replace(pos, 2, "%s");
-            count++;
-        }
+    while ((pos = format.find("%v", pos)) != std::string::npos) {
+        format.replace(pos, 2, "%s");
+        count++;
     }
 
     String::CPtr s[kMax];

@@ -1159,6 +1159,9 @@ char32_t codePointAt(const void* data, UnicodeEncoding enc) {
     case UTF32BE:
     case UTF32LE:
         return toCodePoint(static_cast<const char32_t*>(data), enc);
+    default:
+        assert(false);
+        return 0;
     }
 }
 
@@ -1174,6 +1177,9 @@ std::string fromUtf8(const std::string& str, UnicodeEncoding enc) {
     case UTF32BE:
     case UTF32LE:
         return toStdString(utf8ToUtf32(cstr, -1, -1), enc);
+    default:
+        assert(false);
+        return std::string();
     }
 }
 
@@ -1189,6 +1195,9 @@ std::string fromUtf16(const std::u16string& str, UnicodeEncoding enc) {
     case UTF32BE:
     case UTF32LE:
         return toStdString(utf16ToUtf32(str), enc);
+    default:
+        assert(false);
+        return std::string();
     }
 }
 
@@ -1202,6 +1211,9 @@ std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc) {
     case UTF32BE:
     case UTF32LE:
         return toStdString(str, enc);
+    default:
+        assert(false);
+        return std::string();
     }
 }
 
@@ -1219,6 +1231,9 @@ std::string toUtf8(
     case UTF32LE:
         return utf32ToUtf8(
             static_cast<const char32_t*>(data), enc, len, max, n);
+    default:
+        assert(false);
+        return std::string();
     }
 }
 
@@ -1233,6 +1248,9 @@ std::u16string toUtf16(
     case UTF32BE:
     case UTF32LE:
         return utf32ToUtf16(static_cast<const char32_t*>(data), enc, len, max);
+    default:
+        assert(false);
+        return std::u16string();
     }
 }
 
@@ -1247,6 +1265,9 @@ std::u32string toUtf32(
     case UTF32BE:
     case UTF32LE:
         return utf32ToUtf32(static_cast<const char32_t*>(data), enc, len, max);
+    default:
+        assert(false);
+        return std::u32string();
     }
 }
 

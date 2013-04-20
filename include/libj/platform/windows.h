@@ -15,17 +15,17 @@
 
 #define getcwd _getcwd
 
-#define snprintf _snprintf
-
 #define usleep(useconds) Sleep(useconds/1000)
+
+#define snprintf(s, n, f, ...) _snprintf_s(s, n, _TRUNCATE, f, __VA_ARGS__)
 
 namespace std {
     inline bool isinf(double x) {
-        return _fpclass(x) & (_FPCLASS_PINF | _FPCLASS_NINF);
+        return !!(_fpclass(x) & (_FPCLASS_PINF | _FPCLASS_NINF));
     }
 
     inline bool isnan(double x) {
-        return _isnan(x);
+        return !!_isnan(x);
     }
 
     inline bool signbit(double x) {
