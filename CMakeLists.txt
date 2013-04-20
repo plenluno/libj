@@ -191,6 +191,7 @@ set(libj-test-src
     gtest/gtest_js_object.cpp
     gtest/gtest_js_regexp.cpp
     gtest/gtest_linked_list.cpp
+    gtest/gtest_main.cpp
     gtest/gtest_map.cpp
     gtest/gtest_math.cpp
     gtest/gtest_mutable.cpp
@@ -274,7 +275,6 @@ endif(LIBJ_USE_JSCRE)
 ## libj-test-deps
 set(libj-test-deps
     gtest
-    gtest_main
     j
 )
 
