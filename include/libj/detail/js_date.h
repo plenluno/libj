@@ -6,8 +6,8 @@
 #include <libj/js_date.h>
 #include <libj/detail/js_object.h>
 
-#if defined(LIBJ_PF_UNIX) && !defined(LIBJ_USE_CXX11) \
- || defined(LIBJ_PF_ANDROID)
+#if defined(LIBJ_PF_UNIX) && !defined(LIBJ_USE_CXX11) || \
+    defined(LIBJ_PF_ANDROID)
     #define IV_OS_BSD
 #endif
 
