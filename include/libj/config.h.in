@@ -28,4 +28,8 @@
     #define LIBJ_PF_UNIX
 #endif
 
+#ifdef __ANDROID__
+    #define LIBJ_PF_ANDROID
+#endif
+
 #endif  // LIBJ_CONFIG_H_
