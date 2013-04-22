@@ -8,6 +8,7 @@ include(CMakeDependentOption)
 
 # options ----------------------------------------------------------------------
 
+option(LIBJ_DEBUG         "Debug Mode"        OFF)
 option(LIBJ_USE_BDWGC     "Use BDW-GC"        OFF)
 option(LIBJ_USE_CXX11     "Use C++11"         OFF)
 option(LIBJ_USE_EXCEPTION "Use Exceptions"    OFF)
@@ -34,6 +35,7 @@ if(LIBJ_USE_BDWGC AND LIBJ_USE_THREAD)
 endif(LIBJ_USE_BDWGC AND LIBJ_USE_THREAD)
 
 ## status
+message(STATUS "LIBJ_DEBUG=${LIBJ_DEBUG}")
 message(STATUS "LIBJ_USE_BDWGC=${LIBJ_USE_BDWGC}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")

@@ -1,9 +1,33 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_GC_BASE_H_
 #define LIBJ_DETAIL_GC_BASE_H_
 
 #include <libj/config.h>
+
+#ifdef LIBJ_DEBUG
+    #include <libj/typedef.h>
+#ifdef LIBJ_USE_THREAD
+    #include <libj/detail/atomic.h>
+    #define LIBJ_DEBUG_COUNT_T LIBJ_DETAIL_ATOMIC(libj::Long)
+#else
+    #define LIBJ_DEBUG_COUNT_T libj::Long
+#endif
+    #define LIBJ_DEBUG_OBJECT_COUNT     libj::detail::GCBase::count(0)
+    #define LIBJ_DEBUG_OBJECT_COUNT_INC libj::detail::GCBase::count(1)
+    #define LIBJ_DEBUG_OBJECT_COUNT_DEC libj::detail::GCBase::count(-1)
+    #define LIBJ_DEBUG_OBJECT_COUNT_DEF public: \
+        static libj::Long count(libj::Long diff) { \
+            static LIBJ_DEBUG_COUNT_T cnt(static_cast<Long>(0)); \
+            cnt += diff; \
+            return cnt; \
+        }
+#else
+    #define LIBJ_DEBUG_OBJECT_COUNT
+    #define LIBJ_DEBUG_OBJECT_COUNT_INC
+    #define LIBJ_DEBUG_OBJECT_COUNT_DEC
+    #define LIBJ_DEBUG_OBJECT_COUNT_DEF
+#endif
 
 #ifdef LIBJ_USE_BDWGC
 
@@ -34,6 +58,7 @@ class GCBase : virtual public gc {
                     NULL);
             }
         }
+        LIBJ_DEBUG_OBJECT_COUNT_INC;
     }
 
     virtual ~GCBase() {
@@ -43,6 +68,7 @@ class GCBase : virtual public gc {
             NULL,
             NULL,
             NULL);
+        LIBJ_DEBUG_OBJECT_COUNT_DEC;
     }
 
  private:
@@ -51,6 +77,8 @@ class GCBase : virtual public gc {
             reinterpret_cast<char*>(obj) +
             reinterpret_cast<ptrdiff_t>(displ)))->~GCBase();
     }
+
+    LIBJ_DEBUG_OBJECT_COUNT_DEF;
 };
 
 }  // namespace detail
@@ -71,7 +99,15 @@ namespace detail {
 
 class GCBase : public LIBJ_ENABLE_THIS(GCBase) {
  protected:
-    virtual ~GCBase() {}
+    GCBase() {
+        LIBJ_DEBUG_OBJECT_COUNT_INC;
+    }
+
+    virtual ~GCBase() {
+        LIBJ_DEBUG_OBJECT_COUNT_DEC;
+    }
+
+    LIBJ_DEBUG_OBJECT_COUNT_DEF;
 };
 
 }  // namespace detail

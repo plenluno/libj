@@ -3,6 +3,7 @@
 #ifndef LIBJ_CONFIG_H_
 #define LIBJ_CONFIG_H_
 
+#cmakedefine LIBJ_DEBUG
 #cmakedefine LIBJ_USE_BDWGC
 #cmakedefine LIBJ_USE_CXX11
 #cmakedefine LIBJ_USE_EXCEPTION
