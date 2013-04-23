@@ -13,8 +13,13 @@ int main(int argc, char** argv) {
     int r = RUN_ALL_TESTS();
 
 #ifdef LIBJ_USE_BDWGC
-    GC_gcollect();
-    GC_gcollect();
+    libj::Long before;
+    libj::Long after;
+    do {
+        before = LIBJ_DEBUG_OBJECT_COUNT;
+        GC_gcollect();
+        after = LIBJ_DEBUG_OBJECT_COUNT;
+    } while (before > after);
 #endif
 
 #ifdef LIBJ_DEBUG
