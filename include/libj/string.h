@@ -85,4 +85,12 @@ class String : LIBJ_IMMUTABLE(String)
 
 }  // namespace libj
 
+#ifdef LIBJ_DEBUG
+# define LIBJ_STATIC_CONST_STRING_DEF(N, V) \
+    static const libj::String::CPtr N = libj::String::intern(V);
+#else
+# define LIBJ_STATIC_CONST_STRING_DEF(N, V) \
+    static const libj::String::CPtr N = libj::String::create(V);
+#endif
+
 #endif  // LIBJ_STRING_H_
