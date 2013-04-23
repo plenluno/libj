@@ -12,7 +12,8 @@ int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     int r = RUN_ALL_TESTS();
 
-#ifdef LIBJ_USE_BDWGC
+#ifdef LIBJ_DEBUG
+# ifdef LIBJ_USE_BDWGC
     libj::Long before;
     libj::Long after;
     do {
@@ -20,9 +21,7 @@ int main(int argc, char** argv) {
         GC_gcollect();
         after = LIBJ_DEBUG_OBJECT_COUNT;
     } while (before > after);
-#endif
-
-#ifdef LIBJ_DEBUG
+# endif
     libj::console::debug(
         "[LIBJ DEBUG] remaining objects: %d",
         LIBJ_DEBUG_OBJECT_COUNT);
