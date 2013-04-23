@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_SYMBOL_H_
 #define LIBJ_SYMBOL_H_
@@ -11,6 +11,8 @@ struct Symbol {
     typedef const String::CPtr CPtr;
 
     static CPtr create(const char* str);
+
+    static CPtr create(String::CPtr str);
 };
 
 }  // namespace libj
