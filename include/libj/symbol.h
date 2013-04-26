@@ -18,9 +18,9 @@ struct Symbol {
 }  // namespace libj
 
 #define LIBJ_SYMBOL_DEF(N, V) \
-    libj::Symbol::CPtr N = libj::String::intern(V);
+    libj::Symbol::CPtr N = libj::Symbol::create(V);
 
 #define LIBJ_STATIC_SYMBOL_DEF(N, V) \
-    static libj::Symbol::CPtr N = libj::String::intern(V);
+    static libj::Symbol::CPtr N = libj::Symbol::create(V);
 
 #endif  // LIBJ_SYMBOL_H_
