@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_JS_FUNCTION_H_
 #define LIBJ_IMPL_JS_FUNCTION_H_
@@ -123,7 +123,8 @@ inline Value JsFunction::call(
 
 #define LIBJ_JS_FUNCTION_TO_STRING(T) \
     virtual String::CPtr toString() const { \
-        return String::create("function " #T "() {}"); \
+        LIBJ_STATIC_CONST_STRING_DEF(strFunc, "function " #T "() {}") \
+        return strFunc; \
     }
 
 #define LIBJ_JS_FUNCTION_DEFS(T) \
