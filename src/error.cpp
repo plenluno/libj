@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <libj/error.h>
 #include <libj/detail/status.h>
@@ -23,7 +23,7 @@ namespace libj {
     GEN(UNSUPPORTED_OPERATION, "Unsupported Operation")
 
 #define LIBJ_ERROR_MSG_DEF_GEN(NAME, MESSAGE) \
-    const String::CPtr MSG_##NAME = String::create(MESSAGE);
+    LIBJ_STATIC_CONST_STRING_DEF(MSG_##NAME, MESSAGE);
 
 #define LIBJ_ERROR_MSG_CASE_GEN(NAME, MESSAGE) \
     case NAME: \
