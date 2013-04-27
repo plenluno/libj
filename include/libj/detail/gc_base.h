@@ -7,12 +7,13 @@
 
 #ifdef LIBJ_DEBUG
     #include <libj/typedef.h>
-#ifdef LIBJ_USE_THREAD
-    #include <libj/detail/atomic.h>
-    #define LIBJ_DEBUG_COUNT_T LIBJ_DETAIL_ATOMIC(libj::Long)
-#else
-    #define LIBJ_DEBUG_COUNT_T libj::Long
-#endif
+    #ifdef LIBJ_USE_THREAD
+        #include <libj/detail/atomic.h>
+        #define LIBJ_DEBUG_COUNT_T LIBJ_DETAIL_ATOMIC(libj::Long)
+    #else
+        #define LIBJ_DEBUG_COUNT_T libj::Long
+    #endif
+
     #define LIBJ_DEBUG_OBJECT_COUNT     libj::detail::GCBase::count(0)
     #define LIBJ_DEBUG_OBJECT_COUNT_INC libj::detail::GCBase::count(1)
     #define LIBJ_DEBUG_OBJECT_COUNT_DEC libj::detail::GCBase::count(-1)
@@ -23,7 +24,7 @@
             return cnt; \
         }
 #else
-    #define LIBJ_DEBUG_OBJECT_COUNT
+    #define LIBJ_DEBUG_OBJECT_COUNT 0
     #define LIBJ_DEBUG_OBJECT_COUNT_INC
     #define LIBJ_DEBUG_OBJECT_COUNT_DEC
     #define LIBJ_DEBUG_OBJECT_COUNT_DEF
