@@ -8,7 +8,7 @@
 #ifdef LIBJ_DEBUG
 # define LIBJ_DEBUG_PRINT(FMT, ...) \
     libj::console::printf(libj::console::LEVEL_DEBUG, "[LIBJ DEBUG] "); \
-    libj::console::debug(FMT, __VA_ARGS__);
+    libj::console::debug(FMT, ##__VA_ARGS__);
 #else
 # define LIBJ_DEBUG_PRINT(FMT, ...)
 #endif
