@@ -5,15 +5,12 @@
 
 #include <libj/cast.h>
 #include <libj/constant.h>
+#include <libj/debug.h>
 #include <libj/exception.h>
 #include <libj/string.h>
 #include <libj/this.h>
 #include <libj/typed_iterator.h>
 #include <libj/glue/cvtutf.h>
-
-#ifdef LIBJ_DEBUG
-    #include <libj/console.h>
-#endif
 
 #ifdef LIBJ_USE_THREAD
     #include <libj/concurrent_map.h>
@@ -832,12 +829,10 @@ class String : public libj::String {
 
             CPtr sp(s);
             symbols->put(sp, sp);
-#ifdef LIBJ_DEBUG
-            console::debug(
-                "[LIBJ DEBUG] symbol<%d>: %s",
+            LIBJ_DEBUG_PRINT(
+                "symbol<%d>: %s",
                 symbols->size(),
                 sp->toStdString().c_str());
-#endif
             return sp;
         }
     }
