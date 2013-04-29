@@ -50,13 +50,6 @@ message(STATUS "LIBJ_BUILD_TEST=${LIBJ_BUILD_TEST}")
 
 # variables --------------------------------------------------------------------
 
-## release flags
-if(UNIX)
-    set(CMAKE_CXX_FLAGS_RELEASE
-        "-Wno-unused-parameter"
-    )
-endif(UNIX)
-
 ## libj-include
 set(libj-include
     include
@@ -307,6 +300,14 @@ if(UNIX)
             -fno-exceptions
         )
     endif(NOT LIBJ_USE_EXCEPTION)
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(libj-cflags
+            ${libj-cflags}
+            -Wno-unused-variable
+            -Wno-unused-parameter
+        )
+    endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 else(UNIX)
     set(libj-cflags
         /W4
