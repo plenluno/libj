@@ -830,7 +830,7 @@ class String : public libj::String {
             CPtr sp(s);
             symbols->put(sp, sp);
             LIBJ_DEBUG_PRINT(
-                "symbol<%d>: %s",
+                "symbol: [%d:%s]",
                 symbols->size(),
                 sp->toStdString().c_str());
             return sp;
