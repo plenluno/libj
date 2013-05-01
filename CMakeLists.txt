@@ -239,13 +239,6 @@ set(libj-deps
     regexp
 )
 
-if(UNIX AND NOT ANDROID)
-    set(libj-deps
-        ${libj-deps}
-        pthread
-    )
-endif(UNIX AND NOT ANDROID)
-
 if(LIBJ_USE_ICONV)
     if(APPLE)
         set(libj-deps
@@ -273,6 +266,22 @@ if(LIBJ_USE_JSCRE)
         jscre
     )
 endif(LIBJ_USE_JSCRE)
+
+if(UNIX)
+    if(LIBJ_DEBUG)
+        set(libj-deps
+            ${libj-deps}
+            dl
+        )
+    endif(LIBJ_DEBUG)
+
+    if(NOT ANDROID)
+        set(libj-deps
+            ${libj-deps}
+            pthread
+        )
+    endif(NOT ANDROID)
+endif(UNIX)
 
 ## libj-test-deps
 set(libj-test-deps
@@ -347,6 +356,7 @@ string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
 if(UNIX)
     set(libj-test-cflags
         -Wall
+        -Wno-pragmas
         -Wno-sign-compare
     )
 
