@@ -1,7 +1,7 @@
 // Copyright (c) 2013 Plenluno All rights reserved.
 
-#ifndef LIBJ_DEBUG_H_
-#define LIBJ_DEBUG_H_
+#ifndef LIBJ_DEBUG_PRINT_H_
+#define LIBJ_DEBUG_PRINT_H_
 
 #include <libj/console.h>
 
@@ -15,4 +15,4 @@
 # define LIBJ_DEBUG_PRINT(FMT, ...)
 #endif
 
-#endif  // LIBJ_DEBUG_H_
+#endif  // LIBJ_DEBUG_PRINT_H_
