@@ -7,6 +7,7 @@
 
 int main(int argc, char** argv) {
 #ifdef LIBJ_DEBUG
+    libj::trace::on();
     libj::trace::include("libj");
     libj::trace::exclude("libj::detail");
 #endif
@@ -27,5 +28,9 @@ int main(int argc, char** argv) {
     LIBJ_DEBUG_PRINT(
         "remaining objects: %d",
         LIBJ_DEBUG_OBJECT_COUNT);
+
+#ifdef LIBJ_DEBUG
+    libj::trace::off();
+#endif
     return r;
 }

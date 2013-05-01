@@ -10,6 +10,10 @@
 namespace libj {
 namespace trace {
 
+void on();
+
+void off();
+
 void include(const char* prefix);
 
 void exclude(const char* prefix);

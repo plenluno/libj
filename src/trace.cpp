@@ -14,6 +14,8 @@ extern "C" {
     void __cyg_profile_func_exit(void* funcAddress, void* callSite);
 }
 
+static bool isEnabled = false;
+
 static std::set<std::string>* includes() {
     static std::set<std::string> is;
     return &is;
@@ -59,7 +61,7 @@ static const char* addrToName(void* address) {
 }
 
 void __cyg_profile_func_enter(void* funcAddress, void* callSite) {
-    if (includes()->empty()) return;
+    if (!isEnabled || includes()->empty()) return;
 
     const char* funcName = addrToName(funcAddress);
     if (isPrintable(funcName)) {
@@ -68,7 +70,7 @@ void __cyg_profile_func_enter(void* funcAddress, void* callSite) {
 }
 
 void __cyg_profile_func_exit(void* funcAddress, void* callSite) {
-    if (includes()->empty()) return;
+    if (!isEnabled || includes()->empty()) return;
 
     const char* funcName = addrToName(funcAddress);
     if (isPrintable(funcName)) {
@@ -78,6 +80,14 @@ void __cyg_profile_func_exit(void* funcAddress, void* callSite) {
 
 namespace libj {
 namespace trace {
+
+void on() {
+    isEnabled = true;
+}
+
+void off() {
+    isEnabled = false;
+}
 
 void include(const char* prefix) {
     includes()->insert(prefix);
