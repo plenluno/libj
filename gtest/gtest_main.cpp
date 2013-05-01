@@ -6,11 +6,9 @@
 #include <libj/detail/gc_base.h>
 
 int main(int argc, char** argv) {
-#ifdef LIBJ_DEBUG
-    libj::trace::on();
-    libj::trace::include("libj");
-    libj::trace::exclude("libj::detail");
-#endif
+    LIBJ_DEBUG_TRACE_ON;
+    LIBJ_DEBUG_TRACE_INCLUDE("libj");
+    LIBJ_DEBUG_TRACE_EXCLUDE("libj::detail");
 
     testing::InitGoogleTest(&argc, argv);
     int r = RUN_ALL_TESTS();
@@ -29,8 +27,6 @@ int main(int argc, char** argv) {
         "remaining objects: %d",
         LIBJ_DEBUG_OBJECT_COUNT);
 
-#ifdef LIBJ_DEBUG
-    libj::trace::off();
-#endif
+    LIBJ_DEBUG_TRACE_OFF;
     return r;
 }
