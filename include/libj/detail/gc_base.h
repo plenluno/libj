@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_GC_BASE_H_
 #define LIBJ_DETAIL_GC_BASE_H_
 
-#include <libj/config.h>
+#include <libj/debug.h>
 
 #ifdef LIBJ_DEBUG
     #include <libj/typedef.h>
@@ -60,6 +60,7 @@ class GCBase : virtual public gc {
             }
         }
         LIBJ_DEBUG_OBJECT_COUNT_INC;
+        LIBJ_DEBUG_PRINT("construct: %p", this);
     }
 
     virtual ~GCBase() {
@@ -70,6 +71,7 @@ class GCBase : virtual public gc {
             NULL,
             NULL);
         LIBJ_DEBUG_OBJECT_COUNT_DEC;
+        LIBJ_DEBUG_PRINT("destruct:  %p", this);
     }
 
  private:
@@ -102,10 +104,12 @@ class GCBase : public LIBJ_ENABLE_THIS(GCBase) {
  protected:
     GCBase() {
         LIBJ_DEBUG_OBJECT_COUNT_INC;
+        LIBJ_DEBUG_PRINT("construct: %p", this);
     }
 
     virtual ~GCBase() {
         LIBJ_DEBUG_OBJECT_COUNT_DEC;
+        LIBJ_DEBUG_PRINT("destruct:  %p", this);
     }
 
     LIBJ_DEBUG_OBJECT_COUNT_DEF;
