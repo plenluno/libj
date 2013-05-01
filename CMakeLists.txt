@@ -356,7 +356,6 @@ string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
 if(UNIX)
     set(libj-test-cflags
         -Wall
-        -Wno-pragmas
         -Wno-sign-compare
     )
 
@@ -364,6 +363,7 @@ if(UNIX)
         set(libj-test-cflags
             ${libj-test-cflags}
             -fpermissive
+            -Wno-pragmas
         )
     endif(NOT APPLE)
 
