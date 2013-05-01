@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_GC_BASE_H_
 #define LIBJ_DETAIL_GC_BASE_H_
 
-#include <libj/debug.h>
+#include <libj/debug_print.h>
 
 #ifdef LIBJ_DEBUG
     #include <libj/typedef.h>

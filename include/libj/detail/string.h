@@ -5,7 +5,7 @@
 
 #include <libj/cast.h>
 #include <libj/constant.h>
-#include <libj/debug.h>
+#include <libj/debug_print.h>
 #include <libj/exception.h>
 #include <libj/string.h>
 #include <libj/this.h>

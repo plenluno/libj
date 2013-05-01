@@ -1,7 +1,7 @@
 // Copyright (c) 2013 Plenluno All rights reserved.
 
-#include <libj/debug.h>
 #include <libj/trace.h>
+#include <libj/debug_print.h>
 
 #include <cxxabi.h>
 #include <dlfcn.h>

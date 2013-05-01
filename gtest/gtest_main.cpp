@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
-#include <libj/debug.h>
 #include <libj/trace.h>
 #include <libj/detail/gc_base.h>
 
