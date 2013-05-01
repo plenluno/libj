@@ -2,9 +2,15 @@
 
 #include <gtest/gtest.h>
 #include <libj/debug.h>
+#include <libj/trace.h>
 #include <libj/detail/gc_base.h>
 
 int main(int argc, char** argv) {
+#ifdef LIBJ_DEBUG
+    libj::trace::include("libj");
+    libj::trace::exclude("libj::detail");
+#endif
+
     testing::InitGoogleTest(&argc, argv);
     int r = RUN_ALL_TESTS();
 

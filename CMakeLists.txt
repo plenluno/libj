@@ -155,6 +155,13 @@ else(LIBJ_USE_EXCEPTION)
     )
 endif(LIBJ_USE_EXCEPTION)
 
+if(UNIX AND LIBJ_DEBUG)
+    set(libj-src
+        ${libj-src}
+        src/trace.cpp
+    )
+endif(UNIX AND LIBJ_DEBUG)
+
 ## libj-json-src
 set(libj-json-src
     src/glue/json.cpp
@@ -356,6 +363,13 @@ if(UNIX)
             --std=c++0x
         )
     endif(LIBJ_USE_CXX11)
+
+    if(LIBJ_DEBUG)
+        set(libj-test-cflags
+            ${libj-test-cflags}
+            -finstrument-functions   
+        )
+    endif(LIBJ_DEBUG)
 else(UNIX)
     set(libj-test-cflags
         /D_VARIADIC_MAX=10
