@@ -14,9 +14,9 @@ void on();
 
 void off();
 
-void include(const char* prefix);
+bool include(const char* pattern);
 
-void exclude(const char* prefix);
+bool exclude(const char* pattern);
 
 }  // namespace trace
 }  // namespace libj
@@ -30,8 +30,8 @@ void exclude(const char* prefix);
 
 #define LIBJ_DEBUG_TRACE_ON
 #define LIBJ_DEBUG_TRACE_OFF
-#define LIBJ_DEBUG_TRACE_INCLUDE(P)
-#define LIBJ_DEBUG_TRACE_EXCLUDE(P)
+#define LIBJ_DEBUG_TRACE_INCLUDE(P) false
+#define LIBJ_DEBUG_TRACE_EXCLUDE(P) false
 
 #endif
 

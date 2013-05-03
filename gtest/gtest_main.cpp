@@ -6,8 +6,7 @@
 
 int main(int argc, char** argv) {
     LIBJ_DEBUG_TRACE_ON;
-    LIBJ_DEBUG_TRACE_INCLUDE("libj");
-    LIBJ_DEBUG_TRACE_EXCLUDE("libj::detail");
+    LIBJ_DEBUG_TRACE_INCLUDE("^libj::(.*)::create");
 
     testing::InitGoogleTest(&argc, argv);
     int r = RUN_ALL_TESTS();

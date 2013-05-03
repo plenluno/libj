@@ -1,48 +1,84 @@
 // Copyright (c) 2013 Plenluno All rights reserved.
 
 #include <libj/trace.h>
-#include <libj/debug_print.h>
+#include <libj/glue/regexp.h>
 
+#include <assert.h>
 #include <cxxabi.h>
 #include <dlfcn.h>
+#include <stdio.h>
 
-#include <set>
-#include <string>
-
-extern "C" {
-    void __cyg_profile_func_enter(void* funcAddress, void* callSite);
-    void __cyg_profile_func_exit(void* funcAddress, void* callSite);
-}
+#include <vector>
 
 static bool isEnabled = false;
+static bool wasEnabled = false;
 
-static std::set<std::string>* includes() {
-    static std::set<std::string> is;
-    return &is;
+static void resume() {
+    isEnabled = wasEnabled;
 }
 
-static std::set<std::string>* excludes() {
-    static std::set<std::string> es;
-    return &es;
+static void stop() {
+    wasEnabled = isEnabled;
+    isEnabled = false;
 }
 
-static bool isPrintable(const char* name) {
-    if (!name) return false;
+static std::string convert(const char* s) {
+    assert(libj::glue::RegExp::encoding() == libj::glue::RegExp::UTF16);
+    std::basic_string<uint16_t> s16;
+    for (size_t i = 0; s[i]; i++) {
+        s16 += static_cast<uint16_t>(s[i]);
+    }
+    return std::string(
+        reinterpret_cast<const char*>(s16.c_str()),
+        s16.length() << 1);
+}
 
-    for (std::set<std::string>::const_iterator itr = excludes()->begin();
-         itr != excludes()->end();
-         itr++) {
-        size_t len = itr->length();
-        if (!itr->compare(0, len, name, len)) {
+static libj::glue::RegExp* createRegExp(const char* pattern) {
+    if (!isEnabled || !pattern) {
+        return NULL;
+    } else {
+        return libj::glue::RegExp::create(convert(pattern), 0);
+    }
+}
+
+static std::vector<libj::glue::RegExp*>* whiteList() {
+    static std::vector<libj::glue::RegExp*> patterns;
+    return &patterns;
+}
+
+static std::vector<libj::glue::RegExp*>* blackList() {
+    static std::vector<libj::glue::RegExp*> patterns;
+    return &patterns;
+}
+
+static void clear() {
+    std::vector<libj::glue::RegExp*>::iterator itr;
+    for (itr = whiteList()->begin(); itr != whiteList()->end(); itr++) {
+        delete *itr;
+    }
+    whiteList()->clear();
+
+    for (itr = blackList()->begin(); itr != blackList()->end(); itr++) {
+        delete *itr;
+    }
+    blackList()->clear();
+}
+
+static bool isPrintable(const char* funcName) {
+    if (!funcName) return false;
+
+    std::string name = convert(funcName);
+    std::vector<int> captures;
+    std::vector<libj::glue::RegExp*>::const_iterator itr;
+
+    for (itr = blackList()->begin(); itr != blackList()->end(); itr++) {
+        if ((*itr)->execute(name, 0, captures)) {
             return false;
         }
     }
 
-    for (std::set<std::string>::const_iterator itr = includes()->begin();
-         itr != includes()->end();
-         itr++) {
-        size_t len = itr->length();
-        if (!itr->compare(0, len, name, len)) {
+    for (itr = whiteList()->begin(); itr != whiteList()->end(); itr++) {
+        if ((*itr)->execute(name, 0, captures)) {
             return true;
         }
     }
@@ -60,41 +96,73 @@ static const char* addrToName(void* address) {
     }
 }
 
+extern "C" {
+    void __cyg_profile_func_enter(void* funcAddress, void* callSite);
+    void __cyg_profile_func_exit(void* funcAddress, void* callSite);
+}
+
 void __cyg_profile_func_enter(void* funcAddress, void* callSite) {
-    if (!isEnabled || includes()->empty()) return;
+    if (!isEnabled || whiteList()->empty()) return;
+
+    stop();
 
     const char* funcName = addrToName(funcAddress);
     if (isPrintable(funcName)) {
-        LIBJ_DEBUG_PRINT("enter: %s", funcName);
+        printf("[LIBJ TRACE] enter: %s\n", funcName);
     }
+
+    resume();
 }
 
 void __cyg_profile_func_exit(void* funcAddress, void* callSite) {
-    if (!isEnabled || includes()->empty()) return;
+    if (!isEnabled || whiteList()->empty()) return;
+
+    stop();
 
     const char* funcName = addrToName(funcAddress);
     if (isPrintable(funcName)) {
-        LIBJ_DEBUG_PRINT("exit:  %s", funcName);
+        printf("[LIBJ TRACE] exit:  %s\n", funcName);
     }
+
+    resume();
 }
 
 namespace libj {
 namespace trace {
 
 void on() {
-    isEnabled = true;
+    if (!isEnabled) {
+        assert(whiteList()->empty());
+        assert(blackList()->empty());
+        isEnabled = true;
+    }
 }
 
 void off() {
-    isEnabled = false;
+    if (isEnabled) {
+        isEnabled = false;
+        clear();
+    }
 }
 
-void include(const char* prefix) {
-    includes()->insert(prefix);
+bool include(const char* pattern) {
+    libj::glue::RegExp* re = createRegExp(pattern);
+    if (re) {
+        whiteList()->push_back(re);
+        return true;
+    } else {
+        return false;
+    }
 }
 
-void exclude(const char* prefix) {
-    excludes()->insert(prefix);
+bool exclude(const char* pattern) {
+    libj::glue::RegExp* re = createRegExp(pattern);
+    if (re) {
+        blackList()->push_back(re);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 }  // namespace trance

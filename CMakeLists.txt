@@ -155,13 +155,6 @@ else(LIBJ_USE_EXCEPTION)
     )
 endif(LIBJ_USE_EXCEPTION)
 
-if(UNIX AND LIBJ_DEBUG)
-    set(libj-src
-        ${libj-src}
-        src/trace.cpp
-    )
-endif(UNIX AND LIBJ_DEBUG)
-
 ## libj-json-src
 set(libj-json-src
     src/glue/json.cpp
@@ -272,6 +265,7 @@ if(UNIX)
         set(libj-deps
             ${libj-deps}
             dl
+            trace
         )
     endif(LIBJ_DEBUG)
 
@@ -324,6 +318,13 @@ if(UNIX)
             -Wno-unused-parameter
         )
     endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+
+    if(LIBJ_DEBUG)
+        set(libj-cflags
+            ${libj-cflags}
+            -finstrument-functions   
+        )
+    endif(LIBJ_DEBUG)
 else(UNIX)
     set(libj-cflags
         /W4
@@ -496,6 +497,21 @@ if(LIBJ_BUILD_BDWGC)
         )
     endif(LIBJ_USE_THREAD)
 endif(LIBJ_BUILD_BDWGC)
+
+## trace
+if(UNIX AND LIBJ_DEBUG)
+    add_library(trace STATIC
+        src/trace.cpp
+    )
+
+    target_link_libraries(trace
+        regexp
+    )
+
+    set_target_properties(trace PROPERTIES
+        COMPILE_FLAGS ${libj-deps-cflags}
+    )
+endif(UNIX AND LIBJ_DEBUG)
 
 ## libj
 add_library(j STATIC
