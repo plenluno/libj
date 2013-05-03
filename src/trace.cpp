@@ -13,6 +13,8 @@
 
 #if defined(LIBJ_DEBUG) && !defined(LIBJ_USE_THREAD)
 
+static int depth = 0;
+
 static bool isEnabled = false;
 static bool wasEnabled = false;
 
@@ -112,7 +114,8 @@ void __cyg_profile_func_enter(void* funcAddress, void* callSite) {
 
     const char* funcName = addrToName(funcAddress);
     if (isPrintable(funcName)) {
-        printf("[LIBJ TRACE] enter: %s\n", funcName);
+        depth++;
+        printf("[LIBJ TRACE] enter: [%d: %s]\n", depth, funcName);
     }
 
     resume();
@@ -125,7 +128,8 @@ void __cyg_profile_func_exit(void* funcAddress, void* callSite) {
 
     const char* funcName = addrToName(funcAddress);
     if (isPrintable(funcName)) {
-        printf("[LIBJ TRACE] exit:  %s\n", funcName);
+        printf("[LIBJ TRACE] exit:  [%d: %s]\n", depth, funcName);
+        depth--;
     }
 
     resume();
