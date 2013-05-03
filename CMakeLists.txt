@@ -271,7 +271,6 @@ if(UNIX)
     if(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
         set(libj-deps
             ${libj-deps}
-            dl
             trace
         )
     endif(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
@@ -506,6 +505,7 @@ if(UNIX AND LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
     )
 
     target_link_libraries(trace
+        dl
         regexp
     )
 
