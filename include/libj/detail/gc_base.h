@@ -30,7 +30,8 @@
     #define LIBJ_DEBUG_OBJECT_COUNT_DEF
 #endif
 
-#define LIBJ_DEBUG_OBJECT_PTR(P) static_cast<const GCBase*>(&(*P))
+#define LIBJ_DEBUG_OBJECT_PTR(P) \
+    static_cast<const libj::detail::GCBase*>(&(*P))
 
 #ifdef LIBJ_USE_BDWGC
 
