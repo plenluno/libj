@@ -7,6 +7,7 @@
 #include <cxxabi.h>
 #include <dlfcn.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #include <vector>
 
@@ -30,6 +31,7 @@ static std::string convert(const char* s) {
     for (size_t i = 0; s[i]; i++) {
         s16 += static_cast<uint16_t>(s[i]);
     }
+    s16 += static_cast<uint16_t>(0);
     return std::string(
         reinterpret_cast<const char*>(s16.c_str()),
         s16.length() << 1);
