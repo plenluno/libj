@@ -813,10 +813,17 @@ class String : public libj::String {
  public:
     static CPtr intern(CPtr str) {
 #ifdef LIBJ_USE_THREAD
-        static const ConcurrentMap::Ptr symbols = ConcurrentMap::create();
+        typedef ConcurrentMap SymbolMap;
 #else
-        static const Map::Ptr symbols = Map::create();
+        typedef Map SymbolMap;
 #endif
+        static SymbolMap::Ptr symbols = SymbolMap::null();
+        if (!symbols) {
+            symbols = SymbolMap::create();
+            LIBJ_DEBUG_PRINT(
+                "static: SymbolMap %p",
+                LIBJ_DEBUG_OBJECT_PTR(symbols));
+        }
 
         if (!str || str->isInterned()) return str;
 
@@ -830,9 +837,10 @@ class String : public libj::String {
             CPtr sp(s);
             symbols->put(sp, sp);
             LIBJ_DEBUG_PRINT(
-                "symbol: [%d:%s]",
+                "symbol: [%d:%s] %p",
                 symbols->size(),
-                sp->toStdString().c_str());
+                sp->toStdString().c_str(),
+                LIBJ_DEBUG_OBJECT_PTR(sp));
             return sp;
         }
     }
