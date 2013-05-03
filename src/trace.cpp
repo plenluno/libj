@@ -53,12 +53,12 @@ static std::vector<libj::glue::RegExp*>* blackList() {
 
 static void clear() {
     std::vector<libj::glue::RegExp*>::iterator itr;
-    for (itr = whiteList()->begin(); itr != whiteList()->end(); itr++) {
+    for (itr = whiteList()->begin(); itr != whiteList()->end(); ++itr) {
         delete *itr;
     }
     whiteList()->clear();
 
-    for (itr = blackList()->begin(); itr != blackList()->end(); itr++) {
+    for (itr = blackList()->begin(); itr != blackList()->end(); ++itr) {
         delete *itr;
     }
     blackList()->clear();
@@ -71,13 +71,13 @@ static bool isPrintable(const char* funcName) {
     std::vector<int> captures;
     std::vector<libj::glue::RegExp*>::const_iterator itr;
 
-    for (itr = blackList()->begin(); itr != blackList()->end(); itr++) {
+    for (itr = blackList()->begin(); itr != blackList()->end(); ++itr) {
         if ((*itr)->execute(name, 0, captures)) {
             return false;
         }
     }
 
-    for (itr = whiteList()->begin(); itr != whiteList()->end(); itr++) {
+    for (itr = whiteList()->begin(); itr != whiteList()->end(); ++itr) {
         if ((*itr)->execute(name, 0, captures)) {
             return true;
         }
@@ -127,6 +127,8 @@ void __cyg_profile_func_exit(void* funcAddress, void* callSite) {
     resume();
 }
 
+#ifdef LIBJ_DEBUG
+
 namespace libj {
 namespace trace {
 
@@ -164,6 +166,8 @@ bool exclude(const char* pattern) {
         return false;
     }
 }
+
+#endif  // LIBJ_DEBUG
 
 }  // namespace trance
 }  // namespace libj
