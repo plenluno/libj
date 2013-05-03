@@ -5,7 +5,7 @@
 
 #include <libj/config.h>
 
-#ifdef LIBJ_DEBUG
+#if defined(LIBJ_DEBUG) && !defined(LIBJ_USE_THREAD)
 
 namespace libj {
 namespace trace {
@@ -26,13 +26,13 @@ bool exclude(const char* pattern);
 #define LIBJ_DEBUG_TRACE_INCLUDE(P) libj::trace::include(P)
 #define LIBJ_DEBUG_TRACE_EXCLUDE(P) libj::trace::exclude(P)
 
-#else
+#else  // defined(LIBJ_DEBUG) && !defined(LIBJ_USE_THREAD)
 
 #define LIBJ_DEBUG_TRACE_ON
 #define LIBJ_DEBUG_TRACE_OFF
 #define LIBJ_DEBUG_TRACE_INCLUDE(P) false
 #define LIBJ_DEBUG_TRACE_EXCLUDE(P) false
 
-#endif
+#endif  // defined(LIBJ_DEBUG) && !defined(LIBJ_USE_THREAD)
 
 #endif  // LIBJ_TRACE_H_

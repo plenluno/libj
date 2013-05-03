@@ -261,20 +261,20 @@ if(LIBJ_USE_JSCRE)
 endif(LIBJ_USE_JSCRE)
 
 if(UNIX)
-    if(LIBJ_DEBUG)
-        set(libj-deps
-            ${libj-deps}
-            dl
-            trace
-        )
-    endif(LIBJ_DEBUG)
-
     if(NOT ANDROID)
         set(libj-deps
             ${libj-deps}
             pthread
         )
     endif(NOT ANDROID)
+
+    if(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+        set(libj-deps
+            ${libj-deps}
+            dl
+            trace
+        )
+    endif(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
 endif(UNIX)
 
 ## libj-test-deps
@@ -319,12 +319,12 @@ if(UNIX)
         )
     endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 
-    if(LIBJ_DEBUG)
+    if(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
         set(libj-cflags
             ${libj-cflags}
             -finstrument-functions   
         )
-    endif(LIBJ_DEBUG)
+    endif(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
 else(UNIX)
     set(libj-cflags
         /W4
@@ -358,6 +358,7 @@ if(UNIX)
     set(libj-test-cflags
         -Wall
         -Wno-sign-compare
+        -Wno-unused-value
     )
 
     if(NOT APPLE)
@@ -375,12 +376,12 @@ if(UNIX)
         )
     endif(LIBJ_USE_CXX11)
 
-    if(LIBJ_DEBUG)
+    if(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
         set(libj-test-cflags
             ${libj-test-cflags}
             -finstrument-functions   
         )
-    endif(LIBJ_DEBUG)
+    endif(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
 else(UNIX)
     set(libj-test-cflags
         /D_VARIADIC_MAX=10
@@ -499,7 +500,7 @@ if(LIBJ_BUILD_BDWGC)
 endif(LIBJ_BUILD_BDWGC)
 
 ## trace
-if(UNIX AND LIBJ_DEBUG)
+if(UNIX AND LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
     add_library(trace STATIC
         src/trace.cpp
     )
@@ -511,7 +512,7 @@ if(UNIX AND LIBJ_DEBUG)
     set_target_properties(trace PROPERTIES
         COMPILE_FLAGS ${libj-deps-cflags}
     )
-endif(UNIX AND LIBJ_DEBUG)
+endif(UNIX AND LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
 
 ## libj
 add_library(j STATIC

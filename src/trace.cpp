@@ -10,6 +10,8 @@
 
 #include <vector>
 
+#if defined(LIBJ_DEBUG) && !defined(LIBJ_USE_THREAD)
+
 static bool isEnabled = false;
 static bool wasEnabled = false;
 
@@ -127,8 +129,6 @@ void __cyg_profile_func_exit(void* funcAddress, void* callSite) {
     resume();
 }
 
-#ifdef LIBJ_DEBUG
-
 namespace libj {
 namespace trace {
 
@@ -167,7 +167,7 @@ bool exclude(const char* pattern) {
     }
 }
 
-#endif  // LIBJ_DEBUG
-
 }  // namespace trance
 }  // namespace libj
+
+#endif  // defined(LIBJ_DEBUG) && !defined(LIBJ_USE_THREAD)
