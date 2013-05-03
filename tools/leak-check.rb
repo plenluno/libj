@@ -2,6 +2,7 @@
 
 require 'set'
 
+prevLine = ""
 numObjects = 0
 
 objects = Set.new
@@ -24,7 +25,7 @@ STDIN.each do |line|
     end
   end
 
-  if /^\[LIBJ DEBUG\] static: (\w*) 0x(\w*)/ =~ line
+  if /^\[LIBJ DEBUG\] static: (.*) 0x(\w*)/ =~ line
     if staticObjects.include?($2)
       raise "already constructed: " + $2
     else
@@ -40,17 +41,27 @@ STDIN.each do |line|
     end
   end
 
+  if  /^\[LIBJ DEBUG\] symbol: \[.*/ =~ prevLine and /^\] 0x(\w*)/ =~ line
+    if staticObjects.include?($1)
+      raise "already constructed: " + $1
+    else
+      staticObjects.add($1)
+    end
+  end
+
   if /^\[LIBJ DEBUG\] remaining objects: (\d*)/ =~ line
     numObjects = $1
     break;
   end
+
+  prevLine = line
 end
 
 if objects.size != numObjects.to_i
-  raise "remaining objects: not " + numObjects + " but " + objects.size.to_s;
+  raise "remaining objects: not " + numObjects + " but " + objects.size.to_s
 end
 
 leakedObjects = objects ^ staticObjects
 if !leakedObjects.empty?
-  raise "leaked objects: " + leakedObjects
+  raise "leaked objects: " + leakedObjects.inspect
 end
