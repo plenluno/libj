@@ -298,8 +298,7 @@ TEST(GTestString, TestConcat) {
     ASSERT_TRUE(s->equals(e->concat(s)));
     ASSERT_TRUE(s->equals(s->concat(e)));
 
-    String::CPtr n = String::null();
-    ASSERT_TRUE(s->equals(s->concat(n)));
+    ASSERT_FALSE(s->concat(String::null()));
 }
 
 TEST(GTestString, TestCompareTo) {

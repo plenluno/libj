@@ -142,7 +142,9 @@ class String : public libj::String {
     }
 
     virtual CPtr concat(CPtr other) const {
-        if (!other || other->isEmpty()) {
+        if (!other) {
+            return String::null();
+        } else if (other->isEmpty()) {
             return this->toString();
         } else if (this->isEmpty()) {
             return other->toString();
