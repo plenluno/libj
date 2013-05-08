@@ -4,6 +4,7 @@
 #define LIBJ_CONFIG_H_
 
 #cmakedefine LIBJ_DEBUG
+#cmakedefine LIBJ_TRACE
 #cmakedefine LIBJ_USE_BDWGC
 #cmakedefine LIBJ_USE_CXX11
 #cmakedefine LIBJ_USE_EXCEPTION
@@ -25,12 +26,18 @@
 
 #ifdef _WIN32
     #define LIBJ_PF_WINDOWS
+#elif __ANDROID__
+    #define LIBJ_PF_ANDROID
 #else
     #define LIBJ_PF_UNIX
 #endif
 
-#ifdef __ANDROID__
-    #define LIBJ_PF_ANDROID
+#ifdef _WIN32
+    #define LIBJ_USE_MSVC
+#elif __clang__
+    #define LIBJ_USE_CLANG
+#else
+    #define LIBJ_USE_GCC
 #endif
 
 #endif  // LIBJ_CONFIG_H_
