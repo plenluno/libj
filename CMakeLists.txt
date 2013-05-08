@@ -9,6 +9,7 @@ include(CMakeDependentOption)
 # options ----------------------------------------------------------------------
 
 option(LIBJ_DEBUG         "Debug Mode"        OFF)
+option(LIBJ_TRACE         "Trace Mode"        OFF)
 option(LIBJ_USE_BDWGC     "Use BDW-GC"        OFF)
 option(LIBJ_USE_CXX11     "Use C++11"         OFF)
 option(LIBJ_USE_EXCEPTION "Use Exceptions"    OFF)
@@ -26,6 +27,14 @@ cmake_dependent_option(LIBJ_BUILD_BDWGC
 )
 
 ## check
+if(LIBJ_TRACE AND NOT LIBJ_DEBUG)
+    message(FATAL_ERROR "LIBJ_TRACE=ON and LIBJ_DEBUG=OFF")
+endif(LIBJ_TRACE AND NOT LIBJ_DEBUG)
+
+if(LIBJ_TRACE AND LIBJ_USE_THREAD)
+    message(FATAL_ERROR "LIBJ_TRACE=ON and LIBJ_USE_THREAD=ON")
+endif(LIBJ_TRACE AND LIBJ_USE_THREAD)
+
 if(LIBJ_USE_BDWGC AND NOT LIBJ_BUILD_BDWGC)
     message(FATAL_ERROR "LIBJ_USE_BDWGC=ON and LIBJ_BUILD_BDWGC=OFF")
 endif(LIBJ_USE_BDWGC AND NOT LIBJ_BUILD_BDWGC)
@@ -36,6 +45,7 @@ endif(LIBJ_USE_BDWGC AND LIBJ_USE_THREAD)
 
 ## status
 message(STATUS "LIBJ_DEBUG=${LIBJ_DEBUG}")
+message(STATUS "LIBJ_TRACE=${LIBJ_TRACE}")
 message(STATUS "LIBJ_USE_BDWGC=${LIBJ_USE_BDWGC}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
@@ -268,12 +278,12 @@ if(UNIX)
         )
     endif(NOT ANDROID)
 
-    if(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+    if(LIBJ_TRACE)
         set(libj-deps
             ${libj-deps}
             trace
         )
-    endif(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+    endif(LIBJ_TRACE)
 endif(UNIX)
 
 ## libj-test-deps
@@ -289,6 +299,26 @@ if(UNIX AND NOT ANDROID)
     )
 endif(UNIX AND NOT ANDROID)
 
+if(LIBJ_USE_CXX11 AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(libj-test-deps
+        ${libj-test-deps}
+        c++
+        c++abi
+    )
+endif(LIBJ_USE_CXX11 AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+
+## cxx11-flags
+set(cxx11-flags
+    --std=c++0x
+)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(cxx11-flags
+        ${cxx11-flags}
+        -stdlib=libc++
+    )
+endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+
 ## libj-cflags
 if(UNIX)
     set(libj-cflags
@@ -299,7 +329,7 @@ if(UNIX)
     if(LIBJ_USE_CXX11)
         set(libj-cflags
             ${libj-cflags}
-            --std=c++0x
+            ${cxx11-flags}
         )
     endif(LIBJ_USE_CXX11)
 
@@ -318,19 +348,17 @@ if(UNIX)
         )
     endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 
-    if(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+    if(LIBJ_TRACE)
         set(libj-cflags
             ${libj-cflags}
             -finstrument-functions   
         )
-    endif(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+    endif(LIBJ_TRACE)
 else(UNIX)
     set(libj-cflags
         /W4
     )
 endif(UNIX)
-
-string(REPLACE ";" " " libj-cflags "${libj-cflags}")
 
 ## libj-deps-cflags
 if(UNIX)
@@ -341,7 +369,7 @@ if(UNIX)
     if(LIBJ_USE_CXX11)
         set(libj-deps-cflags
             ${libj-deps-cflags}
-            --std=c++0x
+            ${cxx11-flags}
         )
     endif(LIBJ_USE_CXX11)
 else(UNIX)
@@ -350,14 +378,13 @@ else(UNIX)
     )
 endif(UNIX)
 
-string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
-
 ## libj-test-cflags
 if(UNIX)
     set(libj-test-cflags
         -Wall
         -Wno-sign-compare
         -Wno-unused-value
+        -Wno-unused-private-field
     )
 
     if(NOT APPLE)
@@ -371,22 +398,25 @@ if(UNIX)
     if(LIBJ_USE_CXX11)
         set(libj-test-cflags
             ${libj-test-cflags}
-            --std=c++0x
+            ${cxx11-flags}
         )
     endif(LIBJ_USE_CXX11)
 
-    if(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+    if(LIBJ_TRACE)
         set(libj-test-cflags
             ${libj-test-cflags}
             -finstrument-functions   
         )
-    endif(LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+    endif(LIBJ_TRACE)
 else(UNIX)
     set(libj-test-cflags
         /D_VARIADIC_MAX=10
     )
 endif(UNIX)
 
+string(REPLACE ";" " " cxx11-flags "${cxx11-flags}")
+string(REPLACE ";" " " libj-cflags "${libj-cflags}")
+string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
 string(REPLACE ";" " " libj-test-cflags "${libj-test-cflags}")
 
 # configure --------------------------------------------------------------------
@@ -421,7 +451,7 @@ if(NOT LIBJ_USE_ICONV)
 
     if(UNIX AND LIBJ_USE_CXX11)
         set_target_properties(convertutf PROPERTIES
-            COMPILE_FLAGS "--std=c++0x"
+            COMPILE_FLAGS ${cxx11-flags}
         )
     endif(UNIX AND LIBJ_USE_CXX11)
 endif(NOT LIBJ_USE_ICONV)
@@ -447,11 +477,11 @@ add_library(regexp STATIC
     src/glue/regexp.cpp
 )
 
-if(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
+if(UNIX AND NOT LIBJ_USE_JSCRE AND LIBJ_USE_CXX11)
     set_target_properties(regexp PROPERTIES
-        COMPILE_FLAGS "--std=c++0x"
+        COMPILE_FLAGS ${cxx11-flags}
     )
-endif(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
+endif(UNIX AND NOT LIBJ_USE_JSCRE AND LIBJ_USE_CXX11)
 
 ## dtoa
 add_library(dtoa STATIC
@@ -499,7 +529,7 @@ if(LIBJ_BUILD_BDWGC)
 endif(LIBJ_BUILD_BDWGC)
 
 ## trace
-if(UNIX AND LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+if(UNIX AND LIBJ_TRACE)
     add_library(trace STATIC
         src/trace.cpp
     )
@@ -512,7 +542,7 @@ if(UNIX AND LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
     set_target_properties(trace PROPERTIES
         COMPILE_FLAGS ${libj-deps-cflags}
     )
-endif(UNIX AND LIBJ_DEBUG AND NOT LIBJ_USE_THREAD)
+endif(UNIX AND LIBJ_TRACE)
 
 ## libj
 add_library(j STATIC
@@ -530,19 +560,13 @@ set_target_properties(j PROPERTIES
 # build tests ------------------------------------------------------------------
 
 if(LIBJ_BUILD_GTEST)
-    if(UNIX)
-        add_subdirectory(
-            deps/googletest
-        )
-    else(UNIX)
-        add_library(gtest STATIC
-            deps/googletest/src/gtest-all.cc
-        )
+    add_library(gtest STATIC
+        deps/googletest/src/gtest-all.cc
+    )
 
-        set_target_properties(gtest PROPERTIES
-            COMPILE_FLAGS "/D_VARIADIC_MAX=10"
-        )
-    endif(UNIX)
+    set_target_properties(gtest PROPERTIES
+        COMPILE_FLAGS "${libj-test-cflags}"
+    )
 endif(LIBJ_BUILD_GTEST)
 
 if(LIBJ_BUILD_TEST)
