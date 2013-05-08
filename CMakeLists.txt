@@ -381,10 +381,7 @@ endif(UNIX)
 ## libj-test-cflags
 if(UNIX)
     set(libj-test-cflags
-        -Wall
-        -Wno-sign-compare
-        -Wno-unused-value
-        -Wno-unused-private-field
+        ""
     )
 
     if(NOT APPLE)
@@ -477,11 +474,11 @@ add_library(regexp STATIC
     src/glue/regexp.cpp
 )
 
-if(UNIX AND NOT LIBJ_USE_JSCRE AND LIBJ_USE_CXX11)
+if(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
     set_target_properties(regexp PROPERTIES
         COMPILE_FLAGS ${cxx11-flags}
     )
-endif(UNIX AND NOT LIBJ_USE_JSCRE AND LIBJ_USE_CXX11)
+endif(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
 
 ## dtoa
 add_library(dtoa STATIC
