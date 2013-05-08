@@ -11,7 +11,7 @@
 
 #include <vector>
 
-#if defined(LIBJ_DEBUG) && !defined(LIBJ_USE_THREAD)
+#ifdef LIBJ_TRACE
 
 static int depth = 0;
 
@@ -176,4 +176,4 @@ bool exclude(const char* pattern) {
 }  // namespace trance
 }  // namespace libj
 
-#endif  // defined(LIBJ_DEBUG) && !defined(LIBJ_USE_THREAD)
+#endif  // LIBJ_TRACE
