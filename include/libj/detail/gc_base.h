@@ -92,12 +92,12 @@ class GCBase : virtual public gc {
 
 #else  // LIBJ_USE_BDWGC
 
-#ifndef LIBJ_USE_CXX11
-    #include <boost/enable_shared_from_this.hpp>
-    #define LIBJ_ENABLE_THIS(T) boost::enable_shared_from_this<T>
-#else
+#if defined(LIBJ_USE_CXX11) && !defined(LIBJ_USE_CLANG)
     #include <memory>
     #define LIBJ_ENABLE_THIS(T) std::enable_shared_from_this<T>
+#else
+    #include <boost/enable_shared_from_this.hpp>
+    #define LIBJ_ENABLE_THIS(T) boost::enable_shared_from_this<T>
 #endif
 
 namespace libj {

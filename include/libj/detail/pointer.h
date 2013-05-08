@@ -18,7 +18,7 @@ struct NullDeleter {
 #define LIBJ_NULL(T) static_cast<T*>(0)
 #define LIBJ_NULL_DELETER libj::detail::NullDeleter()
 
-#ifdef LIBJ_USE_CXX11
+#if defined(LIBJ_USE_CXX11) && !defined(LIBJ_USE_CLANG)
     #define STATIC_POINTER_CAST(T) std::static_pointer_cast<T>
 #else
     #define STATIC_POINTER_CAST(T) boost::static_pointer_cast<T>

@@ -3,7 +3,7 @@
 #ifndef LIBJ_DETAIL_SHARED_PTR_H_
 #define LIBJ_DETAIL_SHARED_PTR_H_
 
-#ifdef LIBJ_USE_CXX11
+#if defined(LIBJ_USE_CXX11) && !defined(LIBJ_USE_CLANG)
 
 #include <memory>
 
