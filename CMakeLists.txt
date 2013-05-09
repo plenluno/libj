@@ -307,14 +307,14 @@ if(LIBJ_USE_CXX11 AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     )
 endif(LIBJ_USE_CXX11 AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
-## cxx11-flags
-set(cxx11-flags
+## libj-cxx11-cflags
+set(libj-cxx11-cflags
     --std=c++0x
 )
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(cxx11-flags
-        ${cxx11-flags}
+    set(libj-cxx11-cflags
+        ${libj-cxx11-cflags}
         -stdlib=libc++
     )
 endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -329,7 +329,7 @@ if(UNIX)
     if(LIBJ_USE_CXX11)
         set(libj-cflags
             ${libj-cflags}
-            ${cxx11-flags}
+            ${libj-cxx11-cflags}
         )
     endif(LIBJ_USE_CXX11)
 
@@ -369,7 +369,7 @@ if(UNIX)
     if(LIBJ_USE_CXX11)
         set(libj-deps-cflags
             ${libj-deps-cflags}
-            ${cxx11-flags}
+            ${libj-cxx11-cflags}
         )
     endif(LIBJ_USE_CXX11)
 else(UNIX)
@@ -381,7 +381,7 @@ endif(UNIX)
 ## libj-test-cflags
 if(UNIX)
     set(libj-test-cflags
-        ""
+        -Wno-unused-value
     )
 
     if(NOT APPLE)
@@ -395,7 +395,7 @@ if(UNIX)
     if(LIBJ_USE_CXX11)
         set(libj-test-cflags
             ${libj-test-cflags}
-            ${cxx11-flags}
+            ${libj-cxx11-cflags}
         )
     endif(LIBJ_USE_CXX11)
 
@@ -411,10 +411,10 @@ else(UNIX)
     )
 endif(UNIX)
 
-string(REPLACE ";" " " cxx11-flags "${cxx11-flags}")
-string(REPLACE ";" " " libj-cflags "${libj-cflags}")
-string(REPLACE ";" " " libj-deps-cflags "${libj-deps-cflags}")
-string(REPLACE ";" " " libj-test-cflags "${libj-test-cflags}")
+string(REPLACE ";" " " libj-cflags       "${libj-cflags}")
+string(REPLACE ";" " " libj-deps-cflags  "${libj-deps-cflags}")
+string(REPLACE ";" " " libj-test-cflags  "${libj-test-cflags}")
+string(REPLACE ";" " " libj-cxx11-cflags "${libj-cxx11-cflags}")
 
 # configure --------------------------------------------------------------------
 
@@ -448,7 +448,7 @@ if(NOT LIBJ_USE_ICONV)
 
     if(UNIX AND LIBJ_USE_CXX11)
         set_target_properties(convertutf PROPERTIES
-            COMPILE_FLAGS ${cxx11-flags}
+            COMPILE_FLAGS ${libj-cxx11-cflags}
         )
     endif(UNIX AND LIBJ_USE_CXX11)
 endif(NOT LIBJ_USE_ICONV)
@@ -476,7 +476,7 @@ add_library(regexp STATIC
 
 if(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
     set_target_properties(regexp PROPERTIES
-        COMPILE_FLAGS ${cxx11-flags}
+        COMPILE_FLAGS ${libj-cxx11-cflags}
     )
 endif(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
 
