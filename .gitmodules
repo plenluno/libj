@@ -28,3 +28,6 @@
 [submodule "deps/iv"]
 	path = deps/iv
 	url = https://github.com/plenluno/iv.git
+[submodule "deps/googletest"]
+	path = deps/googletest
+	url = https://github.com/plenluno/googletest.git
