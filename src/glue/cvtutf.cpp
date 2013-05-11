@@ -1184,8 +1184,6 @@ std::string fromUtf8(const std::string& str, UnicodeEncoding enc) {
 }
 
 std::string fromUtf16(const std::u16string& str, UnicodeEncoding enc) {
-    const unsigned char* cstr =
-        reinterpret_cast<const unsigned char*>(str.c_str());
     switch (enc) {
     case UTF8:
         return utf16ToUtf8(str);
