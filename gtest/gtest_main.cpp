@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <libj/trace.h>
+#include <libj/typedef.h>
 #include <libj/detail/gc_base.h>
 
 int main(int argc, char** argv) {
