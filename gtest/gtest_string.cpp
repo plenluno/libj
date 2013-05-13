@@ -305,13 +305,25 @@ TEST(GTestString, TestCompareTo) {
     String::CPtr a = String::create("a");
     String::CPtr c = String::create("c");
     String::CPtr abcde = String::create("abcde");
-    ASSERT_EQ(-2, a->compareTo(c));
-    ASSERT_EQ(-4, a->compareTo(abcde));
-    ASSERT_EQ(-2, abcde->compareTo(c));
-    ASSERT_EQ(4, abcde->compareTo(a));
-    ASSERT_EQ(0, abcde->compareTo(abcde));
-    ASSERT_EQ(2, c->compareTo(a));
-    ASSERT_EQ(2, c->compareTo(abcde));
+
+    Int r0 = a->compareTo(c);
+    Int r1 = c->compareTo(a);
+    Int r2 = a->compareTo(abcde);
+    Int r3 = abcde->compareTo(a);
+    Int r4 = c->compareTo(abcde);
+    Int r5 = abcde->compareTo(c);
+    Int r6 = abcde->compareTo(abcde);
+
+    ASSERT_GT(0,   r0);
+    ASSERT_LT(0,   r1);
+    ASSERT_EQ(r0, -r1);
+    ASSERT_GT(0,   r2);
+    ASSERT_LT(0,   r3);
+    ASSERT_EQ(r2, -r3);
+    ASSERT_LT(0,   r4);
+    ASSERT_GT(0,   r5);
+    ASSERT_EQ(r4, -r5);
+    ASSERT_EQ(0,   r6);
 }
 
 TEST(GTestString, TestEquals) {

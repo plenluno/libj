@@ -43,6 +43,9 @@ glue::UnicodeEncoding convertStrEncoding(libj::String::Encoding enc) {
     }
 }
 
+#define LIBJ_DETAIL_STRING(S) static_cast<const String*>(&(*S))
+#define LIBJ_INTERNAL_STRING(S) LIBJ_DETAIL_STRING(S)->str_
+
 class String : public libj::String {
     typedef TypedIterator<Char> Iterator;
 
@@ -76,9 +79,7 @@ class String : public libj::String {
         return glue::fromUtf16(str_, convertStrEncoding(enc));
     }
 
-#endif  // LIBJ_USE_UTF16
-
-#ifdef LIBJ_USE_UTF32
+#else  // LIBJ_USE_UTF16
 
     typedef std::u32string ustring;
 
@@ -108,9 +109,7 @@ class String : public libj::String {
         return glue::fromUtf32(str_, convertStrEncoding(enc));
     }
 
-#endif  // LIBJ_USE_UTF32
-
-#if defined(LIBJ_USE_UTF16) || defined(LIBJ_USE_UTF32)
+#endif  // LIBJ_USE_UTF16
 
  public:
     String()
@@ -150,9 +149,8 @@ class String : public libj::String {
             return other->toString();
         }
 
-        const String* that = static_cast<const String*>(&(*other));
         String* s = new String(*this);
-        s->str_ += that->str_;
+        s->str_ += LIBJ_INTERNAL_STRING(other);
         return CPtr(s);
     }
 
@@ -163,18 +161,9 @@ class String : public libj::String {
             return result;
         }
 
+        assert(!!that);
         CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
-        Size len1 = this->length();
-        Size len2 = other->length();
-        Size len = len1 < len2 ? len1 : len2;
-        for (Size i = 0; i < len; i++) {
-            Char c1 = this->charAt(i);
-            Char c2 = other->charAt(i);
-            if (c1 != c2) {
-                return c1 - c2;
-            }
-        }
-        return len1 - len2;
+        return str_.compare(LIBJ_INTERNAL_STRING(other));
     }
 
     virtual Boolean equals(Object::CPtr that) const {
@@ -184,41 +173,18 @@ class String : public libj::String {
             return !result;
         }
 
+        assert(!!that);
         CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
-        if (this->isInterned() && other->isInterned()) {
-            return false;
-        } else {
-            Size len = this->length();
-            if (other->length() != len) {
-                return false;
-            } else {
-                for (Size i = 0; i < len; i++) {
-                    Char c1 = this->charAt(i);
-                    Char c2 = other->charAt(i);
-                    if (c1 != c2) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
+        return str_ == LIBJ_INTERNAL_STRING(other);
     }
 
     virtual Boolean startsWith(CPtr other, Size from) const {
         if (!other) return false;
 
-        Size len1 = this->length();
-        Size len2 = other->length();
-        if (len1 < from + len2) {
-            return false;
-        }
-
-        for (Size i = 0; i < len2; i++) {
-            if (this->charAt(from + i) != other->charAt(i)) {
-                return false;
-            }
-        }
-        return true;
+        return !str_.compare(
+            from,
+            other->length(),
+            LIBJ_INTERNAL_STRING(other));
     }
 
     virtual Boolean endsWith(CPtr other) const {
@@ -230,81 +196,30 @@ class String : public libj::String {
             return false;
         }
 
-        Size pos = len1 - len2;
-        for (Size i = 0; i < len2; i++) {
-            if (this->charAt(pos + i) != other->charAt(i)) {
-                return false;
-            }
-        }
-        return true;
+        return !str_.compare(
+            len1 - len2,
+            len2,
+            LIBJ_INTERNAL_STRING(other));
     }
 
     virtual Size indexOf(Char c, Size from) const {
-        Size len = length();
-        for (Size i = from; i < len; i++) {
-            if (charAt(i) == c) {
-                return i;
-            }
-        }
-        return NO_POS;
+        return str_.find_first_of(c, from);
     }
 
-    // TODO(plenluno): make it more efficient
     virtual Size indexOf(CPtr other, Size from) const {
         if (!other) return NO_POS;
 
-        Size len1 = this->length();
-        Size len2 = other->length();
-        if (len1 < from + len2) {
-            return NO_POS;
-        }
-
-        Size n = len1 - len2 + 1;
-        for (Size i = from; i < n; i++) {
-            if (startsWith(other, i)) {
-                return i;
-            }
-        }
-        return NO_POS;
+        return str_.find(LIBJ_INTERNAL_STRING(other), from);
     }
 
     virtual Size lastIndexOf(Char c, Size from) const {
-        Size len = length();
-        if (len == 0) {
-            return NO_POS;
-        }
-
-        from = from < len ? from : len - 1;
-        for (Size i = from; ; i--) {
-            if (charAt(i) == c) {
-                return i;
-            } else if (i == 0) {
-                break;
-            }
-        }
-        return NO_POS;
+        return str_.find_last_of(c, from);
     }
 
-    // TODO(plenluno): make it more efficient
     virtual Size lastIndexOf(CPtr other, Size from) const {
         if (!other) return NO_POS;
 
-        Size len1 = this->length();
-        Size len2 = other->length();
-        if (len1 < len2) {
-            return NO_POS;
-        }
-
-        Size diff = len1 - len2;
-        from = from < diff ? from : diff;
-        for (Size i = from; ; i--) {
-            if (startsWith(other, i)) {
-                return i;
-            } else if (i == 0) {
-                break;
-            }
-        }
-        return NO_POS;
+        return str_.rfind(LIBJ_INTERNAL_STRING(other), from);
     }
 
     virtual CPtr toLowerCase() const {
@@ -333,456 +248,6 @@ class String : public libj::String {
         return CPtr(s);
     }
 
- private:
-    class CharIterator : public Iterator {
-        friend class String;
-        typedef ustring::const_iterator CItr;
-
-     public:
-        virtual Boolean hasNext() const {
-            return pos_ != end_;
-        }
-
-        virtual Char next() {
-            if (pos_ == end_) {
-                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-                return 0;
-            } else {
-                Char c = *pos_;
-                ++pos_;
-                return c;
-            }
-        }
-
-        virtual libj::String::CPtr toString() const {
-            return libj::String::create();
-        }
-
-     private:
-        CItr pos_;
-        CItr end_;
-
-        CharIterator(const ustring& str)
-            : pos_(str.begin())
-            , end_(str.end()) {}
-
-        CharIterator(const CharIterator* itr)
-            : pos_(itr->pos_)
-            , end_(itr->end_) {}
-    };
-
- private:
-    ustring str_;
-
-#endif  // defined(LIBJ_USE_UTF16) || defined(LIBJ_USE_UTF32)
-
-#ifdef LIBJ_USE_UTF8
-
- public:
-    String()
-        : length_(0)
-        , interned_(false) {}
-
-    String(Char c, Size n)
-        : length_(n)
-        , interned_(false) {
-        std::u32string u32s(n, c);
-        str_ = glue::fromUtf32(u32s, glue::UTF8);
-    }
-
-    String(const std::u16string& s16)
-        : interned_(false) {
-        str_ = glue::utf16ToUtf8(s16, &length_);
-    }
-
-    String(const std::u32string& s32)
-        : str_(glue::fromUtf32(s32, glue::UTF8))
-        , length_(s32.length())
-        , interned_(false) {}
-
-    String(const String& other)
-        : str_(other.str_)
-        , length_(other.length_)
-        , interned_(false) {}
-
-    String(const String& other, Size pos, Size count = NO_POS)
-        : interned_(false) {
-        Size len = other.length() - pos;
-        length_ = count < len ? count : len;
-
-        const char* p0 = other.str_.c_str();
-        const char* p1 = advance(p0, pos);
-        const char* p2 = advance(p1, length_);
-        str_ = std::string(other.str_, p1 - p0, p2 - p1);
-    }
-
-    String(
-        const void* data,
-        Encoding enc,
-        Size max)
-        : interned_(false) {
-        str_ = glue::toUtf8(data, convertStrEncoding(enc), max, &length_);
-    }
-
-    virtual Size length() const {
-        return length_;
-    }
-
-    virtual Char charAt(Size index) const {
-        if (index >= length()) {
-            return NO_CHAR;
-        } else {
-            const char* pos = advance(str_.c_str(), index);
-            return glue::codePointAt(pos, glue::UTF8);
-        }
-    }
-
-    virtual CPtr concat(CPtr other) const {
-        if (!other || other->isEmpty()) {
-            return this->toString();
-        } else if (this->isEmpty()) {
-            return other->toString();
-        }
-
-        const String* that = static_cast<const String*>(&(*other));
-        String* s = new String(*this);
-        s->str_ += that->str_;
-        s->length_ += that->length_;
-        return CPtr(s);
-    }
-
-    virtual Int compareTo(Object::CPtr that) const {
-        Int result = Object::compareTo(that);
-        if (result != TYPE_CMP_SAME &&
-            result != -TYPE_CMP_SAME) {
-            return result;
-        }
-
-        CPtr thatStr = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
-        const String* other = static_cast<const String*>(&(*thatStr));
-        Size len1 = this->length();
-        Size len2 = other->length();
-        Size len = len1 < len2 ? len1 : len2;
-        Iterator::Ptr itr1 = this->iterator();
-        Iterator::Ptr itr2 = other->iterator();
-        for (Size i = 0; i < len; i++) {
-            assert(itr1->hasNext() && itr2->hasNext());
-            Char c1 = itr1->next();
-            Char c2 = itr2->next();
-            if (c1 != c2) {
-                return c1 - c2;
-            }
-        }
-        return len1 - len2;
-    }
-
-    virtual Boolean equals(Object::CPtr that) const {
-        Int result = Object::compareTo(that);
-        if (result != TYPE_CMP_SAME &&
-            result != -TYPE_CMP_SAME) {
-            return !result;
-        }
-
-        CPtr thatStr = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
-        const String* other = static_cast<const String*>(&(*thatStr));
-        if (this->isInterned() && other->isInterned()) {
-            return false;
-        } else {
-            Size len = this->length();
-            if (other->length() != len) {
-                return false;
-            } else {
-                Iterator::Ptr itr1 = this->iterator();
-                Iterator::Ptr itr2 = other->iterator();
-                for (Size i = 0; i < len; i++) {
-                    assert(itr1->hasNext() && itr2->hasNext());
-                    Char c1 = itr1->next();
-                    Char c2 = itr2->next();
-                    if (c1 != c2) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-    }
-
-    virtual Boolean startsWith(CPtr other, Size from) const {
-        if (!other) return false;
-
-        Size len1 = this->length();
-        Size len2 = other->length();
-        if (len1 < from + len2) {
-            return false;
-        }
-
-        const char* this8 = advance(this->str_.c_str(), from);
-        const String* that = static_cast<const String*>(&(*other));
-        const char* that8 = that->str_.c_str();
-        Size len8 = that->str_.length();
-
-        for (Size i = 0; i < len8; i++, this8++, that8++) {
-            if (*this8 != *that8) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    virtual Boolean endsWith(CPtr other) const {
-        if (!other) return false;
-
-        Size len1 = this->length();
-        Size len2 = other->length();
-        if (len1 < len2) {
-            return false;
-        }
-
-        const char* this8 = advance(this->str_.c_str(), len1 - len2);
-        const String* that = static_cast<const String*>(&(*other));
-        const char* that8 = that->str_.c_str();
-        Size len8 = that->str_.length();
-
-        for (Size i = 0; i < len8; i++, this8++, that8++) {
-            if (*this8 != *that8) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    virtual Size indexOf(Char c, Size from) const {
-        if (from >= length_) return NO_POS;
-
-        Size i = 0;
-        Iterator::Ptr itr = iterator();
-        for (; i < from; i++) {
-            itr->next();
-        }
-        while (itr->hasNext()) {
-            if (itr->next() == c) {
-                return i;
-            } else {
-                i++;
-            }
-        }
-        return NO_POS;
-    }
-
-    // TODO(plenluno): make it more efficient
-    virtual Size indexOf(CPtr other, Size from) const {
-        if (!other) return NO_POS;
-
-        Size len1 = this->length();
-        Size len2 = other->length();
-        if (len1 < from + len2) {
-            return NO_POS;
-        }
-
-        Size n = len1 - len2 + 1;
-        const String* that = static_cast<const String*>(&(*other));
-        const char* s1 = advance(str_.c_str(), from);
-        const char* s2 = that->str_.c_str();
-        for (Size i = from; i < n; i++) {
-            if (isSame(s1, s2, len2)) {
-                return i;
-            } else {
-                s1 += glue::byteLengthAt(s1, glue::UTF8);
-            }
-        }
-        return NO_POS;
-    }
-
-    virtual Size lastIndexOf(Char c, Size from) const {
-        Size len = length();
-        if (len == 0) {
-            return NO_POS;
-        }
-
-        from = from < len ? from : len - 1;
-        std::vector<Size> byteLens;
-        const char* pos = str_.c_str();
-        for (Size i = 0; i < from; i++) {
-            Size byteLen = glue::byteLengthAt(pos, glue::UTF8);
-            byteLens.push_back(byteLen);
-            pos += byteLen;
-        }
-        for (Size i = from; ; i--) {
-            if (glue::codePointAt(pos, glue::UTF8) == c) {
-                return i;
-            } else if (i == 0) {
-                break;
-            } else {
-                pos -= byteLens[i - 1];
-            }
-        }
-        return NO_POS;
-    }
-
-    // TODO(plenluno): make it more efficient
-    virtual Size lastIndexOf(CPtr other, Size from) const {
-        if (!other) return NO_POS;
-
-        Size len1 = this->length();
-        Size len2 = other->length();
-        if (len1 < len2) {
-            return NO_POS;
-        }
-
-        Size diff = len1 - len2;
-        from = from < diff ? from : diff;
-
-        std::vector<Size> byteLens;
-        const char* s1 = str_.c_str();
-        for (Size i = 0; i < from; i++) {
-            Size byteLen = glue::byteLengthAt(s1, glue::UTF8);
-            byteLens.push_back(byteLen);
-            s1 += byteLen;
-        }
-
-        const String* that = static_cast<const String*>(&(*other));
-        const char* s2 = that->str_.c_str();
-
-        for (Size i = from; ; i--) {
-            if (isSame(s1, s2, len2)) {
-                return i;
-            } else if (i == 0) {
-                break;
-            } else {
-                s1 -= byteLens[i - 1];
-            }
-        }
-        return NO_POS;
-    }
-
-    virtual CPtr toLowerCase() const {
-        String* s = new String();
-        s->length_ = length_;
-        Size len = str_.length();
-        const char* pos = str_.c_str();
-        for (Size i = 0; i < len;) {
-            Size byteLen = glue::byteLengthAt(pos, glue::UTF8);
-            if (byteLen == 1) {
-                char c = *pos++;
-                if (c >= 'A' && c <= 'Z') {
-                    c += 'a' - 'A';
-                }
-                s->str_ += c;
-            } else {
-                for (Size j = 0; j < byteLen; j++) {
-                    s->str_ += *pos++;
-                }
-            }
-            i += byteLen;
-        }
-        return CPtr(s);
-    }
-
-    virtual CPtr toUpperCase() const {
-        String* s = new String();
-        s->length_ = length_;
-        Size len = str_.length();
-        const char* pos = str_.c_str();
-        for (Size i = 0; i < len;) {
-            Size byteLen = glue::byteLengthAt(pos, glue::UTF8);
-            if (byteLen == 1) {
-                char c = *pos++;
-                if (c >= 'a' && c <= 'z') {
-                    c -= 'a' - 'A';
-                }
-                s->str_ += c;
-            } else {
-                for (Size j = 0; j < byteLen; j++) {
-                    s->str_ += *pos++;
-                }
-            }
-            i += byteLen;
-        }
-        return CPtr(s);
-    }
-
-    virtual std::u16string toStdU16String() const {
-        return glue::utf8ToUtf16(str_);
-    }
-
-    virtual std::u32string toStdU32String() const {
-        return glue::toUtf32(str_.c_str(), glue::UTF8, NO_POS);
-    }
-
-    virtual std::string toStdString(Encoding enc) const {
-        return glue::fromUtf8(str_, convertStrEncoding(enc));
-    }
-
- private:
-    class CharIterator : public Iterator {
-        friend class String;
-
-     public:
-        virtual Boolean hasNext() const {
-            return pos_ < end_;
-        }
-
-        virtual Char next() {
-            if (pos_ >= end_) {
-                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
-                return 0;
-            } else {
-                Char c = glue::codePointAt(pos_, glue::UTF8);
-                pos_ += glue::byteLengthAt(pos_, glue::UTF8);
-                return c;
-            }
-        }
-
-        virtual libj::String::CPtr toString() const {
-            return libj::String::create();
-        }
-
-     private:
-        const char* pos_;
-        const char* end_;
-
-        CharIterator(const std::string& str)
-            : pos_(str.c_str())
-            , end_(pos_ + str.length()) {}
-
-        CharIterator(const CharIterator* itr)
-            : pos_(itr->pos_)
-            , end_(itr->end_) {}
-    };
-
-    static const char* advance(const char* utf8, Size n) {
-        const char* pos = utf8;
-        for (Size i = 0; i < n; i++) {
-            pos += glue::byteLengthAt(pos, glue::UTF8);
-        }
-        return pos;
-    }
-
-    static Boolean isSame(const char* s1, const char* s2, Size n) {
-        for (Size i = 0; i < n; i++) {
-            Size byteLen1 = glue::byteLengthAt(s1, glue::UTF8);
-            Size byteLen2 = glue::byteLengthAt(s2, glue::UTF8);
-            if (byteLen1 != byteLen2) return false;
-
-            char32_t c1 = glue::codePointAt(s1, glue::UTF8);
-            char32_t c2 = glue::codePointAt(s2, glue::UTF8);
-            if (c1 != c2) return false;
-
-            s1 += byteLen1;
-            s2 += byteLen2;
-        }
-        return true;
-    }
-
- private:
-    std::string str_;
-    Size length_;
-
-    #define UNSUPPORTED_OPERATIONS
-
-#endif  // LIBJ_USE_UTF8
-
- public:
     virtual Boolean isEmpty() const {
         return length() == 0;
     }
@@ -833,7 +298,7 @@ class String : public libj::String {
         if (sym) {
             return sym;
         } else {
-            String* s = new String(*(static_cast<const String*>(&(*str))));
+            String* s = new String(*LIBJ_DETAIL_STRING(str));
             s->interned_ = true;
 
             CPtr sp(s);
@@ -852,62 +317,50 @@ class String : public libj::String {
     }
 
  private:
-    Boolean interned_;
+    class CharIterator : public Iterator {
+        friend class String;
+        typedef ustring::const_iterator CItr;
 
-#ifdef UNSUPPORTED_OPERATIONS
+     public:
+        virtual Boolean hasNext() const {
+            return pos_ != end_;
+        }
 
- public:
-    virtual Iterator::Ptr iterator() const {
-        return Iterator::Ptr(new CharIterator(str_));
-    }
-
-    virtual CPtr substring(Iterator::CPtr from) const {
-        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
-        return String::null();
-    }
-
-    virtual CPtr substring(Iterator::CPtr from, Iterator::CPtr to) const {
-        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
-        return String::null();
-    }
-
-    virtual Iterator::Ptr findFirstOf(Char c, Iterator::CPtr from) const {
-        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
-        return Iterator::null();
-    }
-
-    virtual Iterator::Ptr findFirstOf(CPtr srt, Iterator::CPtr from) const {
-        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
-        return Iterator::null();
-    }
-
-    virtual Iterator::Ptr findLastOf(Char c, Iterator::CPtr from) const {
-        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
-        return Iterator::null();
-    }
-
-    virtual Iterator::Ptr findLastOf(CPtr srt, Iterator::CPtr from) const {
-        LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
-        return Iterator::null();
-    }
-
-    virtual Boolean startsWith(CPtr other, Iterator::CPtr from) const {
-        if (!other || !from) return false;
-
-        const String* that = static_cast<const String*>(&(*other));
-        Iterator::Ptr itr1(new CharIterator(
-            static_cast<const CharIterator*>(&(*from))));
-        Iterator::Ptr itr2 = that->iterator();
-        while (itr2->hasNext()) {
-            if (!itr1->hasNext() || itr1->next() != itr2->next()) {
-                return false;
+        virtual Char next() {
+            if (pos_ == end_) {
+                LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+                return 0;
+            } else {
+                Char c = *pos_;
+                ++pos_;
+                return c;
             }
         }
-        return true;
-    }
 
-#endif  // UNSUPPORTED_OPERATIONS
+        virtual libj::String::CPtr toString() const {
+            return libj::String::create();
+        }
+
+     private:
+        CItr pos_;
+        CItr end_;
+
+        CharIterator(const ustring& str)
+            : pos_(str.begin())
+            , end_(str.end()) {}
+
+        CharIterator(const CharIterator* itr)
+            : pos_(itr->pos_)
+            , end_(itr->end_) {}
+    };
+
+ private:
+    ustring str_;
+    Boolean interned_;
 };
+
+#undef LIBJ_INTERNAL_STRING
+#undef LIBJ_DETAIL_STRING
 
 }  // namespace detail
 }  // namespace libj
