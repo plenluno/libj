@@ -14,9 +14,7 @@
 #cmakedefine LIBJ_USE_THREAD
 #cmakedefine LIBJ_USE_UTF32
 
-#ifdef LIBJ_USE_BDWGC
-    #include <gc_cpp.h>
-#else
+#ifndef LIBJ_USE_BDWGC
     #define LIBJ_USE_SP
 #endif
 

@@ -35,6 +35,8 @@
 
 #ifdef LIBJ_USE_BDWGC
 
+#include <gc_cpp.h>
+
 namespace libj {
 namespace detail {
 
