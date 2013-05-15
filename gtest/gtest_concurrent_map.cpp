@@ -162,11 +162,4 @@ TEST(GTestConcurrentMap, TestToString) {
         String::create("{undefined=undefined, null=z, x=123, y=null}")));
 }
 
-#ifdef LIBJ_USE_SP
-TEST(GTestConcurrentMap, TestUseCount) {
-    ConcurrentMap::CPtr p = ConcurrentMap::create();
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
-
 }  // namespace libj

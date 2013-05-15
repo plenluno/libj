@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/set.h>
@@ -195,12 +195,5 @@ TEST(GTestSet, TestRetainAll) {
     ASSERT_TRUE(s1->retainAll(Set::create()));
     ASSERT_TRUE(s1->isEmpty());
 }
-
-#ifdef LIBJ_USE_SP
-TEST(GTestSet, TestUseCount) {
-    Set::CPtr p = Set::create();
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
 
 }  // namespace libj

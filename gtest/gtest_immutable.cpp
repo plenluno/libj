@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/immutable.h>
@@ -79,6 +79,13 @@ TEST(GTestImmutable, TestUseCount) {
         p = p2;
         ASSERT_EQ(2, p.use_count());
         ASSERT_EQ(2, p2.use_count());
+        ASSERT_EQ(1, GTestImmutable::count);
+
+        GTestImmutable::CPtr p3 =
+            LIBJ_STATIC_CPTR_CAST(GTestImmutable)((&(*p))->self());
+        ASSERT_EQ(3, p.use_count());
+        ASSERT_EQ(3, p2.use_count());
+        ASSERT_EQ(3, p3.use_count());
         ASSERT_EQ(1, GTestImmutable::count);
     }
     ASSERT_EQ(0, GTestImmutable::count);

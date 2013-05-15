@@ -534,11 +534,4 @@ TEST(GTestString, TestToStdString) {
     ASSERT_TRUE(s8->equals(s3));
 }
 
-#ifdef LIBJ_USE_SP
-TEST(GTestString, TestUseCount) {
-    String::CPtr p = String::create("abc");
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
-
 }  // namespace libj

@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/error.h>
@@ -81,12 +81,5 @@ TEST(GTestFunction, TestCall) {
     ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7, 8, 9).equals(45));
     ASSERT_TRUE(addx2->call(1, 2, 3, 4, 5, 6, 7, 8, 9).equals(90));
 }
-
-#ifdef LIBJ_USE_SP
-TEST(GTestFunction, TestUseCount) {
-    Function::CPtr p = GTestFunctionAdd::create();
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
 
 }  // namespace libj

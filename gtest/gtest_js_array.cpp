@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/js_array.h>
@@ -93,12 +93,5 @@ TEST(GTestJsArray, TestJsProperty) {
     a->deleteProperty(String::create("abc"));
     ASSERT_FALSE(a->hasProperty(String::create("abc")));
 }
-
-#ifdef LIBJ_USE_SP
-TEST(GTestJsArray, TestUseCount) {
-    JsArray::CPtr p = JsArray::create();
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
 
 }  // namespace libj

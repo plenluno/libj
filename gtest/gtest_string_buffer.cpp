@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/string_buffer.h>
@@ -107,12 +107,5 @@ TEST(GTestStringBuffer, TestAppendCStr) {
     ASSERT_EQ(sb, sb->appendCStr("123"));
     ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
 }
-
-#ifdef LIBJ_USE_SP
-TEST(GTestStringBuffer, TestUseCount) {
-    StringBuffer::CPtr p = StringBuffer::create();
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
 
 }  // namespace libj

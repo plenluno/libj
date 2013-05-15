@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/linked_list.h>
@@ -308,12 +308,5 @@ TEST(GTestLinkedList, TestIndexOfAndLastIndexOf) {
     ASSERT_EQ(3, a->lastIndexOf(9));
     ASSERT_EQ(-1, a->lastIndexOf(11));
 }
-
-#ifdef LIBJ_USE_SP
-TEST(GTestLinkedList, TestUseCount) {
-    LinkedList::CPtr p = LinkedList::create();
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
 
 }  // namespace libj

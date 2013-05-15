@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/array_list.h>
@@ -353,12 +353,5 @@ TEST(GTestArrayList, TestIndexOfAndLastIndexOf) {
     ASSERT_EQ(3, a->lastIndexOf(9));
     ASSERT_EQ(-1, a->lastIndexOf(11));
 }
-
-#ifdef LIBJ_USE_SP
-TEST(GTestArrayList, TestUseCount) {
-    ArrayList::CPtr p = ArrayList::create();
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
 
 }  // namespace libj

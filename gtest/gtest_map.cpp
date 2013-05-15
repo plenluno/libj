@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/map.h>
@@ -162,12 +162,5 @@ TEST(GTestMap, TestToString) {
     ASSERT_TRUE(m->toString()->equals(
         String::create("{undefined=undefined, null=z, x=123, y=null}")));
 }
-
-#ifdef LIBJ_USE_SP
-TEST(GTestMap, TestUseCount) {
-    Map::CPtr p = Map::create();
-    ASSERT_EQ(1, p.use_count());
-}
-#endif
 
 }  // namespace libj
