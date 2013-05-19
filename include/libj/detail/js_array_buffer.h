@@ -57,14 +57,11 @@ class JsArrayBuffer : LIBJ_JS_ARRAY_BUFFER(JsArrayBuffer)
 
  public:
     Boolean getInt8(Size byteOffset, Byte* value) const {
-        UByte v;
-        Boolean ret = getUint8(byteOffset, &v);
-        *value = v;
-        return ret;
+        return getUint8(byteOffset, reinterpret_cast<UByte*>(value));
     }
 
     Boolean getUint8(Size byteOffset, UByte* value) const {
-        if (byteOffset >= length_) {
+        if (!value || byteOffset >= length_) {
             return false;
         } else {
             const UByte* buf8 = reinterpret_cast<const UByte*>(buf64_);
@@ -75,15 +72,13 @@ class JsArrayBuffer : LIBJ_JS_ARRAY_BUFFER(JsArrayBuffer)
 
     Boolean getInt16(
         Size byteOffset, Short* value, Boolean littleEndian = false) const {
-        UShort v;
-        Boolean ret = getUint16(byteOffset, &v, littleEndian);
-        *value = v;
-        return ret;
+        return getUint16(
+            byteOffset, reinterpret_cast<UShort*>(value), littleEndian);
     }
 
     Boolean getUint16(
         Size byteOffset, UShort* value, Boolean littleEndian = false) const {
-        if (byteOffset + 1 >= length_) {
+        if (!value || byteOffset + 1 >= length_) {
             return false;
         } else {
             *value = load<UShort>(byteOffset, littleEndian);
@@ -93,15 +88,13 @@ class JsArrayBuffer : LIBJ_JS_ARRAY_BUFFER(JsArrayBuffer)
 
     Boolean getInt32(
         Size byteOffset, Int* value, Boolean littleEndian = false) const {
-        UInt v;
-        Boolean ret = getUint32(byteOffset, &v, littleEndian);
-        *value = v;
-        return ret;
+        return getUint32(
+            byteOffset, reinterpret_cast<UInt*>(value), littleEndian);
     }
 
     Boolean getUint32(
         Size byteOffset, UInt* value, Boolean littleEndian = false) const {
-        if (byteOffset + 3 >= length_) {
+        if (!value || byteOffset + 3 >= length_) {
             return false;
          } else {
             *value = load<UInt>(byteOffset, littleEndian);
@@ -111,18 +104,22 @@ class JsArrayBuffer : LIBJ_JS_ARRAY_BUFFER(JsArrayBuffer)
 
     Boolean getFloat32(
         Size byteOffset, Float* value, Boolean littleEndian = false) const {
-        union {
-            UInt ui;
-            Float f;
-        } v;
-        Boolean ret =  getUint32(byteOffset, &v.ui, littleEndian);
-        *value = v.f;
-        return ret;
+        if (!value || byteOffset + 3 >= length_) {
+            return false;
+        } else {
+            union {
+                UInt ui;
+                Float f;
+            } v;
+            v.ui = load<UInt>(byteOffset, littleEndian);
+            *value = v.f;
+            return true;
+        }
     }
 
     Boolean getFloat64(
         Size byteOffset, Double* value, Boolean littleEndian = false) const {
-        if (byteOffset + 7 >= length_) {
+        if (!value || byteOffset + 7 >= length_) {
             return false;
         } else {
             union {
@@ -181,12 +178,17 @@ class JsArrayBuffer : LIBJ_JS_ARRAY_BUFFER(JsArrayBuffer)
 
     Boolean setFloat32(
         Size byteOffset, Float value, Boolean littleEndian = false) {
-        union {
-            UInt ui;
-            Float f;
-        } v;
-        v.f = value;
-        return setUint32(byteOffset, v.ui, littleEndian);
+        if (byteOffset + 3 >= length_) {
+            return false;
+        } else {
+            union {
+                UInt ui;
+                Float f;
+            } v;
+            v.f = value;
+            store<UInt>(byteOffset, v.ui, littleEndian);
+            return true;
+        }
     }
 
     Boolean setFloat64(
