@@ -92,13 +92,13 @@ static bool isPrintable(const char* funcName) {
     return false;
 }
 
-static const char* addrToName(void* address) {
+static char* addrToName(void* address) {
     Dl_info dli;
     if (dladdr(address, &dli)) {
         int status;
         return abi::__cxa_demangle(dli.dli_sname, 0, 0, &status);
     } else {
-        return "<unknown>";
+        return NULL;
     }
 }
 
@@ -112,11 +112,12 @@ void __cyg_profile_func_enter(void* funcAddress, void* callSite) {
 
     stop();
 
-    const char* funcName = addrToName(funcAddress);
+    char* funcName = addrToName(funcAddress);
     if (isPrintable(funcName)) {
         depth++;
         printf("[LIBJ TRACE] enter: [%d: %s]\n", depth, funcName);
     }
+    free(funcName);
 
     resume();
 }
@@ -126,11 +127,12 @@ void __cyg_profile_func_exit(void* funcAddress, void* callSite) {
 
     stop();
 
-    const char* funcName = addrToName(funcAddress);
+    char* funcName = addrToName(funcAddress);
     if (isPrintable(funcName)) {
         printf("[LIBJ TRACE] exit:  [%d: %s]\n", depth, funcName);
         depth--;
     }
+    free(funcName);
 
     resume();
 }
