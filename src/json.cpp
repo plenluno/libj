@@ -6,7 +6,7 @@
 #include <libj/string_buffer.h>
 #include <libj/symbol.h>
 #include <libj/glue/json.h>
-#include <libj/detail/util.h>
+#include <libj/detail/to_string.h>
 
 #include <assert.h>
 

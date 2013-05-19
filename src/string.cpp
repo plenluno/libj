@@ -2,7 +2,7 @@
 
 #include <libj/symbol.h>
 #include <libj/detail/string.h>
-#include <libj/detail/util.h>
+#include <libj/detail/to_string.h>
 
 namespace libj {
 
