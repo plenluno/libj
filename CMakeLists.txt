@@ -208,6 +208,7 @@ set(libj-test-src
     gtest/gtest_typed_array_list.cpp
     gtest/gtest_typed_js_array.cpp
     gtest/gtest_typed_linked_list.cpp
+    gtest/gtest_typed_set.cpp
     gtest/gtest_typed_value_holder.cpp
     gtest/gtest_value.cpp
     gtest/gtest_value_holder.cpp

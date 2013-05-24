@@ -1,11 +1,10 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_MAP_H_
 #define LIBJ_DETAIL_MAP_H_
 
-#include <libj/set.h>
+#include <libj/typed_set.h>
 #include <libj/string_buffer.h>
-#include <libj/value.h>
 
 #include <map>
 
@@ -17,6 +16,10 @@ class Map : public I {
  private:
     typedef std::map<Value, Value> Container;
     typedef typename Container::const_iterator CItr;
+
+    typedef typename I::Entry EntryT;
+    typedef TypedSet<typename EntryT::CPtr> EntrySetT;
+    typedef TypedIterator<typename EntryT::CPtr> EntryIteratorT;
 
  public:
     virtual Size size() const {
@@ -59,13 +62,11 @@ class Map : public I {
     }
 
     virtual Set::CPtr keySet() const {
-        Set::Ptr s = Set::create();
-        for (CItr itr = map_.begin();
-             itr != map_.end();
-             ++itr) {
-            s->add(itr->first);
-        }
-        return s;
+        return Set::CPtr(new KeySet(this));
+    }
+
+    virtual typename EntrySetT::CPtr entrySet() const {
+        return typename EntrySetT::CPtr(new EntrySet(this));
     }
 
     virtual void clear() {
@@ -96,6 +97,234 @@ class Map : public I {
         sb->appendChar('}');
         return sb->toString();
     }
+
+ private:
+    class KeySet : public GenericCollection<Value, Set> {
+     public:
+        KeySet(const typename detail::Map<I>* self) : self_(self) {}
+
+        virtual Size size() const {
+            return self_->size();
+        }
+
+        virtual Iterator::Ptr iterator() const {
+            return Iterator::Ptr(new KeyIterator(self_->map_));
+        }
+
+     public:
+        class KeyIterator : public Iterator {
+            friend class KeySet;
+
+         public:
+            virtual Boolean hasNext() const {
+                return pos_ != end_;
+            }
+
+            virtual Value next() {
+                if (pos_ == end_) {
+                    LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+                } else {
+                    Value key = pos_->first;
+                    ++pos_;
+                    return key;
+                }
+            }
+
+            virtual String::CPtr toString() const {
+                return String::create();
+            }
+
+         private:
+            CItr pos_;
+            CItr end_;
+
+            KeyIterator(const Container& map)
+                : pos_(map.begin())
+                , end_(map.end()) {}
+        };
+
+     public:
+        virtual void clear() {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        }
+
+        virtual Boolean add(const Value& v) {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return false;
+        }
+
+        virtual Boolean remove(const Value& v) {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return false;
+        }
+
+        virtual Boolean addTyped(const Value& v) {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return false;
+        }
+
+        virtual Boolean removeTyped(const Value& v) {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return false;
+        }
+
+        virtual TypedIterator<Value>::Ptr iteratorTyped() const {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return TypedIterator<Value>::null();
+        }
+
+     private:
+        const typename detail::Map<I>* self_;
+    };
+
+    class Entry : public EntryT {
+        LIBJ_MUTABLE_TEMPLATE_DEFS(Entry, EntryT);
+
+     public:
+        void setKey(const Value& key) {
+            key_ = key;
+        }
+
+        void setValue(const Value& val) {
+            val_ = val;
+        }
+
+        virtual Value getKey() const {
+            return key_;
+        }
+
+        virtual Value getValue() const {
+            return val_;
+        }
+
+        virtual String::CPtr toString() const {
+            return String::create();
+        }
+
+     private:
+        Value key_;
+        Value val_;
+    };
+
+    class EntrySet
+        : public GenericCollection<typename EntryT::CPtr, EntrySetT> {
+     public:
+        EntrySet(const typename detail::Map<I>* self) : self_(self) {}
+
+        virtual Size size() const {
+            return self_->size();
+        }
+
+        virtual Iterator::Ptr iterator() const {
+            return Iterator::Ptr(new EntryIterator(self_->map_));
+        }
+
+        virtual typename EntryIteratorT::Ptr iteratorTyped() const {
+            return typename EntryIteratorT::Ptr(
+                new TypedEntryIterator(self_->map_));
+        }
+
+     public:
+        class EntryIterator : public Iterator {
+            friend class EntrySet;
+
+         public:
+            virtual Boolean hasNext() const {
+                return pos_ != end_;
+            }
+
+            virtual Value next() {
+                if (pos_ == end_) {
+                    LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+                } else {
+                    entry_->setKey(pos_->first);
+                    entry_->setValue(pos_->second);
+                    ++pos_;
+                    return typename Entry::CPtr(entry_);
+                }
+            }
+
+            virtual String::CPtr toString() const {
+                return String::create();
+            }
+
+         private:
+            Map::CItr pos_;
+            Map::CItr end_;
+
+            // reuse Entry for better performance
+            typename Entry::Ptr entry_;
+
+            EntryIterator(const Map::Container& map)
+                : pos_(map.begin())
+                , end_(map.end())
+                , entry_(new Entry()) {}
+        };
+
+        class TypedEntryIterator : public EntryIteratorT {
+            friend class EntrySet;
+
+         public:
+            virtual Boolean hasNext() const {
+                return pos_ != end_;
+            }
+
+            virtual typename EntryT::CPtr next() {
+                if (pos_ == end_) {
+                    LIBJ_THROW(Error::NO_SUCH_ELEMENT);
+                }
+
+                entry_->setKey(pos_->first);
+                entry_->setValue(pos_->second);
+                ++pos_;
+                return typename Entry::CPtr(entry_);
+            }
+
+            virtual String::CPtr toString() const {
+                return String::create();
+            }
+
+         private:
+            Map::CItr pos_;
+            Map::CItr end_;
+
+            // reuse Entry for better performance
+            typename Entry::Ptr entry_;
+
+            TypedEntryIterator(const Map::Container& map)
+                : pos_(map.begin())
+                , end_(map.end())
+                , entry_(new Entry()) {}
+        };
+
+     public:
+        virtual void clear() {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+        }
+
+        virtual Boolean add(const Value& v) {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return false;
+        }
+
+        virtual Boolean remove(const Value& v) {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return false;
+        }
+
+        virtual Boolean addTyped(const typename EntryT::CPtr& v) {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return false;
+        }
+
+        virtual Boolean removeTyped(const typename EntryT::CPtr& v) {
+            LIBJ_THROW(Error::UNSUPPORTED_OPERATION);
+            return false;
+        }
+
+     private:
+        const typename detail::Map<I>* self_;
+    };
 
  private:
     Container map_;

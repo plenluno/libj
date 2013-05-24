@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_BRIDGE_ABSTRACT_MAP_H_
 #define LIBJ_BRIDGE_ABSTRACT_MAP_H_
@@ -10,6 +10,9 @@ namespace bridge {
 
 template<typename I>
 class AbstractMap : public I {
+ private:
+    typedef TypedSet<typename I::Entry::CPtr> EntrySet;
+
  public:
     AbstractMap(Map::Ptr map = Map::create()) : map_(map) {}
 
@@ -23,6 +26,10 @@ class AbstractMap : public I {
 
     virtual Boolean containsValue(const Value& val) const {
         return map_->containsValue(val);
+    }
+
+    virtual typename EntrySet::CPtr entrySet() const {
+        return map_->entrySet();
     }
 
     virtual Value get(const Value& key) const {

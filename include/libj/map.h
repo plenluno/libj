@@ -1,14 +1,20 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_MAP_H_
 #define LIBJ_MAP_H_
 
-#include <libj/set.h>
+#include <libj/typed_set.h>
 
 namespace libj {
 
 class Map : LIBJ_MUTABLE(Map)
  public:
+    class Entry : LIBJ_MUTABLE(Entry)
+        virtual Value getKey() const = 0;
+
+        virtual Value getValue() const = 0;
+    };
+
     static Ptr create();
 
     virtual void clear() = 0;
@@ -20,6 +26,8 @@ class Map : LIBJ_MUTABLE(Map)
     virtual Boolean containsValue(const Value& val) const = 0;
 
     virtual Set::CPtr keySet() const = 0;
+
+    virtual TypedSet<Entry::CPtr>::CPtr entrySet() const = 0;
 
     virtual Value get(const Value& key) const = 0;
 

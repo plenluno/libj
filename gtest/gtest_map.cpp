@@ -84,6 +84,60 @@ TEST(GTestMap, TestKeySet) {
     ASSERT_FALSE(itr->hasNext());
 }
 
+TEST(GTestMap, TestEntrySet) {
+    Map::Ptr m = Map::create();
+    String::CPtr x = String::create("x");
+    String::CPtr y = String::create("y");
+    m->put(x, 123);
+    m->put(y, 456);
+
+    TypedSet<Map::Entry::CPtr>::CPtr es = m->entrySet();
+
+    // iterator
+    Iterator::Ptr i = es->iterator();
+    ASSERT_TRUE(i->hasNext());
+    Map::Entry::CPtr e1 = toCPtr<Map::Entry>(i->next());
+    Value key1 = e1->getKey();
+    Value val1 = e1->getValue();
+    ASSERT_TRUE(key1.equals(x) || key1.equals(y));
+    ASSERT_TRUE(val1.equals(123) || val1.equals(456));
+
+    ASSERT_TRUE(i->hasNext());
+    Map::Entry::CPtr e2 = toCPtr<Map::Entry>(i->next());
+    Value key2 = e2->getKey();
+    Value val2 = e2->getValue();
+    ASSERT_FALSE(key2.equals(key1));
+    ASSERT_FALSE(val2.equals(val1));
+    ASSERT_TRUE(key2.equals(x) || key2.equals(y));
+    ASSERT_TRUE(val2.equals(123) || val2.equals(456));
+
+    // reuse Map::Entry for better performance
+    ASSERT_EQ(e1, e2);
+    ASSERT_FALSE(i->hasNext());
+
+    // iteratorTyped
+    TypedIterator<Map::Entry::CPtr>::Ptr ti = es->iteratorTyped();
+    ASSERT_TRUE(ti->hasNext());
+    e1 = ti->next();
+    key1 = e1->getKey();
+    val1 = e1->getValue();
+    ASSERT_TRUE(key1.equals(x) || key1.equals(y));
+    ASSERT_TRUE(val1.equals(123) || val1.equals(456));
+
+    ASSERT_TRUE(ti->hasNext());
+    e2 = ti->next();
+    key2 = e2->getKey();
+    val2 = e2->getValue();
+    ASSERT_FALSE(key2.equals(key1));
+    ASSERT_FALSE(val2.equals(val1));
+    ASSERT_TRUE(key2.equals(x) || key2.equals(y));
+    ASSERT_TRUE(val2.equals(123) || val2.equals(456));
+
+    // reuse Map::Entry for better performance
+    ASSERT_EQ(e1, e2);
+    ASSERT_FALSE(ti->hasNext());
+}
+
 TEST(GTestMap, TestContainsKey) {
     Map::Ptr m = Map::create();
     String::CPtr x = String::create("x");
