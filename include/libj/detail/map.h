@@ -81,18 +81,18 @@ class Map : public I {
         libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
         sb->appendChar('{');
         Boolean first = true;
-        Set::CPtr keys = Map::keySet();
-        Iterator::Ptr itr = keys->iterator();
+        typename EntrySetT::CPtr es = this->entrySet();
+        typename EntryIteratorT::Ptr itr = es->iteratorTyped();
         while (itr->hasNext()) {
-            Value v = itr->next();
+            typename EntryT::CPtr e = itr->next();
             if (first) {
                 first = false;
             } else {
                 sb->appendCStr(", ");
             }
-            sb->append(String::valueOf(v));
+            sb->append(String::valueOf(e->getKey()));
             sb->appendChar('=');
-            sb->append(String::valueOf(Map::get(v)));
+            sb->append(String::valueOf(e->getValue()));
         }
         sb->appendChar('}');
         return sb->toString();

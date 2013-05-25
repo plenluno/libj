@@ -60,13 +60,15 @@ static StringBuffer::Ptr stringToJson(
 static StringBuffer::Ptr mapToJson(
     StringBuffer::Ptr result,
     Map::CPtr m) {
-    Set::CPtr ks = m->keySet();
-    Iterator::Ptr itr = ks->iterator();
+    typedef Map::Entry Entry;
+    TypedSet<Entry::CPtr>::CPtr es = m->entrySet();
+    TypedIterator<Entry::CPtr>::Ptr itr = es->iteratorTyped();
     Boolean first = true;
     result->appendChar('{');
     while (itr->hasNext()) {
-        String::CPtr k = toCPtr<String>(itr->next());
-        Value v = m->get(k);
+        Entry::CPtr e = itr->next();
+        String::CPtr k = toCPtr<String>(e->getKey());
+        Value v = e->getValue();
         if (k && !v.isUndefined()) {
             if (first) {
                 first = false;
