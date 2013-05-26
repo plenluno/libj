@@ -18,12 +18,16 @@ option(LIBJ_USE_JSCRE     "Use JSCRE"         OFF)
 option(LIBJ_USE_JSONCPP   "Use JsonCpp"       OFF)
 option(LIBJ_USE_THREAD    "Use Threads"       OFF)
 option(LIBJ_USE_UTF32     "Use UTF32"         OFF)
-option(LIBJ_BUILD_GTEST   "Build Google Test" OFF)
 option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
 
 cmake_dependent_option(LIBJ_BUILD_BDWGC
     "Build BDW-GC" ON
     "LIBJ_USE_BDWGC" OFF
+)
+
+cmake_dependent_option(LIBJ_BUILD_GTEST
+    "Build Google Test" ON
+    "LIBJ_BUILD_TEST" OFF
 )
 
 ## check
@@ -179,61 +183,6 @@ if(LIBJ_USE_JSONCPP)
     )
 endif(LIBJ_USE_JSONCPP)
 
-## libj-test-src
-set(libj-test-src
-    gtest/gtest_array_list.cpp
-    gtest/gtest_console.cpp
-    gtest/gtest_cvtutf.cpp
-    gtest/gtest_error.cpp
-    gtest/gtest_function.cpp
-    gtest/gtest_immutable.cpp
-    gtest/gtest_json.cpp
-    gtest/gtest_js_array.cpp
-    gtest/gtest_js_array_buffer.cpp
-    gtest/gtest_js_data_view.cpp
-    gtest/gtest_js_date.cpp
-    gtest/gtest_js_function.cpp
-    gtest/gtest_js_object.cpp
-    gtest/gtest_js_regexp.cpp
-    gtest/gtest_linked_list.cpp
-    gtest/gtest_main.cpp
-    gtest/gtest_map.cpp
-    gtest/gtest_math.cpp
-    gtest/gtest_mutable.cpp
-    gtest/gtest_set.cpp
-    gtest/gtest_singleton.cpp
-    gtest/gtest_status.cpp
-    gtest/gtest_string.cpp
-    gtest/gtest_string_buffer.cpp
-    gtest/gtest_typed_array_list.cpp
-    gtest/gtest_typed_js_array.cpp
-    gtest/gtest_typed_linked_list.cpp
-    gtest/gtest_typed_set.cpp
-    gtest/gtest_typed_value_holder.cpp
-    gtest/gtest_value.cpp
-    gtest/gtest_value_holder.cpp
-)
-
-if(LIBJ_USE_CXX11)
-    set(libj-test-src
-        ${libj-test-src}
-        gtest/gtest_js_closure.cpp
-    )
-endif(LIBJ_USE_CXX11)
-
-if(LIBJ_USE_THREAD)
-    set(libj-test-src
-        ${libj-test-src}
-        gtest/gtest_atomic_integer.cpp
-        gtest/gtest_atomic_long.cpp
-        gtest/gtest_blocking_linked_queue.cpp
-        gtest/gtest_concurrent_linked_queue.cpp
-        gtest/gtest_concurrent_map.cpp
-        gtest/gtest_executor_service.cpp
-        gtest/gtest_thread.cpp
-    )
-endif(LIBJ_USE_THREAD)
-
 ## libj-deps
 set(libj-deps
     cvtutf
@@ -287,22 +236,21 @@ if(UNIX)
     endif(LIBJ_TRACE)
 endif(UNIX)
 
-## libj-test-deps
-set(libj-test-deps
-    gtest
+## libj-linklibs
+set(libj-linklibs
     j
 )
 
-if(UNIX AND NOT ANDROID)
-    set(libj-test-deps
-        ${libj-test-deps}
-        pthread
+if(LIBJ_BUILD_TEST)
+    set(libj-linklibs
+        ${libj-linklibs}
+        gtest
     )
-endif(UNIX AND NOT ANDROID)
+endif(LIBJ_BUILD_TEST)
 
 if(LIBJ_USE_CXX11 AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(libj-test-deps
-        ${libj-test-deps}
+    set(libj-linklibs
+        ${libj-linklibs}
         c++
         c++abi
     )
@@ -373,6 +321,13 @@ if(UNIX)
             ${libj-cxx11-cflags}
         )
     endif(LIBJ_USE_CXX11)
+
+    if(NOT LIBJ_USE_EXCEPTION)
+        set(libj-deps-cflags
+            ${libj-deps-cflags}
+            -fno-exceptions
+        )
+    endif(NOT LIBJ_USE_EXCEPTION)
 else(UNIX)
     set(libj-deps-cflags
         /W1
@@ -443,15 +398,7 @@ set_target_properties(cvtutf PROPERTIES
 )
 
 if(NOT LIBJ_USE_ICONV)
-    add_library(convertutf STATIC
-        deps/convertutf/ConvertUTF.cpp
-    )
-
-    if(UNIX AND LIBJ_USE_CXX11)
-        set_target_properties(convertutf PROPERTIES
-            COMPILE_FLAGS ${libj-cxx11-cflags}
-        )
-    endif(UNIX AND LIBJ_USE_CXX11)
+    add_subdirectory(deps/convertutf)
 endif(NOT LIBJ_USE_ICONV)
 
 ## json
@@ -465,9 +412,7 @@ set_target_properties(json PROPERTIES
 
 ## jscre
 if(LIBJ_USE_JSCRE)
-    add_subdirectory(
-        deps/jscre
-    )
+    add_subdirectory(deps/jscre)
 endif(LIBJ_USE_JSCRE)
 
 ## regexp
@@ -520,9 +465,7 @@ if(LIBJ_BUILD_BDWGC)
                 ${CMAKE_BINARY_DIR}/libgc.a
         )
     else(LIBJ_USE_THREAD)
-        add_subdirectory(
-            deps/bdwgc
-        )
+        add_subdirectory(deps/bdwgc)
     endif(LIBJ_USE_THREAD)
 endif(LIBJ_BUILD_BDWGC)
 
@@ -542,6 +485,11 @@ if(UNIX AND LIBJ_TRACE)
     )
 endif(UNIX AND LIBJ_TRACE)
 
+## gtest
+if(LIBJ_BUILD_GTEST)
+    add_subdirectory(deps/googletest)
+endif(LIBJ_BUILD_GTEST)
+
 ## libj
 add_library(j STATIC
     ${libj-src}
@@ -557,26 +505,6 @@ set_target_properties(j PROPERTIES
 
 # build tests ------------------------------------------------------------------
 
-if(LIBJ_BUILD_GTEST)
-    add_library(gtest STATIC
-        deps/googletest/src/gtest-all.cc
-    )
-
-    set_target_properties(gtest PROPERTIES
-        COMPILE_FLAGS "${libj-test-cflags}"
-    )
-endif(LIBJ_BUILD_GTEST)
-
 if(LIBJ_BUILD_TEST)
-    add_executable(libj-test
-        ${libj-test-src}
-    )
-
-    target_link_libraries(libj-test
-        ${libj-test-deps}
-    )
-
-    set_target_properties(libj-test PROPERTIES
-        COMPILE_FLAGS "${libj-test-cflags}"
-    )
+    add_subdirectory(gtest)
 endif(LIBJ_BUILD_TEST)
