@@ -34,10 +34,13 @@ STDIN.each do |line|
 
   if /\[LIBJ DEBUG\] destruct:  0x(\w*)/ =~ line
     if !objects.include?($1)
-#     warn "not constructed: " + $1
+      warn "not constructed: " + $1
     else
       objects.delete($1)
       callStacks.delete($1)
+      if staticObjects.include?($1)
+        staticObjects.delete($1)
+      end
     end
   end
 
