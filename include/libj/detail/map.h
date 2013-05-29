@@ -135,10 +135,10 @@ class Map : public I {
             }
 
          private:
-            CItr pos_;
-            CItr end_;
+            typename Map<I>::CItr pos_;
+            typename Map<I>::CItr end_;
 
-            KeyIterator(const Container& map)
+            KeyIterator(const typename Map<I>::Container& map)
                 : pos_(map.begin())
                 , end_(map.end()) {}
         };
@@ -249,13 +249,13 @@ class Map : public I {
             }
 
          private:
-            Map::CItr pos_;
-            Map::CItr end_;
+            typename Map<I>::CItr pos_;
+            typename Map<I>::CItr end_;
 
             // reuse Entry for better performance
             typename Entry::Ptr entry_;
 
-            EntryIterator(const Map::Container& map)
+            EntryIterator(const typename Map<I>::Container& map)
                 : pos_(map.begin())
                 , end_(map.end())
                 , entry_(new Entry()) {}
@@ -285,13 +285,13 @@ class Map : public I {
             }
 
          private:
-            Map::CItr pos_;
-            Map::CItr end_;
+            typename Map<I>::CItr pos_;
+            typename Map<I>::CItr end_;
 
             // reuse Entry for better performance
             typename Entry::Ptr entry_;
 
-            TypedEntryIterator(const Map::Container& map)
+            TypedEntryIterator(const typename Map<I>::Container& map)
                 : pos_(map.begin())
                 , end_(map.end())
                 , entry_(new Entry()) {}
