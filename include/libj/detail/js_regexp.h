@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_JS_REGEXP_H_
 #define LIBJ_DETAIL_JS_REGEXP_H_
@@ -23,6 +23,7 @@ class JsRegExp : public JsObject<I> {
         if (pattern) {
             re_ = glue::RegExp::create(toStdString(pattern), flags);
         }
+        setLastIndex(0);
     }
 
     virtual ~JsRegExp() {
@@ -34,32 +35,52 @@ class JsRegExp : public JsObject<I> {
     }
 
     virtual Boolean global() const {
-        return re_->global();
+        return re_ && re_->global();
     }
 
     virtual Boolean ignoreCase() const {
-        return re_->ignoreCase();
+        return re_ && re_->ignoreCase();
     }
 
     virtual Boolean multiline() const {
-        return re_->multiline();
+        return re_ && re_->multiline();
     }
 
     virtual String::CPtr source() const {
         return pattern_;
     }
 
-    virtual JsArray::Ptr exec(String::CPtr str) const {
+    virtual Size lastIndex() const {
+        LIBJ_STATIC_SYMBOL_DEF(symLastIndex, "lastIndex");
+        Size lastIndex = 0;
+        to<Size>(this->get(symLastIndex), &lastIndex);
+        return lastIndex;
+    }
+
+    virtual JsArray::Ptr exec(String::CPtr str) {
         LIBJ_STATIC_SYMBOL_DEF(symIndex, "index");
         LIBJ_STATIC_SYMBOL_DEF(symInput, "input");
 
         if (!str) {
-            return JsArray::null();
+            return execFail();
+        }
+
+        Size lastIndex = 0;
+        Boolean global = this->global();
+        if (global) {
+            lastIndex = this->lastIndex();
+            if (lastIndex > str->length()) {
+                return execFail();
+            } else {
+                str = str->substring(lastIndex);
+            }
         }
 
         std::vector<int> captures;
-        if (!re_->execute(toStdString(str), 0, captures)) {
-            return JsArray::null();
+        if (re_->execute(toStdString(str), 0, captures)) {
+            if (global) setLastIndex(lastIndex + (captures[1] - captures[0]));
+        } else {
+            return execFail();
         }
 
         JsArray::Ptr res = JsArray::create();
@@ -68,7 +89,7 @@ class JsRegExp : public JsObject<I> {
         for (Size i = 0; i < len; i += 2) {
             if (captures[i] >= 0 &&
                 captures[i+1] >= 0 &&
-                captures[i] < captures[i+1] &&
+                captures[i] <= captures[i+1] &&
                 captures[i+1] <= static_cast<int>(str->length())) {
                 res->add(str->substring(captures[i], captures[i+1]));
             } else {
@@ -80,7 +101,7 @@ class JsRegExp : public JsObject<I> {
         return res;
     }
 
-    virtual Boolean test(String::CPtr str) const {
+    virtual Boolean test(String::CPtr str) {
         return !!exec(str);
     }
 
@@ -108,6 +129,16 @@ class JsRegExp : public JsObject<I> {
             assert(false);
             return s->toStdString();
         }
+    }
+
+    void setLastIndex(Size lastIndex) {
+        LIBJ_STATIC_SYMBOL_DEF(symLastIndex, "lastIndex");
+        this->put(symLastIndex, lastIndex);
+    }
+
+    JsArray::Ptr execFail() {
+        if (global()) setLastIndex(0);
+        return JsArray::null();
     }
 
  private:

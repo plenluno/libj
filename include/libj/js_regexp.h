@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_JS_REGEXP_H_
 #define LIBJ_JS_REGEXP_H_
@@ -25,11 +25,13 @@ class JsRegExp : LIBJ_JS_OBJECT(JsRegExp)
 
     virtual Boolean multiline() const = 0;
 
+    virtual Size lastIndex() const = 0;
+
     virtual String::CPtr source() const = 0;
 
-    virtual JsArray::Ptr exec(String::CPtr str) const = 0;
+    virtual JsArray::Ptr exec(String::CPtr str) = 0;
 
-    virtual Boolean test(String::CPtr str) const = 0;
+    virtual Boolean test(String::CPtr str) = 0;
 };
 
 }  // namespace libj

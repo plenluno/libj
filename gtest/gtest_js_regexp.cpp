@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/js_regexp.h>
@@ -48,9 +48,9 @@ TEST(GTestJsRegExp, TestExec) {
 
     JsArray::Ptr a = re->exec(String::create("xaacz"));
     ASSERT_EQ(3, a->length());
-    ASSERT_TRUE(toCPtr<String>(a->get(0))->equals(String::create("aac")));
-    ASSERT_TRUE(a->get(1).isUndefined());
-    ASSERT_TRUE(toCPtr<String>(a->get(2))->equals(String::create("c")));
+    ASSERT_TRUE(a->getCPtr<String>(0)->equals(String::create("aac")));
+    ASSERT_TRUE(a->getCPtr<String>(1)->equals(String::create()));
+    ASSERT_TRUE(a->getCPtr<String>(2)->equals(String::create("c")));
     Int index = -1;
     to<Int>(a->getProperty(String::create("index")), &index);
     ASSERT_EQ(1, index);
@@ -66,9 +66,9 @@ TEST(GTestJsRegExp, TestExec2) {
         JsRegExp::create(String::create("^([0-9]+)\\.([0-9]+)$"));
     JsArray::Ptr a = re->exec(String::create("1.23"));
     ASSERT_EQ(3, a->length());
-    ASSERT_TRUE(toCPtr<String>(a->get(0))->equals(String::create("1.23")));
-    ASSERT_TRUE(toCPtr<String>(a->get(1))->equals(String::create("1")));
-    ASSERT_TRUE(toCPtr<String>(a->get(2))->equals(String::create("23")));
+    ASSERT_TRUE(a->getCPtr<String>(0)->equals(String::create("1.23")));
+    ASSERT_TRUE(a->getCPtr<String>(1)->equals(String::create("1")));
+    ASSERT_TRUE(a->getCPtr<String>(2)->equals(String::create("23")));
     Int index = -1;
     to<Int>(a->getProperty(String::create("index")), &index);
     ASSERT_EQ(0, index);
@@ -78,6 +78,28 @@ TEST(GTestJsRegExp, TestExec2) {
 
     ASSERT_FALSE(re->exec(String::create("1x23")));
     ASSERT_FALSE(re->exec(String::create("v1.23")));
+}
+
+TEST(GTestJsRegExp, TestLastIndex) {
+    JsRegExp::Ptr re =
+        JsRegExp::create(String::create("(hi)?"), JsRegExp::GLOBAL);
+    ASSERT_EQ(0, re->lastIndex());
+
+    JsArray::Ptr a = re->exec(String::create("hi"));
+    ASSERT_EQ(2, a->length());
+    ASSERT_TRUE(a->getCPtr<String>(0)->equals(String::create("hi")));
+    ASSERT_TRUE(a->getCPtr<String>(1)->equals(String::create("hi")));
+
+    ASSERT_EQ(2, re->lastIndex());
+    a = re->exec(String::create("hi"));
+    ASSERT_EQ(2, a->length());
+    ASSERT_EQ(0, a->getCPtr<String>(0)->length());
+    ASSERT_TRUE(a->get(1).isUndefined());
+
+    re->put(String::create("lastIndex"), static_cast<Size>(3));
+    ASSERT_EQ(3, re->lastIndex());
+    ASSERT_TRUE(!re->exec(String::create("hi")));
+    ASSERT_EQ(0, re->lastIndex());
 }
 
 }  // namespace libj
