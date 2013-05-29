@@ -19,15 +19,11 @@ option(LIBJ_USE_JSONCPP   "Use JsonCpp"       OFF)
 option(LIBJ_USE_THREAD    "Use Threads"       OFF)
 option(LIBJ_USE_UTF32     "Use UTF32"         OFF)
 option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
+option(LIBJ_BUILD_GTEST   "Build Google Test" OFF)
 
 cmake_dependent_option(LIBJ_BUILD_BDWGC
     "Build BDW-GC" ON
     "LIBJ_USE_BDWGC" OFF
-)
-
-cmake_dependent_option(LIBJ_BUILD_GTEST
-    "Build Google Test" ON
-    "LIBJ_BUILD_TEST" OFF
 )
 
 ## check
@@ -46,6 +42,10 @@ endif(LIBJ_USE_BDWGC AND LIBJ_USE_THREAD)
 if(LIBJ_USE_BDWGC AND NOT LIBJ_BUILD_BDWGC)
     message(FATAL_ERROR "LIBJ_USE_BDWGC=ON but LIBJ_BUILD_BDWGC=OFF")
 endif(LIBJ_USE_BDWGC AND NOT LIBJ_BUILD_BDWGC)
+
+if(LIBJ_BUILD_TEST AND NOT LIBJ_BUILD_GTEST)
+    message(WARNING "LIBJ_BUILD_TEST=ON but LIBJ_BUILD_GTEST=OFF")
+endif(LIBJ_BUILD_TEST AND NOT LIBJ_BUILD_GTEST)
 
 ## status
 message(STATUS "LIBJ_DEBUG=${LIBJ_DEBUG}")
