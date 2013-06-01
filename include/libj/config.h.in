@@ -10,7 +10,6 @@
 #cmakedefine LIBJ_USE_EXCEPTION
 #cmakedefine LIBJ_USE_ICONV
 #cmakedefine LIBJ_USE_JSCRE
-#cmakedefine LIBJ_USE_JSONCPP
 #cmakedefine LIBJ_USE_THREAD
 #cmakedefine LIBJ_USE_UTF32
 

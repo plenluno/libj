@@ -5,11 +5,7 @@
 #include <libj/js_object.h>
 #include <libj/glue/json.h>
 
-#ifdef LIBJ_USE_JSONCPP
-    #include <json/json.h>
-#else
-    #include <picojson.h>
-#endif
+#include <picojson.h>
 #include <math.h>
 #include <string>
 #include <sstream>
@@ -32,59 +28,6 @@ static Value doubleToValue(Double d) {
         return d;
     }
 }
-
-#ifdef LIBJ_USE_JSONCPP
-
-static Json::Reader jsonReader;
-
-static Value convert(const Json::Value& val) {
-    if (val.isNull()) {
-        return Object::null();
-    } else if (val.isBool()) {
-        return val.asBool();
-    } else if (val.isInt()) {
-        return static_cast<Long>(val.asInt());
-    } else if (val.isUInt()) {
-        return static_cast<Long>(val.asUInt());
-    } else if (val.isDouble()) {
-        return doubleToValue(val.asDouble());
-    } else if (val.isString()) {
-        return String::create(val.asCString(), String::UTF8);
-    } else if (val.isArray()) {
-        JsArray::Ptr a = JsArray::create();
-        Size len = val.size();
-        for (Size i = 0; i < len; i++) {
-            a->add(convert(val[static_cast<Json::UInt>(i)]));
-        }
-        return a;
-    } else if (val.isObject()) {
-        JsObject::Ptr jo = JsObject::create();
-        Json::Value::Members ms = val.getMemberNames();
-        Size len = ms.size();
-        for (Size i = 0; i < len; i++) {
-            String::CPtr k = String::create(ms[i].c_str());
-            Value v = convert(val[ms[i]]);
-            jo->put(k, v);
-        }
-        return jo;
-    } else {
-        return UNDEFINED;
-    }
-}
-
-Value parse(String::CPtr str) {
-    if (!str) return Error::create(Error::ILLEGAL_ARGUMENT);
-
-    Json::Value root;
-    std::istringstream is(str->toStdString());
-    if (jsonReader.parse(is, root)) {
-        return convert(root);
-    } else {
-        return Error::create(Error::ILLEGAL_ARGUMENT);
-    }
-}
-
-#else
 
 static Value convert(const picojson::value& val) {
     if (val.is<picojson::null>()) {
@@ -135,8 +78,6 @@ Value parse(String::CPtr str) {
         return Error::create(Error::ILLEGAL_ARGUMENT);
     }
 }
-
-#endif
 
 }  // namespace json
 }  // namespace glue
