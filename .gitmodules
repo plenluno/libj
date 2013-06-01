@@ -13,9 +13,6 @@
 [submodule "deps/libatomic_ops"]
 	path = deps/libatomic_ops
 	url = https://github.com/ivmai/libatomic_ops.git
-[submodule "deps/jsoncpp"]
-	path = deps/jsoncpp
-	url = https://github.com/youknowone/jsoncpp.git
 [submodule "deps/jscre"]
 	path = deps/jscre
 	url = https://github.com/plenluno/jscre.git
