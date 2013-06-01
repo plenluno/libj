@@ -15,7 +15,6 @@ option(LIBJ_USE_CXX11     "Use C++11"         OFF)
 option(LIBJ_USE_EXCEPTION "Use Exceptions"    OFF)
 option(LIBJ_USE_ICONV     "Use iconv"         OFF)
 option(LIBJ_USE_JSCRE     "Use JSCRE"         OFF)
-option(LIBJ_USE_JSONCPP   "Use JsonCpp"       OFF)
 option(LIBJ_USE_THREAD    "Use Threads"       OFF)
 option(LIBJ_USE_UTF32     "Use UTF32"         OFF)
 option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
@@ -55,7 +54,6 @@ message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 message(STATUS "LIBJ_USE_ICONV=${LIBJ_USE_ICONV}")
 message(STATUS "LIBJ_USE_JSCRE=${LIBJ_USE_JSCRE}")
-message(STATUS "LIBJ_USE_JSONCPP=${LIBJ_USE_JSONCPP}")
 message(STATUS "LIBJ_USE_THREAD=${LIBJ_USE_THREAD}")
 message(STATUS "LIBJ_USE_UTF32=${LIBJ_USE_UTF32}")
 message(STATUS "LIBJ_BUILD_BDWGC=${LIBJ_BUILD_BDWGC}")
@@ -69,6 +67,7 @@ set(libj-include
     include
     deps/iv
     deps/boost-svn
+    deps/picojson
 )
 
 if(LIBJ_USE_JSCRE)
@@ -77,18 +76,6 @@ if(LIBJ_USE_JSCRE)
         deps/jscre
     )
 endif(LIBJ_USE_JSCRE)
-
-if(LIBJ_USE_JSONCPP)
-    set(libj-include
-        ${libj-include}
-        deps/jsoncpp/include
-    )
-else(LIBJ_USE_JSONCPP)
-    set(libj-include
-        ${libj-include}
-        deps/picojson
-    )
-endif(LIBJ_USE_JSONCPP)
 
 if(NOT LIBJ_USE_ICONV)
     set(libj-include
@@ -135,6 +122,8 @@ set(libj-src
     src/string_buffer.cpp
     src/symbol.cpp
     src/value_holder.cpp
+    src/glue/cvtutf.cpp
+    src/glue/json.cpp
 )
 
 if(LIBJ_USE_CXX11)
@@ -169,25 +158,9 @@ else(LIBJ_USE_EXCEPTION)
     )
 endif(LIBJ_USE_EXCEPTION)
 
-## libj-json-src
-set(libj-json-src
-    src/glue/json.cpp
-)
-
-if(LIBJ_USE_JSONCPP)
-    set(libj-json-src
-        ${libj-json-src}
-        deps/jsoncpp/src/lib_json/json_reader.cpp
-        deps/jsoncpp/src/lib_json/json_value.cpp
-        deps/jsoncpp/src/lib_json/json_writer.cpp
-    )
-endif(LIBJ_USE_JSONCPP)
-
 ## libj-deps
 set(libj-deps
-    cvtutf
     dtoa
-    json
     ndtoa
     regexp
 )
@@ -388,27 +361,10 @@ link_directories(
     ${CMAKE_BINARY_DIR}
 )
 
-## cvtutf
-add_library(cvtutf STATIC
-    src/glue/cvtutf.cpp
-)
-
-set_target_properties(cvtutf PROPERTIES
-    COMPILE_FLAGS ${libj-deps-cflags}
-)
-
+## convertutf
 if(NOT LIBJ_USE_ICONV)
     add_subdirectory(deps/convertutf)
 endif(NOT LIBJ_USE_ICONV)
-
-## json
-add_library(json STATIC
-    ${libj-json-src}
-)
-
-set_target_properties(json PROPERTIES
-    COMPILE_FLAGS ${libj-deps-cflags}
-)
 
 ## jscre
 if(LIBJ_USE_JSCRE)
@@ -448,25 +404,7 @@ add_library(ndtoa STATIC
 
 ## bdw-gc
 if(LIBJ_BUILD_BDWGC)
-    if(LIBJ_USE_THREAD)
-        add_custom_command(
-            TARGET json PRE_BUILD
-            COMMAND rsync -av
-                ${CMAKE_CURRENT_LIST_DIR}/deps/bdwgc
-                ${CMAKE_BINARY_DIR}/deps/
-            COMMAND rsync -av
-                ${CMAKE_CURRENT_LIST_DIR}/deps/libatomic_ops
-                ${CMAKE_BINARY_DIR}/deps/bdwgc/
-            COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./autogen.sh
-            COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && ./configure
-            COMMAND cd ${CMAKE_BINARY_DIR}/deps/bdwgc && make
-            COMMAND ln -sf
-                ${CMAKE_BINARY_DIR}/deps/bdwgc/.libs/libgc.a
-                ${CMAKE_BINARY_DIR}/libgc.a
-        )
-    else(LIBJ_USE_THREAD)
-        add_subdirectory(deps/bdwgc)
-    endif(LIBJ_USE_THREAD)
+    add_subdirectory(deps/bdwgc)
 endif(LIBJ_BUILD_BDWGC)
 
 ## trace
