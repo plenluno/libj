@@ -14,16 +14,9 @@ option(LIBJ_USE_BDWGC     "Use BDW-GC"        OFF)
 option(LIBJ_USE_CXX11     "Use C++11"         OFF)
 option(LIBJ_USE_EXCEPTION "Use Exceptions"    OFF)
 option(LIBJ_USE_ICONV     "Use iconv"         OFF)
-option(LIBJ_USE_JSCRE     "Use JSCRE"         OFF)
 option(LIBJ_USE_THREAD    "Use Threads"       OFF)
 option(LIBJ_USE_UTF32     "Use UTF32"         OFF)
 option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
-option(LIBJ_BUILD_GTEST   "Build Google Test" OFF)
-
-cmake_dependent_option(LIBJ_BUILD_BDWGC
-    "Build BDW-GC" ON
-    "LIBJ_USE_BDWGC" OFF
-)
 
 ## check
 if(LIBJ_TRACE AND NOT LIBJ_DEBUG)
@@ -38,14 +31,6 @@ if(LIBJ_USE_BDWGC AND LIBJ_USE_THREAD)
     message(FATAL_ERROR "LIBJ_USE_BDWGC=ON but LIBJ_USE_THREAD=ON")
 endif(LIBJ_USE_BDWGC AND LIBJ_USE_THREAD)
 
-if(LIBJ_USE_BDWGC AND NOT LIBJ_BUILD_BDWGC)
-    message(FATAL_ERROR "LIBJ_USE_BDWGC=ON but LIBJ_BUILD_BDWGC=OFF")
-endif(LIBJ_USE_BDWGC AND NOT LIBJ_BUILD_BDWGC)
-
-if(LIBJ_BUILD_TEST AND NOT LIBJ_BUILD_GTEST)
-    message(WARNING "LIBJ_BUILD_TEST=ON but LIBJ_BUILD_GTEST=OFF")
-endif(LIBJ_BUILD_TEST AND NOT LIBJ_BUILD_GTEST)
-
 ## status
 message(STATUS "LIBJ_DEBUG=${LIBJ_DEBUG}")
 message(STATUS "LIBJ_TRACE=${LIBJ_TRACE}")
@@ -53,11 +38,8 @@ message(STATUS "LIBJ_USE_BDWGC=${LIBJ_USE_BDWGC}")
 message(STATUS "LIBJ_USE_CXX11=${LIBJ_USE_CXX11}")
 message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 message(STATUS "LIBJ_USE_ICONV=${LIBJ_USE_ICONV}")
-message(STATUS "LIBJ_USE_JSCRE=${LIBJ_USE_JSCRE}")
 message(STATUS "LIBJ_USE_THREAD=${LIBJ_USE_THREAD}")
 message(STATUS "LIBJ_USE_UTF32=${LIBJ_USE_UTF32}")
-message(STATUS "LIBJ_BUILD_BDWGC=${LIBJ_BUILD_BDWGC}")
-message(STATUS "LIBJ_BUILD_GTEST=${LIBJ_BUILD_GTEST}")
 message(STATUS "LIBJ_BUILD_TEST=${LIBJ_BUILD_TEST}")
 
 # variables --------------------------------------------------------------------
@@ -66,16 +48,17 @@ message(STATUS "LIBJ_BUILD_TEST=${LIBJ_BUILD_TEST}")
 set(libj-include
     include
     deps/iv
-    deps/boost-svn
+    deps/jscre
     deps/picojson
+    deps/boost-svn
 )
 
-if(LIBJ_USE_JSCRE)
+if(LIBJ_USE_BDWGC)
     set(libj-include
         ${libj-include}
-        deps/jscre
+        deps/bdwgc/include
     )
-endif(LIBJ_USE_JSCRE)
+endif(LIBJ_USE_BDWGC)
 
 if(NOT LIBJ_USE_ICONV)
     set(libj-include
@@ -84,20 +67,13 @@ if(NOT LIBJ_USE_ICONV)
     )
 endif(NOT LIBJ_USE_ICONV)
 
-if(LIBJ_BUILD_BDWGC)
-    set(libj-include
-        ${libj-include}
-        deps/bdwgc/include
-    )
-endif(LIBJ_BUILD_BDWGC)
-
-if(LIBJ_BUILD_GTEST)
+if(LIBJ_BUILD_TEST)
     set(libj-include
         ${libj-include}
         deps/googletest
         deps/googletest/include
     )
-endif(LIBJ_BUILD_GTEST)
+endif(LIBJ_BUILD_TEST)
 
 ## libj-src
 set(libj-src
@@ -123,7 +99,9 @@ set(libj-src
     src/symbol.cpp
     src/value_holder.cpp
     src/glue/cvtutf.cpp
+    src/glue/dtoa.cpp
     src/glue/json.cpp
+    src/glue/regexp.cpp
 )
 
 if(LIBJ_USE_CXX11)
@@ -160,10 +138,17 @@ endif(LIBJ_USE_EXCEPTION)
 
 ## libj-deps
 set(libj-deps
-    dtoa
-    ndtoa
-    regexp
+    jscre
+    nldtoa
+    v8dtoa
 )
+
+if(LIBJ_USE_BDWGC)
+    set(libj-deps
+        ${libj-deps}
+        gc
+    )
+endif(LIBJ_USE_BDWGC)
 
 if(LIBJ_USE_ICONV)
     if(APPLE)
@@ -178,20 +163,6 @@ else(LIBJ_USE_ICONV)
         convertutf
     )
 endif(LIBJ_USE_ICONV)
-
-if(LIBJ_USE_BDWGC)
-    set(libj-deps
-        ${libj-deps}
-        gc
-    )
-endif(LIBJ_USE_BDWGC)
-
-if(LIBJ_USE_JSCRE)
-    set(libj-deps
-        ${libj-deps}
-        jscre
-    )
-endif(LIBJ_USE_JSCRE)
 
 if(UNIX)
     if(NOT ANDROID)
@@ -361,51 +332,24 @@ link_directories(
     ${CMAKE_BINARY_DIR}
 )
 
+## bdw-gc
+if(LIBJ_USE_BDWGC)
+    add_subdirectory(deps/bdwgc)
+endif(LIBJ_USE_BDWGC)
+
 ## convertutf
 if(NOT LIBJ_USE_ICONV)
     add_subdirectory(deps/convertutf)
 endif(NOT LIBJ_USE_ICONV)
 
 ## jscre
-if(LIBJ_USE_JSCRE)
-    add_subdirectory(deps/jscre)
-endif(LIBJ_USE_JSCRE)
+add_subdirectory(deps/jscre)
 
-## regexp
-add_library(regexp STATIC
-    src/glue/regexp.cpp
-)
+## nldtoa
+add_subdirectory(deps/iv/iv/lv5/third_party/netlib_dtoa)
 
-if(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
-    set_target_properties(regexp PROPERTIES
-        COMPILE_FLAGS ${libj-cxx11-cflags}
-    )
-endif(UNIX AND NOT LIBJ_USE_JSCRE AND (NOT APPLE OR LIBJ_USE_CXX11))
-
-## dtoa
-add_library(dtoa STATIC
-    src/glue/dtoa.cpp
-    deps/iv/iv/lv5/third_party/v8_dtoa/checks.cc
-    deps/iv/iv/lv5/third_party/v8_dtoa/conversions.cc
-    deps/iv/iv/lv5/third_party/v8_dtoa/diy-fp.cc
-    deps/iv/iv/lv5/third_party/v8_dtoa/fast-dtoa.cc
-    deps/iv/iv/lv5/third_party/v8_dtoa/platform.cc
-    deps/iv/iv/lv5/third_party/v8_dtoa/utils.cc
-    deps/iv/iv/lv5/third_party/v8_dtoa/v8-dtoa.cc
-)
-
-set_target_properties(dtoa PROPERTIES
-    COMPILE_FLAGS ${libj-deps-cflags}
-)
-
-add_library(ndtoa STATIC
-    deps/iv/iv/lv5/third_party/netlib_dtoa/netlib_dtoa.c
-)
-
-## bdw-gc
-if(LIBJ_BUILD_BDWGC)
-    add_subdirectory(deps/bdwgc)
-endif(LIBJ_BUILD_BDWGC)
+## v8dtoa
+add_subdirectory(deps/iv/iv/lv5/third_party/v8_dtoa)
 
 ## trace
 if(UNIX AND LIBJ_TRACE)
@@ -413,20 +357,10 @@ if(UNIX AND LIBJ_TRACE)
         src/trace.cpp
     )
 
-    target_link_libraries(trace
-        dl
-        regexp
-    )
-
     set_target_properties(trace PROPERTIES
         COMPILE_FLAGS ${libj-deps-cflags}
     )
 endif(UNIX AND LIBJ_TRACE)
-
-## gtest
-if(LIBJ_BUILD_GTEST)
-    add_subdirectory(deps/googletest)
-endif(LIBJ_BUILD_GTEST)
 
 ## libj
 add_library(j STATIC
@@ -444,5 +378,6 @@ set_target_properties(j PROPERTIES
 # build tests ------------------------------------------------------------------
 
 if(LIBJ_BUILD_TEST)
+    add_subdirectory(deps/googletest)
     add_subdirectory(gtest)
 endif(LIBJ_BUILD_TEST)
