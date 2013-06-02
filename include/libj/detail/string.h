@@ -67,16 +67,16 @@ class String : public libj::String {
         : str_(glue::toUtf16(data, convertStrEncoding(enc), len, max))
         , interned_(false) {}
 
+    virtual std::string toStdString(Encoding enc) const {
+        return glue::fromUtf16(str_, convertStrEncoding(enc));
+    }
+
     virtual std::u16string toStdU16String() const {
         return str_;
     }
 
     virtual std::u32string toStdU32String() const {
         return glue::utf16ToUtf32(str_);
-    }
-
-    virtual std::string toStdString(Encoding enc) const {
-        return glue::fromUtf16(str_, convertStrEncoding(enc));
     }
 
 #else  // LIBJ_USE_UTF16
@@ -97,16 +97,16 @@ class String : public libj::String {
         : str_(glue::toUtf32(data, convertStrEncoding(enc), len, max))
         , interned_(false) {}
 
+    virtual std::string toStdString(Encoding enc) const {
+        return glue::fromUtf32(str_, convertStrEncoding(enc));
+    }
+
     virtual std::u16string toStdU16String() const {
         return glue::utf32ToUtf16(str_);
     }
 
     virtual std::u32string toStdU32String() const {
         return str_;
-    }
-
-    virtual std::string toStdString(Encoding enc) const {
-        return glue::fromUtf32(str_, convertStrEncoding(enc));
     }
 
 #endif  // LIBJ_USE_UTF16
@@ -275,6 +275,10 @@ class String : public libj::String {
 
     virtual CPtr toString() const {
         return LIBJ_THIS_CPTR(String);
+    }
+
+    virtual const Char* data() const {
+        return str_.data();
     }
 
  public:

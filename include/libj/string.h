@@ -76,11 +76,13 @@ class String : LIBJ_IMMUTABLE(String)
 
     virtual CPtr toUpperCase() const = 0;
 
+    virtual const Char* data() const = 0;
+
+    virtual std::string toStdString(Encoding enc = UTF8) const = 0;
+
     virtual std::u16string toStdU16String() const = 0;
 
     virtual std::u32string toStdU32String() const = 0;
-
-    virtual std::string toStdString(Encoding enc = UTF8) const = 0;
 };
 
 }  // namespace libj
