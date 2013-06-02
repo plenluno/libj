@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_GLUE_REGEXP_H_
 #define LIBJ_GLUE_REGEXP_H_
@@ -23,7 +23,7 @@ class RegExp {
         UTF32
     };
 
-    static RegExp* create(const std::string& pattern, unsigned flags);
+    static RegExp* create(const void* pattern, int len, unsigned flags);
 
     static Encoding encoding();
 
@@ -36,7 +36,8 @@ class RegExp {
     virtual bool multiline() const = 0;
 
     virtual bool execute(
-        const std::string& str,
+        const void* str,
+        int len,
         int offset,
         std::vector<int>& captures) const = 0;
 };

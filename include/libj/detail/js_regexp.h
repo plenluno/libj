@@ -21,7 +21,17 @@ class JsRegExp : public JsObject<I> {
         : pattern_(pattern)
         , re_(NULL) {
         if (pattern) {
-            re_ = glue::RegExp::create(toStdString(pattern), flags);
+            const void* data;
+            int len;
+            if (glue::RegExp::encoding() == encoding()) {
+                data = pattern->data();
+                len = pattern->length();
+            } else {
+                std::string p = toStdString(pattern);
+                data = p.data();
+                len = getLength(p);
+            }
+            re_ = glue::RegExp::create(data, len, flags);
         }
         setLastIndex(0);
     }
@@ -76,17 +86,28 @@ class JsRegExp : public JsObject<I> {
             }
         }
 
+        const void* data;
+        int len;
+        if (glue::RegExp::encoding() == encoding()) {
+            data = str->data();
+            len = str->length();
+        } else {
+            std::string s = toStdString(str);
+            data = s.data();
+            len = getLength(s);
+        }
+
         std::vector<int> captures;
-        if (re_->execute(toStdString(str), 0, captures)) {
+        if (re_->execute(data, len, 0, captures)) {
             if (global) setLastIndex(lastIndex + (captures[1] - captures[0]));
         } else {
             return execFail();
         }
 
         JsArray::Ptr res = JsArray::create();
-        Size len = captures.size();
-        assert(len > 0);
-        for (Size i = 0; i < len; i += 2) {
+        Size size = captures.size();
+        assert(size > 0);
+        for (Size i = 0; i < size; i += 2) {
             if (captures[i] >= 0 &&
                 captures[i+1] >= 0 &&
                 captures[i] <= captures[i+1] &&
@@ -106,13 +127,21 @@ class JsRegExp : public JsObject<I> {
     }
 
  private:
+    static glue::RegExp::Encoding encoding() {
+#ifdef LIBJ_USE_UTF32
+        return glue::RegExp::UTF32;
+#else
+        return glue::RegExp::UTF16;
+#endif
+    }
+
     static std::string toStdString(String::CPtr s) {
         static Boolean big = endian() == BIG;
         assert(s);
         glue::RegExp::Encoding enc = glue::RegExp::encoding();
         switch (enc) {
         case glue::RegExp::UTF8:
-            return s->toStdString();
+            return s->toStdString(String::UTF8);
         case glue::RegExp::UTF16:
             if (big) {
                 return s->toStdString(String::UTF16BE);
@@ -127,7 +156,24 @@ class JsRegExp : public JsObject<I> {
             }
         default:
             assert(false);
-            return s->toStdString();
+            return std::string();
+        }
+    }
+
+    static int getLength(const std::string& str) {
+        int len = str.length();
+        switch (glue::RegExp::encoding()) {
+        case glue::RegExp::UTF8:
+            return len;
+        case glue::RegExp::UTF16:
+            assert(len % 2 == 0 && len >= 2);
+            return (len / 2) - 1;
+        case glue::RegExp::UTF32:
+            assert(len % 4 == 0 && len >= 4);
+            return (len / 4) - 1;
+        default:
+            assert(false);
+            return 0;
         }
     }
 

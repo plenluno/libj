@@ -8,6 +8,7 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 #include <vector>
 
@@ -27,23 +28,50 @@ static void stop() {
     isEnabled = false;
 }
 
-static std::string convert(const char* s) {
-    assert(libj::glue::RegExp::encoding() == libj::glue::RegExp::UTF16);
-    std::basic_string<uint16_t> s16;
-    for (size_t i = 0; s[i]; i++) {
-        s16 += static_cast<uint16_t>(s[i]);
+static void* convert(const char* s, int len) {
+    switch (libj::glue::RegExp::encoding()) {
+    case libj::glue::RegExp::UTF8:
+        {
+            uint8_t* d = static_cast<uint8_t*>(malloc(len + 1));
+            for (int i = 0; i < len; i++) {
+                d[i] = s[i];
+            }
+            d[len] = 0;
+            return d;
+        }
+    case libj::glue::RegExp::UTF16:
+        {
+            uint16_t* d = static_cast<uint16_t*>(malloc((len + 1) << 1));
+            for (int i = 0; i < len; i++) {
+                d[i] = s[i];
+            }
+            d[len] = 0;
+            return d;
+        }
+    case libj::glue::RegExp::UTF32:
+        {
+            uint32_t* d = static_cast<uint32_t*>(malloc((len + 1) << 2));
+            for (int i = 0; i < len; i++) {
+                d[i] = s[i];
+            }
+            d[len] = 0;
+            return d;
+        }
+    default:
+        assert(false);
+        return NULL;
     }
-    s16 += static_cast<uint16_t>(0);
-    return std::string(
-        reinterpret_cast<const char*>(s16.c_str()),
-        s16.length() << 1);
 }
 
 static libj::glue::RegExp* createRegExp(const char* pattern) {
     if (!isEnabled || !pattern) {
         return NULL;
     } else {
-        return libj::glue::RegExp::create(convert(pattern), 0);
+        int len = strlen(pattern);
+        void* pat = convert(pattern, len);
+        libj::glue::RegExp* re = libj::glue::RegExp::create(pat, len, 0);
+        free(pat);
+        return re;
     }
 }
 
@@ -73,22 +101,26 @@ static void clear() {
 static bool isPrintable(const char* funcName) {
     if (!funcName) return false;
 
-    std::string name = convert(funcName);
+    int len = strlen(funcName);
+    void* name = convert(funcName, len);
     std::vector<int> captures;
     std::vector<libj::glue::RegExp*>::const_iterator itr;
 
     for (itr = blackList()->begin(); itr != blackList()->end(); ++itr) {
-        if ((*itr)->execute(name, 0, captures)) {
+        if ((*itr)->execute(name, len, 0, captures)) {
+            free(name);
             return false;
         }
     }
 
     for (itr = whiteList()->begin(); itr != whiteList()->end(); ++itr) {
-        if ((*itr)->execute(name, 0, captures)) {
+        if ((*itr)->execute(name, len, 0, captures)) {
+            free(name);
             return true;
         }
     }
 
+    free(name);
     return false;
 }
 
