@@ -68,9 +68,7 @@ class JsRegExp : public JsObject<I> {
         LIBJ_STATIC_SYMBOL_DEF(symIndex, "index");
         LIBJ_STATIC_SYMBOL_DEF(symInput, "input");
 
-        if (!str) {
-            return execFail();
-        }
+        if (!str) return execFail();
 
         Size lastIndex = 0;
         Boolean global = this->global();
@@ -83,24 +81,21 @@ class JsRegExp : public JsObject<I> {
             }
         }
 
-        const void* data;
         int len;
+        std::vector<int> captures;
+        Boolean success;
         if (glue::RegExp::encoding() == encoding()) {
-            data = str->data();
             len = str->length();
+            success = re_->execute(str->data(), len, 0, captures);
         } else {
-            static std::string s;
-            s = toStdString(str);
-            data = s.data();
+            std::string s = toStdString(str);
             len = getLength(s);
+            success = re_->execute(s.data(), len, 0, captures);
         }
 
-        std::vector<int> captures;
-        if (re_->execute(data, len, 0, captures)) {
-            if (global) setLastIndex(lastIndex + (captures[1] - captures[0]));
-        } else {
-            return execFail();
-        }
+        if (!success) return execFail();
+
+        if (global) setLastIndex(lastIndex + (captures[1] - captures[0]));
 
         JsArray::Ptr res = JsArray::create();
         Size size = captures.size();
