@@ -21,17 +21,14 @@ class JsRegExp : public JsObject<I> {
         : pattern_(pattern)
         , re_(NULL) {
         if (pattern) {
-            const void* data;
-            int len;
             if (glue::RegExp::encoding() == encoding()) {
-                data = pattern->data();
-                len = pattern->length();
+                re_ = glue::RegExp::create(
+                    pattern->data(), pattern->length(), flags);
             } else {
-                std::string p = toStdString(pattern);
-                data = p.data();
-                len = getLength(p);
+                std::string pat = toStdString(pattern);
+                re_ = glue::RegExp::create(
+                    pat.data(), getLength(pat), flags);
             }
-            re_ = glue::RegExp::create(data, len, flags);
         }
         setLastIndex(0);
     }
@@ -92,7 +89,8 @@ class JsRegExp : public JsObject<I> {
             data = str->data();
             len = str->length();
         } else {
-            std::string s = toStdString(str);
+            static std::string s;
+            s = toStdString(str);
             data = s.data();
             len = getLength(s);
         }
@@ -111,7 +109,7 @@ class JsRegExp : public JsObject<I> {
             if (captures[i] >= 0 &&
                 captures[i+1] >= 0 &&
                 captures[i] <= captures[i+1] &&
-                captures[i+1] <= static_cast<int>(str->length())) {
+                captures[i+1] <= len) {
                 res->add(str->substring(captures[i], captures[i+1]));
             } else {
                 res->add(UNDEFINED);
@@ -137,9 +135,9 @@ class JsRegExp : public JsObject<I> {
 
     static std::string toStdString(String::CPtr s) {
         static Boolean big = endian() == BIG;
+
         assert(s);
-        glue::RegExp::Encoding enc = glue::RegExp::encoding();
-        switch (enc) {
+        switch (glue::RegExp::encoding()) {
         case glue::RegExp::UTF8:
             return s->toStdString(String::UTF8);
         case glue::RegExp::UTF16:
