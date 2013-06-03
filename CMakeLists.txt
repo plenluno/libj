@@ -357,6 +357,10 @@ if(UNIX AND LIBJ_TRACE)
         src/trace.cpp
     )
 
+    target_link_libraries(trace
+        dl
+    )
+
     set_target_properties(trace PROPERTIES
         COMPILE_FLAGS ${libj-deps-cflags}
     )
