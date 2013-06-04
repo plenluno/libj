@@ -8,15 +8,22 @@ include(CMakeDependentOption)
 
 # options ----------------------------------------------------------------------
 
-option(LIBJ_DEBUG         "Debug Mode"        OFF)
-option(LIBJ_TRACE         "Trace Mode"        OFF)
-option(LIBJ_USE_BDWGC     "Use BDW-GC"        OFF)
-option(LIBJ_USE_CXX11     "Use C++11"         OFF)
-option(LIBJ_USE_EXCEPTION "Use Exceptions"    OFF)
-option(LIBJ_USE_ICONV     "Use iconv"         OFF)
-option(LIBJ_USE_THREAD    "Use Threads"       OFF)
-option(LIBJ_USE_UTF32     "Use UTF32"         OFF)
-option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
+if(NOT SUBMODULE_LIBJ)
+    option(LIBJ_DEBUG         "Debug Mode"        OFF)
+    option(LIBJ_TRACE         "Trace Mode"        OFF)
+    option(LIBJ_USE_BDWGC     "Use BDW-GC"        OFF)
+    option(LIBJ_USE_CXX11     "Use C++11"         OFF)
+    option(LIBJ_USE_EXCEPTION "Use Exceptions"    OFF)
+    option(LIBJ_USE_ICONV     "Use iconv"         OFF)
+    option(LIBJ_USE_THREAD    "Use Threads"       OFF)
+    option(LIBJ_USE_UTF32     "Use UTF32"         OFF)
+    option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
+
+    cmake_dependent_option(LIBJ_BUILD_GTEST
+        "Build Google Test" ON
+        "LIBJ_BUILD_TEST" OFF
+    )
+endif(NOT SUBMODULE_LIBJ)
 
 ## check
 if(LIBJ_TRACE AND NOT LIBJ_DEBUG)
@@ -351,6 +358,11 @@ add_subdirectory(deps/iv/iv/lv5/third_party/netlib_dtoa)
 ## v8dtoa
 add_subdirectory(deps/iv/iv/lv5/third_party/v8_dtoa)
 
+## gtest
+if(LIBJ_BUILD_GTEST)
+    add_subdirectory(deps/googletest)
+endif(LIBJ_BUILD_GTEST)
+
 ## trace
 if(UNIX AND LIBJ_TRACE)
     add_library(trace STATIC
@@ -382,6 +394,5 @@ set_target_properties(j PROPERTIES
 # build tests ------------------------------------------------------------------
 
 if(LIBJ_BUILD_TEST)
-    add_subdirectory(deps/googletest)
     add_subdirectory(gtest)
 endif(LIBJ_BUILD_TEST)
