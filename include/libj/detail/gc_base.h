@@ -3,17 +3,17 @@
 #ifndef LIBJ_DETAIL_GC_BASE_H_
 #define LIBJ_DETAIL_GC_BASE_H_
 
+#include <libj/typedef.h>
 #include <libj/debug_print.h>
 
-#ifdef LIBJ_DEBUG
-    #include <libj/typedef.h>
-    #ifdef LIBJ_USE_THREAD
-        #include <libj/detail/atomic.h>
-        #define LIBJ_DEBUG_COUNT_T LIBJ_DETAIL_ATOMIC(libj::Long)
-    #else
-        #define LIBJ_DEBUG_COUNT_T libj::Long
-    #endif
+#ifdef LIBJ_USE_THREAD
+    #include <libj/detail/atomic.h>
+    #define LIBJ_DEBUG_COUNT_T LIBJ_DETAIL_ATOMIC(libj::Long)
+#else
+    #define LIBJ_DEBUG_COUNT_T libj::Long
+#endif
 
+#ifdef LIBJ_DEBUG
     #define LIBJ_DEBUG_OBJECT_COUNT     libj::detail::GCBase::count(0)
     #define LIBJ_DEBUG_OBJECT_COUNT_INC libj::detail::GCBase::count(1)
     #define LIBJ_DEBUG_OBJECT_COUNT_DEC libj::detail::GCBase::count(-1)

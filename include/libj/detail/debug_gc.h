@@ -5,12 +5,15 @@
 
 #include <libj/detail/gc_base.h>
 
-#ifdef LIBJ_USE_BDWGC
+#if defined(LIBJ_DEBUG) && defined(LIBJ_USE_BDWGC)
 
 namespace libj {
 namespace detail {
 
-void gcollect() {
+inline void runFullGC() {
+    static LIBJ_DEBUG_COUNT_T cnt(static_cast<Long>(0));
+    LIBJ_DEBUG_PRINT("full-gc: %d", ++cnt);
+
     Long before;
     Long after;
     do {
@@ -23,12 +26,12 @@ void gcollect() {
 }  // namespace detail
 }  // namespace libj
 
-#define LIBJ_DEBUG_GC libj::detail::gcollect()
+#define LIBJ_DEBUG_GC libj::detail::runFullGC()
 
-#else  // LIBJ_USE_BDWGC
+#else   // LIBJ_DEBUG && LIBJ_USE_BDWGC
 
 #define LIBJ_DEBUG_GC
 
-#endif  // LIBJ_USE_BDWGC
+#endif  // LIBJ_DEBUG && LIBJ_USE_BDWGC
 
 #endif  // LIBJ_DETAIL_DEBUG_GC_H_
