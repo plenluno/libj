@@ -111,15 +111,15 @@ TEST(GTestMutable, TestUseCount) {
 
 #else
 
-TEST(GTestMutable, TestGcCollectAndDelete) {
+TEST(GTestMutable, TestGcDelete) {
     LIBJ_GC_COLLECT;
-    ASSERT_EQ(0, GTestMutable::count);
+    int cnt = GTestMutable::count;
 
     GTestMutable::Ptr p = GTestMutable::create();
-    ASSERT_EQ(1, GTestMutable::count);
+    ASSERT_EQ(cnt + 1, GTestMutable::count);
 
     LIBJ_GC_DELETE(p);
-    ASSERT_EQ(0, GTestMutable::count);
+    ASSERT_EQ(cnt, GTestMutable::count);
 }
 
 #endif

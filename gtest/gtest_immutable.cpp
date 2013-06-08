@@ -96,15 +96,15 @@ TEST(GTestImmutable, TestUseCount) {
 
 #else
 
-TEST(GTestImmutable, TestGcCollectAndDelete) {
+TEST(GTestImmutable, TestGcDelete) {
     LIBJ_GC_COLLECT;
-    ASSERT_EQ(0, GTestImmutable::count);
+    int cnt = GTestImmutable::count;
 
     GTestImmutable::CPtr p = GTestImmutable::create();
-    ASSERT_EQ(1, GTestImmutable::count);
+    ASSERT_EQ(cnt + 1, GTestImmutable::count);
 
     LIBJ_GC_DELETE(p);
-    ASSERT_EQ(0, GTestImmutable::count);
+    ASSERT_EQ(cnt, GTestImmutable::count);
 }
 
 #endif
