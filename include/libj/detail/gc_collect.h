@@ -10,6 +10,8 @@
 namespace libj {
 namespace detail {
 
+#ifdef LIBJ_DEBUG
+
 inline void gcollect() {
     static LIBJ_COUNT_T cnt(static_cast<Long>(0));
     LIBJ_DEBUG_PRINT("full-gc: %d", ++cnt);
@@ -22,6 +24,14 @@ inline void gcollect() {
         after = LIBJ_DEBUG_OBJECT_COUNT;
     } while (before > after);
 }
+
+#else   // LIBJ_DEBUG
+
+inline void gcollect() {
+    GC_gcollect();
+}
+
+#endif  // LIBJ_DEBUG
 
 }  // namespace detail
 }  // namespace libj
