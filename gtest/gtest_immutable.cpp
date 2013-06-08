@@ -1,9 +1,11 @@
 // Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
-#include <libj/immutable.h>
 #include <libj/mutable.h>
+#include <libj/immutable.h>
 #include <libj/string.h>
+#include <libj/detail/gc_delete.h>
+#include <libj/detail/gc_collect.h>
 
 namespace libj {
 
@@ -66,6 +68,7 @@ TEST(GTestImmutable, TestInstanceOf) {
 }
 
 #ifdef LIBJ_USE_SP
+
 TEST(GTestImmutable, TestUseCount) {
     {
         GTestImmutable::CPtr p = GTestImmutable::create();
@@ -90,6 +93,20 @@ TEST(GTestImmutable, TestUseCount) {
     }
     ASSERT_EQ(0, GTestImmutable::count);
 }
+
+#else
+
+TEST(GTestImmutable, TestGcCollectAndDelete) {
+    LIBJ_GC_COLLECT;
+    ASSERT_EQ(0, GTestImmutable::count);
+
+    GTestImmutable::CPtr p = GTestImmutable::create();
+    ASSERT_EQ(1, GTestImmutable::count);
+
+    LIBJ_GC_DELETE(p);
+    ASSERT_EQ(0, GTestImmutable::count);
+}
+
 #endif
 
 }  // namespace libj

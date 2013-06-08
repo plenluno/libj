@@ -5,6 +5,8 @@
 #include <libj/immutable.h>
 #include <libj/cast.h>
 #include <libj/string.h>
+#include <libj/detail/gc_delete.h>
+#include <libj/detail/gc_collect.h>
 
 namespace libj {
 
@@ -81,6 +83,7 @@ TEST(GTestMutable, TestInstanceOf2) {
 }
 
 #ifdef LIBJ_USE_SP
+
 TEST(GTestMutable, TestUseCount) {
     {
         GTestMutable::Ptr p = GTestMutable::create();
@@ -105,6 +108,20 @@ TEST(GTestMutable, TestUseCount) {
     }
     ASSERT_EQ(0, GTestMutable::count);
 }
+
+#else
+
+TEST(GTestMutable, TestGcCollectAndDelete) {
+    LIBJ_GC_COLLECT;
+    ASSERT_EQ(0, GTestMutable::count);
+
+    GTestMutable::Ptr p = GTestMutable::create();
+    ASSERT_EQ(1, GTestMutable::count);
+
+    LIBJ_GC_DELETE(p);
+    ASSERT_EQ(0, GTestMutable::count);
+}
+
 #endif
 
 }  // namespace libj
