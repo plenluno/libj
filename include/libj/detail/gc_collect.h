@@ -1,17 +1,17 @@
 // Copyright (c) 2013 Plenluno All rights reserved.
 
-#ifndef LIBJ_DETAIL_DEBUG_GC_H_
-#define LIBJ_DETAIL_DEBUG_GC_H_
+#ifndef LIBJ_DETAIL_GC_COLLECT_H_
+#define LIBJ_DETAIL_GC_COLLECT_H_
 
 #include <libj/detail/gc_base.h>
 
-#if defined(LIBJ_DEBUG) && defined(LIBJ_USE_BDWGC)
+#ifdef LIBJ_USE_BDWGC
 
 namespace libj {
 namespace detail {
 
-inline void runFullGC() {
-    static LIBJ_DEBUG_COUNT_T cnt(static_cast<Long>(0));
+inline void gcollect() {
+    static LIBJ_COUNT_T cnt(static_cast<Long>(0));
     LIBJ_DEBUG_PRINT("full-gc: %d", ++cnt);
 
     Long before;
@@ -26,12 +26,12 @@ inline void runFullGC() {
 }  // namespace detail
 }  // namespace libj
 
-#define LIBJ_DEBUG_GC libj::detail::runFullGC()
+#define LIBJ_GC_COLLECT libj::detail::gcollect()
 
-#else   // LIBJ_DEBUG && LIBJ_USE_BDWGC
+#else   // LIBJ_USE_BDWGC
 
-#define LIBJ_DEBUG_GC
+#define LIBJ_GC_COLLECT
 
-#endif  // LIBJ_DEBUG && LIBJ_USE_BDWGC
+#endif  // LIBJ_USE_BDWGC
 
-#endif  // LIBJ_DETAIL_DEBUG_GC_H_
+#endif  // LIBJ_DETAIL_GC_COLLECT_H_

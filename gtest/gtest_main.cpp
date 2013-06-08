@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <libj/trace.h>
 #include <libj/typedef.h>
-#include <libj/detail/debug_gc.h>
+#include <libj/detail/gc_collect.h>
 
 int main(int argc, char** argv) {
     LIBJ_DEBUG_TRACE_ON;
@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     int r = RUN_ALL_TESTS();
 
-    LIBJ_DEBUG_GC;
+    LIBJ_GC_COLLECT;
 
     LIBJ_DEBUG_PRINT(
         "remaining objects: %d",

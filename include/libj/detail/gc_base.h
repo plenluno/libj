@@ -8,9 +8,9 @@
 
 #ifdef LIBJ_USE_THREAD
     #include <libj/detail/atomic.h>
-    #define LIBJ_DEBUG_COUNT_T LIBJ_DETAIL_ATOMIC(libj::Long)
+    #define LIBJ_COUNT_T LIBJ_DETAIL_ATOMIC(libj::Long)
 #else
-    #define LIBJ_DEBUG_COUNT_T libj::Long
+    #define LIBJ_COUNT_T libj::Long
 #endif
 
 #ifdef LIBJ_DEBUG
@@ -19,7 +19,7 @@
     #define LIBJ_DEBUG_OBJECT_COUNT_DEC libj::detail::GCBase::count(-1)
     #define LIBJ_DEBUG_OBJECT_COUNT_DEF public: \
         static libj::Long count(libj::Long diff) { \
-            static LIBJ_DEBUG_COUNT_T cnt(static_cast<Long>(0)); \
+            static LIBJ_COUNT_T cnt(static_cast<Long>(0)); \
             cnt += diff; \
             return cnt; \
         }
