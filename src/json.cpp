@@ -31,14 +31,17 @@ static StringBuffer::Ptr stringToJson(
         case '\b':
             result->appendCStr("\\b");
             break;
-        case '\t':
-            result->appendCStr("\\t");
+        case '\f':
+            result->appendCStr("\\f");
             break;
         case '\n':
             result->appendCStr("\\n");
             break;
         case '\r':
             result->appendCStr("\\r");
+            break;
+        case '\t':
+            result->appendCStr("\\t");
             break;
         case '"':
             result->appendCStr("\\\"");

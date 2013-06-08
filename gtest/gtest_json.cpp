@@ -213,8 +213,8 @@ TEST(GTestJson, TestParseError) {
 }
 
 TEST(GTestJson, TestEscape) {
-    String::CPtr str = String::create("\b\t\r\n'\"\\");
-    String::CPtr json = String::create("\"\\b\\t\\r\\n'\\\"\\\\\"");
+    String::CPtr str = String::create("\b\f\n\r\t'\"\\");
+    String::CPtr json = String::create("\"\\b\\f\\n\\r\\t'\\\"\\\\\"");
     String::CPtr s = toCPtr<String>(json::parse(json));
     ASSERT_TRUE(s->equals(str));
     s = json::stringify(str);
