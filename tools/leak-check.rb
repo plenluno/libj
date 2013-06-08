@@ -3,7 +3,7 @@
 require 'set'
 
 prevLine = ""
-numObjects = 0
+numObjects = -1
 
 callStack = []
 callStacks = {}
@@ -69,14 +69,14 @@ STDIN.each do |line|
   end
 
   if /\[LIBJ DEBUG\] remaining objects: (\d*)/ =~ line
-    numObjects = $1
+    numObjects = $1.to_i
     break;
   end
 
   prevLine = line
 end
 
-if objects.size != numObjects.to_i
+if numObjects >=0 and objects.size != numObjects
   raise "remaining objects: not " + numObjects + " but " + objects.size.to_s
 end
 
