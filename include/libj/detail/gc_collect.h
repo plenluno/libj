@@ -46,8 +46,6 @@ inline void gcollect() {
     } \
 }
 
-#endif
-
 #else   // LIBJ_USE_BDWGC
 
 #define LIBJ_GC_COLLECT
