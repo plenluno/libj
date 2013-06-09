@@ -13,8 +13,8 @@ namespace detail {
 #ifdef LIBJ_DEBUG
 
 inline void gcollect() {
-    static LIBJ_COUNT_T cnt(static_cast<Long>(0));
-    LIBJ_DEBUG_PRINT("full-gc: %d", ++cnt);
+    static LIBJ_COUNT_T count(static_cast<Long>(0));
+    LIBJ_DEBUG_PRINT("full-gc: %d", ++count);
 
     Long before;
     Long after;
@@ -38,9 +38,21 @@ inline void gcollect() {
 
 #define LIBJ_GC_COLLECT libj::detail::gcollect()
 
+#define LIBJ_GC_COLLECT_PER(N) { \
+    static LIBJ_COUNT_T count(static_cast<Long>(0)); \
+    if (++count >= N) { \
+        LIBJ_GC_COLLECT; \
+        count = 0; \
+    } \
+}
+
+#endif
+
 #else   // LIBJ_USE_BDWGC
 
 #define LIBJ_GC_COLLECT
+
+#define LIBJ_GC_COLLECT_PER(N)
 
 #endif  // LIBJ_USE_BDWGC
 
