@@ -14,7 +14,7 @@ namespace detail {
 
 inline void gcollect() {
     static LIBJ_COUNT_T count(static_cast<Long>(0));
-    LIBJ_DEBUG_PRINT("full-gc: %d", ++count);
+    LIBJ_DEBUG_PRINT("full-gc: start[%d]", ++count);
 
     Long before;
     Long after;
@@ -23,6 +23,8 @@ inline void gcollect() {
         GC_gcollect();
         after = LIBJ_DEBUG_OBJECT_COUNT;
     } while (before > after);
+
+    LIBJ_DEBUG_PRINT("full-gc: finish[%d]", count);
 }
 
 #else   // LIBJ_DEBUG
