@@ -7,7 +7,7 @@
 #include <libj/glue/dtoa.h>
 
 #ifdef LIBJ_PF_WINDOWS
-    #include <libj/platform/windows.h>
+#include <libj/platform/windows.h>
 #endif
 
 #pragma GCC diagnostic ignored "-Wuninitialized"

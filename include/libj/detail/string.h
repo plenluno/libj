@@ -13,9 +13,9 @@
 #include <libj/glue/cvtutf.h>
 
 #ifdef LIBJ_USE_THREAD
-    #include <libj/concurrent_map.h>
+# include <libj/concurrent_map.h>
 #else
-    #include <libj/map.h>
+# include <libj/map.h>
 #endif
 
 #include <assert.h>

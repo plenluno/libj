@@ -8,7 +8,7 @@
 
 #if defined(LIBJ_PF_UNIX) && !defined(LIBJ_USE_CXX11) || \
     defined(LIBJ_PF_ANDROID)
-    #define IV_OS_BSD
+#define IV_OS_BSD
 #endif
 
 #include <iv/date_utils.h>

@@ -8,7 +8,7 @@
 #ifdef LIBJ_USE_EXCEPTION
 
 #ifdef LIBJ_PF_WINDOWS
-    #include <libj/platform/windows.h>
+#include <libj/platform/windows.h>
 #endif
 
 #include <exception>

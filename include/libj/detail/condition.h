@@ -6,7 +6,7 @@
 #include <libj/detail/scoped_lock.h>
 
 #ifdef LIBJ_USE_CXX11
-    #include <condition_variable>
+#include <condition_variable>
 #endif
 
 namespace libj {

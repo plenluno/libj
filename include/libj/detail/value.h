@@ -12,10 +12,10 @@
 #include <libj/detail/classify.h>
 
 #ifdef LIBJ_USE_CXX11
-    #include <type_traits>
+# include <type_traits>
 #else
-    #include <boost/type_traits/remove_const.hpp>
-    #include <boost/type_traits/remove_reference.hpp>
+# include <boost/type_traits/remove_const.hpp>
+# include <boost/type_traits/remove_reference.hpp>
 #endif
 
 namespace libj {

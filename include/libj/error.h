@@ -42,11 +42,8 @@ class Error : LIBJ_STATUS(Error)
     LIBJ_IMMUTABLE_DEFS(T, libj::Error)
 
 #ifndef LIBJ_USE_EXCEPTION
-    #define LIBJ_THROW(code) \
-        assert(false);
-
-    #define LIBJ_HANDLE_ERROR(code) \
-        return libj::Error::create(code);
+#define LIBJ_THROW(code) assert(false);
+#define LIBJ_HANDLE_ERROR(code) return libj::Error::create(code);
 #endif
 
 #endif  // LIBJ_ERROR_H_

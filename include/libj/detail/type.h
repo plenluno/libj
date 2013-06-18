@@ -7,9 +7,9 @@
 #include <libj/detail/pointer.h>
 
 #ifdef LIBJ_USE_CXX11
-    #include <type_traits>
+# include <type_traits>
 #else
-    #include <boost/type_traits/is_base_of.hpp>
+# include <boost/type_traits/is_base_of.hpp>
 #endif
 
 namespace libj {

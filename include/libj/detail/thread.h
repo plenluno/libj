@@ -7,11 +7,11 @@
 #include <libj/exception.h>
 
 #ifdef LIBJ_USE_CXX11
-    #include <thread>
+# include <thread>
 #else
-    #include <assert.h>
-    #include <pthread.h>
-    #include <signal.h>
+# include <assert.h>
+# include <pthread.h>
+# include <signal.h>
 #endif
 
 namespace libj {

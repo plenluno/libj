@@ -7,9 +7,9 @@
 #include <libj/thread.h>
 
 #ifdef LIBJ_PF_WINDOWS
-    #include <libj/platform/windows.h>
+# include <libj/platform/windows.h>
 #else
-    #include <unistd.h>
+# include <unistd.h>
 #endif
 
 namespace libj {

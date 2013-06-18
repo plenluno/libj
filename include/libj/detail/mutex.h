@@ -7,10 +7,10 @@
 #include <libj/detail/noncopyable.h>
 
 #ifdef LIBJ_USE_CXX11
-    #include <mutex>
+# include <mutex>
 #else
-    #include <assert.h>
-    #include <pthread.h>
+# include <assert.h>
+# include <pthread.h>
 #endif
 
 namespace libj {

@@ -13,27 +13,27 @@
 #cmakedefine LIBJ_USE_UTF32
 
 #ifndef LIBJ_USE_BDWGC
-    #define LIBJ_USE_SP
+#define LIBJ_USE_SP
 #endif
 
 #ifndef LIBJ_USE_UTF32
-    #define LIBJ_USE_UTF16
+#define LIBJ_USE_UTF16
 #endif
 
 #ifdef _WIN32
-    #define LIBJ_PF_WINDOWS
+#define LIBJ_PF_WINDOWS
 #elif __ANDROID__
-    #define LIBJ_PF_ANDROID
+#define LIBJ_PF_ANDROID
 #else
-    #define LIBJ_PF_UNIX
+#define LIBJ_PF_UNIX
 #endif
 
 #ifdef _WIN32
-    #define LIBJ_USE_MSVC
+#define LIBJ_USE_MSVC
 #elif __clang__
-    #define LIBJ_USE_CLANG
+#define LIBJ_USE_CLANG
 #else
-    #define LIBJ_USE_GCC
+#define LIBJ_USE_GCC
 #endif
 
 #endif  // LIBJ_CONFIG_H_

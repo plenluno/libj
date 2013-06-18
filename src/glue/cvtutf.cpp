@@ -7,10 +7,10 @@
 #include <assert.h>
 
 #ifdef LIBJ_USE_ICONV
-    #include <errno.h>
-    #include <iconv.h>
+# include <errno.h>
+# include <iconv.h>
 #else
-    #include <ConvertUTF.h>
+# include <ConvertUTF.h>
 #endif
 
 namespace libj {
@@ -115,10 +115,10 @@ std::u32string utf16ToUtf32(const std::u16string& str) {
 #ifdef LIBJ_USE_ICONV
 
 #ifdef LIBJ_CVTUTF_DEBUG
-    #include <stdio.h>
-    #define ICONV iconvDebug
+# include <stdio.h>
+# define ICONV iconvDebug
 #else
-    #define ICONV iconv
+# define ICONV iconv
 #endif
 
 static inline iconv_t iconvOpen(const char* inEnc, UnicodeEncoding outEnc) {

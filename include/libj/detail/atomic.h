@@ -6,11 +6,11 @@
 #include <libj/config.h>
 
 #ifdef LIBJ_USE_CXX11
-    #include <atomic>
-    #define LIBJ_DETAIL_ATOMIC(T) std::atomic<T>
+# include <atomic>
+# define LIBJ_DETAIL_ATOMIC(T) std::atomic<T>
 #else
-    #include <boost/atomic.hpp>
-    #define LIBJ_DETAIL_ATOMIC(T) boost::atomic<T>
+# include <boost/atomic.hpp>
+# define LIBJ_DETAIL_ATOMIC(T) boost::atomic<T>
 #endif
 
 #endif  // LIBJ_DETAIL_ATOMIC_H_
