@@ -58,6 +58,13 @@ if(LIBJ_USE_THREAD)
     )
 endif(LIBJ_USE_THREAD)
 
+if(LIBJ_USE_XML)
+    set(libj-test-src
+        ${libj-test-src}
+        gtest_xml_dom.cpp
+    )
+endif(LIBJ_USE_XML)
+
 add_executable(libj-test
     ${libj-test-src}
 )
