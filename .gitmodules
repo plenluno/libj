@@ -28,3 +28,6 @@
 [submodule "deps/googletest"]
 	path = deps/googletest
 	url = https://github.com/plenluno/googletest.git
+[submodule "deps/pugixml"]
+	path = deps/pugixml
+	url = https://github.com/plenluno/pugixml.git
