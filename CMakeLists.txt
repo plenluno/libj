@@ -17,6 +17,7 @@ if(NOT SUBMODULE_LIBJ)
     option(LIBJ_USE_ICONV     "Use iconv"         OFF)
     option(LIBJ_USE_THREAD    "Use Threads"       OFF)
     option(LIBJ_USE_UTF32     "Use UTF32"         OFF)
+    option(LIBJ_USE_XML       "Use XML"           ON)
     option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
 
     cmake_dependent_option(LIBJ_BUILD_GTEST
@@ -37,6 +38,10 @@ endif(LIBJ_TRACE AND LIBJ_USE_THREAD)
 if(LIBJ_USE_BDWGC AND LIBJ_USE_THREAD)
     message(FATAL_ERROR "LIBJ_USE_BDWGC=ON but LIBJ_USE_THREAD=ON")
 endif(LIBJ_USE_BDWGC AND LIBJ_USE_THREAD)
+
+if(MSVC AND LIBJ_USE_UTF32)
+    message(FATAL_ERROR "LIBJ_USE_UTF32 not supported in Windows")
+endif(MSVC AND LIBJ_USE_UTF32)
 
 ## status
 message(STATUS "LIBJ_DEBUG=${LIBJ_DEBUG}")
@@ -73,6 +78,13 @@ if(NOT LIBJ_USE_ICONV)
         deps/convertutf
     )
 endif(NOT LIBJ_USE_ICONV)
+
+if(LIBJ_USE_XML)
+    set(libj-include
+        ${libj-include}
+        deps/pugixml/src
+    )
+endif(LIBJ_USE_XML)
 
 if(LIBJ_BUILD_TEST)
     set(libj-include
@@ -142,6 +154,13 @@ else(LIBJ_USE_EXCEPTION)
         src/no_exception.cpp
     )
 endif(LIBJ_USE_EXCEPTION)
+
+if(LIBJ_USE_XML)
+    set(libj-src
+        ${libj-src}
+        src/xml/document.cpp
+    )
+endif(LIBJ_USE_XML)
 
 ## libj-deps
 set(libj-deps
@@ -219,26 +238,38 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     )
 endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
+## libj-common-cflags
+set(libj-common-cflags
+    -fno-rtti
+)
+
+if(LIBJ_USE_CXX11)
+    set(libj-common-cflags
+        ${libj-common-cflags}
+        ${libj-cxx11-cflags}
+    )
+endif(LIBJ_USE_CXX11)
+
+if(NOT LIBJ_USE_EXCEPTION)
+    set(libj-common-cflags
+        ${libj-common-cflags}
+        -fno-exceptions
+    )
+endif(NOT LIBJ_USE_EXCEPTION)
+
+if(NOT LIBJ_USE_UTF32)
+    set(libj-common-cflags
+        ${libj-common-cflags}
+        -fshort-wchar
+    )
+endif(NOT LIBJ_USE_UTF32)
+
 ## libj-cflags
 if(UNIX)
     set(libj-cflags
         -Wall
-        -fno-rtti
+        ${libj-common-cflags}
     )
-
-    if(LIBJ_USE_CXX11)
-        set(libj-cflags
-            ${libj-cflags}
-            ${libj-cxx11-cflags}
-        )
-    endif(LIBJ_USE_CXX11)
-
-    if(NOT LIBJ_USE_EXCEPTION)
-        set(libj-cflags
-            ${libj-cflags}
-            -fno-exceptions
-        )
-    endif(NOT LIBJ_USE_EXCEPTION)
 
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
         set(libj-cflags
@@ -263,22 +294,8 @@ endif(UNIX)
 ## libj-deps-cflags
 if(UNIX)
     set(libj-deps-cflags
-        -fno-rtti
+        ${libj-common-cflags}
     )
-
-    if(LIBJ_USE_CXX11)
-        set(libj-deps-cflags
-            ${libj-deps-cflags}
-            ${libj-cxx11-cflags}
-        )
-    endif(LIBJ_USE_CXX11)
-
-    if(NOT LIBJ_USE_EXCEPTION)
-        set(libj-deps-cflags
-            ${libj-deps-cflags}
-            -fno-exceptions
-        )
-    endif(NOT LIBJ_USE_EXCEPTION)
 else(UNIX)
     set(libj-deps-cflags
         /W1
