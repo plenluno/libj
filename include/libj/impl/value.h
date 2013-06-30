@@ -1,9 +1,14 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_VALUE_H_
 #define LIBJ_IMPL_VALUE_H_
 
 namespace libj {
+
+template<typename T>
+inline T to(const Value& val, T dflt) {
+    return detail::to<T>(val, dflt);
+}
 
 template<typename T>
 inline Boolean to(const Value & val, T* out) {

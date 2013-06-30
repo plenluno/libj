@@ -26,10 +26,10 @@ class Value {
     Value() : content(0) {}
 
     template<typename T>
-    Value(const T & value)
+    Value(const T& value)
         : content(new holder<T>(value)) {}
 
-    Value(const Value & other)
+    Value(const Value& other)
         : content(other.content ? other.content->clone() : 0) {}
 
     ~Value() {
@@ -37,18 +37,18 @@ class Value {
     }
 
  public:
-    Value & swap(Value & rhs) {
+    Value& swap(Value& rhs) {
         std::swap(content, rhs.content);
         return *this;
     }
 
     template<typename T>
-    Value & operator=(const T & rhs) {
+    Value& operator=(const T& rhs) {
         Value(rhs).swap(*this);
         return *this;
     }
 
-    Value & operator=(Value rhs) {
+    Value& operator=(Value rhs) {
         rhs.swap(*this);
         return *this;
     }
@@ -140,9 +140,9 @@ class Value {
 
         virtual Boolean isCPtr() const = 0;
 
-        virtual Int compareTo(placeholder * other) const = 0;
+        virtual Int compareTo(placeholder* other) const = 0;
 
-        virtual placeholder * clone() const = 0;
+        virtual placeholder* clone() const = 0;
     };
 
     template<
@@ -151,7 +151,7 @@ class Value {
         Boolean IsCPtr   = Classify<T>::isCPtr>
     class holder : public placeholder {
      public:
-        holder(const T & value) : held(value) {}
+        holder(const T& value) : held(value) {}
 
      public:
         virtual TypeId type() const {
@@ -178,7 +178,7 @@ class Value {
             return IsCPtr;
         }
 
-        virtual Int compareTo(placeholder * that) const {
+        virtual Int compareTo(placeholder* that) const {
             if (that->isPtr() || that->isCPtr()) {
                 TypeId thisId = this->objectType();
                 TypeId thatId = that->objectType();
@@ -205,7 +205,7 @@ class Value {
             }
         }
 
-        virtual placeholder * clone() const {
+        virtual placeholder* clone() const {
             return new holder(held);
         }
 
@@ -213,13 +213,13 @@ class Value {
         T held;
 
      private:
-        holder & operator=(const holder &);
+        holder& operator=(const holder&);
     };
 
     template<typename T>
     class holder<T, false, false> : public placeholder {
      public:
-        holder(const T & value) : held(value) {}
+        holder(const T& value) : held(value) {}
 
      public:
         virtual TypeId type() const {
@@ -246,7 +246,7 @@ class Value {
             return false;
         }
 
-        virtual Int compareTo(placeholder * that) const {
+        virtual Int compareTo(placeholder* that) const {
             TypeId thisId = this->type();
             TypeId thatId = that->type();
             if (thisId == thatId) {
@@ -265,7 +265,7 @@ class Value {
             }
         }
 
-        virtual placeholder * clone() const {
+        virtual placeholder* clone() const {
             return new holder(held);
         }
 
@@ -273,17 +273,17 @@ class Value {
         T held;
 
      private:
-        holder & operator=(const holder &);
+        holder& operator=(const holder&);
     };
 
  private:
     template<typename T>
     friend Boolean to(
-        Value * operand,
+        Value* operand,
         T** out,
         Boolean instanceof = false);
 
-    placeholder * content;
+    placeholder* content;
 };
 
 #ifdef LIBJ_USE_CXX11
@@ -359,15 +359,26 @@ inline Boolean to(
 }
 
 template<typename T>
+inline T to(const Value& operand, T dflt) {
+    typedef typename remove_reference_and_const<T>::type NonRefConst;
+    NonRefConst* result;
+    if (to<NonRefConst>(&const_cast<Value&>(operand), &result, false)) {
+        return *result;
+    } else {
+        return dflt;
+    }
+}
+
+template<typename T>
 inline Boolean to(
-    const Value & operand,
+    const Value& operand,
     typename remove_reference_and_const<T>::type* out,
     Boolean instanceof = false) {
+    if (!out) return false;
     typedef typename remove_reference_and_const<T>::type NonRefConst;
     NonRefConst* result;
     if (to<NonRefConst>(&const_cast<Value&>(operand), &result, instanceof)) {
-        NonRefConst* o = const_cast<NonRefConst*>(out);
-        *o = *result;
+        *out = *result;
         return true;
     } else {
         return false;
