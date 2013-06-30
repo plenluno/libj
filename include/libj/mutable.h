@@ -20,6 +20,8 @@ class Mutable
 
     virtual Ptr self();
 
+    virtual CPtr celf() const;
+
     virtual Boolean instanceof(TypeId id) const;
 };
 

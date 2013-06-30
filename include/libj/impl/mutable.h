@@ -16,6 +16,10 @@ inline Mutable::Ptr Mutable::self() {
     return LIBJ_STATIC_PTR_CAST(Mutable)(LIBJ_THIS);
 }
 
+inline Mutable::CPtr Mutable::celf() const {
+    return LIBJ_STATIC_CPTR_CAST(Mutable)(LIBJ_THIS);
+}
+
 inline Boolean Mutable::instanceof(TypeId id) const {
     return id == Type<Mutable>::id()
         || Object::instanceof(id);
