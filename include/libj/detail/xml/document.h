@@ -30,6 +30,7 @@ class Document : public Node<libj::xml::Document> {
         if (res.status == pugi::status_ok) {
             return Ptr(doc);
         } else {
+            delete doc;
             return null();
         }
     }
