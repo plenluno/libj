@@ -16,6 +16,8 @@
 namespace libj {
 namespace glue {
 
+static const size_t NO_SIZE = static_cast<size_t>(-1);
+
 static inline bool isBigEndian() {
     static bool big = endian() == BIG;
     return big;
@@ -96,9 +98,9 @@ std::string utf16ToUtf8(const std::u16string& str, size_t* n) {
     assert(sizeof(char16_t) == 2);
 
     if (isBigEndian()) {
-        return toUtf8(str.c_str(), UTF16BE, -1, -1, n);
+        return toUtf8(str.c_str(), UTF16BE, NO_SIZE, NO_SIZE, n);
     } else {
-        return toUtf8(str.c_str(), UTF16LE, -1, -1, n);
+        return toUtf8(str.c_str(), UTF16LE, NO_SIZE, NO_SIZE, n);
     }
 }
 
@@ -106,9 +108,9 @@ std::u32string utf16ToUtf32(const std::u16string& str) {
     assert(sizeof(char16_t) == 2);
 
     if (isBigEndian()) {
-        return toUtf32(str.c_str(), UTF16BE, -1, -1);
+        return toUtf32(str.c_str(), UTF16BE, NO_SIZE, NO_SIZE);
     } else {
-        return toUtf32(str.c_str(), UTF16LE, -1, -1);
+        return toUtf32(str.c_str(), UTF16LE, NO_SIZE, NO_SIZE);
     }
 }
 
@@ -1020,26 +1022,28 @@ static std::u32string utf32ToUtf32(
 std::u16string utf8ToUtf16(const std::string& str, size_t* n) {
     if (isBigEndian()) {
         return utf8ToUtf16(
-            reinterpret_cast<const unsigned char*>(str.c_str()), -1, -1, n);
+            reinterpret_cast<const unsigned char*>(str.c_str()),
+            NO_SIZE, NO_SIZE, n);
     } else {
         return utf8ToUtf16(
-            reinterpret_cast<const unsigned char*>(str.c_str()), -1, -1, n);
+            reinterpret_cast<const unsigned char*>(str.c_str()),
+            NO_SIZE, NO_SIZE, n);
     }
 }
 
 static std::string utf32ToUtf8(const std::u32string& str) {
     if (isBigEndian()) {
-        return utf32ToUtf8(str.c_str(), UTF32BE, -1, -1);
+        return utf32ToUtf8(str.c_str(), UTF32BE, NO_SIZE, NO_SIZE);
     } else {
-        return utf32ToUtf8(str.c_str(), UTF32LE, -1, -1);
+        return utf32ToUtf8(str.c_str(), UTF32LE, NO_SIZE, NO_SIZE);
     }
 }
 
 std::u16string utf32ToUtf16(const std::u32string& str) {
     if (isBigEndian()) {
-        return utf32ToUtf16(str.c_str(), UTF32BE, -1, -1);
+        return utf32ToUtf16(str.c_str(), UTF32BE, NO_SIZE, NO_SIZE);
     } else {
-        return utf32ToUtf16(str.c_str(), UTF32LE, -1, -1);
+        return utf32ToUtf16(str.c_str(), UTF32LE, NO_SIZE, NO_SIZE);
     }
 }
 
@@ -1173,10 +1177,10 @@ std::string fromUtf8(const std::string& str, UnicodeEncoding enc) {
         return str;
     case UTF16BE:
     case UTF16LE:
-        return toStdString(utf8ToUtf16(cstr, -1, -1), enc);
+        return toStdString(utf8ToUtf16(cstr, NO_SIZE, NO_SIZE), enc);
     case UTF32BE:
     case UTF32LE:
-        return toStdString(utf8ToUtf32(cstr, -1, -1), enc);
+        return toStdString(utf8ToUtf32(cstr, NO_SIZE, NO_SIZE), enc);
     default:
         assert(false);
         return std::string();

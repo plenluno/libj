@@ -289,6 +289,8 @@ if(UNIX)
 else(UNIX)
     set(libj-cflags
         /W4
+        /wd4068
+        /wd4100
     )
 endif(UNIX)
 
@@ -332,6 +334,8 @@ if(UNIX)
     endif(LIBJ_TRACE)
 else(UNIX)
     set(libj-test-cflags
+        /wd4068
+        /wd4309
         /D_VARIADIC_MAX=10
     )
 endif(UNIX)

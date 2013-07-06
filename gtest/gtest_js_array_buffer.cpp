@@ -13,7 +13,7 @@ TEST(GTestJsArrayBuffer, TestCreate) {
 
     a = JsArrayBuffer::create(1);
     ASSERT_TRUE(!!a);
-    ASSERT_TRUE(a->data());
+    ASSERT_TRUE(!!a->data());
 }
 
 TEST(GTestJsArrayBuffer, TestByteLength) {
