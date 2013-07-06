@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_GENERIC_JS_ARRAY_H_
 #define LIBJ_DETAIL_GENERIC_JS_ARRAY_H_
@@ -27,7 +27,7 @@ class GenericJsArray : public GenericArrayList<T, I> {
     }
 
     virtual String::CPtr toString() const {
-        libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
+        libj::StringBuilder::Ptr sb = libj::StringBuilder::create();
         Iterator::Ptr itr = this->iterator();
         Boolean first = true;
         while (itr->hasNext()) {

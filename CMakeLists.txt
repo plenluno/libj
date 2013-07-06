@@ -114,7 +114,7 @@ set(libj-src
     src/set.cpp
     src/status.cpp
     src/string.cpp
-    src/string_buffer.cpp
+    src/string_builder.cpp
     src/symbol.cpp
     src/value_holder.cpp
     src/glue/cvtutf.cpp
@@ -139,6 +139,7 @@ if(LIBJ_USE_THREAD)
         src/concurrent_linked_queue.cpp
         src/concurrent_map.cpp
         src/executors.cpp
+        src/string_buffer.cpp
         src/thread.cpp
     )
 endif(LIBJ_USE_THREAD)

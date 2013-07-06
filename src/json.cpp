@@ -3,7 +3,7 @@
 #include <libj/json.h>
 #include <libj/js_array.h>
 #include <libj/js_object.h>
-#include <libj/string_buffer.h>
+#include <libj/string_builder.h>
 #include <libj/symbol.h>
 #include <libj/glue/json.h>
 #include <libj/detail/to_string.h>
@@ -17,57 +17,57 @@ Value parse(String::CPtr str) {
     return glue::json::parse(str);
 }
 
-static StringBuffer::Ptr stringify(
-    StringBuffer::Ptr result,
-    const Value& val);
+static StringBuilder::Ptr stringify(
+    const Value& val,
+    StringBuilder::Ptr sb);
 
-static StringBuffer::Ptr stringToJson(
-    StringBuffer::Ptr result,
-    String::CPtr s) {
-    result->appendChar('"');
+static StringBuilder::Ptr stringToJson(
+    String::CPtr s,
+    StringBuilder::Ptr sb) {
+    sb->appendChar('"');
     for (Size i = 0; i < s->length(); i++) {
         Char c = s->charAt(i);
         switch (c) {
         case '\b':
-            result->appendCStr("\\b");
+            sb->appendCStr("\\b");
             break;
         case '\f':
-            result->appendCStr("\\f");
+            sb->appendCStr("\\f");
             break;
         case '\n':
-            result->appendCStr("\\n");
+            sb->appendCStr("\\n");
             break;
         case '\r':
-            result->appendCStr("\\r");
+            sb->appendCStr("\\r");
             break;
         case '\t':
-            result->appendCStr("\\t");
+            sb->appendCStr("\\t");
             break;
         case '"':
-            result->appendCStr("\\\"");
+            sb->appendCStr("\\\"");
             break;
         case '\\':
-            result->appendCStr("\\\\");
+            sb->appendCStr("\\\\");
             break;
         case '\0':
         case '\v':
             break;
         default:
-            result->appendChar(c);
+            sb->appendChar(c);
         }
     }
-    result->appendChar('"');
-    return result;
+    sb->appendChar('"');
+    return sb;
 }
 
-static StringBuffer::Ptr mapToJson(
-    StringBuffer::Ptr result,
-    Map::CPtr m) {
+static StringBuilder::Ptr mapToJson(
+    Map::CPtr m,
+    StringBuilder::Ptr sb) {
     typedef Map::Entry Entry;
     TypedSet<Entry::CPtr>::CPtr es = m->entrySet();
     TypedIterator<Entry::CPtr>::Ptr itr = es->iteratorTyped();
     Boolean first = true;
-    result->appendChar('{');
+    sb->appendChar('{');
     while (itr->hasNext()) {
         Entry::CPtr e = itr->next();
         String::CPtr k = toCPtr<String>(e->getKey());
@@ -76,66 +76,66 @@ static StringBuffer::Ptr mapToJson(
             if (first) {
                 first = false;
             } else {
-                result->appendChar(',');
+                sb->appendChar(',');
             }
-            stringToJson(result, k);
-            result->appendChar(':');
-            stringify(result, v);
+            stringToJson(k, sb);
+            sb->appendChar(':');
+            stringify(v, sb);
         }
     }
-    result->appendChar('}');
-    return result;
+    sb->appendChar('}');
+    return sb;
 }
 
-static StringBuffer::Ptr collectionToJson(
-    StringBuffer::Ptr result,
-    Collection::CPtr c) {
+static StringBuilder::Ptr collectionToJson(
+    Collection::CPtr c,
+    StringBuilder::Ptr sb) {
     Iterator::Ptr itr = c->iterator();
     Boolean first = true;
-    result->appendChar('[');
+    sb->appendChar('[');
     while (itr->hasNext()) {
         Value v = itr->next();
         if (first) {
             first = false;
         } else {
-            result->appendChar(',');
+            sb->appendChar(',');
         }
-        stringify(result, v);
+        stringify(v, sb);
     }
-    result->appendChar(']');
-    return result;
+    sb->appendChar(']');
+    return sb;
 }
 
-static StringBuffer::Ptr stringify(
-    StringBuffer::Ptr result,
-    const Value& val) {
+static StringBuilder::Ptr stringify(
+    const Value& val,
+    StringBuilder::Ptr sb) {
     const Size kLen = 64;
     char buf[kLen];
     // 'undefined' only in collectionToJson
     if (val.isNull() || val.isUndefined()) {
-        result->appendCStr("null");
+        sb->appendCStr("null");
     } else if (val.instanceof(Type<String>::id())) {
-        stringToJson(result, toCPtr<String>(val));
+        stringToJson(toCPtr<String>(val), sb);
     } else if (val.instanceof(Type<Map>::id())) {
-        mapToJson(result, toCPtr<Map>(val));
+        mapToJson(toCPtr<Map>(val), sb);
     } else if (val.instanceof(Type<Collection>::id())) {
-        collectionToJson(result, toCPtr<Collection>(val));
+        collectionToJson(toCPtr<Collection>(val), sb);
     } else if (val.instanceof(Type<Object>::id())) {
-        result->appendCStr("null");
+        sb->appendCStr("null");
     } else if (detail::primitiveToString(val, buf, kLen)) {
-        result->appendCStr(buf);
+        sb->appendCStr(buf);
     } else {
         assert(false);
     }
-    return result;
+    return sb;
 }
 
 String::CPtr stringify(const Value& val) {
     if (val.isUndefined()) {
         return String::null();
     } else {
-        StringBuffer::Ptr result = StringBuffer::create();
-        return stringify(result, val)->toString();
+        StringBuilder::Ptr sb = StringBuilder::create();
+        return stringify(val, sb)->toString();
     }
 }
 

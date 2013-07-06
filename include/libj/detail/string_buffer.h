@@ -3,76 +3,52 @@
 #ifndef LIBJ_DETAIL_STRING_BUFFER_H_
 #define LIBJ_DETAIL_STRING_BUFFER_H_
 
-#include <libj/this.h>
 #include <libj/string_buffer.h>
-
-#include <assert.h>
+#include <libj/detail/scoped_lock.h>
+#include <libj/detail/string_builder.h>
 
 namespace libj {
 namespace detail {
 
-class StringBuffer : public libj::StringBuffer {
+class StringBuffer : public StringBuilder<libj::StringBuffer> {
  public:
     virtual Size length() const {
-        return buf_.length();
+        ScopedLock lock(mutex_);
+        return StringBuilder::length();
     }
 
     virtual Char charAt(Size index) const {
-        if (index >= length()) {
-            return NO_CHAR;
-        } else {
-            return buf_[index];
-        }
+        ScopedLock lock(mutex_);
+        return StringBuilder::charAt(index);
     }
 
     virtual Ptr append(const Value& val) {
-        String::CPtr s = String::valueOf(val);
-        if (s) {
-#ifdef LIBJ_USE_UTF32
-            buf_.append(s->toStdU32String());
-#else
-            buf_.append(s->toStdU16String());
-#endif
-            return LIBJ_THIS_PTR(libj::StringBuffer);
-        } else {
-            assert(false);
-            return appendCStr("null");
-        }
+        ScopedLock lock(mutex_);
+        return StringBuilder::append(val);
     }
 
     virtual Ptr appendChar(Char c) {
-        buf_.push_back(c);
-        return LIBJ_THIS_PTR(libj::StringBuffer);
+        ScopedLock lock(mutex_);
+        return StringBuilder::appendChar(c);
     }
 
     virtual Ptr appendCStr(const char* cstr) {
-        if (!cstr) return appendCStr("null");
-
-        while (Char c = static_cast<Char>(*cstr++)) {
-            buf_.push_back(c);
-        }
-        return LIBJ_THIS_PTR(libj::StringBuffer);
+        ScopedLock lock(mutex_);
+        return StringBuilder::appendCStr(cstr);
     }
 
     virtual Boolean setCharAt(Size index, Char c) {
-        if (index >= length()) {
-            return false;
-        } else {
-            buf_[index] = c;
-            return true;
-        }
+        ScopedLock lock(mutex_);
+        return StringBuilder::setCharAt(index, c);
     }
 
     virtual String::CPtr toString() const {
-        return String::create(buf_);
+        ScopedLock lock(mutex_);
+        return StringBuilder::toString();
     }
 
  private:
-#ifdef LIBJ_USE_UTF32
-    std::u32string buf_;
-#else
-    std::u16string buf_;
-#endif
+    mutable Mutex mutex_;
 };
 
 }  // namespace detail

@@ -8,7 +8,7 @@
 #include <libj/js_array.h>
 #include <libj/js_object.h>
 #include <libj/map.h>
-#include <libj/string_buffer.h>
+#include <libj/string_builder.h>
 
 namespace libj {
 
@@ -154,7 +154,7 @@ TEST(GTestJson, TestParseString) {
     s32 += 0x3042;
     s32 += 0x2000b;
     s = String::create(s32);
-    StringBuffer::Ptr sb = StringBuffer::create();
+    StringBuilder::Ptr sb = StringBuilder::create();
     sb->appendCStr("\"");
     sb->append(s);
     sb->appendCStr("\"");

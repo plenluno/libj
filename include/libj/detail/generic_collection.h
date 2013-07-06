@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_GENERIC_COLLECTION_H_
 #define LIBJ_DETAIL_GENERIC_COLLECTION_H_
@@ -6,7 +6,7 @@
 #include <libj/collection.h>
 #include <libj/iterator.h>
 #include <libj/typed_iterator.h>
-#include <libj/string_buffer.h>
+#include <libj/string_builder.h>
 #include <libj/detail/util.h>
 
 #include <vector>
@@ -110,7 +110,7 @@ class GenericCollection : public I {
     }
 
     virtual String::CPtr toString() const {
-        libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
+        libj::StringBuilder::Ptr sb = libj::StringBuilder::create();
         sb->appendChar('[');
         Boolean first = true;
         Iterator::Ptr itr = iterator();

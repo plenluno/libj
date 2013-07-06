@@ -28,7 +28,7 @@ set(libj-test-src
     gtest_singleton.cpp
     gtest_status.cpp
     gtest_string.cpp
-    gtest_string_buffer.cpp
+    gtest_string_builder.cpp
     gtest_typed_array_list.cpp
     gtest_typed_js_array.cpp
     gtest_typed_linked_list.cpp
@@ -54,6 +54,7 @@ if(LIBJ_USE_THREAD)
         gtest_concurrent_linked_queue.cpp
         gtest_concurrent_map.cpp
         gtest_executor_service.cpp
+        gtest_string_buffer.cpp
         gtest_thread.cpp
     )
 endif(LIBJ_USE_THREAD)

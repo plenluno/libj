@@ -4,7 +4,7 @@
 #define LIBJ_DETAIL_MAP_H_
 
 #include <libj/typed_set.h>
-#include <libj/string_buffer.h>
+#include <libj/string_builder.h>
 
 #include <map>
 
@@ -78,7 +78,7 @@ class Map : public I {
     }
 
     virtual String::CPtr toString() const {
-        libj::StringBuffer::Ptr sb = libj::StringBuffer::create();
+        libj::StringBuilder::Ptr sb = libj::StringBuilder::create();
         sb->appendChar('{');
         Boolean first = true;
         typename EntrySetT::CPtr es = this->entrySet();
