@@ -47,7 +47,8 @@ class Attr : public Node<libj::xml::Attr> {
         if (!value) value = String::create();
         value_ = value;
         if (attr_) {
-			attr_.set_value(reinterpret_cast<const pugi::char_t*>(value->data()));
+            attr_.set_value(
+                reinterpret_cast<const pugi::char_t*>(value->data()));
         }
     }
 
