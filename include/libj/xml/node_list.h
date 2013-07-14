@@ -8,11 +8,11 @@
 namespace libj {
 namespace xml {
 
-class NodeList : LIBJ_MUTABLE(NodeList)
+class NodeList : LIBJ_IMMUTABLE(NodeList)
  public:
     virtual Size length() const = 0;
 
-    virtual Node::Ptr item(Size index) const = 0;
+    virtual Node::CPtr item(Size index) const = 0;
 };
 
 }  // namespace xml

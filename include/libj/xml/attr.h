@@ -13,8 +13,6 @@ class Attr : LIBJ_XML_NODE(Attr)
     virtual String::CPtr name() const = 0;
 
     virtual String::CPtr value() const = 0;
-
-    virtual void setValue(String::CPtr value) = 0;
 };
 
 }  // namespace xml

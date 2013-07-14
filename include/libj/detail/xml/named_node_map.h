@@ -15,7 +15,7 @@ namespace libj {
 namespace detail {
 namespace xml {
 
-libj::xml::Attr::Ptr createAttr(
+libj::xml::Attr::CPtr createAttr(
     libj::xml::Document::CPtr root,
     const pugi::xml_attribute& attr);
 
@@ -41,7 +41,7 @@ class NamedNodeMap : public libj::xml::NamedNodeMap {
         return len;
     }
 
-    virtual libj::xml::Node::Ptr item(Size index) const {
+    virtual libj::xml::Node::CPtr item(Size index) const {
         if (!node_) return libj::xml::Attr::null();
 
         pugi::xml_attribute attr = node_.first_attribute();
@@ -56,7 +56,7 @@ class NamedNodeMap : public libj::xml::NamedNodeMap {
         return libj::xml::Attr::null();
     }
 
-    virtual libj::xml::Node::Ptr getNamedItem(String::CPtr name) const {
+    virtual libj::xml::Node::CPtr getNamedItem(String::CPtr name) const {
         if (!name || !node_) return libj::xml::Attr::null();
 
         pugi::xml_attribute attr = node_.attribute(

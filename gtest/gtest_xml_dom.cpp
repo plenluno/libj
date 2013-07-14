@@ -18,7 +18,7 @@ static String::CPtr sample = String::create(
 );
 
 TEST(GTestXmlDom, TestParse) {
-    Document::Ptr doc = Document::parse(String::null());
+    Document::CPtr doc = Document::parse(String::null());
     ASSERT_TRUE(!doc);
 
     doc = Document::parse(error);
@@ -30,7 +30,7 @@ TEST(GTestXmlDom, TestParse) {
 }
 
 TEST(GTestXmlDom, TestNodeList) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     NodeList::CPtr list = doc->childNodes();
     ASSERT_EQ(1, list->length());
 
@@ -54,14 +54,14 @@ TEST(GTestXmlDom, TestNodeList) {
 }
 
 TEST(GTestXmlDom, TestNamedNodeMap) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     ASSERT_TRUE(!doc->attributes());
 
-    NamedNodeMap::Ptr map = doc->firstChild()->attributes();
+    NamedNodeMap::CPtr map = doc->firstChild()->attributes();
     ASSERT_TRUE(!!map);
     ASSERT_EQ(1, map->length());
 
-    Node::Ptr node = map->item(0);
+    Node::CPtr node = map->item(0);
     ASSERT_TRUE(!!node);
     ASSERT_TRUE(node->nodeName()->equals(String::create("name")));
     ASSERT_TRUE(node->nodeValue()->equals(String::create("foo")));
@@ -77,28 +77,28 @@ TEST(GTestXmlDom, TestNamedNodeMap) {
 }
 
 TEST(GTestXmlDom, TestFirstChild) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     Node::CPtr node = doc->firstChild()->firstChild()->firstChild();
     ASSERT_TRUE(node->nodeValue()->equals(String::create("abc")));
     ASSERT_TRUE(!node->firstChild());
 }
 
 TEST(GTestXmlDom, TestLastChild) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     Node::CPtr node = doc->lastChild()->lastChild()->lastChild();
     ASSERT_TRUE(node->nodeValue()->equals(String::create("xyz")));
     ASSERT_TRUE(!node->lastChild());
 }
 
 TEST(GTestXmlDom, TestParentNode) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     Node::CPtr node = doc->firstChild()->lastChild()->firstChild();
     node = node->parentNode()->parentNode()->parentNode();
     ASSERT_EQ(Node::DOCUMENT_NODE, node->nodeType());
 }
 
 TEST(GTestXmlDom, TestNextSiblingAndPreviousSibling) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     ASSERT_TRUE(!doc->nextSibling());
     ASSERT_TRUE(!doc->previousSibling());
 
@@ -116,7 +116,7 @@ TEST(GTestXmlDom, TestNextSiblingAndPreviousSibling) {
 }
 
 TEST(GTestXmlDom, TestHasChildNodes) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     ASSERT_TRUE(doc->hasChildNodes());
 
     Node::CPtr node = doc->firstChild();
@@ -130,7 +130,7 @@ TEST(GTestXmlDom, TestHasChildNodes) {
 }
 
 TEST(GTestXmlDom, TestHasAttributes) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     ASSERT_FALSE(doc->hasAttributes());
 
     Node::CPtr node = doc->firstChild();
@@ -138,7 +138,7 @@ TEST(GTestXmlDom, TestHasAttributes) {
 }
 
 TEST(GTestXmlDom, TestToString) {
-    Document::Ptr doc = Document::parse(sample);
+    Document::CPtr doc = Document::parse(sample);
     ASSERT_TRUE(doc->toString()->equals(sample));
 }
 

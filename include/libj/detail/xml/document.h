@@ -12,7 +12,7 @@ namespace xml {
 
 class Document : public Node<libj::xml::Document> {
  public:
-    static Ptr parse(String::CPtr str) {
+    static CPtr parse(String::CPtr str) {
         if (!str) return null();
 
         Document* doc(new Document());
@@ -28,7 +28,7 @@ class Document : public Node<libj::xml::Document> {
             encoding);
 
         if (res.status == pugi::status_ok) {
-            return Ptr(doc);
+            return CPtr(doc);
         } else {
             delete doc;
             return null();
@@ -37,10 +37,6 @@ class Document : public Node<libj::xml::Document> {
 
     Document() {
         node_ = doc_;
-    }
-
-    virtual libj::xml::Attr::Ptr createAttribute(String::CPtr name) const {
-        return createAttr(root(), name);
     }
 
  private:

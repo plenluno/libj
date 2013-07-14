@@ -10,7 +10,7 @@ namespace xml {
 
 class Document : LIBJ_XML_NODE(Document)
  public:
-    static Ptr parse(String::CPtr str);
+    static CPtr parse(String::CPtr str);
 };
 
 }  // namespace xml

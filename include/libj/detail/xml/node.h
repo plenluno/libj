@@ -69,11 +69,6 @@ class Node : public I {
         return createString(node_.value());
     }
 
-    virtual void setNodeValue(String::CPtr value) {
-        if (!value) value = String::create();
-        node_.set_value(reinterpret_cast<const pugi::char_t*>(value->data()));
-    }
-
     virtual typename I::NodeType nodeType() const {
         pugi::xml_node_type type = node_.type();
         switch (type) {
@@ -99,58 +94,58 @@ class Node : public I {
         }
     }
 
-    virtual libj::xml::Node::Ptr parentNode() const {
+    virtual libj::xml::Node::CPtr parentNode() const {
         pugi::xml_node parent = node_.parent();
         if (parent) {
-            return libj::xml::Node::Ptr(new Node(root(), parent));
+            return libj::xml::Node::CPtr(new Node(root(), parent));
         } else {
             return libj::xml::Node::null();
         }
     }
 
-    virtual libj::xml::NodeList::Ptr childNodes() const {
-        return libj::xml::NodeList::Ptr(new NodeList(root(), node_));
+    virtual libj::xml::NodeList::CPtr childNodes() const {
+        return libj::xml::NodeList::CPtr(new NodeList(root(), node_));
     }
 
-    virtual libj::xml::Node::Ptr firstChild() const {
+    virtual libj::xml::Node::CPtr firstChild() const {
         pugi::xml_node child = node_.first_child();
         if (child) {
-            return libj::xml::Node::Ptr(new Node(root(), child));
+            return libj::xml::Node::CPtr(new Node(root(), child));
         } else {
             return libj::xml::Node::null();
         }
     }
 
-    virtual libj::xml::Node::Ptr lastChild() const {
+    virtual libj::xml::Node::CPtr lastChild() const {
         pugi::xml_node child = node_.last_child();
         if (child) {
-            return libj::xml::Node::Ptr(new Node(root(), child));
+            return libj::xml::Node::CPtr(new Node(root(), child));
         } else {
             return libj::xml::Node::null();
         }
     }
 
-    virtual libj::xml::Node::Ptr previousSibling() const {
+    virtual libj::xml::Node::CPtr previousSibling() const {
         pugi::xml_node node = node_.previous_sibling();
         if (node) {
-            return libj::xml::Node::Ptr(new Node(root(), node));
+            return libj::xml::Node::CPtr(new Node(root(), node));
         } else {
             return libj::xml::Node::null();
         }
     }
 
-    virtual libj::xml::Node::Ptr nextSibling() const {
+    virtual libj::xml::Node::CPtr nextSibling() const {
         pugi::xml_node node = node_.next_sibling();
         if (node) {
-            return libj::xml::Node::Ptr(new Node(root(), node));
+            return libj::xml::Node::CPtr(new Node(root(), node));
         } else {
             return libj::xml::Node::null();
         }
     }
 
-    virtual libj::xml::NamedNodeMap::Ptr attributes() const {
+    virtual libj::xml::NamedNodeMap::CPtr attributes() const {
         if (node_.type() == pugi::node_element) {
-            return libj::xml::NamedNodeMap::Ptr(
+            return libj::xml::NamedNodeMap::CPtr(
                 new NamedNodeMap(root(), node_));
         } else {
             return NamedNodeMap::null();
@@ -181,7 +176,7 @@ class Node : public I {
     }
 
  public:  // Document
-    virtual libj::xml::Attr::Ptr createAttribute(String::CPtr name) const {
+    virtual libj::xml::Attr::CPtr createAttribute(String::CPtr name) const {
         return libj::xml::Attr::null();
     }
 
@@ -192,9 +187,6 @@ class Node : public I {
 
     virtual String::CPtr value() const {
         return String::null();
-    }
-
-    virtual void setValue(String::CPtr value) {
     }
 
  protected:
@@ -222,7 +214,7 @@ class Node : public I {
             return root_;
         } else {
             assert(this->nodeType() == I::DOCUMENT_NODE);
-            return LIBJ_STATIC_CPTR_CAST(libj::xml::Document)(this->celf());
+            return LIBJ_STATIC_CPTR_CAST(libj::xml::Document)(this->self());
         }
     }
 
@@ -231,10 +223,10 @@ class Node : public I {
     pugi::xml_node node_;
 };
 
-inline libj::xml::Node::Ptr createNode(
+inline libj::xml::Node::CPtr createNode(
     libj::xml::Document::CPtr root,
     const pugi::xml_node& node) {
-    return libj::xml::Node::Ptr(new Node<libj::xml::Node>(root, node));
+    return libj::xml::Node::CPtr(new Node<libj::xml::Node>(root, node));
 }
 
 }  // namespace xml

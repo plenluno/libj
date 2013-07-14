@@ -3,7 +3,6 @@
 #ifndef LIBJ_XML_NODE_H_
 #define LIBJ_XML_NODE_H_
 
-#include <libj/mutable.h>
 #include <libj/string.h>
 
 namespace libj {
@@ -13,7 +12,7 @@ class Document;
 class NodeList;
 class NamedNodeMap;
 
-class Node : LIBJ_MUTABLE(Node)
+class Node : LIBJ_IMMUTABLE(Node)
  public:
     enum NodeType {
         ELEMENT_NODE                = 1,
@@ -34,23 +33,21 @@ class Node : LIBJ_MUTABLE(Node)
 
     virtual String::CPtr nodeValue() const = 0;
 
-    virtual void setNodeValue(String::CPtr val) = 0;
-
     virtual NodeType nodeType() const = 0;
 
-    virtual Ptr parentNode() const = 0;
+    virtual CPtr parentNode() const = 0;
 
-    virtual LIBJ_PTR(NodeList) childNodes() const = 0;
+    virtual LIBJ_CPTR(NodeList) childNodes() const = 0;
 
-    virtual Ptr firstChild() const = 0;
+    virtual CPtr firstChild() const = 0;
 
-    virtual Ptr lastChild() const = 0;
+    virtual CPtr lastChild() const = 0;
 
-    virtual Ptr previousSibling() const = 0;
+    virtual CPtr previousSibling() const = 0;
 
-    virtual Ptr nextSibling() const = 0;
+    virtual CPtr nextSibling() const = 0;
 
-    virtual LIBJ_PTR(NamedNodeMap) attributes() const = 0;
+    virtual LIBJ_CPTR(NamedNodeMap) attributes() const = 0;
 
     virtual LIBJ_CPTR(Document) ownerDocument() const = 0;
 
@@ -63,6 +60,6 @@ class Node : LIBJ_MUTABLE(Node)
 }  // namespace libj
 
 #define LIBJ_XML_NODE(T) public libj::xml::Node { \
-    LIBJ_MUTABLE_DEFS(T, libj::xml::Node)
+    LIBJ_IMMUTABLE_DEFS(T, libj::xml::Node)
 
 #endif  // LIBJ_XML_NODE_H_

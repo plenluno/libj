@@ -26,30 +26,12 @@ class Attr : public Node<libj::xml::Attr> {
         }
     }
 
-    Attr(
-        libj::xml::Document::CPtr root,
-        String::CPtr name) {
-        assert(!attr_);
-        root_ = root;
-        name_ = name;
-        value_ = String::create();
-    }
-
     virtual String::CPtr name() const {
         return name_;
     }
 
     virtual String::CPtr value() const {
         return value_;
-    }
-
-    virtual void setValue(String::CPtr value) {
-        if (!value) value = String::create();
-        value_ = value;
-        if (attr_) {
-            attr_.set_value(
-                reinterpret_cast<const pugi::char_t*>(value->data()));
-        }
     }
 
  public:
@@ -61,42 +43,38 @@ class Attr : public Node<libj::xml::Attr> {
         return value();
     }
 
-    virtual void setNodeValue(String::CPtr value) {
-        setValue(value);
-    }
-
     virtual NodeType nodeType() const {
         return ATTRIBUTE_NODE;
     }
 
-    virtual libj::xml::Node::Ptr parentNode() const {
+    virtual libj::xml::Node::CPtr parentNode() const {
         return libj::xml::Node::null();
     }
 
-    virtual libj::xml::NodeList::Ptr childNodes() const {
+    virtual libj::xml::NodeList::CPtr childNodes() const {
         // TODO(plenluno): check
         return libj::xml::NodeList::null();
     }
 
-    virtual libj::xml::Node::Ptr firstChild() const {
+    virtual libj::xml::Node::CPtr firstChild() const {
         // TODO(plenluno): check
         return libj::xml::Node::null();
     }
 
-    virtual libj::xml::Node::Ptr lastChild() const {
+    virtual libj::xml::Node::CPtr lastChild() const {
         // TODO(plenluno): check
         return libj::xml::Node::null();
     }
 
-    virtual libj::xml::Node::Ptr previousSibling() const {
+    virtual libj::xml::Node::CPtr previousSibling() const {
         return libj::xml::Node::null();
     }
 
-    virtual libj::xml::Node::Ptr nextSibling() const {
+    virtual libj::xml::Node::CPtr nextSibling() const {
         return libj::xml::Node::null();
     }
 
-    virtual libj::xml::NamedNodeMap::Ptr attributes() const {
+    virtual libj::xml::NamedNodeMap::CPtr attributes() const {
         return libj::xml::NamedNodeMap::null();
     }
 
@@ -115,16 +93,10 @@ class Attr : public Node<libj::xml::Attr> {
     String::CPtr value_;
 };
 
-inline libj::xml::Attr::Ptr createAttr(
+inline libj::xml::Attr::CPtr createAttr(
     libj::xml::Document::CPtr root,
     const pugi::xml_attribute& attr) {
-    return libj::xml::Attr::Ptr(new Attr(root, attr));
-}
-
-inline libj::xml::Attr::Ptr createAttr(
-    libj::xml::Document::CPtr root,
-    String::CPtr name) {
-    return libj::xml::Attr::Ptr(new Attr(root, name));
+    return libj::xml::Attr::CPtr(new Attr(root, attr));
 }
 
 }  // namespace xml

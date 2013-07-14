@@ -5,7 +5,7 @@
 namespace libj {
 namespace xml {
 
-Document::Ptr Document::parse(String::CPtr str) {
+Document::CPtr Document::parse(String::CPtr str) {
     return detail::xml::Document::parse(str);
 }
 

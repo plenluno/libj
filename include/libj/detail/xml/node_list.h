@@ -14,7 +14,7 @@ namespace libj {
 namespace detail {
 namespace xml {
 
-libj::xml::Node::Ptr createNode(
+libj::xml::Node::CPtr createNode(
     libj::xml::Document::CPtr root,
     const pugi::xml_node& node);
 
@@ -40,7 +40,7 @@ class NodeList : public libj::xml::NodeList {
         return len;
     }
 
-    virtual libj::xml::Node::Ptr item(Size index) const {
+    virtual libj::xml::Node::CPtr item(Size index) const {
         if (!node_) return libj::xml::Node::null();
 
         pugi::xml_node node = node_.first_child();

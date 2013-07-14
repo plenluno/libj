@@ -8,13 +8,13 @@
 namespace libj {
 namespace xml {
 
-class NamedNodeMap : LIBJ_MUTABLE(NamedNodeMap)
+class NamedNodeMap : LIBJ_IMMUTABLE(NamedNodeMap)
  public:
     virtual Size length() const = 0;
 
-    virtual Node::Ptr item(Size index) const = 0;
+    virtual Node::CPtr item(Size index) const = 0;
 
-    virtual Node::Ptr getNamedItem(String::CPtr name) const = 0;
+    virtual Node::CPtr getNamedItem(String::CPtr name) const = 0;
 };
 
 }  // namespace xml
