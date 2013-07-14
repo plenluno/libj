@@ -4,6 +4,7 @@
 #define LIBJ_XML_H_
 
 #include <libj/xml/attr.h>
+#include <libj/xml/element.h>
 #include <libj/xml/document.h>
 #include <libj/xml/node_list.h>
 #include <libj/xml/named_node_map.h>

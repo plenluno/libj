@@ -1,5 +1,7 @@
 // Copyright (c) 2013 Plenluno All rights reserved.
 
+#include <libj/detail/xml/attr.h>
+#include <libj/detail/xml/element.h>
 #include <libj/detail/xml/document.h>
 
 namespace libj {

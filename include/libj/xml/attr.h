@@ -8,11 +8,15 @@
 namespace libj {
 namespace xml {
 
+class Element;
+
 class Attr : LIBJ_XML_NODE(Attr)
  public:
     virtual String::CPtr name() const = 0;
 
     virtual String::CPtr value() const = 0;
+
+    virtual LIBJ_CPTR(Element) ownerElement() const = 0;
 };
 
 }  // namespace xml

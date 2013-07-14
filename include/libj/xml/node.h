@@ -8,6 +8,8 @@
 namespace libj {
 namespace xml {
 
+class Attr;
+class Element;
 class Document;
 class NodeList;
 class NamedNodeMap;
@@ -54,6 +56,13 @@ class Node : LIBJ_IMMUTABLE(Node)
     virtual Boolean hasChildNodes() const = 0;
 
     virtual Boolean hasAttributes() const = 0;
+
+ public:
+    virtual LIBJ_CPTR(Attr) asAttr() const = 0;
+
+    virtual LIBJ_CPTR(Document) asDocument() const = 0;
+
+    virtual LIBJ_CPTR(Element) asElement() const = 0;
 };
 
 }  // namespace xml

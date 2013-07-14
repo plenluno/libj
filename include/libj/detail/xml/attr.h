@@ -10,20 +10,22 @@ namespace libj {
 namespace detail {
 namespace xml {
 
+libj::xml::Element::CPtr createElement(
+    libj::xml::Document::CPtr root,
+    const pugi::xml_node& node);
+
 class Attr : public Node<libj::xml::Attr> {
  public:
     Attr(
         libj::xml::Document::CPtr root,
+        const pugi::xml_node& node,
         const pugi::xml_attribute& attr)
         : attr_(attr.internal_object()) {
+        assert(attr_);
         root_ = root;
-        if (attr_) {
-            name_ = createString(attr_.name());
-            value_ = createString(attr_.value());
-        } else {
-            name_ = String::create();
-            value_ = String::create();
-        }
+        node_ = node;
+        name_ = createString(attr_.name());
+        value_ = createString(attr_.value());
     }
 
     virtual String::CPtr name() const {
@@ -32,6 +34,10 @@ class Attr : public Node<libj::xml::Attr> {
 
     virtual String::CPtr value() const {
         return value_;
+    }
+
+    virtual libj::xml::Element::CPtr ownerElement() const {
+        return createElement(root_, node_);
     }
 
  public:
@@ -87,16 +93,23 @@ class Attr : public Node<libj::xml::Attr> {
         return false;
     }
 
+    virtual libj::xml::Attr::CPtr asAttr() const {
+        return LIBJ_THIS_CPTR(Attr);
+    }
+
  private:
     pugi::xml_attribute attr_;
-    String::CPtr name_;
-    String::CPtr value_;
 };
 
 inline libj::xml::Attr::CPtr createAttr(
     libj::xml::Document::CPtr root,
+    const pugi::xml_node& node,
     const pugi::xml_attribute& attr) {
-    return libj::xml::Attr::CPtr(new Attr(root, attr));
+    if (attr) {
+        return libj::xml::Attr::CPtr(new Attr(root, node, attr));
+    } else {
+        return libj::xml::Attr::null();
+    }
 }
 
 }  // namespace xml

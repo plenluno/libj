@@ -4,7 +4,6 @@
 #define LIBJ_DETAIL_XML_DOCUMENT_H_
 
 #include <libj/xml/document.h>
-#include <libj/detail/xml/attr.h>
 
 namespace libj {
 namespace detail {
@@ -37,6 +36,27 @@ class Document : public Node<libj::xml::Document> {
 
     Document() {
         node_ = doc_;
+    }
+
+    virtual String::CPtr nodeName() const {
+        LIBJ_STATIC_SYMBOL_DEF(symDocument, "#document");
+        return symDocument;
+    }
+
+    virtual String::CPtr nodeValue() const {
+        return String::null();
+    }
+
+    virtual NodeType nodeType() const {
+        return DOCUMENT_NODE;
+    }
+
+    virtual libj::xml::NamedNodeMap::CPtr attributes() const {
+        return NamedNodeMap::null();
+    }
+
+    virtual libj::xml::Document::CPtr asDocument() const {
+        return LIBJ_THIS_CPTR(Document);
     }
 
  private:

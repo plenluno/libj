@@ -5,10 +5,7 @@
 
 #include <libj/xml/document.h>
 #include <libj/xml/node_list.h>
-
-#include <pugixml.hpp>
-
-#include <assert.h>
+#include <libj/detail/xml/util.h>
 
 namespace libj {
 namespace detail {
@@ -32,10 +29,10 @@ class NodeList : public libj::xml::NodeList {
         if (!node_) return 0;
 
         Size len = 0;
-        pugi::xml_node node = node_.first_child();
+        pugi::xml_node node = findNode(node_.first_child());
         while (node) {
             len++;
-            node = node.next_sibling();
+            node = findNode(node.next_sibling());
         }
         return len;
     }
@@ -43,15 +40,14 @@ class NodeList : public libj::xml::NodeList {
     virtual libj::xml::Node::CPtr item(Size index) const {
         if (!node_) return libj::xml::Node::null();
 
-        pugi::xml_node node = node_.first_child();
+        pugi::xml_node node = findNode(node_.first_child());
         for (Size i = 0; node; i++) {
             if (i == index) {
                 return createNode(root_, node);
             } else {
-                node = node.next_sibling();
+                node = findNode(node.next_sibling());
             }
         }
-
         return libj::xml::Node::null();
     }
 

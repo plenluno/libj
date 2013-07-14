@@ -17,6 +17,15 @@ static String::CPtr sample = String::create(
     "</team>\n"
 );
 
+static String::CPtr xhtml = String::create(
+    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""
+        "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
+    "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"ja\" xml:lang=\"ja\">"
+        "<head><title>title</title></head>"
+        "<body></body>"
+    "</html>");
+
 TEST(GTestXmlDom, TestParse) {
     Document::CPtr doc = Document::parse(String::null());
     ASSERT_TRUE(!doc);
@@ -74,6 +83,53 @@ TEST(GTestXmlDom, TestNamedNodeMap) {
 
     node = map->getNamedItem(String::create("foo"));
     ASSERT_TRUE(!node);
+}
+
+TEST(GTestXmlDom, TestElement) {
+    Document::CPtr doc = Document::parse(sample);
+    ASSERT_TRUE(!doc->asAttr());
+    ASSERT_TRUE(!doc->asElement());
+    ASSERT_TRUE(!!doc->asDocument());
+
+    Node::CPtr node = doc->firstChild();
+    ASSERT_TRUE(!node->asAttr());
+    ASSERT_TRUE(!!node->asElement());
+    ASSERT_TRUE(!node->asDocument());
+
+    Element::CPtr element = node->asElement();
+    String::CPtr tag = element->tagName();
+    String::CPtr attrVal1 = element->getAttribute(String::create("name"));
+    String::CPtr attrVal2 = element->getAttribute(String::create("foo"));
+    String::CPtr attrVal3 = element->getAttribute(String::null());
+    ASSERT_TRUE(tag->equals(String::create("team")));
+    ASSERT_TRUE(attrVal1->equals(String::create("foo")));
+    ASSERT_TRUE(attrVal2->equals(String::create()));
+    ASSERT_TRUE(!attrVal3);
+    ASSERT_TRUE(element->hasAttribute(String::create("name")));
+    ASSERT_FALSE(element->hasAttribute(String::create("foo")));
+    ASSERT_FALSE(element->hasAttribute(String::null()));
+
+    Attr::CPtr attr1 = element->getAttributeNode(String::create("name"));
+    Attr::CPtr attr2 = element->getAttributeNode(String::create("foo"));
+    Attr::CPtr attr3 = element->getAttributeNode(String::null());
+    ASSERT_TRUE(!!attr1);
+    ASSERT_TRUE(!attr2);
+    ASSERT_TRUE(!attr3);
+}
+
+TEST(GTestXmlDom, TestAttr) {
+    Document::CPtr doc = Document::parse(sample);
+    Element::CPtr element = doc->firstChild()->asElement();
+    Attr::CPtr attr = element->getAttributeNode(String::create("name"));
+    ASSERT_TRUE(!!attr->asAttr());
+    ASSERT_TRUE(!attr->asElement());
+    ASSERT_TRUE(!attr->asDocument());
+
+    ASSERT_TRUE(attr->name()->equals(String::create("name")));
+    ASSERT_TRUE(attr->value()->equals(String::create("foo")));
+
+    Element::CPtr owner = attr->ownerElement();
+    ASSERT_TRUE(owner->tagName()->equals(String::create("team")));
 }
 
 TEST(GTestXmlDom, TestFirstChild) {
@@ -140,6 +196,13 @@ TEST(GTestXmlDom, TestHasAttributes) {
 TEST(GTestXmlDom, TestToString) {
     Document::CPtr doc = Document::parse(sample);
     ASSERT_TRUE(doc->toString()->equals(sample));
+}
+
+TEST(GTestXmlDom, TestXmlDeclaration) {
+    Document::CPtr doc = Document::parse(xhtml);
+    ASSERT_TRUE(!!doc);
+    ASSERT_TRUE(doc->firstChild()->nodeType() == Node::DOCUMENT_TYPE_NODE);
+    ASSERT_EQ(2, doc->childNodes()->length());
 }
 
 }  // namespace xml

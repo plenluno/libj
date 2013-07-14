@@ -3,20 +3,23 @@
 #ifndef LIBJ_DETAIL_XML_NODE_H_
 #define LIBJ_DETAIL_XML_NODE_H_
 
-#include <libj/endian.h>
+#include <libj/this.h>
+#include <libj/symbol.h>
+#include <libj/xml/attr.h>
+#include <libj/xml/element.h>
 #include <libj/xml/document.h>
 #include <libj/xml/node_list.h>
 #include <libj/xml/named_node_map.h>
 #include <libj/detail/xml/node_list.h>
 #include <libj/detail/xml/named_node_map.h>
 
-#include <pugixml.hpp>
-
-#include <assert.h>
-
 namespace libj {
 namespace detail {
 namespace xml {
+
+libj::xml::Element::CPtr createElement(
+    libj::xml::Document::CPtr root,
+    const pugi::xml_node& node);
 
 class StringWriter : public pugi::xml_writer {
  public:
@@ -53,20 +56,54 @@ class Node : public I {
  public:
     Node()
         : root_(libj::xml::Document::null())
-        , node_() {}
+        , node_()
+        , name_(String::null())
+        , value_(String::null()) {}
 
     Node(
         libj::xml::Document::CPtr root,
         const pugi::xml_node& node)
         : root_(root)
-        , node_(node.internal_object()) {}
+        , node_(node.internal_object())
+        , name_(createString(node_.name()))
+        , value_(createString(node_.value())) {}
 
     virtual String::CPtr nodeName() const {
-        return createString(node_.name());
+        LIBJ_STATIC_SYMBOL_DEF(symCdataSection,     "#cdata-section");
+        LIBJ_STATIC_SYMBOL_DEF(symComment,          "#comment");
+        LIBJ_STATIC_SYMBOL_DEF(symDocument,         "#document");
+        LIBJ_STATIC_SYMBOL_DEF(symDocumentFragment, "#document-fragment");
+        LIBJ_STATIC_SYMBOL_DEF(symText,             "#text");
+
+        switch (nodeType()) {
+        case I::CDATA_SECTION_NODE:
+            return symCdataSection;
+        case I::COMMENT_NODE:
+            return symComment;
+        case I::DOCUMENT_NODE:
+            return symDocument;
+        case I::DOCUMENT_FRAGMENT_NODE:
+            return symDocumentFragment;
+        case I::TEXT_NODE:
+            return symText;
+        default:
+            return name_;
+        }
     }
 
     virtual String::CPtr nodeValue() const {
-        return createString(node_.value());
+        switch (nodeType()) {
+        case I::DOCUMENT_NODE:
+        case I::DOCUMENT_FRAGMENT_NODE:
+        case I::DOCUMENT_TYPE_NODE:
+        case I::ELEMENT_NODE:
+        case I::ENTITY_NODE:
+        case I::ENTITY_REFERENCE_NODE:
+        case I::NOTATION_NODE:
+            return String::null();
+        default:
+            return value_;
+        }
     }
 
     virtual typename I::NodeType nodeType() const {
@@ -84,8 +121,6 @@ class Node : public I {
             return I::COMMENT_NODE;
         case pugi::node_pi:
             return I::PROCESSING_INSTRUCTION_NODE;
-        case pugi::node_declaration:
-            // TODO(plenluno): implement
         case pugi::node_doctype:
             return I::DOCUMENT_TYPE_NODE;
         default:
@@ -108,7 +143,7 @@ class Node : public I {
     }
 
     virtual libj::xml::Node::CPtr firstChild() const {
-        pugi::xml_node child = node_.first_child();
+        pugi::xml_node child = findNode(node_.first_child());
         if (child) {
             return libj::xml::Node::CPtr(new Node(root(), child));
         } else {
@@ -117,7 +152,7 @@ class Node : public I {
     }
 
     virtual libj::xml::Node::CPtr lastChild() const {
-        pugi::xml_node child = node_.last_child();
+        pugi::xml_node child = rfindNode(node_.last_child());
         if (child) {
             return libj::xml::Node::CPtr(new Node(root(), child));
         } else {
@@ -126,7 +161,7 @@ class Node : public I {
     }
 
     virtual libj::xml::Node::CPtr previousSibling() const {
-        pugi::xml_node node = node_.previous_sibling();
+        pugi::xml_node node = rfindNode(node_.previous_sibling());
         if (node) {
             return libj::xml::Node::CPtr(new Node(root(), node));
         } else {
@@ -135,7 +170,7 @@ class Node : public I {
     }
 
     virtual libj::xml::Node::CPtr nextSibling() const {
-        pugi::xml_node node = node_.next_sibling();
+        pugi::xml_node node = findNode(node_.next_sibling());
         if (node) {
             return libj::xml::Node::CPtr(new Node(root(), node));
         } else {
@@ -144,7 +179,7 @@ class Node : public I {
     }
 
     virtual libj::xml::NamedNodeMap::CPtr attributes() const {
-        if (node_.type() == pugi::node_element) {
+        if (nodeType() == I::ELEMENT_NODE) {
             return libj::xml::NamedNodeMap::CPtr(
                 new NamedNodeMap(root(), node_));
         } else {
@@ -175,9 +210,21 @@ class Node : public I {
         return writer.result();
     }
 
- public:  // Document
-    virtual libj::xml::Attr::CPtr createAttribute(String::CPtr name) const {
+ public:
+    virtual libj::xml::Attr::CPtr asAttr() const {
         return libj::xml::Attr::null();
+    }
+
+    virtual libj::xml::Document::CPtr asDocument() const {
+        return libj::xml::Document::null();
+    }
+
+    virtual libj::xml::Element::CPtr asElement() const {
+        if (nodeType() == I::ELEMENT_NODE) {
+            return createElement(root_, node_);
+        } else {
+            return libj::xml::Element::null();
+        }
     }
 
  public:  // Attr
@@ -189,26 +236,28 @@ class Node : public I {
         return String::null();
     }
 
- protected:
-    static String::CPtr createString(const pugi::char_t* s) {
-        static const Boolean bigEndian = endian() == BIG;
-
-        assert(sizeof(pugi::char_t) == sizeof(Char));
-#ifdef LIBJ_USE_UTF32
-        if (bigEndian) {
-            return String::create(s, String::UTF32BE);
-        } else {
-            return String::create(s, String::UTF32LE);
-        }
-#else
-        if (bigEndian) {
-            return String::create(s, String::UTF16BE);
-        } else {
-            return String::create(s, String::UTF16LE);
-        }
-#endif
+    virtual libj::xml::Element::CPtr ownerElement() const {
+        return libj::xml::Element::null();
     }
 
+ public:  // Element
+    virtual String::CPtr tagName() const {
+        return String::null();
+    }
+
+    virtual String::CPtr getAttribute(String::CPtr name) const {
+        return String::null();
+    }
+
+    virtual libj::xml::Attr::CPtr getAttributeNode(String::CPtr name) const {
+        return libj::xml::Attr::null();
+    }
+
+    virtual Boolean hasAttribute(String::CPtr name) const {
+        return false;
+    }
+
+ protected:
     libj::xml::Document::CPtr root() const {
         if (root_) {
             return root_;
@@ -221,12 +270,18 @@ class Node : public I {
  protected:
     libj::xml::Document::CPtr root_;
     pugi::xml_node node_;
+    String::CPtr name_;
+    String::CPtr value_;
 };
 
 inline libj::xml::Node::CPtr createNode(
     libj::xml::Document::CPtr root,
     const pugi::xml_node& node) {
-    return libj::xml::Node::CPtr(new Node<libj::xml::Node>(root, node));
+    if (node) {
+        return libj::xml::Node::CPtr(new Node<libj::xml::Node>(root, node));
+    } else {
+        return libj::xml::Node::null();
+    }
 }
 
 }  // namespace xml

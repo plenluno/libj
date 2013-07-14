@@ -7,9 +7,8 @@
 #include <libj/xml/document.h>
 #include <libj/xml/named_node_map.h>
 
-#include <pugixml.hpp>
-
 #include <assert.h>
+#include <pugixml.hpp>
 
 namespace libj {
 namespace detail {
@@ -17,6 +16,7 @@ namespace xml {
 
 libj::xml::Attr::CPtr createAttr(
     libj::xml::Document::CPtr root,
+    const pugi::xml_node& node,
     const pugi::xml_attribute& attr);
 
 class NamedNodeMap : public libj::xml::NamedNodeMap {
@@ -47,7 +47,7 @@ class NamedNodeMap : public libj::xml::NamedNodeMap {
         pugi::xml_attribute attr = node_.first_attribute();
         for (Size i = 0; attr; i++) {
             if (i == index) {
-                return createAttr(root_, attr);
+                return createAttr(root_, node_, attr);
             } else {
                 attr = attr.next_attribute();
             }
@@ -61,11 +61,7 @@ class NamedNodeMap : public libj::xml::NamedNodeMap {
 
         pugi::xml_attribute attr = node_.attribute(
             reinterpret_cast<const pugi::char_t*>(name->data()));
-        if (attr) {
-            return createAttr(root_, attr);
-        } else {
-            return libj::xml::Attr::null();
-        }
+        return createAttr(root_, node_, attr);
     }
 
     virtual String::CPtr toString() const {
