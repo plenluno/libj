@@ -3,12 +3,13 @@
 #ifndef LIBJ_TYPED_COLLECTION_H_
 #define LIBJ_TYPED_COLLECTION_H_
 
+#include <libj/typed_mutable.h>
 #include <libj/typed_iterator.h>
 
 namespace libj {
 
 template<typename L, typename T>
-class TypedCollection : public L {
+class TypedCollection : public TypedMutable<L, T> {
  public:
     virtual Boolean addTyped(const T& t) = 0;
 

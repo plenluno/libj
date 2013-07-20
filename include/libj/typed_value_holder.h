@@ -4,16 +4,14 @@
 #define LIBJ_TYPED_VALUE_HOLDER_H_
 
 #include <libj/value_holder.h>
+#include <libj/typed_mutable.h>
 #include <libj/detail/generic_value_holder.h>
 
 namespace libj {
 
 template<typename T>
-class TypedValueHolder
-    : public detail::GenericValueHolder<ValueHolder, T> {
+class TypedValueHolder : LIBJ_TYPED_MUTABLE(ValueHolder, T)
  public:
-    LIBJ_MUTABLE_TEMPLATE_DEFS(TypedValueHolder, ValueHolder);
-
     static Ptr create(const T& val);
 };
 
