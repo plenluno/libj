@@ -13,6 +13,10 @@ template<typename T>
 class TypedValueHolder : LIBJ_TYPED_MUTABLE(ValueHolder, T)
  public:
     static Ptr create(const T& val);
+
+    virtual T getTyped() const;
+
+    virtual void setTyped(const T& t);
 };
 
 }  // namespace libj
