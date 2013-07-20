@@ -4,15 +4,14 @@
 #define LIBJ_TYPED_SET_H_
 
 #include <libj/set.h>
+#include <libj/typed_collection.h>
 #include <libj/detail/generic_set.h>
 
 namespace libj {
 
 template<typename T>
-class TypedSet : public detail::GenericSet<Set, T> {
+class TypedSet : LIBJ_TYPED_COLLECTION(Set, T)
  public:
-    LIBJ_MUTABLE_TEMPLATE_DEFS(TypedSet, Set);
-
     static Ptr create();
 };
 
