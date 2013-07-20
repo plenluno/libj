@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_JS_ARRAY_H_
 #define LIBJ_TYPED_JS_ARRAY_H_
@@ -10,11 +10,8 @@
 namespace libj {
 
 template<typename T>
-class TypedJsArray
-    : public detail::GenericJsArray<T, TypedList<T, JsArray> > {
+class TypedJsArray : LIBJ_TYPED_LIST(T, JsArray)
  public:
-    LIBJ_MUTABLE_TEMPLATE_DEFS(TypedJsArray, JsArray);
-
     static Ptr create();
 
     static Ptr create(Collection::CPtr c);

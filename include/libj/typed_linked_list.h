@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_LINKED_LIST_H_
 #define LIBJ_TYPED_LINKED_LIST_H_
@@ -10,11 +10,8 @@
 namespace libj {
 
 template<typename T>
-class TypedLinkedList
-    : public detail::GenericLinkedList<T, TypedList<T, LinkedList> > {
+class TypedLinkedList : LIBJ_TYPED_LIST(T, LinkedList)
  public:
-    LIBJ_MUTABLE_TEMPLATE_DEFS(TypedLinkedList, LinkedList);
-
     static Ptr create();
 
     static Ptr create(Collection::CPtr c);

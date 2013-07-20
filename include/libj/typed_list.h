@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_LIST_H_
 #define LIBJ_TYPED_LIST_H_
@@ -37,5 +37,9 @@ class TypedList : public L {
 };
 
 }  // namespace libj
+
+#define LIBJ_TYPED_LIST(T, L) \
+    public detail::Generic##L<T, TypedList<T, L> > { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##L, L)
 
 #endif  // LIBJ_TYPED_LIST_H_
