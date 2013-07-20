@@ -10,7 +10,7 @@
 namespace libj {
 
 template<typename T>
-class TypedJsArray : LIBJ_TYPED_LIST(T, JsArray)
+class TypedJsArray : LIBJ_TYPED_LIST(JsArray, T)
  public:
     static Ptr create();
 

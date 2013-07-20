@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_GENERIC_LINKED_LIST_H_
 #define LIBJ_DETAIL_GENERIC_LINKED_LIST_H_
@@ -10,8 +10,8 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename I>
-class GenericLinkedList : public GenericList<T, I> {
+template<typename I, typename T>
+class GenericLinkedList : public GenericList<I, T> {
  private:
     typedef std::list<T> Container;
     typedef typename Container::iterator Itr;
@@ -179,7 +179,7 @@ class GenericLinkedList : public GenericList<T, I> {
                 l->addTyped(*pos);
             }
         }
-        return typename GenericList<T, I>::Ptr(l);
+        return typename GenericList<I, T>::Ptr(l);
     }
 
     virtual Iterator::Ptr iterator() const {

@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_GENERIC_LIST_H_
 #define LIBJ_DETAIL_GENERIC_LIST_H_
@@ -8,8 +8,8 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename I>
-class GenericList : public GenericCollection<T, I> {
+template<typename I, typename T>
+class GenericList : public GenericCollection<I, T> {
  public:
     virtual Size size() const = 0;
 

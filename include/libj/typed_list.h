@@ -7,7 +7,7 @@
 
 namespace libj {
 
-template<typename T, typename L>
+template<typename L, typename T>
 class TypedList : public L {
  public:
     virtual Boolean addTyped(const T& t) = 0;
@@ -38,8 +38,8 @@ class TypedList : public L {
 
 }  // namespace libj
 
-#define LIBJ_TYPED_LIST(T, L) \
-    public detail::Generic##L<T, TypedList<T, L> > { \
+#define LIBJ_TYPED_LIST(L, T) \
+    public detail::Generic##L<TypedList<L, T>, T> { \
     LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##L, L)
 
 #endif  // LIBJ_TYPED_LIST_H_

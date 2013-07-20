@@ -14,7 +14,7 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename I>
+template<typename I, typename T>
 class GenericCollection : public I {
  public:
     typedef typename I::Ptr Ptr;

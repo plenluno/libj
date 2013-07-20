@@ -9,8 +9,8 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename I>
-class GenericJsArray : public GenericArrayList<T, I> {
+template<typename I, typename T>
+class GenericJsArray : public GenericArrayList<I, T> {
  public:
     GenericJsArray() : obj_(libj::JsObject::null()) {}
 
@@ -23,7 +23,7 @@ class GenericJsArray : public GenericArrayList<T, I> {
         for (Size i = from; i < to; i++) {
             a->addTyped(this->getTyped(i));
         }
-        return typename GenericArrayList<T, I>::Ptr(a);
+        return typename GenericArrayList<I, T>::Ptr(a);
     }
 
     virtual String::CPtr toString() const {

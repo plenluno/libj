@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_GENERIC_ARRAY_LIST_H_
 #define LIBJ_DETAIL_GENERIC_ARRAY_LIST_H_
@@ -10,8 +10,8 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename I>
-class GenericArrayList : public GenericList<T, I> {
+template<typename I, typename T>
+class GenericArrayList : public GenericList<I, T> {
  private:
     typedef std::vector<T> Container;
     typedef typename Container::iterator Itr;
@@ -125,7 +125,7 @@ class GenericArrayList : public GenericList<T, I> {
         for (Size i = from; i < to; i++) {
             l->addTyped(vec_[i]);
         }
-        return typename GenericList<T, I>::Ptr(l);
+        return typename GenericList<I, T>::Ptr(l);
     }
 
     virtual Iterator::Ptr iterator() const {

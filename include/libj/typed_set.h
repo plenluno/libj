@@ -9,7 +9,7 @@
 namespace libj {
 
 template<typename T>
-class TypedSet : public detail::GenericSet<T, Set> {
+class TypedSet : public detail::GenericSet<Set, T> {
  public:
     LIBJ_MUTABLE_TEMPLATE_DEFS(TypedSet, Set);
 

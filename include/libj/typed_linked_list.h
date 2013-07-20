@@ -10,7 +10,7 @@
 namespace libj {
 
 template<typename T>
-class TypedLinkedList : LIBJ_TYPED_LIST(T, LinkedList)
+class TypedLinkedList : LIBJ_TYPED_LIST(LinkedList, T)
  public:
     static Ptr create();
 

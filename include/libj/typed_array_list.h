@@ -10,7 +10,7 @@
 namespace libj {
 
 template<typename T>
-class TypedArrayList : LIBJ_TYPED_LIST(T, ArrayList)
+class TypedArrayList : LIBJ_TYPED_LIST(ArrayList, T)
  public:
     static Ptr create();
 

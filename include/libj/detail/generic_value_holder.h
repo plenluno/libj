@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_GENERIC_VALUE_HOLDER_H_
 #define LIBJ_DETAIL_GENERIC_VALUE_HOLDER_H_
@@ -8,7 +8,7 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename I>
+template<typename I, typename T>
 class GenericValueHolder : public I {
  public:
     GenericValueHolder() {}

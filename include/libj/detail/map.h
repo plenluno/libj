@@ -99,7 +99,7 @@ class Map : public I {
     }
 
  private:
-    class KeySet : public GenericCollection<Value, Set> {
+    class KeySet : public GenericCollection<Set, Value> {
      public:
         KeySet(const typename detail::Map<I>* self) : self_(self) {}
 
@@ -207,7 +207,7 @@ class Map : public I {
     };
 
     class EntrySet
-        : public GenericCollection<typename EntryT::CPtr, EntrySetT> {
+        : public GenericCollection<EntrySetT, typename EntryT::CPtr> {
      public:
         EntrySet(const typename detail::Map<I>* self) : self_(self) {}
 

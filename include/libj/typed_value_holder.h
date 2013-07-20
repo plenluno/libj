@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_VALUE_HOLDER_H_
 #define LIBJ_TYPED_VALUE_HOLDER_H_
@@ -10,7 +10,7 @@ namespace libj {
 
 template<typename T>
 class TypedValueHolder
-    : public detail::GenericValueHolder<T, ValueHolder> {
+    : public detail::GenericValueHolder<ValueHolder, T> {
  public:
     LIBJ_MUTABLE_TEMPLATE_DEFS(TypedValueHolder, ValueHolder);
 

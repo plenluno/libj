@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_ARRAY_LIST_H_
 #define LIBJ_DETAIL_ARRAY_LIST_H_
@@ -9,18 +9,18 @@ namespace libj {
 namespace detail {
 
 template<typename I>
-class ArrayList : public GenericArrayList<Value, I> {
+class ArrayList : public GenericArrayList<I, Value> {
  public:
     virtual Boolean add(const Value& v) {
-        return GenericArrayList<Value, I>::addTyped(v);
+        return GenericArrayList<I, Value>::addTyped(v);
     }
 
     virtual Boolean add(Size i, const Value& v) {
-        return GenericArrayList<Value, I>::addTyped(i, v);
+        return GenericArrayList<I, Value>::addTyped(i, v);
     }
 
     virtual Boolean set(Size i, const Value& v) {
-        return GenericArrayList<Value, I>::setTyped(i, v);
+        return GenericArrayList<I, Value>::setTyped(i, v);
     }
 };
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_SET_H_
 #define LIBJ_DETAIL_SET_H_
@@ -9,14 +9,14 @@ namespace libj {
 namespace detail {
 
 template<typename I>
-class Set : public GenericSet<Value, I> {
+class Set : public GenericSet<I, Value> {
  public:
     Boolean add(const Value& v) {
-        return GenericSet<Value, I>::addTyped(v);
+        return GenericSet<I, Value>::addTyped(v);
     }
 
     Boolean remove(const Value& v) {
-        return GenericSet<Value, I>::removeTyped(v);
+        return GenericSet<I, Value>::removeTyped(v);
     }
 };
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_GENERIC_SET_H_
 #define LIBJ_DETAIL_GENERIC_SET_H_
@@ -10,8 +10,8 @@
 namespace libj {
 namespace detail {
 
-template<typename T, typename I>
-class GenericSet : public GenericCollection<T, I> {
+template<typename I, typename T>
+class GenericSet : public GenericCollection<I, T> {
  private:
     typedef std::set<T> Container;
     typedef typename Container::iterator Itr;
