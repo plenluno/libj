@@ -43,6 +43,11 @@ inline Boolean Object::equals(Object::CPtr that) const {
     return !compareTo(that);
 }
 
+template<typename T>
+inline Boolean Object::is() const {
+    return this->instanceof(Type<T>::id());
+}
+
 }  // namespace libj
 
 #endif  // LIBJ_IMPL_OBJECT_H_

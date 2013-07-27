@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_OBJECT_H_
 #define LIBJ_OBJECT_H_
@@ -27,6 +27,8 @@ class Object
     virtual TypeId type() const = 0;
 
     virtual LIBJ_CPTR(String) toString() const = 0;
+
+    template<typename T> Boolean is() const;
 };
 
 }  // namespace libj

@@ -82,6 +82,16 @@ TEST(GTestMutable, TestInstanceOf2) {
     ASSERT_FALSE(p->instanceof(Type<Immutable>::id()));
 }
 
+TEST(GTestMutable, TestIs) {
+    GTestMutable::Ptr p = GTestMutable::create();
+
+    ASSERT_TRUE(p->is<GTestMutable>());
+    ASSERT_TRUE(p->is<Mutable>());
+    ASSERT_TRUE(p->is<Object>());
+
+    ASSERT_FALSE(p->is<Immutable>());
+}
+
 #ifdef LIBJ_USE_SP
 
 TEST(GTestMutable, TestUseCount) {
