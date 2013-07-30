@@ -10,6 +10,8 @@ namespace libj {
 template<typename L, typename T>
 class TypedList : public TypedCollection<L, T> {
  public:
+    virtual Boolean addTyped(const T& t) = 0;
+
     virtual Boolean addTyped(Size i, const T& t) = 0;
 
     virtual Boolean setTyped(Size i, const T& t) = 0;
@@ -17,6 +19,8 @@ class TypedList : public TypedCollection<L, T> {
     virtual T getTyped(Size i) const = 0;
 
     virtual T removeTyped(Size i) = 0;
+
+    virtual Boolean removeTyped(const T& t) = 0;
 
     virtual typename TypedIterator<T>::Ptr reverseIteratorTyped() const = 0;
 
