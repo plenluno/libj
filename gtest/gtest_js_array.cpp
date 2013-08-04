@@ -10,6 +10,11 @@ namespace libj {
 TEST(GTestJsArray, TestCreate) {
     JsArray::Ptr a = JsArray::create();
     ASSERT_TRUE(!!a);
+    ASSERT_EQ(0, a->length());
+
+    a = JsArray::create(5);
+    ASSERT_TRUE(!!a);
+    ASSERT_EQ(5, a->length());
 }
 
 TEST(GTestJsArray, TestCreate2) {

@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_JS_ARRAY_H_
 #define LIBJ_JS_ARRAY_H_
@@ -9,7 +9,7 @@ namespace libj {
 
 class JsArray : LIBJ_ARRAY_LIST(JsArray)
  public:
-    static Ptr create();
+    static Ptr create(Size length = 0);
 
     static Ptr create(ArrayList::CPtr);
 
