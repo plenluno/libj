@@ -118,14 +118,14 @@ TEST(GTestMap, TestEntrySet) {
     // iteratorTyped
     TypedIterator<Map::Entry::CPtr>::Ptr ti = es->iteratorTyped();
     ASSERT_TRUE(ti->hasNext());
-    e1 = ti->next();
+    e1 = ti->nextTyped();
     key1 = e1->getKey();
     val1 = e1->getValue();
     ASSERT_TRUE(key1.equals(x) || key1.equals(y));
     ASSERT_TRUE(val1.equals(123) || val1.equals(456));
 
     ASSERT_TRUE(ti->hasNext());
-    e2 = ti->next();
+    e2 = ti->nextTyped();
     key2 = e2->getKey();
     val2 = e2->getValue();
     ASSERT_FALSE(key2.equals(key1));

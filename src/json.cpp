@@ -69,7 +69,7 @@ static StringBuilder::Ptr mapToJson(
     Boolean first = true;
     sb->appendChar('{');
     while (itr->hasNext()) {
-        Entry::CPtr e = itr->next();
+        Entry::CPtr e = itr->nextTyped();
         String::CPtr k = toCPtr<String>(e->getKey());
         Value v = e->getValue();
         if (k && !v.isUndefined()) {

@@ -84,7 +84,7 @@ class Map : public I {
         typename EntrySetT::CPtr es = this->entrySet();
         typename EntryIteratorT::Ptr itr = es->iteratorTyped();
         while (itr->hasNext()) {
-            typename EntryT::CPtr e = itr->next();
+            typename EntryT::CPtr e = itr->nextTyped();
             if (first) {
                 first = false;
             } else {
@@ -269,7 +269,18 @@ class Map : public I {
                 return pos_ != end_;
             }
 
-            virtual typename EntryT::CPtr next() {
+            virtual Value next() {
+                if (pos_ == end_) {
+                    LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+                } else {
+                    entry_->setKey(pos_->first);
+                    entry_->setValue(pos_->second);
+                    ++pos_;
+                    return typename Entry::CPtr(entry_);
+                }
+            }
+
+            virtual typename EntryT::CPtr nextTyped() {
                 if (pos_ == end_) {
                     LIBJ_THROW(Error::NO_SUCH_ELEMENT);
                 }

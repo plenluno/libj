@@ -232,7 +232,17 @@ class GenericArrayList : public GenericList<I, T> {
             return pos_ != end_;
         }
 
-        virtual T next() {
+        virtual Value next() {
+            if (pos_ == end_) {
+                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+        virtual T nextTyped() {
             if (pos_ == end_) {
                 LIBJ_THROW(Error::NO_SUCH_ELEMENT);
             }
@@ -263,7 +273,17 @@ class GenericArrayList : public GenericList<I, T> {
             return pos_ != end_;
         }
 
-        virtual T next() {
+        virtual Value next() {
+            if (pos_ == end_) {
+                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
+            } else {
+                T t = *pos_;
+                ++pos_;
+                return t;
+            }
+        }
+
+        virtual T nextTyped() {
             if (pos_ == end_) {
                 LIBJ_THROW(Error::NO_SUCH_ELEMENT);
             }

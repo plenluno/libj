@@ -8,8 +8,8 @@
 
 namespace libj {
 
-template<typename L, typename T>
-class TypedCollection : public TypedMutable<L, T> {
+template<typename C, typename T>
+class TypedCollection : public TypedMutable<C, T> {
  public:
     virtual Boolean addTyped(const T& t) = 0;
 
@@ -20,8 +20,8 @@ class TypedCollection : public TypedMutable<L, T> {
 
 }  // namespace libj
 
-#define LIBJ_TYPED_COLLECTION(L, T) \
-    public detail::Generic##L<TypedCollection<L, T>, T> { \
-    LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##L, L)
+#define LIBJ_TYPED_COLLECTION(C, T) \
+    public detail::Generic##C<TypedCollection<C, T>, T> { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##C, C)
 
 #endif  // LIBJ_TYPED_COLLECTION_H_

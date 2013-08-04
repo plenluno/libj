@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/typed_array_list.h>
@@ -147,9 +147,9 @@ TEST(GTestTypedArrayList, TestIteratorTyped) {
     a->add(7);
     TypedIterator<Int>::Ptr i = a->iteratorTyped();
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(5, i->next());
+    ASSERT_EQ(5, i->nextTyped());
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(7, i->next());
+    ASSERT_EQ(7, i->nextTyped());
     ASSERT_FALSE(i->hasNext());
 }
 
@@ -159,9 +159,9 @@ TEST(GTestTypedArrayList, TestReverseIteratorTyped) {
     a->add(7);
     TypedIterator<Int>::Ptr i = a->reverseIteratorTyped();
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(7, i->next());
+    ASSERT_EQ(7, i->nextTyped());
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(5, i->next());
+    ASSERT_EQ(5, i->nextTyped());
     ASSERT_FALSE(i->hasNext());
 }
 

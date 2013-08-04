@@ -7,13 +7,17 @@
 
 namespace libj {
 
-template<typename L, typename T>
-class TypedMutable : public L {};
+template<typename M, typename T>
+class TypedMutable : public M {};
 
 }  // namespace libj
 
-#define LIBJ_TYPED_MUTABLE(L, T) \
-    public detail::Generic##L<TypedMutable<L, T>, T> { \
-    LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##L, L)
+#define LIBJ_TYPED_MUTABLE(M, T) \
+    public detail::Generic##M<TypedMutable<M, T>, T> { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##M, M)
+
+#define LIBJ_TYPED_MUTABLE_IF(M, T) \
+    public TypedMutable<M, T> { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##M, M)
 
 #endif  // LIBJ_TYPED_MUTABLE_H_

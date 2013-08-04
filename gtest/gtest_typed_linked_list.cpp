@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/typed_linked_list.h>
@@ -142,9 +142,9 @@ TEST(GTestTypedLinkedList, TestIteratorTyped) {
     l->add(7);
     TypedIterator<int>::Ptr i = l->iteratorTyped();
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(5, i->next());
+    ASSERT_EQ(5, i->nextTyped());
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(7, i->next());
+    ASSERT_EQ(7, i->nextTyped());
     ASSERT_FALSE(i->hasNext());
 }
 
@@ -154,9 +154,9 @@ TEST(GTestTypedLinkedList, TestReverseIteratorTyped) {
     l->add(7);
     TypedIterator<Int>::Ptr i = l->reverseIteratorTyped();
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(7, i->next());
+    ASSERT_EQ(7, i->nextTyped());
     ASSERT_TRUE(i->hasNext());
-    ASSERT_EQ(5, i->next());
+    ASSERT_EQ(5, i->nextTyped());
     ASSERT_FALSE(i->hasNext());
 }
 

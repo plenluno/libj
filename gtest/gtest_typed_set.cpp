@@ -46,10 +46,10 @@ TEST(GTestTypedSet, TestIteratorTyped) {
     TypedIterator<Int>::Ptr i = s->iteratorTyped();
     Int x, y;
     ASSERT_TRUE(i->hasNext());
-    x = i->next();
+    x = i->nextTyped();
     ASSERT_TRUE(x == 5 || x == 7);
     ASSERT_TRUE(i->hasNext());
-    y = i->next();
+    y = i->nextTyped();
     ASSERT_TRUE(y == 5 || y == 7);
     ASSERT_NE(x, y);
     ASSERT_FALSE(i->hasNext());

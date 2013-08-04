@@ -1,18 +1,17 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_ITERATOR_H_
 #define LIBJ_TYPED_ITERATOR_H_
 
-#include <libj/mutable.h>
+#include <libj/iterator.h>
+#include <libj/typed_mutable.h>
 
 namespace libj {
 
 template<typename T>
-class TypedIterator : LIBJ_MUTABLE_TEMPLATE(TypedIterator<T>)
+class TypedIterator : LIBJ_TYPED_MUTABLE_IF(Iterator, T)
  public:
-    virtual Boolean hasNext() const = 0;
-
-    virtual T next() = 0;
+    virtual T nextTyped() = 0;
 };
 
 }  // namespace libj

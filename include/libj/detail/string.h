@@ -330,7 +330,7 @@ class String : public libj::String {
             return pos_ != end_;
         }
 
-        virtual Char next() {
+        virtual Char nextTyped() {
             if (pos_ == end_) {
                 LIBJ_THROW(Error::NO_SUCH_ELEMENT);
                 return 0;
