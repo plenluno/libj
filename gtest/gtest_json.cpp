@@ -102,6 +102,7 @@ TEST(GTestJson, TestParse) {
         String::create("{\"x\":123,\"y\":[3.5,false],\"z\":null}");
     Value v = json::parse(json);
     ASSERT_TRUE(v.instanceof(Type<Map>::id()));
+    ASSERT_TRUE(v.instanceof(Type<JsObject>::id()));
 
     JsObject::CPtr m = toCPtr<JsObject>(v);
     ASSERT_EQ(3, m->size());
@@ -115,6 +116,7 @@ TEST(GTestJson, TestParse) {
 
     Value yv = m->get(String::create("y"));
     ASSERT_TRUE(yv.instanceof(Type<ArrayList>::id()));
+    ASSERT_TRUE(yv.instanceof(Type<JsArray>::id()));
 
     JsArray::CPtr a = toCPtr<JsArray>(yv);
     Value a0 = a->get(0);
