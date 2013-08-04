@@ -216,7 +216,7 @@ class Map : public I {
         }
 
         virtual Iterator::Ptr iterator() const {
-            return Iterator::Ptr(new EntryIterator(self_->map_));
+            return Iterator::Ptr(new TypedEntryIterator(self_->map_));
         }
 
         virtual typename EntryIteratorT::Ptr iteratorTyped() const {
@@ -225,42 +225,6 @@ class Map : public I {
         }
 
      public:
-        class EntryIterator : public Iterator {
-            friend class EntrySet;
-
-         public:
-            virtual Boolean hasNext() const {
-                return pos_ != end_;
-            }
-
-            virtual Value next() {
-                if (pos_ == end_) {
-                    LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
-                } else {
-                    entry_->setKey(pos_->first);
-                    entry_->setValue(pos_->second);
-                    ++pos_;
-                    return typename Entry::CPtr(entry_);
-                }
-            }
-
-            virtual String::CPtr toString() const {
-                return String::create();
-            }
-
-         private:
-            typename Map<I>::CItr pos_;
-            typename Map<I>::CItr end_;
-
-            // reuse Entry for better performance
-            typename Entry::Ptr entry_;
-
-            EntryIterator(const typename Map<I>::Container& map)
-                : pos_(map.begin())
-                , end_(map.end())
-                , entry_(new Entry()) {}
-        };
-
         class TypedEntryIterator : public EntryIteratorT {
             friend class EntrySet;
 

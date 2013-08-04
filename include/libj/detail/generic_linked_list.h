@@ -183,11 +183,11 @@ class GenericLinkedList : public GenericList<I, T> {
     }
 
     virtual Iterator::Ptr iterator() const {
-        return Iterator::Ptr(new ObverseIterator(list_));
+        return Iterator::Ptr(new TypedObverseIterator(list_));
     }
 
     virtual Iterator::Ptr reverseIterator() const {
-        return Iterator::Ptr(new ReverseIterator(list_));
+        return Iterator::Ptr(new TypedReverseIterator(list_));
     }
 
     virtual typename TypedIterator<T>::Ptr iteratorTyped() const {
@@ -199,68 +199,6 @@ class GenericLinkedList : public GenericList<I, T> {
     }
 
  private:
-    class ObverseIterator : public Iterator {
-        friend class GenericLinkedList;
-
-     public:
-        virtual Boolean hasNext() const {
-            return pos_ != end_;
-        }
-
-        virtual Value next() {
-            if (pos_ == end_) {
-                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
-            }
-        }
-
-        virtual String::CPtr toString() const {
-            return String::create();
-        }
-
-     private:
-        CItr pos_;
-        CItr end_;
-
-        ObverseIterator(const Container& list)
-            : pos_(list.begin())
-            , end_(list.end()) {}
-    };
-
-    class ReverseIterator : public Iterator {
-        friend class GenericLinkedList;
-
-     public:
-        virtual Boolean hasNext() const {
-            return pos_ != end_;
-        }
-
-        virtual Value next() {
-            if (pos_ == end_) {
-                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
-            }
-
-            T t = *pos_;
-            ++pos_;
-            return t;
-        }
-
-        virtual String::CPtr toString() const {
-            return String::create();
-        }
-
-     private:
-        CRItr pos_;
-        CRItr end_;
-
-        ReverseIterator(const Container& list)
-            : pos_(list.rbegin())
-            , end_(list.rend()) {}
-    };
-
     class TypedObverseIterator : public TypedIterator<T> {
         friend class GenericLinkedList;
 

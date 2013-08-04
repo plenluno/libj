@@ -46,7 +46,7 @@ class GenericSet : public GenericCollection<I, T> {
     }
 
     virtual Iterator::Ptr iterator() const {
-        return Iterator::Ptr(new SetIterator(set_));
+        return Iterator::Ptr(new TypedSetIterator(set_));
     }
 
     virtual typename TypedIterator<T>::Ptr iteratorTyped() const {
@@ -54,37 +54,6 @@ class GenericSet : public GenericCollection<I, T> {
     }
 
  private:
-    class SetIterator : public Iterator {
-        friend class GenericSet;
-
-     public:
-        virtual Boolean hasNext() const {
-            return pos_ != end_;
-        }
-
-        virtual Value next() {
-            if (pos_ == end_) {
-                LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
-            } else {
-                T t = *pos_;
-                ++pos_;
-                return t;
-            }
-        }
-
-        virtual String::CPtr toString() const {
-            return String::create();
-        }
-
-     private:
-        CItr pos_;
-        CItr end_;
-
-        SetIterator(const Container& set)
-            : pos_(set.begin())
-            , end_(set.end()) {}
-    };
-
     class TypedSetIterator : public TypedIterator<T> {
         friend class GenericSet;
 
