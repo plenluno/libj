@@ -104,7 +104,7 @@ class GenericList : public GenericCollection<I, T> {
         return removeTyped(len - 1);
     }
 
-    virtual Int indexOf(const Value& v) {
+    virtual Int indexOf(const Value& v) const {
         Size index = 0;
         Iterator::Ptr itr = iterator();
         while (itr->hasNext()) {
@@ -116,7 +116,7 @@ class GenericList : public GenericCollection<I, T> {
         return -1;
     }
 
-    virtual Int lastIndexOf(const Value& v) {
+    virtual Int lastIndexOf(const Value& v) const {
         Size index = size() - 1;
         Iterator::Ptr itr = reverseIterator();
         while (itr->hasNext()) {

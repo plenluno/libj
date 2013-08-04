@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_LIST_H_
 #define LIBJ_LIST_H_
@@ -15,9 +15,9 @@ class List : LIBJ_COLLECTION(List)
 
     virtual Value get(Size index) const = 0;
 
-    virtual Int indexOf(const Value& val) = 0;
+    virtual Int indexOf(const Value& val) const = 0;
 
-    virtual Int lastIndexOf(const Value& val) = 0;
+    virtual Int lastIndexOf(const Value& val) const = 0;
 
     virtual Value remove(Size index) = 0;
 
