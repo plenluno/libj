@@ -31,3 +31,6 @@
 [submodule "deps/pugixml"]
 	path = deps/pugixml
 	url = https://github.com/plenluno/pugixml.git
+[submodule "deps/rapidjson"]
+	path = deps/rapidjson
+	url = https://github.com/plenluno/rapidjson.git
