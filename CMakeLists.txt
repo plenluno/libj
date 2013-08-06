@@ -63,6 +63,7 @@ set(libj-include
     deps/jscre
     deps/picojson
     deps/boost-svn
+    deps/rapidjson/include
 )
 
 if(LIBJ_USE_BDWGC)
