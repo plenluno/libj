@@ -6,6 +6,7 @@
 #include <libj/cast.h>
 #include <libj/constant.h>
 #include <libj/debug_print.h>
+#include <libj/endian.h>
 #include <libj/exception.h>
 #include <libj/string.h>
 #include <libj/this.h>
@@ -26,6 +27,8 @@ namespace libj {
 namespace detail {
 
 glue::UnicodeEncoding convertStrEncoding(libj::String::Encoding enc) {
+    static Endian e = endian();
+
     switch (enc) {
     case libj::String::UTF8:
         return glue::UTF8;
@@ -37,6 +40,18 @@ glue::UnicodeEncoding convertStrEncoding(libj::String::Encoding enc) {
         return glue::UTF32BE;
     case libj::String::UTF32LE:
         return glue::UTF32LE;
+    case libj::String::UTF16:
+        if (e == BIG) {
+            return glue::UTF16BE;
+        } else {
+            return glue::UTF16LE;
+        }
+    case libj::String::UTF32:
+        if (e == BIG) {
+            return glue::UTF32BE;
+        } else {
+            return glue::UTF32LE;
+        }
     default:
         assert(false);
         return glue::UTF8;

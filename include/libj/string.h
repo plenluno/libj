@@ -16,8 +16,10 @@ class String : LIBJ_IMMUTABLE(String)
  public:
     enum Encoding {
         UTF8,
+        UTF16,
         UTF16BE,
         UTF16LE,
+        UTF32,
         UTF32BE,
         UTF32LE,
     };

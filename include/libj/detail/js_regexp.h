@@ -3,7 +3,6 @@
 #ifndef LIBJ_DETAIL_JS_REGEXP_H_
 #define LIBJ_DETAIL_JS_REGEXP_H_
 
-#include <libj/endian.h>
 #include <libj/glue/regexp.h>
 #include <libj/detail/js_object.h>
 
@@ -129,24 +128,14 @@ class JsRegExp : public JsObject<I> {
     }
 
     static std::string toStdString(String::CPtr s) {
-        static Boolean big = endian() == BIG;
-
         assert(s);
         switch (glue::RegExp::encoding()) {
         case glue::RegExp::UTF8:
             return s->toStdString(String::UTF8);
         case glue::RegExp::UTF16:
-            if (big) {
-                return s->toStdString(String::UTF16BE);
-            } else {
-                return s->toStdString(String::UTF16LE);
-            }
+            return s->toStdString(String::UTF16);
         case glue::RegExp::UTF32:
-            if (big) {
-                return s->toStdString(String::UTF16BE);
-            } else {
-                return s->toStdString(String::UTF16LE);
-            }
+            return s->toStdString(String::UTF32);
         default:
             assert(false);
             return std::string();

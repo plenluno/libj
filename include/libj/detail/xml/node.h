@@ -26,21 +26,10 @@ class StringWriter : public pugi::xml_writer {
     StringWriter() : str_(String::create()) {}
 
     virtual void write(const void* data, size_t size) {
-        static const Boolean bigEndian = endian() == BIG;
-
-        String::CPtr d;
 #ifdef LIBJ_USE_UTF32
-        if (bigEndian) {
-            d = String::create(data, String::UTF32BE, size >> 2);
-        } else {
-            d = String::create(data, String::UTF32LE, size >> 2);
-        }
+        String::CPtr d = String::create(data, String::UTF32, size >> 2);
 #else
-        if (bigEndian) {
-            d = String::create(data, String::UTF16BE, size >> 1);
-        } else {
-            d = String::create(data, String::UTF16LE, size >> 1);
-        }
+        String::CPtr d = String::create(data, String::UTF16, size >> 1);
 #endif
         str_ = str_->concat(d);
     }

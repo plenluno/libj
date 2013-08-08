@@ -3,7 +3,6 @@
 #ifndef LIBJ_DETAIL_XML_UTIL_H_
 #define LIBJ_DETAIL_XML_UTIL_H_
 
-#include <libj/endian.h>
 #include <libj/string.h>
 
 #include <assert.h>
@@ -14,22 +13,12 @@ namespace detail {
 namespace xml {
 
 inline String::CPtr createString(const pugi::char_t* s) {
-    static const Boolean bigEndian = endian() == BIG;
-
     assert(sizeof(pugi::char_t) == sizeof(Char));
 
 #ifdef LIBJ_USE_UTF32
-    if (bigEndian) {
-        return String::create(s, String::UTF32BE);
-    } else {
-        return String::create(s, String::UTF32LE);
-    }
+    return String::create(s, String::UTF32);
 #else
-    if (bigEndian) {
-        return String::create(s, String::UTF16BE);
-    } else {
-        return String::create(s, String::UTF16LE);
-    }
+    return String::create(s, String::UTF16);
 #endif
 }
 

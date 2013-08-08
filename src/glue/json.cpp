@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <libj/error.h>
-#include <libj/endian.h>
 #include <libj/js_array.h>
 #include <libj/js_object.h>
 #include <libj/glue/json.h>
@@ -42,24 +41,11 @@ static Value longToValue(Long l) {
     }
 }
 
-static Boolean isBigEndian() {
-    static Endian e = endian();
-    return e == BIG;
-}
-
 static String::CPtr createString(const Char* s) {
 #ifdef LIBJ_USE_UTF32
-    if (isBigEndian()) {
-        return String::create(s, String::UTF32BE);
-    } else {
-        return String::create(s, String::UTF32LE);
-    }
+    return String::create(s, String::UTF32);
 #else
-    if (isBigEndian()) {
-        return String::create(s, String::UTF16BE);
-    } else {
-        return String::create(s, String::UTF16LE);
-    }
+    return String::create(s, String::UTF16);
 #endif
 }
 
