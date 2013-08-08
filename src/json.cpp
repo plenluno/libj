@@ -114,13 +114,13 @@ static StringBuilder::Ptr stringify(
     // 'undefined' only in collectionToJson
     if (val.isNull() || val.isUndefined()) {
         sb->appendCStr("null");
-    } else if (val.instanceof(Type<String>::id())) {
+    } else if (val.is<String>()) {
         stringToJson(toCPtr<String>(val), sb);
-    } else if (val.instanceof(Type<Map>::id())) {
+    } else if (val.is<Map>()) {
         mapToJson(toCPtr<Map>(val), sb);
-    } else if (val.instanceof(Type<Collection>::id())) {
+    } else if (val.is<Collection>()) {
         collectionToJson(toCPtr<Collection>(val), sb);
-    } else if (val.instanceof(Type<Object>::id())) {
+    } else if (val.is<Object>()) {
         sb->appendCStr("null");
     } else if (detail::primitiveToString(val, buf, kLen)) {
         sb->appendCStr(buf);

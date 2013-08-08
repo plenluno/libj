@@ -282,8 +282,7 @@ void printf(Level level, const char* fmt, ...) {
 
 static String::CPtr toString(const Value& val) {
     String::CPtr s = String::null();
-    if (val.instanceof(Type<Map>::id()) ||
-        val.instanceof(Type<Collection>::id())) {
+    if (val.is<Map>() || val.is<Collection>()) {
         s = json::stringify(val);
     } else {
         s = String::valueOf(val);

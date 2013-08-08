@@ -18,8 +18,8 @@ inline Boolean to(const Value & val, T* out) {
 template<typename T>
 inline typename Type<T>::Ptr toPtr(const Value& v) {
     LIBJ_PTR_TYPE(T) p;
-    if (v.instanceof(Type<T>::id()) &&
-        !v.isCPtr() &&
+    if (!v.isCPtr() &&
+        v.instanceof(Type<T>::id()) &&
         detail::to<typename Type<T>::Ptr>(v, &p, true)) {
         return p;
     } else {

@@ -58,6 +58,11 @@ TEST(GTestValue, TestIsPtrAndIsCPtr) {
     ASSERT_TRUE(cv.isCPtr());
     ASSERT_FALSE(pv.isPtr());
     ASSERT_FALSE(pv.isCPtr());
+
+    Value null = String::null();
+
+    ASSERT_TRUE(null.isPtr());
+    ASSERT_TRUE(null.isCPtr());
 }
 
 TEST(GTestValue, TestTo1) {
@@ -345,16 +350,19 @@ TEST(GTestValue, TestTo11) {
     Value v = String::null();
     String::CPtr s = String::create("abc");
     ASSERT_TRUE(to<String::CPtr>(v, &s));
-    ASSERT_FALSE(s);
+    ASSERT_TRUE(!s);
 
-    Immutable::CPtr i1;
-    ASSERT_FALSE(to<Immutable::CPtr>(v, &i1));
+    Immutable::CPtr i;
+    ASSERT_TRUE(to<Immutable::CPtr>(v, &i));
+    ASSERT_TRUE(!i);
 
-    Immutable::CPtr i2 = String::null();
-    v = i2;
-    Immutable::CPtr i3 = String::create("123");
-    ASSERT_TRUE(to<Immutable::CPtr>(v, &i3));
-    ASSERT_FALSE(i3);
+    Double d;
+    ASSERT_FALSE(to<Double>(v, &d));
+
+    v = Immutable::null();
+    s = String::create("123");
+    ASSERT_TRUE(to<String::CPtr>(v, &s));
+    ASSERT_TRUE(!s);
 }
 
 TEST(GTestValue, TestInstanceOf) {
@@ -365,6 +373,10 @@ TEST(GTestValue, TestInstanceOf) {
     ASSERT_TRUE(v.instanceof(Type<Immutable>::id()));
     ASSERT_TRUE(v.instanceof(Type<Object>::id()));
     ASSERT_FALSE(v.instanceof(Type<int>::id()));
+
+    Value n = String::null();
+    ASSERT_FALSE(n.instanceof(Type<String>::id()));
+    ASSERT_FALSE(n.instanceof(Type<Object>::id()));
 
     v = 1;
     ASSERT_FALSE(v.instanceof(Type<Object>::id()));
@@ -668,15 +680,30 @@ TEST(GTestValue, TestType) {
     ASSERT_TRUE(to<GTestValueStruct*>(v6, &y));
     ASSERT_EQ(&x, y);
 
-    Value obj = Object::null();
-    ASSERT_EQ(Type<Object::CPtr>::id(), obj.type());
-
     Value str = String::create("abc");
     ASSERT_EQ(Type<String::CPtr>::id(), str.type());
 
+    Value null = String::null();
+    ASSERT_EQ(1, null.type());
+
     Value v;
-    ASSERT_FALSE(v.type());
-    ASSERT_FALSE(UNDEFINED.type());
+    ASSERT_EQ(0, v.type());
+    ASSERT_EQ(0, UNDEFINED.type());
+}
+
+TEST(GTestValue, TestIs) {
+    int i = 2;
+    Value v1 = i;
+    ASSERT_TRUE(v1.is<int>());
+    ASSERT_FALSE(v1.is<double>());
+
+    Value str = String::create("abc");
+    ASSERT_TRUE(str.is<Object>());
+    ASSERT_TRUE(str.is<String>());
+    ASSERT_FALSE(str.is<ArrayList>());
+
+    Value null = String::null();
+    ASSERT_FALSE(null.is<String>());
 }
 
 }  // namespace libj

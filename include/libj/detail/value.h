@@ -58,6 +58,15 @@ class Value {
         return content ? content->type() : 0;
     }
 
+    template<typename T>
+    Boolean is() const {
+        if (isPtr() || isCPtr()) {
+            return instanceof(Type<T>::id());
+        } else {
+            return type() == Type<T>::id();
+        }
+    }
+
     Boolean instanceof(TypeId id) const {
         return content ? content->instanceof(id) : false;
     }
@@ -155,11 +164,11 @@ class Value {
 
      public:
         virtual TypeId type() const {
-            return Type<T>::id();
+            return held ? Type<T>::id() : 1;
         }
 
         virtual TypeId objectType() const {
-            return held ? held->type() : 0;
+            return held ? held->type() : 1;
         }
 
         virtual Boolean instanceof(TypeId id) const {
@@ -171,11 +180,11 @@ class Value {
         }
 
         virtual Boolean isPtr() const {
-            return !IsCPtr;
+            return held ? !IsCPtr : true;
         }
 
         virtual Boolean isCPtr() const {
-            return IsCPtr;
+            return held ? IsCPtr : true;
         }
 
         virtual Int compareTo(placeholder* that) const {
@@ -336,7 +345,10 @@ class remove_reference_and_const {
 
 template<typename T>
 inline Boolean to(Value* operand, T** out, Boolean instanceof) {
-    if (operand && (operand->type() == Type<T>::id() || instanceof)) {
+    if (operand &&
+        (operand->type() == Type<T>::id() ||
+         (operand->isNull() && Classify<T>::isObject) ||
+         instanceof)) {
         Value::holder<T>* content =
             static_cast<Value::holder<T>*>(operand->content);
         *out = &content->held;
