@@ -61,7 +61,6 @@ set(libj-include
     include
     deps/iv
     deps/jscre
-    deps/picojson
     deps/boost-svn
     deps/rapidjson/include
 )
