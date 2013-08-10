@@ -34,3 +34,6 @@
 [submodule "tools/android-cmake"]
 	path = tools/android-cmake
 	url = https://github.com/plenluno/android-cmake.git
+[submodule "tools/ios-cmake"]
+	path = tools/ios-cmake
+	url = https://github.com/plenluno/ios-cmake.git
