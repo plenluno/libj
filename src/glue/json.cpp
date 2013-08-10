@@ -6,7 +6,7 @@
 #include <libj/glue/json.h>
 
 #include <math.h>
-#include <rapidjson/document.h>
+#include <rapidjson/reader.h>
 
 #include <string>
 #include <sstream>
