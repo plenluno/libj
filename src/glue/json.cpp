@@ -42,7 +42,7 @@ static Value longToValue(Long l) {
 }
 
 static Value ulongToValue(ULong ul) {
-    static const Long JSON_INTEGER_MAX = +9007199254740991;
+    static const ULong JSON_INTEGER_MAX = +9007199254740991;
 
     if (ul <= JSON_INTEGER_MAX) {
         return static_cast<Long>(ul);
