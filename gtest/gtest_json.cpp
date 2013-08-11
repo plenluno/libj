@@ -167,15 +167,15 @@ TEST(GTestJson, TestParseNumber) {
     String::CPtr s1 = String::create("1.0");
     Value v1 = json::parse(s1);
     ASSERT_EQ(Type<Long>::id(), v1.type());
-    ASSERT_TRUE(v1.equals(1LL));
+    ASSERT_TRUE(v1.equals(static_cast<Long>(1)));
 
     String::CPtr s2 = String::create("9007199254740990");
     Value v2 = json::parse(s2);
-    ASSERT_TRUE(v2.equals(9007199254740990LL));
+    ASSERT_TRUE(v2.equals(static_cast<Long>(9007199254740990)));
 
     String::CPtr s3 = String::create("9007199254740991");
     Value v3 = json::parse(s3);
-    ASSERT_TRUE(v3.equals(9007199254740991LL));
+    ASSERT_TRUE(v3.equals(static_cast<Long>(9007199254740991)));
 
     String::CPtr s4 = String::create("9007199254740992");
     Value v4 = json::parse(s4);
