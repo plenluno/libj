@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(gtest)
 
+option(LIBJ_USE_TRAVIS "Use Travis CI" OFF)
+
 set(libj-test-src
     gtest_array_list.cpp
     gtest_console.cpp
@@ -15,7 +17,6 @@ set(libj-test-src
     gtest_js_array.cpp
     gtest_js_array_buffer.cpp
     gtest_js_data_view.cpp
-    gtest_js_date.cpp
     gtest_js_function.cpp
     gtest_js_object.cpp
     gtest_js_regexp.cpp
@@ -37,6 +38,13 @@ set(libj-test-src
     gtest_value.cpp
     gtest_value_holder.cpp
 )
+
+if(NOT LIBJ_USE_TRAVIS)
+    set(libj-test-src
+        ${libj-test-src}
+        gtest_js_date.cpp
+    )
+endif(NOT LIBJ_USE_TRAVIS)
 
 if(LIBJ_USE_CXX11)
     set(libj-test-src

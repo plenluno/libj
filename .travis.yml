@@ -6,7 +6,7 @@ compiler:
 before_script:
   - mkdir build
   - cd build
-  - cmake -DLIBJ_USE_THREAD=ON -DLIBJ_BUILD_TEST=ON ..
+  - cmake -DLIBJ_USE_THREAD=ON -DLIBJ_USE_XML=ON -DLIBJ_USE_TRAVIS=ON -DLIBJ_BUILD_TEST=ON ..
 
 script:
   - make
