@@ -17,7 +17,7 @@ if(NOT SUBMODULE_LIBJ)
     option(LIBJ_USE_ICONV     "Use iconv"         OFF)
     option(LIBJ_USE_THREAD    "Use Threads"       OFF)
     option(LIBJ_USE_UTF32     "Use UTF32"         OFF)
-    option(LIBJ_USE_XML       "Use XML"           ON)
+    option(LIBJ_USE_XML       "Use XML"           OFF)
     option(LIBJ_BUILD_TEST    "Build Unit Tests"  OFF)
 
     cmake_dependent_option(LIBJ_BUILD_GTEST
@@ -52,6 +52,7 @@ message(STATUS "LIBJ_USE_EXCEPTION=${LIBJ_USE_EXCEPTION}")
 message(STATUS "LIBJ_USE_ICONV=${LIBJ_USE_ICONV}")
 message(STATUS "LIBJ_USE_THREAD=${LIBJ_USE_THREAD}")
 message(STATUS "LIBJ_USE_UTF32=${LIBJ_USE_UTF32}")
+message(STATUS "LIBJ_USE_XML=${LIBJ_USE_XML}")
 message(STATUS "LIBJ_BUILD_TEST=${LIBJ_BUILD_TEST}")
 
 # variables --------------------------------------------------------------------
