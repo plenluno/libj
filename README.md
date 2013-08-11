@@ -1,6 +1,8 @@
 libj
 ====
 
+[![Build Status](https://travis-ci.org/plenluno/libj.png?branch=master)](https://travis-ci.org/plenluno/libj)
+
 libj is a cross-platform native runtime library equipped with Java/JavaScript-like API.
 
 ### Build
