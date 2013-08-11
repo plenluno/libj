@@ -1,12 +1,13 @@
 language: cpp
 
 compiler:
-  - clang
   - gcc
 
 before_script:
   - mkdir build
   - cd build
-  - cmake ..
+  - cmake -DLIBJ_USE_THREAD=ON -DLIBJ_BUILD_TEST=ON ..
 
-script: make
+script:
+  - make
+  - gtest/libj-test
