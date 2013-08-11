@@ -187,11 +187,11 @@ TEST(GTestJson, TestParseNumber) {
 
     String::CPtr s6 = String::create("-9007199254740990");
     Value v6 = json::parse(s6);
-    ASSERT_TRUE(v6.equals(-9007199254740990LL));
+    ASSERT_TRUE(v6.equals(static_cast<Long>(-9007199254740990)));
 
     String::CPtr s7 = String::create("-9007199254740991");
     Value v7 = json::parse(s7);
-    ASSERT_TRUE(v7.equals(-9007199254740991LL));
+    ASSERT_TRUE(v7.equals(static_cast<Long>(-9007199254740991)));
 
     String::CPtr s8 = String::create("-9007199254740992");
     Value v8 = json::parse(s8);
