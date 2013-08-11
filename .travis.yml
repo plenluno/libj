@@ -3,6 +3,9 @@ language: cpp
 compiler:
   - gcc
 
+install:
+  - sudo apt-get install cmake valgrind
+
 before_script:
   - mkdir build
   - cd build
@@ -10,4 +13,7 @@ before_script:
 
 script:
   - make
+
+after_script:
   - gtest/libj-test
+  - valgrind --leak-check=full gtest/libj-test
