@@ -65,12 +65,12 @@ inline void uintToString(const Value& val, char* buf, Size len) {
 
 inline void longToString(const Value& val, char* buf, Size len) {
     Long l = to<Long>(val, static_cast<Long>(0));
-    snprintf(buf, len, "%lld", l);
+    snprintf(buf, len, "%lld", static_cast<long long>(l));
 }
 
 inline void ulongToString(const Value& val, char* buf, Size len) {
     ULong ul = to<ULong>(val, static_cast<ULong>(0));
-    snprintf(buf, len, "%lld", ul);
+    snprintf(buf, len, "%llu", static_cast<unsigned long long>(ul));
 }
 
 inline void sizeToString(const Value& val, char* buf, Size len) {
