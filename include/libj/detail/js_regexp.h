@@ -58,9 +58,7 @@ class JsRegExp : public JsObject<I> {
 
     virtual Size lastIndex() const {
         LIBJ_STATIC_SYMBOL_DEF(symLastIndex, "lastIndex");
-        Size lastIndex = 0;
-        to<Size>(this->get(symLastIndex), &lastIndex);
-        return lastIndex;
+        return to<Size>(this->get(symLastIndex));
     }
 
     virtual JsArray::Ptr exec(String::CPtr str) {

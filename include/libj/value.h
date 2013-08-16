@@ -15,7 +15,7 @@ Boolean to(
     typename detail::remove_reference_and_const<T>::type* out);
 
 template<typename T>
-T to(const Value& val, T dflt);
+T to(const Value& val, T dflt = static_cast<T>(0));
 
 template<typename T>
 typename Type<T>::Ptr toPtr(const Value& val);

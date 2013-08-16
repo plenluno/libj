@@ -365,6 +365,21 @@ TEST(GTestValue, TestTo11) {
     ASSERT_TRUE(!s);
 }
 
+TEST(GTestValue, TestTo12) {
+    Value v = 5;
+    int i = to<int>(v);
+    ASSERT_EQ(5, i);
+
+    i = to<int>(v, 3);
+    ASSERT_EQ(5, i);
+
+    double d = to<double>(v);
+    ASSERT_EQ(0.0, d);
+
+    d = to<double>(v, 3.3);
+    ASSERT_EQ(3.3, d);
+}
+
 TEST(GTestValue, TestInstanceOf) {
     String::CPtr s = String::create("abc");
     Value v = s;
