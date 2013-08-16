@@ -10,10 +10,12 @@ namespace libj {
 typedef detail::Value Value;
 
 template<typename T>
-T to(const Value& val, T dflt);
+Boolean to(
+    const Value& val,
+    typename detail::remove_reference_and_const<T>::type* out);
 
 template<typename T>
-Boolean to(const Value& val, T* out);
+T to(const Value& val, T dflt);
 
 template<typename T>
 typename Type<T>::Ptr toPtr(const Value& val);

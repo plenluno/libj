@@ -4,7 +4,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// modified boost::any for libj by Plenluno
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// modified boost::any for libj
 
 #ifndef LIBJ_DETAIL_VALUE_H_
 #define LIBJ_DETAIL_VALUE_H_
@@ -287,7 +288,7 @@ class Value {
 
  private:
     template<typename T>
-    friend Boolean to(
+    friend Boolean _to(
         Value* operand,
         T** out,
         Boolean instanceof = false);
@@ -344,7 +345,7 @@ class remove_reference_and_const {
 #endif  // LIBJ_USE_CXX11
 
 template<typename T>
-inline Boolean to(Value* operand, T** out, Boolean instanceof) {
+inline Boolean _to(Value* operand, T** out, Boolean instanceof) {
     if (operand &&
         (operand->type() == Type<T>::id() ||
          (operand->isNull() && Classify<T>::isObject) ||
@@ -359,22 +360,22 @@ inline Boolean to(Value* operand, T** out, Boolean instanceof) {
 }
 
 template<typename T>
-inline Boolean to(
+inline Boolean _to(
     const Value* operand,
     const T** out,
     Boolean instanceof = false) {
     typedef typename remove_const<T>::type NonConst;
-    return to<NonConst>(
+    return _to<NonConst>(
         const_cast<Value*>(operand),
         const_cast<T**>(out),
         instanceof);
 }
 
 template<typename T>
-inline T to(const Value& operand, T dflt) {
+inline T _to(const Value& operand, T dflt) {
     typedef typename remove_reference_and_const<T>::type NonRefConst;
     NonRefConst* result;
-    if (to<NonRefConst>(&const_cast<Value&>(operand), &result, false)) {
+    if (_to<NonRefConst>(&const_cast<Value&>(operand), &result, false)) {
         return *result;
     } else {
         return dflt;
@@ -382,14 +383,14 @@ inline T to(const Value& operand, T dflt) {
 }
 
 template<typename T>
-inline Boolean to(
+inline Boolean _to(
     const Value& operand,
     typename remove_reference_and_const<T>::type* out,
     Boolean instanceof = false) {
     if (!out) return false;
     typedef typename remove_reference_and_const<T>::type NonRefConst;
     NonRefConst* result;
-    if (to<NonRefConst>(&const_cast<Value&>(operand), &result, instanceof)) {
+    if (_to<NonRefConst>(&const_cast<Value&>(operand), &result, instanceof)) {
         *out = *result;
         return true;
     } else {

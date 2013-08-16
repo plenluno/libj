@@ -260,19 +260,19 @@ TEST(GTestValue, TestTo8) {
     Value* vp = &v;
 
     int* ip;
-    ASSERT_TRUE(to<int>(vp, &ip));
+    ASSERT_TRUE(detail::_to<int>(vp, &ip));
     ASSERT_EQ(3, *ip);
 
     v = 5;
     const int* cip;
-    ASSERT_TRUE(to<int>(vp, &cip));
+    ASSERT_TRUE(detail::_to<int>(vp, &cip));
     ASSERT_EQ(5, *cip);
 
     // differ from boost::any!
-    ASSERT_FALSE(to<const int>(vp, &cip));
+    ASSERT_FALSE(detail::_to<const int>(vp, &cip));
 
     int64_t* lp;
-    ASSERT_FALSE(to<int64_t>(vp, &lp));
+    ASSERT_FALSE(detail::_to<int64_t>(vp, &lp));
 }
 
 TEST(GTestAny, TestCast8) {
@@ -300,16 +300,16 @@ TEST(GTestValue, TestTo9) {
     const Value* vp = &v;
 
     const int* cip;
-    ASSERT_TRUE(to<int>(vp, &cip));
+    ASSERT_TRUE(detail::_to<int>(vp, &cip));
     ASSERT_EQ(3, *cip);
 
     v = 5;
-    ASSERT_TRUE(to<const int>(vp, &cip));
+    ASSERT_TRUE(detail::_to<const int>(vp, &cip));
     ASSERT_EQ(5, *cip);
 
     const int64_t* clp;
-    ASSERT_FALSE(to<int64_t>(vp, &clp));
-    ASSERT_FALSE(to<const int64_t>(vp, &clp));
+    ASSERT_FALSE(detail::_to<int64_t>(vp, &clp));
+    ASSERT_FALSE(detail::_to<const int64_t>(vp, &clp));
 }
 
 TEST(GTestAny, TestCast9) {
