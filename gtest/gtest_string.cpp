@@ -486,8 +486,6 @@ TEST(GTestString, TestValueOf) {
     ASSERT_TRUE(String::valueOf(v)->equals(s));
 }
 
-#include <iostream>
-
 TEST(GTestString, TestToStdString) {
     String::CPtr s1 = String::create();
     ASSERT_EQ(0, s1->toStdString().compare(""));
@@ -532,6 +530,14 @@ TEST(GTestString, TestToStdString) {
     ASSERT_TRUE(s6->equals(s3));
     ASSERT_TRUE(s7->equals(s3));
     ASSERT_TRUE(s8->equals(s3));
+}
+
+TEST(GTestString, TestStr) {
+    ASSERT_TRUE(str("abc")->equals(String::create("abc")));
+#ifdef LIBJ_USE_CXX11
+    ASSERT_TRUE(str(u"abc")->equals(String::create("abc")));
+    ASSERT_TRUE(str(U"abc")->equals(String::create("abc")));
+#endif
 }
 
 }  // namespace libj

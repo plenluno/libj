@@ -87,7 +87,15 @@ class String : LIBJ_IMMUTABLE(String)
     virtual std::u32string toStdU32String() const = 0;
 };
 
+String::CPtr str(const char* utf8);
+
+String::CPtr str(const char16_t* utf16);
+
+String::CPtr str(const char32_t* utf32);
+
 }  // namespace libj
+
+#include <libj/impl/string.h>
 
 #ifdef LIBJ_DEBUG
 # define LIBJ_STATIC_CONST_STRING_DEF(N, V) \
