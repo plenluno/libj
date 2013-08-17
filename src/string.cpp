@@ -12,21 +12,37 @@ String::CPtr String::create() {
 }
 
 String::CPtr String::create(Char c, Size n) {
-    return CPtr(new detail::String(c, n));
+    if (n) {
+        return CPtr(new detail::String(c, n));
+    } else {
+        return create();
+    }
 }
 
 String::CPtr String::create(const std::u16string& s16) {
-    return CPtr(new detail::String(s16));
+    if (s16.length()) {
+        return CPtr(new detail::String(s16));
+    } else {
+        return create();
+    }
 }
 
 String::CPtr String::create(const std::u32string& s32) {
-    return CPtr(new detail::String(s32));
+    if (s32.length()) {
+        return CPtr(new detail::String(s32));
+    } else {
+        return create();
+    }
 }
 
 String::CPtr String::create(
     const void* data, Encoding enc, Size len, Size max) {
     if (data) {
-        return CPtr(new detail::String(data, enc, len, max));
+        if (len && max) {
+            return CPtr(new detail::String(data, enc, len, max));
+        } else {
+            return create();
+        }
     } else {
         return null();
     }
