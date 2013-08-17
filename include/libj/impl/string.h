@@ -5,6 +5,10 @@
 
 namespace libj {
 
+inline String::CPtr str() {
+    return String::create();
+}
+
 inline String::CPtr str(const char* utf8) {
     return String::create(utf8, String::UTF8);
 }

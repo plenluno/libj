@@ -533,6 +533,8 @@ TEST(GTestString, TestToStdString) {
 }
 
 TEST(GTestString, TestStr) {
+    ASSERT_EQ(String::create(), str());
+    ASSERT_NE(String::create("abc"), str("abc"));
     ASSERT_TRUE(str("abc")->equals(String::create("abc")));
 #ifdef LIBJ_USE_CXX11
     ASSERT_TRUE(str(u"abc")->equals(String::create("abc")));

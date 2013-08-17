@@ -87,6 +87,8 @@ class String : LIBJ_IMMUTABLE(String)
     virtual std::u32string toStdU32String() const = 0;
 };
 
+String::CPtr str();
+
 String::CPtr str(const char* utf8);
 
 String::CPtr str(const char16_t* utf16);
