@@ -4,6 +4,7 @@
 #define LIBJ_DETAIL_STRING_BUILDER_H_
 
 #include <libj/this.h>
+#include <libj/symbol.h>
 #include <libj/detail/to_string.h>
 
 #include <assert.h>
@@ -30,30 +31,33 @@ class StringBuilder : public I {
     }
 
     virtual Ptr append(const Value& val) {
-        if (val.isPrimitive()) {
+        LIBJ_STATIC_SYMBOL_DEF(symNull,      "null");
+        LIBJ_STATIC_SYMBOL_DEF(symUndefined, "undefined");
+
+        if (val.isObject()) {
+            String::CPtr s = toCPtr<Object>(val)->toString();
+            if (s) {
+                buf_.append(s->data());
+            } else {
+                assert(false);
+                buf_.append(symNull->data());
+            }
+        } else if (val.isPrimitive()) {
             const Size kLen = 64;
             char buf[kLen];
             if (primitiveToString(val, buf, kLen)) {
                 return StringBuilder::appendCStr(buf);
             } else {
                 assert(false);
-                return StringBuilder::appendCStr("null");
-            }
-        } else if (val.isObject()) {
-            String::CPtr s = toCPtr<Object>(val)->toString();
-            if (s) {
-                buf_.append(s->data());
-                return LIBJ_THIS_PTR(I);
-            } else {
-                assert(false);
-                return StringBuilder::appendCStr("null");
+                buf_.append(symNull->data());
             }
         } else if (val.isNull()) {
-            return StringBuilder::appendCStr("null");
+            buf_.append(symNull->data());
         } else {
             assert(val.isUndefined());
-            return StringBuilder::appendCStr("undefined");
+            buf_.append(symUndefined->data());
         }
+        return LIBJ_THIS_PTR(I);
     }
 
     virtual Ptr appendChar(Char c) {
@@ -62,10 +66,14 @@ class StringBuilder : public I {
     }
 
     virtual Ptr appendCStr(const char* cstr) {
-        if (!cstr) return StringBuilder::appendCStr("null");
+        LIBJ_STATIC_SYMBOL_DEF(symNull, "null");
 
-        while (Char c = static_cast<Char>(*cstr++)) {
-            buf_.push_back(c);
+        if (cstr) {
+            while (Char c = static_cast<Char>(*cstr++)) {
+                buf_.push_back(c);
+            }
+        } else {
+            buf_.append(symNull->data());
         }
         return LIBJ_THIS_PTR(I);
     }
