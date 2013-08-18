@@ -178,6 +178,7 @@ class String : public libj::String {
 
         assert(!!that);
         CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
+        assert(!isInterned() || !other->isInterned() || this != &(*other));
         return str_.compare(LIBJ_INTERNAL_STRING(other));
     }
 
@@ -190,6 +191,7 @@ class String : public libj::String {
 
         assert(!!that);
         CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
+        assert(!isInterned() || !other->isInterned() || this != &(*other));
         return str_ == LIBJ_INTERNAL_STRING(other);
     }
 
