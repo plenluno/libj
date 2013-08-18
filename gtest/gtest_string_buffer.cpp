@@ -72,6 +72,13 @@ TEST(GTestStringBuffer, TestToString2) {
     ASSERT_TRUE(sb->toString()->equals(e3));
 }
 
+TEST(GTestStringBuffer, TestAppendBoolean) {
+    StringBuffer::Ptr sb = StringBuffer::create();
+    sb->append(true);
+    sb->append(false);
+    ASSERT_TRUE(sb->toString()->equals(String::create("truefalse")));
+}
+
 TEST(GTestStringBuffer, TestAppendManyTimes) {
     const char a[] = "abcde";
     const char u[] = {

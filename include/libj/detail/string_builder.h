@@ -33,6 +33,8 @@ class StringBuilder : public I {
     virtual Ptr append(const Value& val) {
         LIBJ_STATIC_SYMBOL_DEF(symNull,      "null");
         LIBJ_STATIC_SYMBOL_DEF(symUndefined, "undefined");
+        LIBJ_STATIC_SYMBOL_DEF(symTrue,      "true");
+        LIBJ_STATIC_SYMBOL_DEF(symFalse,     "false");
 
         if (val.isObject()) {
             String::CPtr s = toCPtr<Object>(val)->toString();
@@ -45,7 +47,13 @@ class StringBuilder : public I {
         } else if (val.isPrimitive()) {
             const Size kLen = 64;
             char buf[kLen];
-            if (primitiveToString(val, buf, kLen)) {
+            if (val.is<Boolean>()) {
+                if (to<Boolean>(val)) {
+                    buf_.append(symTrue->data());
+                } else {
+                    buf_.append(symFalse->data());
+                }
+            } else if (primitiveToString(val, buf, kLen)) {
                 return StringBuilder::appendCStr(buf);
             } else {
                 assert(false);

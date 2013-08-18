@@ -60,6 +60,8 @@ String::CPtr String::intern(
 String::CPtr String::valueOf(const Value& val) {
     LIBJ_STATIC_SYMBOL_DEF(symNull,      "null");
     LIBJ_STATIC_SYMBOL_DEF(symUndefined, "undefined");
+    LIBJ_STATIC_SYMBOL_DEF(symTrue,      "true");
+    LIBJ_STATIC_SYMBOL_DEF(symFalse,     "false");
 
     const Size kLen = 64;
     char buf[kLen];
@@ -69,6 +71,8 @@ String::CPtr String::valueOf(const Value& val) {
         return symUndefined;
     } else if (val.isObject()) {
         return toCPtr<Object>(val)->toString();
+    } else if (val.is<Boolean>()) {
+        return to<Boolean>(val) ? symTrue : symFalse;
     } else if (detail::primitiveToString(val, buf, kLen)) {
         return String::create(buf);
     } else {

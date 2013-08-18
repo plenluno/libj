@@ -109,8 +109,6 @@ static StringBuilder::Ptr collectionToJson(
 static StringBuilder::Ptr stringify(
     const Value& val,
     StringBuilder::Ptr sb) {
-    const Size kLen = 64;
-    char buf[kLen];
     // 'undefined' only in collectionToJson
     if (val.isNull() || val.isUndefined()) {
         sb->appendCStr("null");
@@ -120,12 +118,11 @@ static StringBuilder::Ptr stringify(
         mapToJson(toCPtr<Map>(val), sb);
     } else if (val.is<Collection>()) {
         collectionToJson(toCPtr<Collection>(val), sb);
-    } else if (val.is<Object>()) {
+    } else if (val.isObject()) {
         sb->appendCStr("null");
-    } else if (detail::primitiveToString(val, buf, kLen)) {
-        sb->appendCStr(buf);
     } else {
-        assert(false);
+        assert(val.isPrimitive());
+        sb->append(val);
     }
     return sb;
 }

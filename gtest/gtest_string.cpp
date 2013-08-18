@@ -444,6 +444,9 @@ TEST(GTestString, TestValueOf) {
     v = String::null();
     ASSERT_TRUE(String::valueOf(v)->equals(String::create("null")));
 
+    v = true;
+    ASSERT_TRUE(String::valueOf(v)->equals(String::create("true")));
+
     v = false;
     ASSERT_TRUE(String::valueOf(v)->equals(String::create("false")));
 

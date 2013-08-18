@@ -13,26 +13,6 @@
 namespace libj {
 namespace detail {
 
-inline void booleanToString(const Value& val, char* buf, Size len) {
-    if (len < 6) return;
-
-    Boolean b = to<Boolean>(val);
-    if (b) {
-        buf[0] = 't';
-        buf[1] = 'r';
-        buf[2] = 'u';
-        buf[3] = 'e';
-        buf[4] = 0;
-    } else {
-        buf[0] = 'f';
-        buf[1] = 'a';
-        buf[2] = 'l';
-        buf[3] = 's';
-        buf[4] = 'e';
-        buf[5] = 0;
-    }
-}
-
 inline void byteToString(const Value& val, char* buf, Size len) {
     Byte b = to<Byte>(val);
     snprintf(buf, len, "%d", b);
@@ -94,9 +74,8 @@ inline void doubleToString(const Value& val, char* buf, Size len) {
 }
 
 inline Boolean primitiveToString(const Value& val, char* buf, Size len) {
-    if (val.is<Boolean>()) {
-        booleanToString(val, buf, len);
-    } else if (val.is<Byte>()) {
+    assert(!val.is<Boolean>());
+    if (val.is<Byte>()) {
         byteToString(val, buf, len);
     } else if (val.is<UByte>()) {
         ubyteToString(val, buf, len);
