@@ -12,14 +12,16 @@ namespace detail {
 
 class JsArrayBuffer : LIBJ_JS_ARRAY_BUFFER(JsArrayBuffer)
  public:
-    JsArrayBuffer(Size length)
+    JsArrayBuffer(Size length, Boolean init = true)
         : length_(length)
         , buf64_(0) {
         if (length) {
             Size len64 = (length + 7) >> 3;
             buf64_ = new ULong[len64 + 1];
-            for (Size i = 0; i <= len64; i++) {
-                buf64_[i] = 0;
+            if (init) {
+                for (Size i = 0; i <= len64; i++) {
+                    buf64_[i] = 0;
+                }
             }
         }
     }
