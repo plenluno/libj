@@ -59,15 +59,6 @@ class Value {
         return content ? content->type() : 0;
     }
 
-    template<typename T>
-    Boolean is() const {
-        if (isPtr() || isCPtr()) {
-            return instanceof(Type<T>::id());
-        } else {
-            return type() == Type<T>::id();
-        }
-    }
-
     Boolean instanceof(TypeId id) const {
         return content ? content->instanceof(id) : false;
     }
@@ -80,12 +71,31 @@ class Value {
         return content ? content->isNull() : false;
     }
 
+    Boolean isPrimitive() const {
+        return content ? content->isPrimitive() : false;
+    }
+
+    Boolean isObject() const {
+        return content ? content->isObject() : false;
+    }
+
     Boolean isPtr() const {
         return content ? content->isPtr() : false;
     }
 
     Boolean isCPtr() const {
         return content ? content->isCPtr() : false;
+    }
+
+    template<typename T>
+    Boolean is() const {
+        if (isNull()) {
+            return false;
+        } else if (isObject()) {
+            return instanceof(Type<T>::id());
+        } else {
+            return type() == Type<T>::id();
+        }
     }
 
     Int compareTo(const Value& val) const {
@@ -146,6 +156,10 @@ class Value {
 
         virtual Boolean isNull() const = 0;
 
+        virtual Boolean isPrimitive() const = 0;
+
+        virtual Boolean isObject() const = 0;
+
         virtual Boolean isPtr() const = 0;
 
         virtual Boolean isCPtr() const = 0;
@@ -178,6 +192,14 @@ class Value {
 
         virtual Boolean isNull() const {
             return !held;
+        }
+
+        virtual Boolean isPrimitive() const {
+            return false;
+        }
+
+        virtual Boolean isObject() const {
+            return !!held;
         }
 
         virtual Boolean isPtr() const {
@@ -245,6 +267,14 @@ class Value {
         }
 
         virtual Boolean isNull() const {
+            return false;
+        }
+
+        virtual Boolean isPrimitive() const {
+            return true;
+        }
+
+        virtual Boolean isObject() const {
             return false;
         }
 

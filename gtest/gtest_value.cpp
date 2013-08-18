@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <boost/any.hpp>
@@ -43,6 +43,34 @@ TEST(GTestValue, TestIsNull) {
 
     v = 5;
     ASSERT_FALSE(v.isNull());
+}
+
+TEST(GTestValue, TestIsPrimitive) {
+    Value v;
+    ASSERT_FALSE(v.isPrimitive());
+
+    v = 7;
+    ASSERT_TRUE(v.isPrimitive());
+
+    v = String::null();
+    ASSERT_FALSE(v.isPrimitive());
+
+    v = String::create();
+    ASSERT_FALSE(v.isPrimitive());
+}
+
+TEST(GTestValue, TestIsObject) {
+    Value v;
+    ASSERT_FALSE(v.isObject());
+
+    v = 7;
+    ASSERT_FALSE(v.isObject());
+
+    v = String::null();
+    ASSERT_FALSE(v.isObject());
+
+    v = String::create();
+    ASSERT_TRUE(v.isObject());
 }
 
 TEST(GTestValue, TestIsPtrAndIsCPtr) {
@@ -355,6 +383,10 @@ TEST(GTestValue, TestTo11) {
     Immutable::CPtr i;
     ASSERT_TRUE(to<Immutable::CPtr>(v, &i));
     ASSERT_TRUE(!i);
+
+    Mutable::Ptr m = ArrayList::create();
+    ASSERT_TRUE(to<Mutable::Ptr>(v, &m));
+    ASSERT_TRUE(!m);
 
     Double d;
     ASSERT_FALSE(to<Double>(v, &d));
