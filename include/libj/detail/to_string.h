@@ -10,6 +10,8 @@
 #include <libj/platform/windows.h>
 #endif
 
+#include <assert.h>
+
 namespace libj {
 namespace detail {
 
