@@ -4,6 +4,7 @@
 #define LIBJ_DETAIL_STRING_BUILDER_H_
 
 #include <libj/this.h>
+#include <libj/detail/to_string.h>
 
 #include <assert.h>
 
@@ -29,17 +30,29 @@ class StringBuilder : public I {
     }
 
     virtual Ptr append(const Value& val) {
-        String::CPtr s = String::valueOf(val);
-        if (s) {
-#ifdef LIBJ_USE_UTF32
-            buf_.append(s->toStdU32String());
-#else
-            buf_.append(s->toStdU16String());
-#endif
-            return LIBJ_THIS_PTR(I);
-        } else {
-            assert(false);
+        if (val.isPrimitive()) {
+            const Size kLen = 64;
+            char buf[kLen];
+            if (primitiveToString(val, buf, kLen)) {
+                return StringBuilder::appendCStr(buf);
+            } else {
+                assert(false);
+                return StringBuilder::appendCStr("null");
+            }
+        } else if (val.isObject()) {
+            String::CPtr s = toCPtr<Object>(val)->toString();
+            if (s) {
+                buf_.append(s->data());
+                return LIBJ_THIS_PTR(I);
+            } else {
+                assert(false);
+                return StringBuilder::appendCStr("null");
+            }
+        } else if (val.isNull()) {
             return StringBuilder::appendCStr("null");
+        } else {
+            assert(val.isUndefined());
+            return StringBuilder::appendCStr("undefined");
         }
     }
 
