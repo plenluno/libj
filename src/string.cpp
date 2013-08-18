@@ -57,29 +57,18 @@ String::CPtr String::intern(
     return intern(String::create(data, enc, len, max));
 }
 
-static inline String::CPtr objectToString(const Value& val) {
-    LIBJ_STATIC_SYMBOL_DEF(symNull, "null");
-
-    String::CPtr s = toCPtr<String>(val);
-    if (s) return s;
-
-    Object::CPtr o = toCPtr<Object>(val);
-    if (o) {
-        return o->toString();
-    } else {
-        return symNull;
-    }
-}
-
 String::CPtr String::valueOf(const Value& val) {
+    LIBJ_STATIC_SYMBOL_DEF(symNull,      "null");
     LIBJ_STATIC_SYMBOL_DEF(symUndefined, "undefined");
 
     const Size kLen = 64;
     char buf[kLen];
-    if (val.isUndefined()) {
+    if (val.isNull()) {
+        return symNull;
+    } else if (val.isUndefined()) {
         return symUndefined;
-    } else if (val.isPtr() || val.isCPtr()) {
-        return objectToString(val);
+    } else if (val.isObject()) {
+        return toCPtr<Object>(val)->toString();
     } else if (detail::primitiveToString(val, buf, kLen)) {
         return String::create(buf);
     } else {
