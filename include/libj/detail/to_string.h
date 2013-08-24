@@ -23,7 +23,7 @@ inline const Char* signedToString(const Value& val, Char* buf, Size len) {
 
     T radix = 10;
     do {
-        *cp-- = '0' + t % radix;
+        *cp-- = static_cast<Char>('0' + t % radix);
         t /= radix;
     } while (t > 0);
 
@@ -44,7 +44,7 @@ inline const Char* unsignedToString(const Value& val, Char* buf, Size len) {
 
     T radix = 10;
     do {
-        *cp-- = '0' + t % radix;
+        *cp-- = static_cast<Char>('0' + t % radix);
         t /= radix;
     } while (t > 0);
 
