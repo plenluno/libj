@@ -45,19 +45,32 @@ class StringBuilder : public I {
                 buf_.append(symNull->data());
             }
         } else if (val.isPrimitive()) {
-            const Size kLen = 64;
-            char buf[kLen];
             if (val.is<Boolean>()) {
                 if (to<Boolean>(val)) {
                     buf_.append(symTrue->data());
                 } else {
                     buf_.append(symFalse->data());
                 }
-            } else if (primitiveToString(val, buf, kLen)) {
+            } else if (val.is<Double>()) {
+                const Size kLen = 64;
+                char buf[kLen];
+                doubleToString(val, buf, kLen);
+                return StringBuilder::appendCStr(buf);
+            } else if (val.is<Float>()) {
+                const Size kLen = 64;
+                char buf[kLen];
+                floatToString(val, buf, kLen);
                 return StringBuilder::appendCStr(buf);
             } else {
-                assert(false);
-                buf_.append(symNull->data());
+                const Size kLen = 64;
+                Char buf[kLen];
+                const Char* s = integerToString(val, buf, kLen);
+                if (s) {
+                    buf_.append(s);
+                } else {
+                    assert(false);
+                    buf_.append(symNull->data());
+                }
             }
         } else if (val.isNull()) {
             buf_.append(symNull->data());

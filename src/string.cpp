@@ -63,20 +63,23 @@ String::CPtr String::valueOf(const Value& val) {
     LIBJ_STATIC_SYMBOL_DEF(symTrue,      "true");
     LIBJ_STATIC_SYMBOL_DEF(symFalse,     "false");
 
-    const Size kLen = 64;
-    char buf[kLen];
-    if (val.isNull()) {
-        return symNull;
-    } else if (val.isUndefined()) {
-        return symUndefined;
-    } else if (val.isObject()) {
+    if (val.isObject()) {
         return toCPtr<Object>(val)->toString();
-    } else if (val.is<Boolean>()) {
-        return to<Boolean>(val) ? symTrue : symFalse;
-    } else if (detail::primitiveToString(val, buf, kLen)) {
-        return String::create(buf);
+    } else if (val.isPrimitive()) {
+        if (val.is<Boolean>()) {
+            return to<Boolean>(val) ? symTrue : symFalse;
+        } else if (val.is<Double>()) {
+            return detail::doubleToString(val);
+        } else if (val.is<Float>()) {
+            return detail::floatToString(val);
+        } else {
+            return detail::integerToString(val);
+        }
+    } else if (val.isNull()) {
+        return symNull;
     } else {
-        return null();
+        assert(val.isUndefined());
+        return symUndefined;
     }
 }
 

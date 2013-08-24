@@ -6,63 +6,86 @@
 #include <libj/value.h>
 #include <libj/glue/dtoa.h>
 
-#ifdef LIBJ_PF_WINDOWS
-#include <libj/platform/windows.h>
-#endif
-
 #include <assert.h>
 
 namespace libj {
 namespace detail {
 
-inline void byteToString(const Value& val, char* buf, Size len) {
-    Byte b = to<Byte>(val);
-    snprintf(buf, len, "%d", b);
+template<typename T>
+inline const Char* signedToString(const Value& val, Char* buf, Size len) {
+    T t = to<T>(val);
+
+    Boolean sign = t < 0;
+    if (sign) t = -t;
+
+    Char* cp = buf + len - 1;
+    *cp-- = 0;
+
+    T radix = 10;
+    do {
+        *cp-- = '0' + t % radix;
+        t /= radix;
+    } while (t > 0);
+
+    if (sign) {
+        *cp = '-';
+        return cp;
+    } else {
+        return cp + 1;
+    }
 }
 
-inline void ubyteToString(const Value& val, char* buf, Size len) {
-    UByte ub = to<UByte>(val);
-    snprintf(buf, len, "%d", ub);
+template<typename T>
+inline const Char* unsignedToString(const Value& val, Char* buf, Size len) {
+    T t = to<T>(val);
+
+    Char* cp = buf + len - 1;
+    *cp-- = 0;
+
+    T radix = 10;
+    do {
+        *cp-- = '0' + t % radix;
+        t /= radix;
+    } while (t > 0);
+
+    return cp + 1;
 }
 
-inline void shortToString(const Value& val, char* buf, Size len) {
-    Short sh = to<Short>(val);
-    snprintf(buf, len, "%d", sh);
+inline const Char* integerToString(const Value& val, Char* buf, Size len) {
+    if (val.is<Int>()) {
+        return signedToString<Int>(val, buf, len);
+    } else if (val.is<Long>()) {
+        return signedToString<Long>(val, buf, len);
+    } else if (val.is<Size>()) {
+        return unsignedToString<Size>(val, buf, len);
+    } else if (val.is<UInt>()) {
+        return unsignedToString<UInt>(val, buf, len);
+    } else if (val.is<ULong>()) {
+        return unsignedToString<ULong>(val, buf, len);
+    } else if (val.is<Byte>()) {
+        return signedToString<Byte>(val, buf, len);
+    } else if (val.is<UByte>()) {
+        return unsignedToString<UByte>(val, buf, len);
+    } else if (val.is<Short>()) {
+        return signedToString<Short>(val, buf, len);
+    } else if (val.is<UShort>()) {
+        return unsignedToString<UShort>(val, buf, len);
+    } else if (val.is<TypeId>()) {
+        return unsignedToString<TypeId>(val, buf, len);
+    } else {
+        assert(false);
+        return NULL;
+    }
 }
 
-inline void ushortToString(const Value& val, char* buf, Size len) {
-    UShort ush = to<UShort>(val);
-    snprintf(buf, len, "%d", ush);
-}
-
-inline void intToString(const Value& val, char* buf, Size len) {
-    Int i = to<Int>(val);
-    snprintf(buf, len, "%d", i);
-}
-
-inline void uintToString(const Value& val, char* buf, Size len) {
-    UInt ui = to<UInt>(val);
-    snprintf(buf, len, "%d", ui);
-}
-
-inline void longToString(const Value& val, char* buf, Size len) {
-    Long l = to<Long>(val);
-    snprintf(buf, len, "%lld", static_cast<long long>(l));
-}
-
-inline void ulongToString(const Value& val, char* buf, Size len) {
-    ULong ul = to<ULong>(val);
-    snprintf(buf, len, "%llu", static_cast<unsigned long long>(ul));
-}
-
-inline void sizeToString(const Value& val, char* buf, Size len) {
-    Size n = to<Size>(val);
-    snprintf(buf, len, "%zd", n);
-}
-
-inline void typeidToString(const Value& val, char* buf, Size len) {
-    TypeId t = to<TypeId>(val);
-    snprintf(buf, len, "%zd", t);
+inline String::CPtr integerToString(const Value& val) {
+    const Size kLen = 64;
+    Char buf[kLen];
+#ifdef LIBJ_USE_UTF32
+    return String::create(integerToString(val, buf, kLen), String::UTF32);
+#else
+    return String::create(integerToString(val, buf, kLen), String::UTF16);
+#endif
 }
 
 inline void floatToString(const Value& val, char* buf, Size len) {
@@ -70,41 +93,23 @@ inline void floatToString(const Value& val, char* buf, Size len) {
     glue::dtoa::doubleToString(f, buf, len);
 }
 
+inline String::CPtr floatToString(const Value& val) {
+    const Size kLen = 64;
+    char buf[kLen];
+    floatToString(val, buf, kLen);
+    return String::create(buf);
+}
+
 inline void doubleToString(const Value& val, char* buf, Size len) {
     Double d = to<Double>(val);
     glue::dtoa::doubleToString(d, buf, len);
 }
 
-inline Boolean primitiveToString(const Value& val, char* buf, Size len) {
-    assert(!val.is<Boolean>());
-    if (val.is<Byte>()) {
-        byteToString(val, buf, len);
-    } else if (val.is<UByte>()) {
-        ubyteToString(val, buf, len);
-    } else if (val.is<Short>()) {
-        shortToString(val, buf, len);
-    } else if (val.is<UShort>()) {
-        ushortToString(val, buf, len);
-    } else if (val.is<Int>()) {
-        intToString(val, buf, len);
-    } else if (val.is<UInt>()) {
-        uintToString(val, buf, len);
-    } else if (val.is<Long>()) {
-        longToString(val, buf, len);
-    } else if (val.is<ULong>()) {
-        ulongToString(val, buf, len);
-    } else if (val.is<Float>()) {
-        floatToString(val, buf, len);
-    } else if (val.is<Double>()) {
-        doubleToString(val, buf, len);
-    } else if (val.is<Size>()) {
-        sizeToString(val, buf, len);
-    } else if (val.is<TypeId>()) {
-        typeidToString(val, buf, len);
-    } else {
-        return false;
-    }
-    return true;
+inline String::CPtr doubleToString(const Value& val) {
+    const Size kLen = 64;
+    char buf[kLen];
+    doubleToString(val, buf, kLen);
+    return String::create(buf);
 }
 
 }  // namespace detail
