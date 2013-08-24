@@ -539,7 +539,7 @@ TEST(GTestString, TestStr) {
     ASSERT_EQ(String::create(), str());
     ASSERT_NE(String::create("abc"), str("abc"));
     ASSERT_TRUE(str("abc")->equals(String::create("abc")));
-#ifdef LIBJ_USE_CXX11
+#if defined(LIBJ_USE_CXX11) && !defined(LIBJ_USE_MSVC)
     ASSERT_TRUE(str(u"abc")->equals(String::create("abc")));
     ASSERT_TRUE(str(U"abc")->equals(String::create("abc")));
 #endif
