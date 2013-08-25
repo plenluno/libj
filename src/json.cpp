@@ -2,6 +2,7 @@
 
 #include <libj/json.h>
 #include <libj/js_array.h>
+#include <libj/js_date.h>
 #include <libj/js_object.h>
 #include <libj/string_builder.h>
 #include <libj/symbol.h>
@@ -63,6 +64,10 @@ static StringBuilder::Ptr stringToJson(
 static StringBuilder::Ptr mapToJson(
     Map::CPtr m,
     StringBuilder::Ptr sb) {
+    if (m->is<JsDate>()) {
+        return sb->append(toCPtr<JsDate>(m)->toJSON());
+    }
+
     typedef Map::Entry Entry;
     TypedSet<Entry::CPtr>::CPtr es = m->entrySet();
     TypedIterator<Entry::CPtr>::Ptr itr = es->iteratorTyped();

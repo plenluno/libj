@@ -6,6 +6,7 @@
 #include <libj/error.h>
 #include <libj/json.h>
 #include <libj/js_array.h>
+#include <libj/js_date.h>
 #include <libj/js_object.h>
 #include <libj/map.h>
 #include <libj/string_builder.h>
@@ -56,6 +57,9 @@ TEST(GTestJson, TestStringify) {
 
     ASSERT_TRUE(json::stringify(ArrayList::create())
         ->equals(String::create("[]")));
+
+    ASSERT_TRUE(json::stringify(JsDate::create(1364685226134))
+        ->equals(String::create("\"2013-03-30T23:13:46Z\"")));
 
     Map::Ptr m = Map::create();
     m->put(3, false);
