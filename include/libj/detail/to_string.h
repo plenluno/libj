@@ -13,6 +13,10 @@ namespace detail {
 
 template<typename T>
 inline const Char* signedToString(T t, Char* buf, Size len, T radix = 10) {
+    LIBJ_STATIC_CONST_STRING_DEF(symHexits, "0123456789abcdef");
+    static const Char* hexits = symHexits->data();
+    assert(radix >= 2 && radix <= 16);
+
     Boolean sign = t < 0;
     if (sign) t = -t;
 
@@ -20,7 +24,7 @@ inline const Char* signedToString(T t, Char* buf, Size len, T radix = 10) {
     *cp-- = 0;
 
     do {
-        *cp-- = static_cast<Char>('0' + t % radix);
+        *cp-- = hexits[t % radix];
         t /= radix;
     } while (t > 0);
 
@@ -34,11 +38,15 @@ inline const Char* signedToString(T t, Char* buf, Size len, T radix = 10) {
 
 template<typename T>
 inline const Char* unsignedToString(T t, Char* buf, Size len, T radix = 10) {
+    LIBJ_STATIC_CONST_STRING_DEF(symHexits, "0123456789abcdef");
+    static const Char* hexits = symHexits->data();
+    assert(radix >= 2 && radix <= 16);
+
     Char* cp = buf + len - 1;
     *cp-- = 0;
 
     do {
-        *cp-- = static_cast<Char>('0' + t % radix);
+        *cp-- = hexits[t % radix];
         t /= radix;
     } while (t > 0);
 
