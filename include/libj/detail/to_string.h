@@ -12,16 +12,13 @@ namespace libj {
 namespace detail {
 
 template<typename T>
-inline const Char* signedToString(const Value& val, Char* buf, Size len) {
-    T t = to<T>(val);
-
+inline const Char* signedToString(T t, Char* buf, Size len, T radix = 10) {
     Boolean sign = t < 0;
     if (sign) t = -t;
 
     Char* cp = buf + len - 1;
     *cp-- = 0;
 
-    T radix = 10;
     do {
         *cp-- = static_cast<Char>('0' + t % radix);
         t /= radix;
@@ -36,13 +33,10 @@ inline const Char* signedToString(const Value& val, Char* buf, Size len) {
 }
 
 template<typename T>
-inline const Char* unsignedToString(const Value& val, Char* buf, Size len) {
-    T t = to<T>(val);
-
+inline const Char* unsignedToString(T t, Char* buf, Size len, T radix = 10) {
     Char* cp = buf + len - 1;
     *cp-- = 0;
 
-    T radix = 10;
     do {
         *cp-- = static_cast<Char>('0' + t % radix);
         t /= radix;
@@ -53,25 +47,25 @@ inline const Char* unsignedToString(const Value& val, Char* buf, Size len) {
 
 inline const Char* integerToString(const Value& val, Char* buf, Size len) {
     if (val.is<Int>()) {
-        return signedToString<Int>(val, buf, len);
+        return signedToString<Int>(to<Int>(val), buf, len);
     } else if (val.is<Long>()) {
-        return signedToString<Long>(val, buf, len);
+        return signedToString<Long>(to<Long>(val), buf, len);
     } else if (val.is<Size>()) {
-        return unsignedToString<Size>(val, buf, len);
+        return unsignedToString<Size>(to<Size>(val), buf, len);
     } else if (val.is<UInt>()) {
-        return unsignedToString<UInt>(val, buf, len);
+        return unsignedToString<UInt>(to<UInt>(val), buf, len);
     } else if (val.is<ULong>()) {
-        return unsignedToString<ULong>(val, buf, len);
+        return unsignedToString<ULong>(to<ULong>(val), buf, len);
     } else if (val.is<Byte>()) {
-        return signedToString<Byte>(val, buf, len);
+        return signedToString<Byte>(to<Byte>(val), buf, len);
     } else if (val.is<UByte>()) {
-        return unsignedToString<UByte>(val, buf, len);
+        return unsignedToString<UByte>(to<UByte>(val), buf, len);
     } else if (val.is<Short>()) {
-        return signedToString<Short>(val, buf, len);
+        return signedToString<Short>(to<Short>(val), buf, len);
     } else if (val.is<UShort>()) {
-        return unsignedToString<UShort>(val, buf, len);
+        return unsignedToString<UShort>(to<UShort>(val), buf, len);
     } else if (val.is<TypeId>()) {
-        return unsignedToString<TypeId>(val, buf, len);
+        return unsignedToString<TypeId>(to<TypeId>(val), buf, len);
     } else {
         assert(false);
         return NULL;
