@@ -20,7 +20,9 @@ class StringBuffer : LIBJ_MUTABLE(StringBuffer)
 
     virtual Ptr appendChar(Char c) = 0;
 
-    virtual Ptr appendCStr(const char* cstr) = 0;
+    virtual Ptr appendStr(const char* str) = 0;
+
+    virtual Ptr appendStr(const Char* str) = 0;
 
     virtual Boolean setCharAt(Size index, Char c) = 0;
 };

@@ -161,9 +161,9 @@ TEST(GTestJson, TestParseString) {
     s32 += 0x2000b;
     s = String::create(s32);
     StringBuilder::Ptr sb = StringBuilder::create();
-    sb->appendCStr("\"");
+    sb->appendStr("\"");
     sb->append(s);
-    sb->appendCStr("\"");
+    sb->appendStr("\"");
     ASSERT_TRUE(json::parse(sb->toString()).equals(s));
 }
 

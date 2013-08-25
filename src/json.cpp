@@ -30,25 +30,25 @@ static StringBuilder::Ptr stringToJson(
         Char c = s->charAt(i);
         switch (c) {
         case '\b':
-            sb->appendCStr("\\b");
+            sb->appendStr("\\b");
             break;
         case '\f':
-            sb->appendCStr("\\f");
+            sb->appendStr("\\f");
             break;
         case '\n':
-            sb->appendCStr("\\n");
+            sb->appendStr("\\n");
             break;
         case '\r':
-            sb->appendCStr("\\r");
+            sb->appendStr("\\r");
             break;
         case '\t':
-            sb->appendCStr("\\t");
+            sb->appendStr("\\t");
             break;
         case '"':
-            sb->appendCStr("\\\"");
+            sb->appendStr("\\\"");
             break;
         case '\\':
-            sb->appendCStr("\\\\");
+            sb->appendStr("\\\\");
             break;
         case '\0':
         case '\v':
@@ -116,7 +116,7 @@ static StringBuilder::Ptr stringify(
     StringBuilder::Ptr sb) {
     // 'undefined' only in collectionToJson
     if (val.isNull() || val.isUndefined()) {
-        sb->appendCStr("null");
+        sb->appendStr("null");
     } else if (val.is<String>()) {
         stringToJson(toCPtr<String>(val), sb);
     } else if (val.is<Map>()) {
@@ -124,7 +124,7 @@ static StringBuilder::Ptr stringify(
     } else if (val.is<Collection>()) {
         collectionToJson(toCPtr<Collection>(val), sb);
     } else if (val.isObject()) {
-        sb->appendCStr("null");
+        sb->appendStr("null");
     } else {
         assert(val.isPrimitive());
         sb->append(val);

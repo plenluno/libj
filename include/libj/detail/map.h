@@ -88,7 +88,7 @@ class Map : public I {
             if (first) {
                 first = false;
             } else {
-                sb->appendCStr(", ");
+                sb->appendStr(", ");
             }
             sb->append(String::valueOf(e->getKey()));
             sb->appendChar('=');

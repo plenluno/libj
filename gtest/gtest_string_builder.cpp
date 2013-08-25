@@ -109,9 +109,9 @@ TEST(GTestStringBuilder, TestAppendChar) {
 
 TEST(GTestStringBuilder, TestAppendCStr) {
     StringBuilder::Ptr sb = StringBuilder::create();
-    ASSERT_EQ(sb, sb->appendCStr("abc"));
-    ASSERT_EQ(sb, sb->appendCStr(NULL));
-    ASSERT_EQ(sb, sb->appendCStr("123"));
+    ASSERT_EQ(sb, sb->appendStr("abc"));
+    ASSERT_EQ(sb, sb->appendStr(static_cast<const char*>(NULL)));
+    ASSERT_EQ(sb, sb->appendStr("123"));
     ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
 }
 

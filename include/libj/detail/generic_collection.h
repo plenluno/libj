@@ -119,7 +119,7 @@ class GenericCollection : public I {
             if (first) {
                 first = false;
             } else {
-                sb->appendCStr(", ");
+                sb->appendStr(", ");
             }
             sb->append(String::valueOf(v));
         }

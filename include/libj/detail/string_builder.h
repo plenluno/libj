@@ -55,12 +55,12 @@ class StringBuilder : public I {
                 const Size kLen = 64;
                 char buf[kLen];
                 doubleToString(val, buf, kLen);
-                return StringBuilder::appendCStr(buf);
+                return StringBuilder::appendStr(buf);
             } else if (val.is<Float>()) {
                 const Size kLen = 64;
                 char buf[kLen];
                 floatToString(val, buf, kLen);
-                return StringBuilder::appendCStr(buf);
+                return StringBuilder::appendStr(buf);
             } else {
                 const Size kLen = 64;
                 Char buf[kLen];
@@ -86,13 +86,24 @@ class StringBuilder : public I {
         return LIBJ_THIS_PTR(I);
     }
 
-    virtual Ptr appendCStr(const char* cstr) {
+    virtual Ptr appendStr(const char* str) {
         LIBJ_STATIC_SYMBOL_DEF(symNull, "null");
 
-        if (cstr) {
-            while (Char c = static_cast<Char>(*cstr++)) {
+        if (str) {
+            while (Char c = static_cast<Char>(*str++)) {
                 buf_.push_back(c);
             }
+        } else {
+            buf_.append(symNull->data());
+        }
+        return LIBJ_THIS_PTR(I);
+    }
+
+    virtual Ptr appendStr(const Char* str) {
+        LIBJ_STATIC_SYMBOL_DEF(symNull, "null");
+
+        if (str) {
+            buf_.append(str);
         } else {
             buf_.append(symNull->data());
         }

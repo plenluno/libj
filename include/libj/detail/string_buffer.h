@@ -32,9 +32,14 @@ class StringBuffer : public StringBuilder<libj::StringBuffer> {
         return StringBuilder::appendChar(c);
     }
 
-    virtual Ptr appendCStr(const char* cstr) {
+    virtual Ptr appendStr(const char* str) {
         ScopedLock lock(mutex_);
-        return StringBuilder::appendCStr(cstr);
+        return StringBuilder::appendStr(str);
+    }
+
+    virtual Ptr appendStr(const Char* str) {
+        ScopedLock lock(mutex_);
+        return StringBuilder::appendStr(str);
     }
 
     virtual Boolean setCharAt(Size index, Char c) {
