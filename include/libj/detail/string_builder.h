@@ -123,6 +123,10 @@ class StringBuilder : public I {
         return String::create(buf_);
     }
 
+    virtual const Char* data() const {
+        return buf_.data();
+    }
+
  private:
 #ifdef LIBJ_USE_UTF32
     std::u32string buf_;

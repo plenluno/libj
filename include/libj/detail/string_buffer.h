@@ -52,6 +52,11 @@ class StringBuffer : public StringBuilder<libj::StringBuffer> {
         return StringBuilder::toString();
     }
 
+    virtual const Char* data() const {
+        ScopedLock lock(mutex_);
+        return StringBuilder::data();
+    }
+
  private:
     mutable Mutex mutex_;
 };

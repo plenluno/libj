@@ -25,6 +25,8 @@ class StringBuffer : LIBJ_MUTABLE(StringBuffer)
     virtual Ptr appendStr(const Char* str) = 0;
 
     virtual Boolean setCharAt(Size index, Char c) = 0;
+
+    virtual const Char* data() const = 0;
 };
 
 }  // namespace libj
