@@ -115,4 +115,20 @@ TEST(GTestStringBuffer, TestAppendCStr) {
     ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
 }
 
+TEST(GTestStringBuffer, TestAppendStr2) {
+    StringBuffer::Ptr sb = StringBuffer::create();
+    ASSERT_EQ(sb, sb->appendStr(String::create("abc")->data()));
+    ASSERT_EQ(sb, sb->appendStr(static_cast<const Char*>(NULL)));
+    ASSERT_EQ(sb, sb->appendStr(String::create("123")->data()));
+    ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
+}
+
+TEST(GTestStringBuffer, TestData) {
+    StringBuffer::Ptr sb = StringBuffer::create();
+    sb->appendChar('a');
+    sb->appendChar('1');
+    sb->appendStr(sb->data());
+    ASSERT_TRUE(sb->toString()->equals(String::create("a1a1")));
+}
+
 }  // namespace libj

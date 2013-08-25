@@ -107,12 +107,29 @@ TEST(GTestStringBuilder, TestAppendChar) {
     ASSERT_TRUE(sb->toString()->equals(String::create("a1")));
 }
 
-TEST(GTestStringBuilder, TestAppendCStr) {
+TEST(GTestStringBuilder, TestAppendStr) {
     StringBuilder::Ptr sb = StringBuilder::create();
     ASSERT_EQ(sb, sb->appendStr("abc"));
     ASSERT_EQ(sb, sb->appendStr(static_cast<const char*>(NULL)));
     ASSERT_EQ(sb, sb->appendStr("123"));
     ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
+}
+
+
+TEST(GTestStringBuilder, TestAppendStr2) {
+    StringBuilder::Ptr sb = StringBuilder::create();
+    ASSERT_EQ(sb, sb->appendStr(String::create("abc")->data()));
+    ASSERT_EQ(sb, sb->appendStr(static_cast<const Char*>(NULL)));
+    ASSERT_EQ(sb, sb->appendStr(String::create("123")->data()));
+    ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
+}
+
+TEST(GTestStringBuilder, TestData) {
+    StringBuilder::Ptr sb = StringBuilder::create();
+    sb->appendChar('a');
+    sb->appendChar('1');
+    sb->appendStr(sb->data());
+    ASSERT_TRUE(sb->toString()->equals(String::create("a1a1")));
 }
 
 }  // namespace libj
