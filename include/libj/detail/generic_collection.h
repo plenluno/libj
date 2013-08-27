@@ -119,9 +119,9 @@ class GenericCollection : public I {
             if (first) {
                 first = false;
             } else {
-                sb->appendStr(", ");
+                sb->appendStr(LIBJ_U(", "));
             }
-            sb->append(String::valueOf(v));
+            sb->append(v);
         }
         sb->appendChar(']');
         return sb->toString();

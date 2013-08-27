@@ -99,6 +99,16 @@ String::CPtr str(const char32_t* utf32);
 
 #include <libj/impl/string.h>
 
+#if defined(LIBJ_USE_CXX11) && !defined(LIBJ_USE_MSVC)
+# ifdef LIBJ_USE_UTF32
+#  define LIBJ_U(S) U##S
+# else
+#  define LIBJ_U(S) u##S
+# endif
+#else
+# define  LIBJ_U(S) S
+#endif
+
 #ifdef LIBJ_DEBUG
 # define LIBJ_STATIC_CONST_STRING_DEF(N, V) \
     static const libj::String::CPtr N = libj::String::intern(V);

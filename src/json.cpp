@@ -30,25 +30,25 @@ static StringBuilder::Ptr stringToJson(
         Char c = s->charAt(i);
         switch (c) {
         case '\b':
-            sb->appendStr("\\b");
+            sb->appendStr(LIBJ_U("\\b"));
             break;
         case '\f':
-            sb->appendStr("\\f");
+            sb->appendStr(LIBJ_U("\\f"));
             break;
         case '\n':
-            sb->appendStr("\\n");
+            sb->appendStr(LIBJ_U("\\n"));
             break;
         case '\r':
-            sb->appendStr("\\r");
+            sb->appendStr(LIBJ_U("\\r"));
             break;
         case '\t':
-            sb->appendStr("\\t");
+            sb->appendStr(LIBJ_U("\\t"));
             break;
         case '"':
-            sb->appendStr("\\\"");
+            sb->appendStr(LIBJ_U("\\\""));
             break;
         case '\\':
-            sb->appendStr("\\\\");
+            sb->appendStr(LIBJ_U("\\\\"));
             break;
         case '\0':
         case '\v':
@@ -65,7 +65,7 @@ static StringBuilder::Ptr mapToJson(
     Map::CPtr m,
     StringBuilder::Ptr sb) {
     if (m->is<JsDate>()) {
-        return sb->append(toCPtr<JsDate>(m)->toJSON());
+        return sb->appendStr(toCPtr<JsDate>(m)->toJSON()->data());
     }
 
     typedef Map::Entry Entry;
@@ -116,7 +116,7 @@ static StringBuilder::Ptr stringify(
     StringBuilder::Ptr sb) {
     // 'undefined' only in collectionToJson
     if (val.isNull() || val.isUndefined()) {
-        sb->appendStr("null");
+        sb->appendStr(LIBJ_U("null"));
     } else if (val.is<String>()) {
         stringToJson(toCPtr<String>(val), sb);
     } else if (val.is<Map>()) {
@@ -124,7 +124,7 @@ static StringBuilder::Ptr stringify(
     } else if (val.is<Collection>()) {
         collectionToJson(toCPtr<Collection>(val), sb);
     } else if (val.isObject()) {
-        sb->appendStr("null");
+        sb->appendStr(LIBJ_U("null"));
     } else {
         assert(val.isPrimitive());
         sb->append(val);

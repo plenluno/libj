@@ -88,11 +88,11 @@ class Map : public I {
             if (first) {
                 first = false;
             } else {
-                sb->appendStr(", ");
+                sb->appendStr(LIBJ_U(", "));
             }
-            sb->append(String::valueOf(e->getKey()));
+            sb->append(e->getKey());
             sb->appendChar('=');
-            sb->append(String::valueOf(e->getValue()));
+            sb->append(e->getValue());
         }
         sb->appendChar('}');
         return sb->toString();
