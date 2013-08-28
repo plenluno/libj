@@ -42,6 +42,11 @@ class StringBuffer : public StringBuilder<libj::StringBuffer> {
         return StringBuilder::appendStr(str);
     }
 
+    virtual Ptr appendStr(String::CPtr str) {
+        ScopedLock lock(mutex_);
+        return StringBuilder::appendStr(str);
+    }
+
     virtual Boolean setCharAt(Size index, Char c) {
         ScopedLock lock(mutex_);
         return StringBuilder::setCharAt(index, c);

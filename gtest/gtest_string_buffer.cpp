@@ -123,6 +123,14 @@ TEST(GTestStringBuffer, TestAppendStr2) {
     ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
 }
 
+TEST(GTestStringBuffer, TestAppendStr3) {
+    StringBuffer::Ptr sb = StringBuffer::create();
+    ASSERT_EQ(sb, sb->appendStr(String::create("abc")));
+    ASSERT_EQ(sb, sb->appendStr(String::null()));
+    ASSERT_EQ(sb, sb->appendStr(String::create("123")));
+    ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
+}
+
 TEST(GTestStringBuffer, TestData) {
     StringBuffer::Ptr sb = StringBuffer::create();
     sb->appendChar('a');

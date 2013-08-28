@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_STRING_BUFFER_H_
 #define LIBJ_STRING_BUFFER_H_
@@ -23,6 +23,8 @@ class StringBuffer : LIBJ_MUTABLE(StringBuffer)
     virtual Ptr appendStr(const char* str) = 0;
 
     virtual Ptr appendStr(const Char* str) = 0;
+
+    virtual Ptr appendStr(String::CPtr str) = 0;
 
     virtual Boolean setCharAt(Size index, Char c) = 0;
 

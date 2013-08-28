@@ -124,6 +124,14 @@ TEST(GTestStringBuilder, TestAppendStr2) {
     ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
 }
 
+TEST(GTestStringBuilder, TestAppendStr3) {
+    StringBuilder::Ptr sb = StringBuilder::create();
+    ASSERT_EQ(sb, sb->appendStr(String::create("abc")));
+    ASSERT_EQ(sb, sb->appendStr(String::null()));
+    ASSERT_EQ(sb, sb->appendStr(String::create("123")));
+    ASSERT_TRUE(sb->toString()->equals(String::create("abcnull123")));
+}
+
 TEST(GTestStringBuilder, TestData) {
     StringBuilder::Ptr sb = StringBuilder::create();
     sb->appendChar('a');

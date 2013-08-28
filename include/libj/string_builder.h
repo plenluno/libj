@@ -24,6 +24,8 @@ class StringBuilder : LIBJ_MUTABLE(StringBuilder)
 
     virtual Ptr appendStr(const Char* str) = 0;
 
+    virtual Ptr appendStr(String::CPtr str) = 0;
+
     virtual Boolean setCharAt(Size index, Char c) = 0;
 
     virtual const Char* data() const = 0;

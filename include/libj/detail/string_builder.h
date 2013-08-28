@@ -38,12 +38,8 @@ class StringBuilder : public I {
 
         if (val.isObject()) {
             String::CPtr s = toCPtr<Object>(val)->toString();
-            if (s) {
-                buf_.append(s->data());
-            } else {
-                assert(false);
-                buf_.append(symNull->data());
-            }
+            assert(s);
+            buf_.append(s->data());
         } else if (val.isPrimitive()) {
             if (val.is<Boolean>()) {
                 if (to<Boolean>(val)) {
@@ -65,12 +61,8 @@ class StringBuilder : public I {
                 const Size kLen = 64;
                 Char buf[kLen];
                 const Char* s = integerToString(val, buf, kLen);
-                if (s) {
-                    buf_.append(s);
-                } else {
-                    assert(false);
-                    buf_.append(symNull->data());
-                }
+                assert(s);
+                buf_.append(s);
             }
         } else if (val.isNull()) {
             buf_.append(symNull->data());
@@ -104,6 +96,17 @@ class StringBuilder : public I {
 
         if (str) {
             buf_.append(str);
+        } else {
+            buf_.append(symNull->data());
+        }
+        return LIBJ_THIS_PTR(I);
+    }
+
+    virtual Ptr appendStr(String::CPtr str) {
+        LIBJ_STATIC_SYMBOL_DEF(symNull, "null");
+
+        if (str) {
+            buf_.append(str->data());
         } else {
             buf_.append(symNull->data());
         }
