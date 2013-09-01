@@ -421,12 +421,20 @@ TEST(GTestString, TestToLowerCase) {
     String::CPtr s = String::create("Ab#");
     String::CPtr e = String::create("ab#");
     ASSERT_TRUE(s->toLowerCase()->equals(e));
+    ASSERT_EQ(e, e->toLowerCase());
+
+    e = String::create();
+    ASSERT_EQ(e, e->toLowerCase());
 }
 
 TEST(GTestString, TestToUpperCase) {
     String::CPtr s = String::create("Ab#");
     String::CPtr e = String::create("AB#");
     ASSERT_TRUE(s->toUpperCase()->equals(e));
+    ASSERT_EQ(e, e->toUpperCase());
+
+    e = String::create();
+    ASSERT_EQ(e, e->toUpperCase());
 }
 
 TEST(GTestString, TestToString) {

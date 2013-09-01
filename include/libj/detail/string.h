@@ -240,29 +240,47 @@ class String : public libj::String {
     }
 
     virtual CPtr toLowerCase() const {
+        String* s = NULL;
         Size len = length();
-        String* s = new String();
         for (Size i = 0; i < len; i++) {
-            Char c = charAt(i);
+            Char c = str_.at(i);
             if (c >= 'A' && c <= 'Z') {
                 c += 'a' - 'A';
+                if (!s) {
+                    s = new String(*this, 0, i);
+                }
             }
-            s->str_ += c;
+            if (s) {
+                s->str_ += c;
+            }
         }
-        return CPtr(s);
+        if (s) {
+            return CPtr(s);
+        } else {
+            return toString();
+        }
     }
 
     virtual CPtr toUpperCase() const {
+        String* s = NULL;
         Size len = length();
-        String* s = new String();
         for (Size i = 0; i < len; i++) {
-            Char c = charAt(i);
+            Char c = str_.at(i);
             if (c >= 'a' && c <= 'z') {
                 c -= 'a' - 'A';
+                if (!s) {
+                    s = new String(*this, 0, i);
+                }
             }
-            s->str_ += c;
+            if (s) {
+                s->str_ += c;
+            }
         }
-        return CPtr(s);
+        if (s) {
+            return CPtr(s);
+        } else {
+            return toString();
+        }
     }
 
     virtual Boolean isEmpty() const {
