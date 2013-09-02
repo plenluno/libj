@@ -13,7 +13,7 @@ namespace detail {
 
 template<typename T>
 inline const Char* signedToString(T t, Char* buf, Size len, T radix = 10) {
-    LIBJ_STATIC_CONST_STRING_DEF(symHexits, "0123456789abcdef");
+    LIBJ_STATIC_SYMBOL_DEF(symHexits, "0123456789abcdef");
     static const Char* hexits = symHexits->data();
     assert(radix >= 2 && radix <= 16);
 
@@ -38,7 +38,7 @@ inline const Char* signedToString(T t, Char* buf, Size len, T radix = 10) {
 
 template<typename T>
 inline const Char* unsignedToString(T t, Char* buf, Size len, T radix = 10) {
-    LIBJ_STATIC_CONST_STRING_DEF(symHexits, "0123456789abcdef");
+    LIBJ_STATIC_SYMBOL_DEF(symHexits, "0123456789abcdef");
     static const Char* hexits = symHexits->data();
     assert(radix >= 2 && radix <= 16);
 
