@@ -68,13 +68,17 @@ TEST(GTestMap, TestPutAndGet2) {
 
 TEST(GTestMap, TestKeySet) {
     Map::Ptr m = Map::create();
+    Set::CPtr ks = m->keySet();
+    Iterator::Ptr itr = ks->iterator();
+    ASSERT_FALSE(itr->hasNext());
+
     String::CPtr x = String::create("x");
     String::CPtr y = String::create("y");
     m->put(x, 123);
     m->put(y, 456);
 
-    Set::CPtr ks = m->keySet();
-    Iterator::Ptr itr = ks->iterator();
+    ks = m->keySet();
+    itr = ks->iterator();
     ASSERT_TRUE(itr->hasNext());
     String::CPtr v1 = toCPtr<String>(itr->next());
     ASSERT_TRUE(v1->equals(x) || v1->equals(y));
@@ -86,15 +90,21 @@ TEST(GTestMap, TestKeySet) {
 
 TEST(GTestMap, TestEntrySet) {
     Map::Ptr m = Map::create();
+    TypedSet<Map::Entry::CPtr>::CPtr es = m->entrySet();
+    Iterator::Ptr i = es->iterator();
+    TypedIterator<Map::Entry::CPtr>::Ptr ti = es->iteratorTyped();
+    ASSERT_FALSE(i->hasNext());
+    ASSERT_FALSE(ti->hasNext());
+
     String::CPtr x = String::create("x");
     String::CPtr y = String::create("y");
     m->put(x, 123);
     m->put(y, 456);
 
-    TypedSet<Map::Entry::CPtr>::CPtr es = m->entrySet();
+    es = m->entrySet();
 
     // iterator
-    Iterator::Ptr i = es->iterator();
+    i = es->iterator();
     ASSERT_TRUE(i->hasNext());
     Map::Entry::CPtr e1 = toCPtr<Map::Entry>(i->next());
     Value key1 = e1->getKey();
@@ -116,7 +126,7 @@ TEST(GTestMap, TestEntrySet) {
     ASSERT_FALSE(i->hasNext());
 
     // iteratorTyped
-    TypedIterator<Map::Entry::CPtr>::Ptr ti = es->iteratorTyped();
+    ti = es->iteratorTyped();
     ASSERT_TRUE(ti->hasNext());
     e1 = ti->nextTyped();
     key1 = e1->getKey();

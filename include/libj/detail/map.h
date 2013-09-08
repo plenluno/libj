@@ -22,18 +22,21 @@ class Map : public I {
     typedef TypedIterator<typename EntryT::CPtr> EntryIteratorT;
 
  public:
+    Map() : map_(NULL) {}
+
     virtual Size size() const {
-        return map_.size();
+        return map_ ? map_->size() : 0;
     }
 
     virtual Boolean containsKey(const Value& key) const {
-        return map_.find(key) != map_.end();
+        return map_ && map_->find(key) != map_->end();
     }
 
     virtual Boolean containsValue(const Value& val) const {
-        for (CItr itr = map_.begin();
-             itr != map_.end();
-             ++itr) {
+        if (!map_) return false;
+
+        CItr end = map_->end();
+        for (CItr itr = map_->begin(); itr != end; ++itr) {
             if (!itr->second.compareTo(val))
                 return true;
         }
@@ -41,24 +44,29 @@ class Map : public I {
     }
 
     virtual Value get(const Value& key) const {
-        CItr itr = map_.find(key);
-        if (itr != map_.end()) {
-            return itr->second;
+        return _get(key);
+    }
+
+    virtual Value put(const Value& key, const Value& val) {
+        if (map_) {
+            Value v = _get(key);
+            (*map_)[key] = val;
+            return v;
         } else {
+            map_ = new Container();
+            (*map_)[key] = val;
             return UNDEFINED;
         }
     }
 
-    virtual Value put(const Value& key, const Value& val) {
-        Value v = Map::get(key);
-        map_[key] = val;
-        return v;
-    }
-
     virtual Value remove(const Value& key) {
-        Value v = Map::get(key);
-        map_.erase(key);
-        return v;
+        if (map_) {
+            Value v = _get(key);
+            map_->erase(key);
+            return v;
+        } else {
+            return UNDEFINED;
+        }
     }
 
     virtual Set::CPtr keySet() const {
@@ -70,11 +78,13 @@ class Map : public I {
     }
 
     virtual void clear() {
-        map_.clear();
+        if (map_) {
+            map_->clear();
+        }
     }
 
     virtual Boolean isEmpty() const {
-        return map_.size() == 0;
+        return map_ ? map_->size() == 0 : true;
     }
 
     virtual String::CPtr toString() const {
@@ -117,11 +127,11 @@ class Map : public I {
 
          public:
             virtual Boolean hasNext() const {
-                return pos_ != end_;
+                return map_ && pos_ != end_;
             }
 
             virtual Value next() {
-                if (pos_ == end_) {
+                if (!map_ || pos_ == end_) {
                     LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
                 } else {
                     Value key = pos_->first;
@@ -135,12 +145,14 @@ class Map : public I {
             }
 
          private:
+            const typename Map<I>::Container* map_;
             typename Map<I>::CItr pos_;
             typename Map<I>::CItr end_;
 
-            KeyIterator(const typename Map<I>::Container& map)
-                : pos_(map.begin())
-                , end_(map.end()) {}
+            KeyIterator(const typename Map<I>::Container* map)
+                : map_(map)
+                , pos_(map ? map->begin() : typename Map<I>::CItr())
+                , end_(map ? map->end() : typename Map<I>::CItr()) {}
         };
 
      public:
@@ -230,11 +242,11 @@ class Map : public I {
 
          public:
             virtual Boolean hasNext() const {
-                return pos_ != end_;
+                return map_ && pos_ != end_;
             }
 
             virtual Value next() {
-                if (pos_ == end_) {
+                if (!map_ || pos_ == end_) {
                     LIBJ_HANDLE_ERROR(Error::NO_SUCH_ELEMENT);
                 } else {
                     entry_->setKey(pos_->first);
@@ -245,7 +257,7 @@ class Map : public I {
             }
 
             virtual typename EntryT::CPtr nextTyped() {
-                if (pos_ == end_) {
+                if (!map_ || pos_ == end_) {
                     LIBJ_THROW(Error::NO_SUCH_ELEMENT);
                 }
 
@@ -260,16 +272,18 @@ class Map : public I {
             }
 
          private:
+            const typename Map<I>::Container* map_;
             typename Map<I>::CItr pos_;
             typename Map<I>::CItr end_;
 
             // reuse Entry for better performance
             typename Entry::Ptr entry_;
 
-            TypedEntryIterator(const typename Map<I>::Container& map)
-                : pos_(map.begin())
-                , end_(map.end())
-                , entry_(new Entry()) {}
+            TypedEntryIterator(const typename Map<I>::Container* map)
+                : map_(map)
+                , pos_(map ? map->begin() : typename Map<I>::CItr())
+                , end_(map ? map->end() : typename Map<I>::CItr())
+                , entry_(map ? new Entry() : NULL) {}
         };
 
      public:
@@ -302,7 +316,19 @@ class Map : public I {
     };
 
  private:
-    Container map_;
+    Value _get(const Value& key) const {
+        if (!map_) return UNDEFINED;
+
+        CItr itr = map_->find(key);
+        if (itr != map_->end()) {
+            return itr->second;
+        } else {
+            return UNDEFINED;
+        }
+    }
+
+ private:
+    Container* map_;
 };
 
 }  // namespace detail
