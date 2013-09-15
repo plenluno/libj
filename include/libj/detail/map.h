@@ -24,6 +24,8 @@ class Map : public I {
  public:
     Map() : map_(NULL) {}
 
+    virtual ~Map() { delete map_; }
+
     virtual Size size() const {
         return map_ ? map_->size() : 0;
     }
