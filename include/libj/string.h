@@ -58,6 +58,10 @@ class String : LIBJ_IMMUTABLE(String)
 
     virtual CPtr substring(Size from, Size to) const = 0;
 
+    virtual CPtr replace(Char oldC, Char newC) const = 0;
+
+    virtual CPtr replace(CPtr oldS, CPtr newS) const = 0;
+
     virtual Size indexOf(Char c, Size from = 0) const = 0;
 
     virtual Size indexOf(CPtr str, Size from = 0) const = 0;

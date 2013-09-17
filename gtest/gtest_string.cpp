@@ -288,6 +288,30 @@ TEST(GTestString, TestSubstring) {
     ASSERT_TRUE(s5->equals(ss5));
 }
 
+TEST(GTestString, TestReplace) {
+    String::CPtr s = str();
+    ASSERT_EQ(str(), s->replace('a', 'b'));
+
+    s = str("abcabc");
+    ASSERT_TRUE(s->replace('b', 'p')->equals(str("apcapc")));
+
+    s = str("aabaa");
+    ASSERT_TRUE(s->replace('a', 'z')->equals(str("zzbzz")));
+}
+
+TEST(GTestString, TestReplace2) {
+    String::CPtr s = str();
+    ASSERT_EQ(str(), s->replace(str("a"), str("b")));
+
+    s = str("abcabca");
+    s = s->replace(str("bc"), str("xyz"));
+    ASSERT_TRUE(s->equals(str("axyzaxyza")));
+
+    s = str("aacaa");
+    s = s->replace(str("a"), str("bb"));
+    ASSERT_TRUE(s->equals(str("bbbbcbbbb")));
+}
+
 TEST(GTestString, TestConcat) {
     String::CPtr s = String::create("abcde");
     String::CPtr s1 = String::create("abc");

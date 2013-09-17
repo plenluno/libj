@@ -59,7 +59,7 @@ glue::UnicodeEncoding convertStrEncoding(libj::String::Encoding enc) {
 }
 
 #define LIBJ_DETAIL_STRING(S) static_cast<const String*>(&(*S))
-#define LIBJ_INTERNAL_STRING(S) LIBJ_DETAIL_STRING(S)->str_
+#define LIBJ_INTERNAL_STRING(S) (LIBJ_DETAIL_STRING(S)->str_)
 
 class String : public libj::String {
     typedef TypedIterator<Char> Iterator;
@@ -306,6 +306,41 @@ class String : public libj::String {
         } else {
             return CPtr(new String(*this, from, to - from));
         }
+    }
+
+    virtual CPtr replace(Char oldC, Char newC) const {
+        if (!str_.length()) return LIBJ_THIS_CPTR(String);
+
+        String* result = new String();
+        Size curr = 0;
+        Size prev = 0;
+        while ((curr = str_.find_first_of(oldC, curr)) != ustring::npos) {
+            result->str_.append(str_, prev, curr - prev);
+            result->str_ += newC;
+            curr++;
+            prev = curr;
+        }
+        result->str_.append(str_, prev, str_.size() - prev);
+        return CPtr(result);
+    }
+
+    virtual CPtr replace(CPtr oldS, CPtr newS) const {
+        if (!str_.length()) return LIBJ_THIS_CPTR(String);
+
+        String* result = new String();
+        Size curr = 0;
+        Size prev = 0;
+        const ustring* oldp = &LIBJ_INTERNAL_STRING(oldS);
+        const ustring* newp = &LIBJ_INTERNAL_STRING(newS);
+        Size len = oldp->size();
+        while ((curr = str_.find(*oldp, curr)) != ustring::npos) {
+            result->str_.append(str_, prev, curr - prev);
+            result->str_.append(*newp);
+            curr += len;
+            prev = curr;
+        }
+        result->str_.append(str_, prev, str_.size() - prev);
+        return CPtr(result);
     }
 
     virtual CPtr toString() const {
