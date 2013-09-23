@@ -11,10 +11,10 @@ LIBJ_STATIC_CONST_STRING_DEF(error,
 );
 
 LIBJ_STATIC_CONST_STRING_DEF(sample,
-    "<team name=\"foo\">"
-        "\t<member>abc</member>"
-        "\t<member>xyz</member>"
-    "</team>"
+    "<team name=\"foo\">  "
+        "\t<member>abc</member>  "
+        "\t<member>xyz</member>  "
+    "</team>  "
 );
 
 LIBJ_STATIC_CONST_STRING_DEF(xhtml,
@@ -195,8 +195,14 @@ TEST(GTestXmlDom, TestHasAttributes) {
 }
 
 TEST(GTestXmlDom, TestToString) {
+    String::CPtr sample2 =
+        sample->replace(String::create("  "), String::create('\n'));
+
     Document::CPtr doc = Document::parse(sample);
-    ASSERT_TRUE(doc->toString()->equals(sample));
+    ASSERT_TRUE(doc->toString()->equals(sample2));
+
+    doc = Document::parse(sample2);
+    ASSERT_TRUE(doc->toString()->equals(sample2));
 }
 
 TEST(GTestXmlDom, TestXmlDeclaration) {
