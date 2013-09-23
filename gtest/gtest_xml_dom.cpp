@@ -6,25 +6,26 @@
 namespace libj {
 namespace xml {
 
-static String::CPtr error = String::create(
+LIBJ_STATIC_CONST_STRING_DEF(error,
     "<team></member>"
 );
 
-static String::CPtr sample = String::create(
-    "<team name=\"foo\">\n"
-        "\t<member>abc</member>\n"
-        "\t<member>xyz</member>\n"
-    "</team>\n"
+LIBJ_STATIC_CONST_STRING_DEF(sample,
+    "<team name=\"foo\">"
+        "\t<member>abc</member>"
+        "\t<member>xyz</member>"
+    "</team>"
 );
 
-static String::CPtr xhtml = String::create(
+LIBJ_STATIC_CONST_STRING_DEF(xhtml,
     "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
     "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""
         "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
     "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"ja\" xml:lang=\"ja\">"
         "<head><title>title</title></head>"
         "<body></body>"
-    "</html>");
+    "</html>"
+);
 
 TEST(GTestXmlDom, TestParse) {
     Document::CPtr doc = Document::parse(String::null());
