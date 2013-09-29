@@ -17,7 +17,9 @@
 
 #define usleep(useconds) Sleep(useconds/1000)
 
+#ifndef snprintf
 #define snprintf(s, n, f, ...) _snprintf_s(s, n, _TRUNCATE, f, __VA_ARGS__)
+#endif
 
 namespace std {
     inline bool isinf(double x) {
