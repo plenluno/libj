@@ -259,12 +259,12 @@ if(NOT LIBJ_USE_EXCEPTION)
     )
 endif(NOT LIBJ_USE_EXCEPTION)
 
-if(NOT LIBJ_USE_UTF32)
+if(LIBJ_USE_XML AND NOT LIBJ_USE_UTF32)
     set(libj-common-cflags
         ${libj-common-cflags}
         -fshort-wchar
     )
-endif(NOT LIBJ_USE_UTF32)
+endif(LIBJ_USE_XML AND NOT LIBJ_USE_UTF32)
 
 ## libj-cflags
 if(UNIX)
