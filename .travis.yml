@@ -3,17 +3,20 @@ language: cpp
 compiler:
   - gcc
 
-install:
-  - sudo apt-get install cmake valgrind
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get -qq update
+  - sudo apt-get install -qq cmake valgrind g++-4.8
+  - export CC=gcc-4.8 CXX=g++-4.8
 
 before_script:
+  - gcc-4.8 --version
+  - git submodule update --init --recursive
+
+script:
   - mkdir build
   - cd build
   - cmake -DLIBJ_USE_THREAD=ON -DLIBJ_USE_XML=ON -DLIBJ_BUILD_TEST=ON ..
-
-script:
   - make
-
-after_script:
   - gtest/libj-test
   - valgrind --leak-check=full gtest/libj-test
