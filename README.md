@@ -18,10 +18,6 @@ libj uses shared_ptr by default. In order to use bdw-gc,
 
     cmake -DLIBJ_USE_BDWGC=ON ..
 
-If your compiler supports C++11,
-
-    cmake -DLIBJ_USE_CXX11=ON ..
-
 The following option allows you to use thread-related classes and concurrent collection classes.
 
     cmake -DLIBJ_USE_THREAD=ON ..
