@@ -158,8 +158,18 @@ TEST(GTestConcurrentMap, TestToString) {
     m->put(y, String::null());
     m->put(String::null(), z);
     m->put(UNDEFINED, UNDEFINED);
-    ASSERT_TRUE(m->toString()->equals(
-        String::create("{undefined=undefined, null=z, x=123, y=null}")));
+
+    String::CPtr s1 = m->toString();
+    String::CPtr s2 = str("{undefined=undefined, null=z, x=123, y=null}");
+    String::CPtr s3 = str("undefined=undefined");
+    String::CPtr s4 = str("null=z");
+    String::CPtr s5 = str("x=123");
+    String::CPtr s6 = str("y=null");
+    ASSERT_EQ(s2->length(), s1->length());
+    ASSERT_NE(NO_POS, s1->indexOf(s3));
+    ASSERT_NE(NO_POS, s1->indexOf(s4));
+    ASSERT_NE(NO_POS, s1->indexOf(s5));
+    ASSERT_NE(NO_POS, s1->indexOf(s6));
 }
 
 }  // namespace libj
