@@ -297,7 +297,8 @@ class Value {
         }
 
         virtual Size hashCode() const {
-            return std::hash<T>()(held);
+            static std::hash<T> hashFunc;
+            return hashFunc(held);
         }
 
         virtual Int compareTo(placeholder* that) const {
