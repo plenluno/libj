@@ -170,7 +170,11 @@ class String : public libj::String {
     }
 
     virtual Size hashCode() const {
+#ifdef LIBJ_USE_CXX11
         static std::hash<ustring> hashFunc;
+#else
+        static boost::hash<ustring> hashFunc;
+#endif
         return hashFunc(str_);
     }
 

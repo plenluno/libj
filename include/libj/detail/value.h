@@ -15,6 +15,7 @@
 #ifdef LIBJ_USE_CXX11
 # include <type_traits>
 #else
+# include <boost/functional/hash.hpp>
 # include <boost/type_traits/remove_const.hpp>
 # include <boost/type_traits/remove_reference.hpp>
 #endif
@@ -297,7 +298,11 @@ class Value {
         }
 
         virtual Size hashCode() const {
+#ifdef LIBJ_USE_CXX11
             static std::hash<T> hashFunc;
+#else
+            static boost::hash<T> hashFunc;
+#endif
             return hashFunc(held);
         }
 
@@ -446,7 +451,11 @@ inline Boolean _to(
 }  // namespace detail
 }  // namespace libj
 
+#ifdef LIBJ_USE_CXX11
 namespace std {
+#else
+namespace boost {
+#endif
     template <>
     struct hash<libj::detail::Value> {
         std::size_t operator()(const libj::detail::Value& key) const {

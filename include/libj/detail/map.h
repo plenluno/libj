@@ -7,9 +7,9 @@
 #include <libj/string_builder.h>
 
 #ifdef LIBJ_USE_CXX11
-#include <unordered_map>
+# include <unordered_map>
 #else
-#include <map>
+# include <boost/unordered_map.hpp>
 #endif
 
 namespace libj {
@@ -21,7 +21,7 @@ class Map : public I {
 #ifdef LIBJ_USE_CXX11
     typedef std::unordered_map<Value, Value> Container;
 #else
-    typedef std::map<Value, Value> Container;
+    typedef boost::unordered_map<Value, Value> Container;
 #endif
     typedef typename Container::const_iterator CItr;
 
