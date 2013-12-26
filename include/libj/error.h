@@ -34,9 +34,10 @@ class Error : LIBJ_STATUS(Error)
     static CPtr create(Code code, String::CPtr msg);
 };
 
-}  // namespace libj
+}  // namespace libjß
 
 #include <assert.h>
+#include <libj/impl/error.h>
 
 #define LIBJ_ERROR(T) public libj::Error { \
     LIBJ_IMMUTABLE_DEFS(T, libj::Error)
