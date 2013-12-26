@@ -24,6 +24,8 @@ class Status : LIBJ_IMMUTABLE(Status)
 
 }  // namespace libj
 
+#include <libj/impl/status.h>
+
 #define LIBJ_STATUS(T) public libj::Status { \
     LIBJ_IMMUTABLE_DEFS(T, libj::Status)
 
