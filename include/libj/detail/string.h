@@ -169,6 +169,11 @@ class String : public libj::String {
         return CPtr(s);
     }
 
+    virtual Size hashCode() const {
+        static std::hash<ustring> hashFunc;
+        return hashFunc(str_);
+    }
+
     virtual Int compareTo(Object::CPtr that) const {
         Int result = Object::compareTo(that);
         if (result != TYPE_CMP_SAME &&
