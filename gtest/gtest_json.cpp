@@ -67,8 +67,16 @@ TEST(GTestJson, TestStringify) {
     m->put(String::create("x"), 123);
     m->put(String::create("y"), String::create("456"));
     m->put(String::create("z"), String::null());
-    ASSERT_TRUE(json::stringify(m)
-        ->equals(String::create("{\"x\":123,\"y\":\"456\",\"z\":null}")));
+
+    String::CPtr s1 = json::stringify(m);
+    String::CPtr s2 = String::create("{\"x\":123,\"y\":\"456\",\"z\":null}");
+    String::CPtr s3 = String::create("\"x\":123");
+    String::CPtr s4 = String::create("\"y\":\"456\"");
+    String::CPtr s5 = String::create("\"z\":null");
+    ASSERT_EQ(s2->length(), s1->length());
+    ASSERT_NE(NO_POS, s1->indexOf(s3));
+    ASSERT_NE(NO_POS, s1->indexOf(s4));
+    ASSERT_NE(NO_POS, s1->indexOf(s5));
 
     ArrayList::Ptr a = ArrayList::create();
     a->add(3);
@@ -86,8 +94,18 @@ TEST(GTestJson, TestRecursiveStringify) {
     JsObject::Ptr jo = JsObject::create();
     jo->put(3, false);
     jo->put(Object::null(), m);
-    ASSERT_TRUE(json::stringify(jo)->equals(
-        String::create("{\"3\":false,\"null\":{\"x\":123,\"y\":[]}}")));
+
+    String::CPtr s1 = json::stringify(jo);
+    String::CPtr s2 = str("{\"3\":false,\"null\":{\"x\":123,\"y\":[]}}");
+    String::CPtr s3 = str("\"3\":false");
+    String::CPtr s4 = str("\"null\":{");
+    String::CPtr s5 = str("\"x\":123");
+    String::CPtr s6 = str("\"y\":[]");
+    ASSERT_EQ(s2->length(), s1->length());
+    ASSERT_NE(NO_POS, s1->indexOf(s3));
+    ASSERT_NE(NO_POS, s1->indexOf(s4));
+    ASSERT_NE(NO_POS, s1->indexOf(s5));
+    ASSERT_NE(NO_POS, s1->indexOf(s6));
 
     ArrayList::Ptr a = ArrayList::create();
     a->add(3);
@@ -97,8 +115,11 @@ TEST(GTestJson, TestRecursiveStringify) {
     ja->add(UNDEFINED);
     ja->add(Object::null());
     ja->add(a);
-    ASSERT_TRUE(json::stringify(ja)->equals(
-        String::create("[null,null,[3,{\"x\":123,\"y\":[]}]]")));
+
+    String::CPtr s7 = json::stringify(ja);
+    String::CPtr s8 = str("[null,null,[3,{\"x\":123,\"y\":[]}]]");
+    String::CPtr s9 = str("[null,null,[3,{\"y\":[],\"x\":123}]]");
+    ASSERT_TRUE(s7->equals(s8) || s7->equals(s9));
 }
 
 TEST(GTestJson, TestParse) {
