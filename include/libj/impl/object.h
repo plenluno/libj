@@ -10,8 +10,8 @@ inline Object::CPtr Object::null() {
     return nullp;
 }
 
-inline Boolean Object::instanceof(TypeId id) const {
-    return id == Type<Object>::id();
+inline Size Object::hashCode() const {
+    return reinterpret_cast<Size>(this);
 }
 
 inline Int Object::compareTo(Object::CPtr that) const {
@@ -41,6 +41,10 @@ inline Int Object::compareTo(Object::CPtr that) const {
 
 inline Boolean Object::equals(Object::CPtr that) const {
     return !compareTo(that);
+}
+
+inline Boolean Object::instanceof(TypeId id) const {
+    return id == Type<Object>::id();
 }
 
 template<typename T>

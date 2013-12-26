@@ -18,11 +18,13 @@ class Object
 
     static CPtr null();
 
-    virtual Boolean instanceof(TypeId id) const;
+    virtual Size hashCode() const;
 
     virtual Int compareTo(CPtr that) const;
 
     virtual Boolean equals(CPtr that) const;
+
+    virtual Boolean instanceof(TypeId id) const;
 
     virtual TypeId type() const = 0;
 

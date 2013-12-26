@@ -6,7 +6,11 @@
 #include <libj/typed_set.h>
 #include <libj/string_builder.h>
 
+#ifdef LIBJ_USE_CXX11
+#include <unordered_map>
+#else
 #include <map>
+#endif
 
 namespace libj {
 namespace detail {
@@ -14,7 +18,11 @@ namespace detail {
 template<typename I>
 class Map : public I {
  private:
+#ifdef LIBJ_USE_CXX11
+    typedef std::unordered_map<Value, Value> Container;
+#else
     typedef std::map<Value, Value> Container;
+#endif
     typedef typename Container::const_iterator CItr;
 
     typedef typename I::Entry EntryT;

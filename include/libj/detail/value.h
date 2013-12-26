@@ -98,6 +98,10 @@ class Value {
         }
     }
 
+    Size hashCode() const {
+        return content ? content->hashCode() : -1;
+    }
+
     Int compareTo(const Value& val) const {
         if (content) {
             if (val.content) {
@@ -164,6 +168,8 @@ class Value {
 
         virtual Boolean isCPtr() const = 0;
 
+        virtual Size hashCode() const = 0;
+
         virtual Int compareTo(placeholder* other) const = 0;
 
         virtual placeholder* clone() const = 0;
@@ -208,6 +214,10 @@ class Value {
 
         virtual Boolean isCPtr() const {
             return held ? IsCPtr : true;
+        }
+
+        virtual Size hashCode() const {
+            return held ? held->hashCode() : 0;
         }
 
         virtual Int compareTo(placeholder* that) const {
@@ -284,6 +294,10 @@ class Value {
 
         virtual Boolean isCPtr() const {
             return false;
+        }
+
+        virtual Size hashCode() const {
+            return std::hash<T>()(held);
         }
 
         virtual Int compareTo(placeholder* that) const {
@@ -430,5 +444,14 @@ inline Boolean _to(
 
 }  // namespace detail
 }  // namespace libj
+
+namespace std {
+    template <>
+    struct hash<libj::detail::Value> {
+        std::size_t operator()(const libj::detail::Value& key) const {
+            return key.hashCode();
+        }
+    };
+}
 
 #endif  // LIBJ_DETAIL_VALUE_H_
