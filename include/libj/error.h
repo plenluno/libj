@@ -34,7 +34,7 @@ class Error : LIBJ_STATUS(Error)
     static CPtr create(Code code, String::CPtr msg);
 };
 
-}  // namespace libjß
+}  // namespace libj
 
 #include <assert.h>
 #include <libj/impl/error.h>
