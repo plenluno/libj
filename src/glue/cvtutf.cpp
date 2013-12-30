@@ -13,7 +13,11 @@
 # include <ConvertUTF.h>
 #endif
 
-#ifdef LIBJ_USE_CXX11
+#if defined(LIBJ_USE_CXX11) && defined(LIBJ_USE_CLANG)
+# define LIBJ_USE_CODECVT
+#endif
+
+#ifdef LIBJ_USE_CODECVT
 # include <locale>
 # include <codecvt>
 #endif
@@ -100,7 +104,7 @@ size_t byteLengthAt(const void* data, UnicodeEncoding enc) {
 }
 
 std::string utf16ToUtf8(const std::u16string& str) {
-#ifdef LIBJ_USE_CXX11
+#ifdef LIBJ_USE_CODECVT
     static std::wstring_convert<
         std::codecvt_utf8_utf16<char16_t>,
         char16_t> cvt;
@@ -116,7 +120,7 @@ std::string utf16ToUtf8(const std::u16string& str) {
 #endif
 }
 
-#ifdef LIBJ_USE_CXX11
+#ifdef LIBJ_USE_CODECVT
 std::u16string utf8ToUtf16(const std::string& str) {
     static std::wstring_convert<
         std::codecvt_utf8_utf16<char16_t>,
@@ -535,7 +539,7 @@ std::u32string toUtf32(
     return s32;
 }
 
-#ifndef LIBJ_USE_CXX11
+#ifndef LIBJ_USE_CODECVT
 std::u16string utf8ToUtf16(const std::string& str) {
     assert(sizeof(char) == 1 && sizeof(char16_t) == 2);
 
@@ -1038,7 +1042,7 @@ static std::u32string utf32ToUtf32(
     return u32s;
 }
 
-#ifndef LIBJ_USE_CXX11
+#ifndef LIBJ_USE_CODECVT
 std::u16string utf8ToUtf16(const std::string& str) {
     if (isBigEndian()) {
         return utf8ToUtf16(
