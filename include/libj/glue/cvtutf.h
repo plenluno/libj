@@ -42,8 +42,7 @@ std::string toUtf8(
     const void* data,
     UnicodeEncoding enc,
     size_t len,
-    size_t max,
-    size_t* n = NULL);
+    size_t max);
 
 std::u16string toUtf16(
     const void* data,

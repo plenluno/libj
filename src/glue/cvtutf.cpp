@@ -425,7 +425,7 @@ static inline size_t dataLength(size_t byteLen, UnicodeEncoding enc) {
 }
 
 std::string toUtf8(
-    const void* data, UnicodeEncoding enc, size_t len, size_t max, size_t* n) {
+    const void* data, UnicodeEncoding enc, size_t len, size_t max) {
     assert(sizeof(char) == 1);
 
     if (!data) return std::string();
@@ -458,8 +458,6 @@ std::string toUtf8(
 #endif  // LIBJ_CVTUTF_DEBUG
     }
     iconvClose(cd);
-
-    if (n) *n = i;
     return s8;
 }
 
@@ -724,13 +722,15 @@ static size_t findUtf32End(
 static std::string utf8ToUtf8(
     const unsigned char* data,
     size_t len,
-    size_t max,
-    size_t* n = NULL) {
+    size_t max) {
     assert(data && sizeof(unsigned char) == 1);
+
+    if (len == NO_SIZE && max == NO_SIZE) {
+        return std::string(reinterpret_cast<const char*>(data));
+    }
 
     const unsigned char* end;
     size_t num = findUtf8End(data, len, max, &end);
-    if (n) *n = num;
     if (!num) return std::string();
 
     return std::string(reinterpret_cast<const char*>(data), end - data);
@@ -739,15 +739,28 @@ static std::string utf8ToUtf8(
 static std::u16string utf8ToUtf16(
     const unsigned char* data,
     size_t len,
-    size_t max,
-    size_t* n = NULL) {
+    size_t max) {
     assert(data && sizeof(unsigned char) == 1 && sizeof(char16_t) == 2);
+
+#ifdef LIBJ_USE_CODECVT
+    static std::wstring_convert<
+        std::codecvt_utf8_utf16<char16_t>,
+        char16_t> cvt;
+
+    if (len == NO_SIZE && max == NO_SIZE) {
+        return cvt.from_bytes(reinterpret_cast<const char*>(data));
+    }
+#endif
 
     const unsigned char* end;
     size_t num = findUtf8End(data, len, max, &end);
-    if (n) *n = num;
     if (!num) return std::u16string();
 
+#ifdef LIBJ_USE_CODECVT
+    return cvt.from_bytes(
+        reinterpret_cast<const char*>(data),
+        reinterpret_cast<const char*>(end));
+#else
     const unsigned char* sourceStart = data;
     const unsigned char* sourceEnd = end;
 
@@ -767,6 +780,7 @@ static std::u16string utf8ToUtf16(
     std::u16string u16s(out, num);
     delete[] out;
     return u16s;
+#endif
 }
 
 static std::u32string utf8ToUtf32(
@@ -775,10 +789,25 @@ static std::u32string utf8ToUtf32(
     size_t max) {
     assert(data && sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
 
+#ifdef LIBJ_USE_CODECVT
+    static std::wstring_convert<
+        std::codecvt_utf8<char32_t>,
+        char32_t> cvt;
+
+    if (len == NO_SIZE && max == NO_SIZE) {
+        return cvt.from_bytes(reinterpret_cast<const char*>(data));
+    }
+#endif
+
     const unsigned char* end;
     size_t n = findUtf8End(data, len, max, &end);
     if (!n) return std::u32string();
 
+#ifdef LIBJ_USE_CODECVT
+    return cvt.from_bytes(
+        reinterpret_cast<const char*>(data),
+        reinterpret_cast<const char*>(end));
+#else
     const unsigned char* sourceStart = data;
     const unsigned char* sourceEnd = end;
 
@@ -796,20 +825,29 @@ static std::u32string utf8ToUtf32(
     std::u32string u32s(out, targetStart - out);
     delete[] out;
     return u32s;
+#endif
 }
 
 static std::string utf16ToUtf8(
     const char16_t* data,
     UnicodeEncoding enc,
     size_t len,
-    size_t max,
-    size_t* n = NULL) {
+    size_t max) {
     assert(data && sizeof(unsigned char) == 1 && sizeof(char16_t) == 2);
+
+#ifdef LIBJ_USE_CODECVT
+    static std::wstring_convert<
+        std::codecvt_utf8_utf16<char16_t>,
+        char16_t> cvt;
+
+    if (len == NO_SIZE && max == NO_SIZE) {
+        return cvt.to_bytes(data);
+    }
+#endif
 
     const char16_t* end;
     std::u16string* u16s;
     size_t num = findUtf16End(data, enc, len, max, &end, &u16s);
-    if (n) *n = num;
     if (!num) {
         delete u16s;
         return std::string();
@@ -824,7 +862,11 @@ static std::string utf16ToUtf8(
         sourceStart = data;
         sourceEnd = end;
     }
+    delete u16s;
 
+#ifdef LIBJ_USE_CODECVT
+    return cvt.to_bytes(sourceStart, sourceEnd);
+#else
     num *= 6;
     unsigned char* out = new unsigned char[num];
     unsigned char* targetStart = out;
@@ -838,9 +880,9 @@ static std::string utf16ToUtf8(
         strictConversion);
 
     std::string u8s(reinterpret_cast<const char*>(out), targetStart - out);
-    delete u16s;
     delete[] out;
     return u8s;
+#endif
 }
 
 static std::u16string utf16ToUtf16(
@@ -926,14 +968,22 @@ static std::string utf32ToUtf8(
     const char32_t* data,
     UnicodeEncoding enc,
     size_t len,
-    size_t max,
-    size_t* n = NULL) {
+    size_t max) {
     assert(data && sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
+
+#ifdef LIBJ_USE_CODECVT
+    static std::wstring_convert<
+        std::codecvt_utf8<char32_t>,
+        char32_t> cvt;
+
+    if (len == NO_SIZE && max == NO_SIZE) {
+        return cvt.to_bytes(data);
+    }
+#endif
 
     const char32_t* end;
     std::u32string* u32s;
     size_t num = findUtf32End(data, enc, len, max, &end, &u32s);
-    if (n) *n = num;
     if (!num) {
         delete u32s;
         return std::string();
@@ -948,7 +998,11 @@ static std::string utf32ToUtf8(
         sourceStart = data;
         sourceEnd = end;
     }
+    delete u32s;
 
+#ifdef LIBJ_USE_CODECVT
+    return cvt.to_bytes(sourceStart, sourceEnd);
+#else
     num *= 6;
     unsigned char* out = new unsigned char[num];
     unsigned char* targetStart = out;
@@ -962,23 +1016,21 @@ static std::string utf32ToUtf8(
         strictConversion);
 
     std::string u8s(reinterpret_cast<const char*>(out), targetStart - out);
-    delete u32s;
     delete[] out;
     return u8s;
+#endif
 }
 
 static std::u16string utf32ToUtf16(
     const char32_t* data,
     UnicodeEncoding enc,
     size_t len,
-    size_t max,
-    size_t* n = NULL) {
+    size_t max) {
     assert(data && sizeof(char16_t) == 2 && sizeof(char32_t) == 4);
 
     const char32_t* end;
     std::u32string* u32s;
     size_t num = findUtf32End(data, enc, len, max, &end, &u32s);
-    if (n) *n = num;
     if (!num) {
         delete u32s;
         return std::u16string();
@@ -1259,19 +1311,19 @@ std::string fromUtf32(const std::u32string& str, UnicodeEncoding enc) {
 }
 
 std::string toUtf8(
-    const void* data, UnicodeEncoding enc, size_t len, size_t max, size_t* n) {
+    const void* data, UnicodeEncoding enc, size_t len, size_t max) {
     switch (enc) {
     case UTF8:
         return utf8ToUtf8(
-            static_cast<const unsigned char*>(data), len, max, n);
+            static_cast<const unsigned char*>(data), len, max);
     case UTF16BE:
     case UTF16LE:
         return utf16ToUtf8(
-            static_cast<const char16_t*>(data), enc, len, max, n);
+            static_cast<const char16_t*>(data), enc, len, max);
     case UTF32BE:
     case UTF32LE:
         return utf32ToUtf8(
-            static_cast<const char32_t*>(data), enc, len, max, n);
+            static_cast<const char32_t*>(data), enc, len, max);
     default:
         assert(false);
         return std::string();
