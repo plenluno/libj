@@ -57,9 +57,9 @@ std::u32string toUtf32(
     size_t len,
     size_t max);
 
-std::string utf16ToUtf8(const std::u16string& str, size_t* n = NULL);
+std::string utf16ToUtf8(const std::u16string& str);
 
-std::u16string utf8ToUtf16(const std::string& str, size_t* n = NULL);
+std::u16string utf8ToUtf16(const std::string& str);
 
 std::u32string utf16ToUtf32(const std::u16string& str);
 

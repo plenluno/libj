@@ -13,6 +13,11 @@
 # include <ConvertUTF.h>
 #endif
 
+#ifdef LIBJ_USE_CXX11
+# include <locale>
+# include <codecvt>
+#endif
+
 namespace libj {
 namespace glue {
 
@@ -94,15 +99,31 @@ size_t byteLengthAt(const void* data, UnicodeEncoding enc) {
     }
 }
 
-std::string utf16ToUtf8(const std::u16string& str, size_t* n) {
+std::string utf16ToUtf8(const std::u16string& str) {
+#ifdef LIBJ_USE_CXX11
+    static std::wstring_convert<
+        std::codecvt_utf8_utf16<char16_t>,
+        char16_t> cvt;
+    return cvt.to_bytes(str);
+#else
     assert(sizeof(char16_t) == 2);
 
     if (isBigEndian()) {
-        return toUtf8(str.c_str(), UTF16BE, NO_SIZE, NO_SIZE, n);
+        return toUtf8(str.c_str(), UTF16BE, NO_SIZE, NO_SIZE);
     } else {
-        return toUtf8(str.c_str(), UTF16LE, NO_SIZE, NO_SIZE, n);
+        return toUtf8(str.c_str(), UTF16LE, NO_SIZE, NO_SIZE);
     }
+#endif
 }
+
+#ifdef LIBJ_USE_CXX11
+std::u16string utf8ToUtf16(const std::string& str) {
+    static std::wstring_convert<
+        std::codecvt_utf8_utf16<char16_t>,
+        char16_t> cvt;
+    return cvt.from_bytes(str);
+}
+#endif
 
 std::u32string utf16ToUtf32(const std::u16string& str) {
     assert(sizeof(char16_t) == 2);
@@ -514,7 +535,8 @@ std::u32string toUtf32(
     return s32;
 }
 
-std::u16string utf8ToUtf16(const std::string& str, size_t* n) {
+#ifndef LIBJ_USE_CXX11
+std::u16string utf8ToUtf16(const std::string& str) {
     assert(sizeof(char) == 1 && sizeof(char16_t) == 2);
 
     std::u16string s;
@@ -526,7 +548,6 @@ std::u16string utf8ToUtf16(const std::string& str, size_t* n) {
     }
     char* inBuf = const_cast<char*>(str.c_str());
     size_t inLen = str.length();
-    size_t num = 0;
     for (size_t i = 0; i < inLen;) {
         size_t byteLen = byteLengthAt(inBuf, UTF8);
         size_t inBytesLeft = byteLen;
@@ -543,13 +564,11 @@ std::u16string utf8ToUtf16(const std::string& str, size_t* n) {
             s += u.c16[j];
         }
         i += byteLen;
-        num++;
     }
     iconvClose(cd);
-
-    if (n) *n = num;
     return s;
 }
+#endif
 
 std::u16string utf32ToUtf16(const std::u32string& str) {
     assert(sizeof(char) == 1 && sizeof(char16_t) == 2 && sizeof(char32_t) == 4);
@@ -1019,17 +1038,19 @@ static std::u32string utf32ToUtf32(
     return u32s;
 }
 
-std::u16string utf8ToUtf16(const std::string& str, size_t* n) {
+#ifndef LIBJ_USE_CXX11
+std::u16string utf8ToUtf16(const std::string& str) {
     if (isBigEndian()) {
         return utf8ToUtf16(
             reinterpret_cast<const unsigned char*>(str.c_str()),
-            NO_SIZE, NO_SIZE, n);
+            NO_SIZE, NO_SIZE);
     } else {
         return utf8ToUtf16(
             reinterpret_cast<const unsigned char*>(str.c_str()),
-            NO_SIZE, NO_SIZE, n);
+            NO_SIZE, NO_SIZE);
     }
 }
+#endif
 
 static std::string utf32ToUtf8(const std::u32string& str) {
     if (isBigEndian()) {
