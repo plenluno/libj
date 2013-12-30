@@ -1044,24 +1044,40 @@ static std::u32string utf32ToUtf32(
 
 #ifndef LIBJ_USE_CODECVT
 std::u16string utf8ToUtf16(const std::string& str) {
-    if (isBigEndian()) {
-        return utf8ToUtf16(
-            reinterpret_cast<const unsigned char*>(str.c_str()),
-            NO_SIZE, NO_SIZE);
-    } else {
-        return utf8ToUtf16(
-            reinterpret_cast<const unsigned char*>(str.c_str()),
-            NO_SIZE, NO_SIZE);
-    }
+    return utf8ToUtf16(
+        reinterpret_cast<const unsigned char*>(str.c_str()),
+        NO_SIZE,
+        NO_SIZE);
 }
 #endif
 
+static std::u32string utf8ToUtf32(const std::string& str) {
+#ifdef LIBJ_USE_CODECVT
+    static std::wstring_convert<
+        std::codecvt_utf8<char32_t>,
+        char32_t> cvt;
+    return cvt.from_bytes(str);
+#else
+    return utf8ToUtf32(
+        reinterpret_cast<const unsigned char*>(str.c_str()),
+        NO_SIZE,
+        NO_SIZE);
+#endif
+}
+
 static std::string utf32ToUtf8(const std::u32string& str) {
+#ifdef LIBJ_USE_CODECVT
+    static std::wstring_convert<
+        std::codecvt_utf8<char32_t>,
+        char32_t> cvt;
+    return cvt.to_bytes(str);
+#else
     if (isBigEndian()) {
         return utf32ToUtf8(str.c_str(), UTF32BE, NO_SIZE, NO_SIZE);
     } else {
         return utf32ToUtf8(str.c_str(), UTF32LE, NO_SIZE, NO_SIZE);
     }
+#endif
 }
 
 std::u16string utf32ToUtf16(const std::u32string& str) {
@@ -1195,17 +1211,15 @@ char32_t codePointAt(const void* data, UnicodeEncoding enc) {
 }
 
 std::string fromUtf8(const std::string& str, UnicodeEncoding enc) {
-    const unsigned char* cstr =
-        reinterpret_cast<const unsigned char*>(str.c_str());
     switch (enc) {
     case UTF8:
         return str;
     case UTF16BE:
     case UTF16LE:
-        return toStdString(utf8ToUtf16(cstr, NO_SIZE, NO_SIZE), enc);
+        return toStdString(utf8ToUtf16(str), enc);
     case UTF32BE:
     case UTF32LE:
-        return toStdString(utf8ToUtf32(cstr, NO_SIZE, NO_SIZE), enc);
+        return toStdString(utf8ToUtf32(str), enc);
     default:
         assert(false);
         return std::string();
