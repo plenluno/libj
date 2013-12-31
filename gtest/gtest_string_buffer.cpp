@@ -139,4 +139,13 @@ TEST(GTestStringBuffer, TestData) {
     ASSERT_TRUE(sb->toString()->equals(String::create("a1a1")));
 }
 
+TEST(GTestStringBuffer, TestCapacity) {
+    StringBuffer::Ptr sb = StringBuffer::create(1024);
+    ASSERT_LE(1024, sb->capacity());
+
+    sb->ensureCapacity(2048);
+    ASSERT_LE(2048, sb->capacity());
+    ASSERT_EQ(0, sb->length());
+}
+
 }  // namespace libj

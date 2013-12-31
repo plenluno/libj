@@ -17,9 +17,14 @@ class StringBuffer : public StringBuilder<libj::StringBuffer> {
         return StringBuilder::length();
     }
 
-    virtual Char charAt(Size index) const {
+    virtual Size capacity() const {
         ScopedLock lock(mutex_);
-        return StringBuilder::charAt(index);
+        return StringBuilder::capacity();
+    }
+
+    virtual void ensureCapacity(Size capacity) {
+        ScopedLock lock(mutex_);
+        return StringBuilder::ensureCapacity(capacity);
     }
 
     virtual Ptr append(const Value& val) {
@@ -45,6 +50,11 @@ class StringBuffer : public StringBuilder<libj::StringBuffer> {
     virtual Ptr appendStr(String::CPtr str) {
         ScopedLock lock(mutex_);
         return StringBuilder::appendStr(str);
+    }
+
+    virtual Char charAt(Size index) const {
+        ScopedLock lock(mutex_);
+        return StringBuilder::charAt(index);
     }
 
     virtual Boolean setCharAt(Size index, Char c) {

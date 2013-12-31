@@ -22,12 +22,12 @@ class StringBuilder : public I {
         return buf_.length();
     }
 
-    virtual Char charAt(Size index) const {
-        if (index >= buf_.length()) {
-            return NO_CHAR;
-        } else {
-            return buf_[index];
-        }
+    virtual Size capacity() const {
+        return buf_.capacity();
+    }
+
+    virtual void ensureCapacity(Size capacity) {
+        buf_.reserve(capacity);
     }
 
     virtual Ptr append(const Value& val) {
@@ -111,6 +111,14 @@ class StringBuilder : public I {
             buf_.append(symNull->data());
         }
         return LIBJ_THIS_PTR(I);
+    }
+
+    virtual Char charAt(Size index) const {
+        if (index >= buf_.length()) {
+            return NO_CHAR;
+        } else {
+            return buf_[index];
+        }
     }
 
     virtual Boolean setCharAt(Size index, Char c) {

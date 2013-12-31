@@ -12,9 +12,13 @@ class StringBuilder : LIBJ_MUTABLE(StringBuilder)
  public:
     static Ptr create();
 
+    static Ptr create(Size capacity);
+
     virtual Size length() const = 0;
 
-    virtual Char charAt(Size index) const = 0;
+    virtual Size capacity() const = 0;
+
+    virtual void ensureCapacity(Size capacity) = 0;
 
     virtual Ptr append(const Value& val) = 0;
 
@@ -25,6 +29,8 @@ class StringBuilder : LIBJ_MUTABLE(StringBuilder)
     virtual Ptr appendStr(const Char* str) = 0;
 
     virtual Ptr appendStr(String::CPtr str) = 0;
+
+    virtual Char charAt(Size index) const = 0;
 
     virtual Boolean setCharAt(Size index, Char c) = 0;
 

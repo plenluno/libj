@@ -8,4 +8,10 @@ StringBuffer::Ptr StringBuffer::create() {
     return Ptr(new detail::StringBuffer());
 }
 
+StringBuffer::Ptr StringBuffer::create(Size capacity) {
+    detail::StringBuffer* s = new detail::StringBuffer();
+    s->ensureCapacity(capacity);
+    return Ptr(s);
+}
+
 }  // namespace libj

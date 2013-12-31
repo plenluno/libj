@@ -9,4 +9,11 @@ StringBuilder::Ptr StringBuilder::create() {
     return Ptr(new detail::StringBuilder<StringBuilder>());
 }
 
+StringBuilder::Ptr StringBuilder::create(Size capacity) {
+    detail::StringBuilder<StringBuilder>* s =
+        new detail::StringBuilder<StringBuilder>();
+    s->ensureCapacity(capacity);
+    return Ptr(s);
+}
+
 }  // namespace libj
