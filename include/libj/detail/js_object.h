@@ -16,6 +16,10 @@ class JsObject : public Map<I> {
         return Map<I>::containsKey(String::valueOf(key));
     }
 
+    virtual Boolean containsKey(String::CPtr key) const {
+        return Map<I>::containsKey(key);
+    }
+
     virtual Value get(const Value& key) const {
         return Map<I>::get(String::valueOf(key));
     }
@@ -36,6 +40,10 @@ class JsObject : public Map<I> {
         return Map<I>::remove(String::valueOf(key));
     }
 
+    virtual Value remove(String::CPtr key) {
+        return Map<I>::remove(key);
+    }
+
     virtual String::CPtr toString() const {
         LIBJ_STATIC_SYMBOL_DEF(symObject, "[object Object]");
         return symObject;
@@ -46,7 +54,15 @@ class JsObject : public Map<I> {
         return containsKey(name);
     }
 
+    virtual Boolean hasProperty(String::CPtr name) const {
+        return containsKey(name);
+    }
+
     virtual Value getProperty(const Value& name) const {
+        return get(name);
+    }
+
+    virtual Value getProperty(String::CPtr name) const {
         return get(name);
     }
 
@@ -54,7 +70,15 @@ class JsObject : public Map<I> {
         return put(name, val);
     }
 
+    virtual Value setProperty(String::CPtr name, const Value& val) {
+        return put(name, val);
+    }
+
     virtual Value deleteProperty(const Value& name) {
+        return remove(name);
+    }
+
+    virtual Value deleteProperty(String::CPtr name) {
         return remove(name);
     }
 };
