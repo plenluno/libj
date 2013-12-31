@@ -20,7 +20,7 @@ class StringBuilder : public I {
 
     StringBuilder() {}
 
-    StringBuilder(String::CPtr str) : buf_(str->data()) {}
+    StringBuilder(String::CPtr str) : buf_(str->data(), str->length()) {}
 
     virtual Size length() const {
         return buf_.length();
@@ -43,13 +43,13 @@ class StringBuilder : public I {
         if (val.isObject()) {
             String::CPtr s = toCPtr<Object>(val)->toString();
             assert(s);
-            buf_.append(s->data());
+            buf_.append(s->data(), s->length());
         } else if (val.isPrimitive()) {
             if (val.is<Boolean>()) {
                 if (to<Boolean>(val)) {
-                    buf_.append(symTrue->data());
+                    buf_.append(symTrue->data(), symTrue->length());
                 } else {
-                    buf_.append(symFalse->data());
+                    buf_.append(symFalse->data(), symFalse->length());
                 }
             } else if (val.is<Double>()) {
                 const Size kLen = 64;
@@ -69,10 +69,10 @@ class StringBuilder : public I {
                 buf_.append(s);
             }
         } else if (val.isNull()) {
-            buf_.append(symNull->data());
+            buf_.append(symNull->data(), symNull->length());
         } else {
             assert(val.isUndefined());
-            buf_.append(symUndefined->data());
+            buf_.append(symUndefined->data(), symUndefined->length());
         }
         return LIBJ_THIS_PTR(I);
     }
@@ -90,7 +90,7 @@ class StringBuilder : public I {
                 buf_.push_back(c);
             }
         } else {
-            buf_.append(symNull->data());
+            buf_.append(symNull->data(), symNull->length());
         }
         return LIBJ_THIS_PTR(I);
     }
@@ -101,7 +101,7 @@ class StringBuilder : public I {
         if (str) {
             buf_.append(str);
         } else {
-            buf_.append(symNull->data());
+            buf_.append(symNull->data(), symNull->length());
         }
         return LIBJ_THIS_PTR(I);
     }
@@ -110,9 +110,9 @@ class StringBuilder : public I {
         LIBJ_STATIC_SYMBOL_DEF(symNull, "null");
 
         if (str) {
-            buf_.append(str->data());
+            buf_.append(str->data(), str->length());
         } else {
-            buf_.append(symNull->data());
+            buf_.append(symNull->data(), symNull->length());
         }
         return LIBJ_THIS_PTR(I);
     }
