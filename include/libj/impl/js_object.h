@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_JS_OBJECT_H_
 #define LIBJ_IMPL_JS_OBJECT_H_
@@ -11,7 +11,17 @@ inline typename Type<T>::Ptr JsObject::getPtr(const Value& name) const {
 }
 
 template<typename T>
+inline typename Type<T>::Ptr JsObject::getPtr(String::CPtr name) const {
+    return toPtr<T>(get(name));
+}
+
+template<typename T>
 inline typename Type<T>::CPtr JsObject::getCPtr(const Value& name) const {
+    return toCPtr<T>(get(name));
+}
+
+template<typename T>
+inline typename Type<T>::CPtr JsObject::getCPtr(String::CPtr name) const {
     return toCPtr<T>(get(name));
 }
 
