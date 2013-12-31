@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_JS_OBJECT_H_
 #define LIBJ_DETAIL_JS_OBJECT_H_
@@ -20,8 +20,16 @@ class JsObject : public Map<I> {
         return Map<I>::get(String::valueOf(key));
     }
 
+    virtual Value get(String::CPtr key) const {
+        return Map<I>::get(key);
+    }
+
     virtual Value put(const Value& key, const Value& val) {
         return Map<I>::put(String::valueOf(key), val);
+    }
+
+    virtual Value put(String::CPtr key, const Value& val) {
+        return Map<I>::put(key, val);
     }
 
     virtual Value remove(const Value& key) {

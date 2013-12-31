@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2013 Plenluno All rights reserved.
 
 #ifndef LIBJ_BRIDGE_ABSTRACT_JS_OBJECT_H_
 #define LIBJ_BRIDGE_ABSTRACT_JS_OBJECT_H_
@@ -15,6 +15,14 @@ class AbstractJsObject : public AbstractMap<I> {
     AbstractJsObject(JsObject::Ptr obj = JsObject::create())
         : AbstractMap<I>(obj)
         , obj_(obj) {}
+
+    virtual Value get(String::CPtr key) const {
+        return obj_->get(key);
+    }
+
+    virtual Value put(String::CPtr key, const Value& val) {
+        return obj_->put(key, val);
+    }
 
     virtual Boolean hasProperty(const Value& name) const {
         return obj_->hasProperty(name);
