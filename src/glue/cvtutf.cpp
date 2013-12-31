@@ -105,9 +105,7 @@ size_t byteLengthAt(const void* data, UnicodeEncoding enc) {
 
 std::string utf16ToUtf8(const std::u16string& str) {
 #ifdef LIBJ_USE_CODECVT
-    static std::wstring_convert<
-        std::codecvt_utf8_utf16<char16_t>,
-        char16_t> cvt;
+    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> cvt;
     return cvt.to_bytes(str);
 #else
     assert(sizeof(char16_t) == 2);
@@ -122,9 +120,7 @@ std::string utf16ToUtf8(const std::u16string& str) {
 
 #ifdef LIBJ_USE_CODECVT
 std::u16string utf8ToUtf16(const std::string& str) {
-    static std::wstring_convert<
-        std::codecvt_utf8_utf16<char16_t>,
-        char16_t> cvt;
+    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> cvt;
     return cvt.from_bytes(str);
 }
 #endif
@@ -743,10 +739,7 @@ static std::u16string utf8ToUtf16(
     assert(data && sizeof(unsigned char) == 1 && sizeof(char16_t) == 2);
 
 #ifdef LIBJ_USE_CODECVT
-    static std::wstring_convert<
-        std::codecvt_utf8_utf16<char16_t>,
-        char16_t> cvt;
-
+    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> cvt;
     if (len == NO_SIZE && max == NO_SIZE) {
         return cvt.from_bytes(reinterpret_cast<const char*>(data));
     }
@@ -790,10 +783,7 @@ static std::u32string utf8ToUtf32(
     assert(data && sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
 
 #ifdef LIBJ_USE_CODECVT
-    static std::wstring_convert<
-        std::codecvt_utf8<char32_t>,
-        char32_t> cvt;
-
+    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> cvt;
     if (len == NO_SIZE && max == NO_SIZE) {
         return cvt.from_bytes(reinterpret_cast<const char*>(data));
     }
@@ -836,10 +826,7 @@ static std::string utf16ToUtf8(
     assert(data && sizeof(unsigned char) == 1 && sizeof(char16_t) == 2);
 
 #ifdef LIBJ_USE_CODECVT
-    static std::wstring_convert<
-        std::codecvt_utf8_utf16<char16_t>,
-        char16_t> cvt;
-
+    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> cvt;
     if (len == NO_SIZE && max == NO_SIZE) {
         return cvt.to_bytes(data);
     }
@@ -972,10 +959,7 @@ static std::string utf32ToUtf8(
     assert(data && sizeof(unsigned char) == 1 && sizeof(char32_t) == 4);
 
 #ifdef LIBJ_USE_CODECVT
-    static std::wstring_convert<
-        std::codecvt_utf8<char32_t>,
-        char32_t> cvt;
-
+    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> cvt;
     if (len == NO_SIZE && max == NO_SIZE) {
         return cvt.to_bytes(data);
     }
@@ -1105,9 +1089,7 @@ std::u16string utf8ToUtf16(const std::string& str) {
 
 static std::u32string utf8ToUtf32(const std::string& str) {
 #ifdef LIBJ_USE_CODECVT
-    static std::wstring_convert<
-        std::codecvt_utf8<char32_t>,
-        char32_t> cvt;
+    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> cvt;
     return cvt.from_bytes(str);
 #else
     return utf8ToUtf32(
@@ -1119,9 +1101,7 @@ static std::u32string utf8ToUtf32(const std::string& str) {
 
 static std::string utf32ToUtf8(const std::u32string& str) {
 #ifdef LIBJ_USE_CODECVT
-    static std::wstring_convert<
-        std::codecvt_utf8<char32_t>,
-        char32_t> cvt;
+    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> cvt;
     return cvt.to_bytes(str);
 #else
     if (isBigEndian()) {
