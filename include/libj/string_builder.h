@@ -14,6 +14,8 @@ class StringBuilder : LIBJ_MUTABLE(StringBuilder)
 
     static Ptr create(Size capacity);
 
+    static Ptr create(String::CPtr str);
+
     virtual Size length() const = 0;
 
     virtual Size capacity() const = 0;

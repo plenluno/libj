@@ -12,6 +12,10 @@ namespace detail {
 
 class StringBuffer : public StringBuilder<libj::StringBuffer> {
  public:
+    StringBuffer() {}
+
+    StringBuffer(String::CPtr str) : StringBuilder<libj::StringBuffer>(str) {}
+
     virtual Size length() const {
         ScopedLock lock(mutex_);
         return StringBuilder::length();

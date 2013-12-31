@@ -18,6 +18,10 @@ class StringBuilder : public I {
     typedef typename I::Ptr Ptr;
     typedef typename I::CPtr CPtr;
 
+    StringBuilder() {}
+
+    StringBuilder(String::CPtr str) : buf_(str->data()) {}
+
     virtual Size length() const {
         return buf_.length();
     }

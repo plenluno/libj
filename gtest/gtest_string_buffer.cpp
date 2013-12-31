@@ -148,4 +148,12 @@ TEST(GTestStringBuffer, TestCapacity) {
     ASSERT_EQ(0, sb->length());
 }
 
+TEST(GTestStringBuffer, TestCreate) {
+    ASSERT_TRUE(!StringBuffer::create(String::null()));
+
+    String::CPtr s = String::create("abc");
+    StringBuffer::Ptr sb = StringBuffer::create(s);
+    ASSERT_TRUE(sb->toString()->equals(s));
+}
+
 }  // namespace libj

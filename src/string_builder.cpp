@@ -16,4 +16,12 @@ StringBuilder::Ptr StringBuilder::create(Size capacity) {
     return Ptr(s);
 }
 
+StringBuilder::Ptr StringBuilder::create(String::CPtr str) {
+    if (str) {
+        return Ptr(new detail::StringBuilder<StringBuilder>(str));
+    } else {
+        return StringBuilder::null();
+    }
+}
+
 }  // namespace libj
