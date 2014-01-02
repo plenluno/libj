@@ -157,4 +157,16 @@ TEST(GTestStringBuilder, TestCreate) {
     ASSERT_TRUE(sb->toString()->equals(s));
 }
 
+TEST(GTestStringBuilder, TestClear) {
+    String::CPtr s = String::create("abc");
+    StringBuilder::Ptr sb = StringBuilder::create(s);
+    sb->ensureCapacity(1024);
+    Size capacity = sb->capacity();
+    ASSERT_EQ(3, sb->length());
+
+    sb->clear();
+    ASSERT_EQ(0, sb->length());
+    ASSERT_EQ(capacity, sb->capacity());
+}
+
 }  // namespace libj

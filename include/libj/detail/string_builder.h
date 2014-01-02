@@ -134,6 +134,10 @@ class StringBuilder : public I {
         }
     }
 
+    virtual void clear() {
+        buf_.clear();
+    }
+
     virtual String::CPtr toString() const {
         return String::create(buf_);
     }

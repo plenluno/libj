@@ -36,6 +36,8 @@ class StringBuilder : LIBJ_MUTABLE(StringBuilder)
 
     virtual Boolean setCharAt(Size index, Char c) = 0;
 
+    virtual void clear() = 0;
+
     virtual const Char* data() const = 0;
 };
 

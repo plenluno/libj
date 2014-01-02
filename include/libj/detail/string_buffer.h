@@ -66,6 +66,11 @@ class StringBuffer : public StringBuilder<libj::StringBuffer> {
         return StringBuilder::setCharAt(index, c);
     }
 
+    virtual void clear() {
+        ScopedLock lock(mutex_);
+        StringBuilder::clear();
+    }
+
     virtual String::CPtr toString() const {
         ScopedLock lock(mutex_);
         return StringBuilder::toString();
