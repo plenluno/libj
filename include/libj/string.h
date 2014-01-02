@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_STRING_H_
 #define LIBJ_STRING_H_
@@ -77,6 +77,14 @@ class String : LIBJ_IMMUTABLE(String)
     virtual Boolean startsWith(CPtr str, Size from = 0) const = 0;
 
     virtual Boolean endsWith(CPtr str) const = 0;
+
+    virtual Int compareTo(CPtr str) const = 0;
+
+    virtual Int compareTo(Object::CPtr obj) const = 0;
+
+    virtual Boolean equals(CPtr str) const = 0;
+
+    virtual Boolean equals(Object::CPtr obj) const = 0;
 
     virtual CPtr toLowerCase() const = 0;
 

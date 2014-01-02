@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_STRING_H_
 #define LIBJ_DETAIL_STRING_H_
@@ -178,6 +178,17 @@ class String : public libj::String {
         return hashFunc(str_);
     }
 
+    virtual Int compareTo(CPtr other) const {
+        if (!other) return TYPE_CMP_NA;
+
+        const String* that = LIBJ_DETAIL_STRING(other);
+        if (interned_ && that->interned_ && this == that) {
+            return 0;
+        } else {
+            return str_.compare(that->str_);
+        }
+    }
+
     virtual Int compareTo(Object::CPtr that) const {
         Int result = Object::compareTo(that);
         if (result != TYPE_CMP_SAME &&
@@ -189,6 +200,17 @@ class String : public libj::String {
         CPtr other = LIBJ_STATIC_CPTR_CAST(libj::String)(that);
         assert(!isInterned() || !other->isInterned() || this != &(*other));
         return str_.compare(LIBJ_INTERNAL_STRING(other));
+    }
+
+    virtual Boolean equals(CPtr other) const {
+        if (!other) return false;
+
+        const String* that = LIBJ_DETAIL_STRING(other);
+        if (interned_ && that->interned_) {
+            return this == that;
+        } else {
+            return str_ == that->str_;
+        }
     }
 
     virtual Boolean equals(Object::CPtr that) const {

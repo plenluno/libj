@@ -1,7 +1,8 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/string.h>
+#include <libj/array_list.h>
 
 #pragma GCC diagnostic ignored "-Wnarrowing"
 
@@ -348,6 +349,13 @@ TEST(GTestString, TestCompareTo) {
     ASSERT_GT(0,   r5);
     ASSERT_EQ(r4, -r5);
     ASSERT_EQ(0,   r6);
+
+    ArrayList::Ptr arr = ArrayList::create();
+    Int r7 = a->compareTo(arr);
+    Int r8 = arr->compareTo(a);
+    ASSERT_NE(0, r7);
+    ASSERT_NE(0, r8);
+    ASSERT_EQ(r7, -r8);
 }
 
 TEST(GTestString, TestEquals) {
@@ -365,6 +373,10 @@ TEST(GTestString, TestEquals) {
     ASSERT_FALSE(abc->equals(abcd));
     ASSERT_FALSE(internedAbc->equals(ab));
     ASSERT_FALSE(internedAbc->equals(abcd));
+
+    ArrayList::Ptr arr = ArrayList::create();
+    ASSERT_FALSE(abc->equals(arr));
+    ASSERT_FALSE(arr->equals(abc));
 }
 
 TEST(GTestString, TestIsEmpty) {
