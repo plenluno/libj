@@ -7,6 +7,17 @@
 #include <libj/string.h>
 #include <libj/value.h>
 
+#ifdef LIBJ_USE_MSVC
+namespace std {
+    template <>
+    struct hash<const int> {
+        std::size_t operator()(const int& key) const {
+            return hash<int>()(static_cast<int>(key));
+        }
+    };
+}
+#endif
+
 namespace libj {
 
 TEST(GTestValue, TestIsUndefined) {
