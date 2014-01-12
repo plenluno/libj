@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_IMMUTABLE_H_
 #define LIBJ_IMPL_IMMUTABLE_H_
@@ -36,7 +36,7 @@ inline Boolean Immutable::instanceof(TypeId id) const {
     typedef LIBJ_CPTR(T) CPtr; \
     LIBJ_IMMUTABLE_METHODS(T, B) \
     static CPtr null() { \
-        LIBJ_NULL_CPTR_DEF(T, nullp); \
+        static LIBJ_NULL_CPTR_DEF(T, nullp); \
         return nullp; \
     }
 
@@ -44,7 +44,7 @@ inline Boolean Immutable::instanceof(TypeId id) const {
     typedef LIBJ_CPTR_TYPE(T) CPtr; \
     LIBJ_IMMUTABLE_METHODS(T, B) \
     static CPtr null() { \
-        LIBJ_NULL_CPTR_TYPE_DEF(T, nullp); \
+        static LIBJ_NULL_CPTR_TYPE_DEF(T, nullp); \
         return nullp; \
     }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_MUTABLE_H_
 #define LIBJ_IMPL_MUTABLE_H_
@@ -41,7 +41,7 @@ inline Boolean Mutable::instanceof(TypeId id) const {
     typedef LIBJ_CPTR(T) CPtr; \
     LIBJ_MUTABLE_METHODS(T, B) \
     static Ptr null() { \
-        LIBJ_NULL_PTR_DEF(T, nullp); \
+        static LIBJ_NULL_PTR_DEF(T, nullp); \
         return nullp; \
     }
 
@@ -50,7 +50,7 @@ inline Boolean Mutable::instanceof(TypeId id) const {
     typedef LIBJ_CPTR_TYPE(T) CPtr; \
     LIBJ_MUTABLE_METHODS(T, B) \
     static Ptr null() { \
-        LIBJ_NULL_PTR_TYPE_DEF(T, nullp); \
+        static LIBJ_NULL_PTR_TYPE_DEF(T, nullp); \
         return nullp; \
     }
 
