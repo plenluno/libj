@@ -40,7 +40,7 @@ inline Int Object::compareTo(Object::CPtr that) const {
 }
 
 inline Boolean Object::equals(Object::CPtr that) const {
-    return !compareTo(that);
+    return that && this == &(*that);
 }
 
 inline Boolean Object::instanceof(TypeId id) const {
