@@ -226,6 +226,12 @@ class String : public libj::String {
         return str_ == LIBJ_INTERNAL_STRING(other);
     }
 
+    virtual Boolean instanceof(TypeId id) const {
+        return id == libj::Type<libj::String>::id()
+            || id == libj::Type<libj::Immutable>::id()
+            || id == libj::Type<libj::Object>::id();
+    }
+
     virtual Boolean startsWith(CPtr other, Size from) const {
         if (!other) return false;
 
