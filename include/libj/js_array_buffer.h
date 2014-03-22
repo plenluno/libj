@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_JS_ARRAY_BUFFER_H_
 #define LIBJ_JS_ARRAY_BUFFER_H_
@@ -21,7 +21,9 @@ class JsArrayBuffer : LIBJ_MUTABLE(JsArrayBuffer)
 
 }  // namespace libj
 
+#include <libj/impl/js_array_buffer.h>
+
 #define LIBJ_JS_ARRAY_BUFFER(T) public libj::JsArrayBuffer { \
-    LIBJ_MUTABLE_DEFS(T, libj::JsArrayBuffer)
+    LIBJ_MUTABLE_DEFS(T, LIBJ_JS_ARRAY_BUFFER)
 
 #endif  // LIBJ_JS_ARRAY_BUFFER_H_

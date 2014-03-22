@@ -5,6 +5,9 @@
 
 #include <libj/cast.h>
 
+#define LIBJ_MUTABLE_INSTANCEOF(ID) \
+    (ID == libj::Type<libj::Mutable>::id() || LIBJ_OBJECT_INSTANCEOF(ID))
+
 namespace libj {
 
 inline Mutable::Ptr Mutable::null() {
@@ -21,8 +24,7 @@ inline Mutable::CPtr Mutable::celf() const {
 }
 
 inline Boolean Mutable::instanceof(TypeId id) const {
-    return id == Type<Mutable>::id()
-        || Object::instanceof(id);
+    return LIBJ_MUTABLE_INSTANCEOF(id);
 }
 
 }  // namespace libj
@@ -32,8 +34,7 @@ inline Boolean Mutable::instanceof(TypeId id) const {
         return libj::Type<T >::id(); \
     } \
     virtual Boolean instanceof(libj::TypeId id) const { \
-        return id == libj::Type<T >::id() \
-            || B::instanceof(id); \
+        return id == libj::Type<T >::id() || B##_INSTANCEOF(id); \
     }
 
 #define LIBJ_MUTABLE_DEFS(T, B) public: \

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_MAP_H_
 #define LIBJ_MAP_H_
@@ -40,7 +40,9 @@ class Map : LIBJ_MUTABLE(Map)
 
 }  // namespace libj
 
+#include <libj/impl/map.h>
+
 #define LIBJ_MAP(T) public libj::Map { \
-    LIBJ_MUTABLE_DEFS(T, libj::Map)
+    LIBJ_MUTABLE_DEFS(T, LIBJ_MAP)
 
 #endif  // LIBJ_MAP_H_

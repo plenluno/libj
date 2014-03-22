@@ -1,7 +1,10 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_JS_FUNCTION_H_
 #define LIBJ_IMPL_JS_FUNCTION_H_
+
+#define LIBJ_JS_FUNCTION_INSTANCEOF(ID) \
+    (ID == libj::Type<libj::JsFunction>::id() || LIBJ_FUNCTION_INSTANCEOF(ID))
 
 namespace libj {
 
@@ -128,11 +131,11 @@ inline Value JsFunction::call(
     }
 
 #define LIBJ_JS_FUNCTION_DEFS(T) \
-    LIBJ_MUTABLE_DEFS(T, libj::JsFunction) \
+    LIBJ_MUTABLE_DEFS(T, LIBJ_JS_FUNCTION) \
     LIBJ_JS_FUNCTION_TO_STRING(T)
 
 #define LIBJ_JS_FUNCTION_TEMPLATE_DEFS(T) \
-    LIBJ_MUTABLE_TEMPLATE_DEFS(T, libj::JsFunction) \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(T, LIBJ_JS_FUNCTION) \
     LIBJ_JS_FUNCTION_TO_STRING(T)
 
 #endif  // LIBJ_IMPL_JS_FUNCTION_H_

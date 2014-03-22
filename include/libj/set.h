@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_SET_H_
 #define LIBJ_SET_H_
@@ -13,5 +13,10 @@ class Set : LIBJ_COLLECTION(Set)
 };
 
 }  // namespace libj
+
+#include <libj/impl/set.h>
+
+#define LIBJ_SET_TEMPLATE(T) public libj::Set { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(T, LIBJ_SET)
 
 #endif  // LIBJ_SET_H_

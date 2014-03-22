@@ -1,7 +1,10 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_JS_OBJECT_H_
 #define LIBJ_IMPL_JS_OBJECT_H_
+
+#define LIBJ_JS_OBJECT_INSTANCEOF(ID) \
+    (ID == libj::Type<libj::JsObject>::id() || LIBJ_MAP_INSTANCEOF(ID))
 
 namespace libj {
 

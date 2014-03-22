@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_STATUS_H_
 #define LIBJ_STATUS_H_
@@ -27,6 +27,6 @@ class Status : LIBJ_IMMUTABLE(Status)
 #include <libj/impl/status.h>
 
 #define LIBJ_STATUS(T) public libj::Status { \
-    LIBJ_IMMUTABLE_DEFS(T, libj::Status)
+    LIBJ_IMMUTABLE_DEFS(T, LIBJ_STATUS)
 
 #endif  // LIBJ_STATUS_H_

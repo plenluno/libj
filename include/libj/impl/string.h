@@ -1,7 +1,10 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_STRING_H_
 #define LIBJ_IMPL_STRING_H_
+
+#define LIBJ_STRING_INSTANCEOF(ID) \
+    (ID == libj::Type<libj::String>::id() || LIBJ_IMMUTABLE_INSTANCEOF(ID))
 
 namespace libj {
 

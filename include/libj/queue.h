@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_QUEUE_H_
 #define LIBJ_QUEUE_H_
@@ -24,7 +24,9 @@ class Queue : LIBJ_COLLECTION(Queue)
 
 }  // namespace libj
 
+#include <libj/impl/queue.h>
+
 #define LIBJ_QUEUE(T) public libj::Queue { \
-    LIBJ_MUTABLE_DEFS(T, libj::Queue)
+    LIBJ_MUTABLE_DEFS(T, LIBJ_QUEUE)
 
 #endif  // LIBJ_QUEUE_H_

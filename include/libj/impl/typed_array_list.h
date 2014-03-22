@@ -1,20 +1,24 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_TYPED_ARRAY_LIST_H_
 #define LIBJ_IMPL_TYPED_ARRAY_LIST_H_
+
+#include <libj/detail/generic_array_list.h>
 
 namespace libj {
 
 template<typename T>
 typename TypedArrayList<T>::Ptr
 TypedArrayList<T>::create() {
-    return Ptr(new TypedArrayList());
+    typedef TypedArrayList<T> I;
+    return Ptr(new detail::GenericArrayList<I, T>());
 }
 
 template<typename T>
 typename TypedArrayList<T>::Ptr
 TypedArrayList<T>::create(Collection::CPtr c) {
-    Ptr list(new TypedArrayList());
+    typedef TypedArrayList<T> I;
+    Ptr list(new detail::GenericArrayList<I, T>());
     Iterator::Ptr itr = c->iterator();
     while (itr->hasNext()) {
         Value v = itr->next();
@@ -34,7 +38,8 @@ Value TypedArrayList<T>::subList(Size from, Size to) const {
         LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
     }
 
-    TypedArrayList* list(new TypedArrayList());
+    typedef TypedArrayList<T> I;
+    TypedArrayList* list(new detail::GenericArrayList<I, T>());
     for (Size i = from; i < to; i++) {
         list->addTyped(this->getTyped(i));
     }

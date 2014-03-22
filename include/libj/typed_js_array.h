@@ -1,16 +1,17 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_JS_ARRAY_H_
 #define LIBJ_TYPED_JS_ARRAY_H_
 
 #include <libj/js_array.h>
 #include <libj/typed_list.h>
-#include <libj/detail/generic_js_array.h>
 
 namespace libj {
 
 template<typename T>
-class TypedJsArray : LIBJ_TYPED_LIST(JsArray, T)
+class TypedJsArray
+    : public TypedList<T>
+    , LIBJ_JS_ARRAY_TEMPLATE(TypedJsArray)
  public:
     static Ptr create();
 

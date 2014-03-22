@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_VALUE_HOLDER_H_
 #define LIBJ_VALUE_HOLDER_H_
@@ -27,5 +27,8 @@ class ValueHolder : LIBJ_MUTABLE(ValueHolder)
 }  // namespace libj
 
 #include <libj/impl/value_holder.h>
+
+#define LIBJ_VALUE_HOLDER_TEMPLATE(T) public libj::ValueHolder { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(T, LIBJ_VALUE_HOLDER)
 
 #endif  // LIBJ_VALUE_HOLDER_H_

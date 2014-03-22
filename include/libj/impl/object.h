@@ -1,7 +1,10 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_OBJECT_H_
 #define LIBJ_IMPL_OBJECT_H_
+
+#define LIBJ_OBJECT_INSTANCEOF(ID) \
+    ID == Type<libj::Object>::id()
 
 namespace libj {
 
@@ -44,7 +47,7 @@ inline Boolean Object::equals(Object::CPtr that) const {
 }
 
 inline Boolean Object::instanceof(TypeId id) const {
-    return id == Type<Object>::id();
+    return LIBJ_OBJECT_INSTANCEOF(id);
 }
 
 template<typename T>

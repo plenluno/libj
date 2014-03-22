@@ -1,16 +1,17 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_LINKED_LIST_H_
 #define LIBJ_TYPED_LINKED_LIST_H_
 
 #include <libj/linked_list.h>
 #include <libj/typed_list.h>
-#include <libj/detail/generic_linked_list.h>
 
 namespace libj {
 
 template<typename T>
-class TypedLinkedList : LIBJ_TYPED_LIST(LinkedList, T)
+class TypedLinkedList
+    : public TypedList<T>
+    , LIBJ_LINKED_LIST_TEMPLATE(TypedLinkedList)
  public:
     static Ptr create();
 

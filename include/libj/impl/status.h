@@ -1,7 +1,10 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_STATUS_H_
 #define LIBJ_IMPL_STATUS_H_
+
+#define LIBJ_STATUS_INSTANCEOF(ID) \
+    (ID == libj::Type<libj::Status>::id() || LIBJ_IMMUTABLE_INSTANCEOF(ID))
 
 #ifdef LIBJ_USE_CXX11
 namespace std {

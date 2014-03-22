@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_COLLECTION_H_
 #define LIBJ_COLLECTION_H_
@@ -35,7 +35,9 @@ class Collection : LIBJ_MUTABLE(Collection)
 
 }  // namespace libj
 
+#include <libj/impl/collection.h>
+
 #define LIBJ_COLLECTION(T) public libj::Collection { \
-    LIBJ_MUTABLE_DEFS(T, libj::Collection)
+    LIBJ_MUTABLE_DEFS(T, LIBJ_COLLECTION)
 
 #endif  // LIBJ_COLLECTION_H_

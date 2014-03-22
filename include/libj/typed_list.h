@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_LIST_H_
 #define LIBJ_TYPED_LIST_H_
@@ -7,8 +7,8 @@
 
 namespace libj {
 
-template<typename L, typename T>
-class TypedList : public TypedCollection<L, T> {
+template<typename T>
+class TypedList : public TypedCollection<T> {
  public:
     virtual Boolean addTyped(const T& t) = 0;
 
@@ -35,9 +35,5 @@ class TypedList : public TypedCollection<L, T> {
 };
 
 }  // namespace libj
-
-#define LIBJ_TYPED_LIST(L, T) \
-    public detail::Generic##L<TypedList<L, T>, T> { \
-    LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##L, L)
 
 #endif  // LIBJ_TYPED_LIST_H_

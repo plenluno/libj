@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_ITERATOR_H_
 #define LIBJ_ITERATOR_H_
@@ -16,5 +16,10 @@ class Iterator : LIBJ_MUTABLE(Iterator)
 };
 
 }  // namespace libj
+
+#include <libj/impl/iterator.h>
+
+#define LIBJ_ITERATOR_TEMPLATE(T) public libj::Iterator { \
+    LIBJ_MUTABLE_TEMPLATE_DEFS(T, LIBJ_ITERATOR)
 
 #endif  // LIBJ_ITERATOR_H_

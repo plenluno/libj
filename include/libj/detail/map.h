@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_MAP_H_
 #define LIBJ_DETAIL_MAP_H_
@@ -11,6 +11,9 @@
 #else
 # include <boost/unordered_map.hpp>
 #endif
+
+#define LIBJ_ENTRY_INSTANCEOF(ID) \
+    ID == libj::Type<EntryT>::id() || LIBJ_MUTABLE_INSTANCEOF(ID)
 
 namespace libj {
 namespace detail {
@@ -200,7 +203,7 @@ class Map : public I {
     };
 
     class Entry : public EntryT {
-        LIBJ_MUTABLE_TEMPLATE_DEFS(Entry, EntryT);
+        LIBJ_MUTABLE_TEMPLATE_DEFS(Entry, LIBJ_ENTRY);
 
      public:
         void setKey(const Value& key) {

@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_XML_NODE_H_
 #define LIBJ_XML_NODE_H_
@@ -68,7 +68,9 @@ class Node : LIBJ_IMMUTABLE(Node)
 }  // namespace xml
 }  // namespace libj
 
+#include <libj/impl/xml/node.h>
+
 #define LIBJ_XML_NODE(T) public libj::xml::Node { \
-    LIBJ_IMMUTABLE_DEFS(T, libj::xml::Node)
+    LIBJ_IMMUTABLE_DEFS(T, LIBJ_XML_NODE)
 
 #endif  // LIBJ_XML_NODE_H_

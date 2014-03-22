@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_BLOCKING_QUEUE_H_
 #define LIBJ_BLOCKING_QUEUE_H_
@@ -16,7 +16,9 @@ class BlockingQueue : LIBJ_QUEUE(BlockingQueue)
 
 }  // namespace libj
 
+#include <libj/impl/blocking_queue.h>
+
 #define LIBJ_BLOCKING_QUEUE(T) public libj::BlockingQueue { \
-    LIBJ_MUTABLE_DEFS(T, libj::BlockingQueue)
+    LIBJ_MUTABLE_DEFS(T, LIBJ_BLOCKING_QUEUE)
 
 #endif  // LIBJ_BLOCKING_QUEUE_H_

@@ -5,6 +5,9 @@
 
 #include <libj/cast.h>
 
+#define LIBJ_IMMUTABLE_INSTANCEOF(ID) \
+    (ID == libj::Type<libj::Immutable>::id() || LIBJ_OBJECT_INSTANCEOF(ID))
+
 namespace libj {
 
 inline Immutable::CPtr Immutable::null() {
@@ -25,11 +28,10 @@ inline Boolean Immutable::instanceof(TypeId id) const {
 
 #define LIBJ_IMMUTABLE_METHODS(T, B) public: \
     virtual libj::TypeId type() const { \
-        return libj::Type<T>::id(); \
+        return libj::Type<T >::id(); \
     } \
     virtual Boolean instanceof(libj::TypeId id) const { \
-        return id == libj::Type<T>::id() \
-            || B::instanceof(id); \
+        return id == libj::Type<T >::id() || B##_INSTANCEOF(id); \
     }
 
 #define LIBJ_IMMUTABLE_DEFS(T, B) public: \

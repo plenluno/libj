@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_JS_OBJECT_H_
 #define LIBJ_JS_OBJECT_H_
@@ -62,6 +62,6 @@ class JsObject : LIBJ_MAP(JsObject)
 #include <libj/impl/js_object.h>
 
 #define LIBJ_JS_OBJECT(T) public libj::JsObject { \
-    LIBJ_MUTABLE_DEFS(T, libj::JsObject)
+    LIBJ_MUTABLE_DEFS(T, LIBJ_JS_OBJECT)
 
 #endif  // LIBJ_JS_OBJECT_H_

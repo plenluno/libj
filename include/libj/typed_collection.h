@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_TYPED_COLLECTION_H_
 #define LIBJ_TYPED_COLLECTION_H_
@@ -8,8 +8,8 @@
 
 namespace libj {
 
-template<typename C, typename T>
-class TypedCollection : public TypedMutable<C, T> {
+template<typename T>
+class TypedCollection : public TypedMutable<T> {
  public:
     virtual Boolean addTyped(const T& t) = 0;
 
@@ -19,9 +19,5 @@ class TypedCollection : public TypedMutable<C, T> {
 };
 
 }  // namespace libj
-
-#define LIBJ_TYPED_COLLECTION(C, T) \
-    public detail::Generic##C<TypedCollection<C, T>, T> { \
-    LIBJ_MUTABLE_TEMPLATE_DEFS(Typed##C, C)
 
 #endif  // LIBJ_TYPED_COLLECTION_H_

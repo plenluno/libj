@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMMUTABLE_H_
 #define LIBJ_IMMUTABLE_H_
@@ -27,6 +27,6 @@ class Immutable
 #include <libj/impl/immutable.h>
 
 #define LIBJ_IMMUTABLE(T) public libj::Immutable { \
-    LIBJ_IMMUTABLE_DEFS(T, libj::Immutable)
+    LIBJ_IMMUTABLE_DEFS(T, LIBJ_IMMUTABLE)
 
 #endif  // LIBJ_IMMUTABLE_H_

@@ -1,20 +1,24 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_TYPED_LINKED_LIST_H_
 #define LIBJ_IMPL_TYPED_LINKED_LIST_H_
+
+#include <libj/detail/generic_linked_list.h>
 
 namespace libj {
 
 template<typename T>
 typename TypedLinkedList<T>::Ptr
 TypedLinkedList<T>::create() {
-    return Ptr(new TypedLinkedList());
+    typedef TypedLinkedList<T> I;
+    return Ptr(new detail::GenericLinkedList<I, T>());
 }
 
 template<typename T>
 typename TypedLinkedList<T>::Ptr
 TypedLinkedList<T>::create(Collection::CPtr c) {
-    Ptr list(new TypedLinkedList());
+    typedef TypedLinkedList<T> I;
+    Ptr list(new detail::GenericLinkedList<I, T>());
     Iterator::Ptr itr = c->iterator();
     while (itr->hasNext()) {
         Value v = itr->next();
@@ -34,7 +38,8 @@ Value TypedLinkedList<T>::subList(Size from, Size to) const {
         LIBJ_HANDLE_ERROR(Error::INDEX_OUT_OF_BOUNDS);
     }
 
-    TypedLinkedList* list(new TypedLinkedList());
+    typedef TypedLinkedList<T> I;
+    TypedLinkedList* list(new detail::GenericLinkedList<I, T>());
     for (Size i = from; i < to; i++) {
         list->addTyped(this->getTyped(i));
     }

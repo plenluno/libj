@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_LIST_H_
 #define LIBJ_LIST_H_
@@ -43,7 +43,9 @@ class List : LIBJ_COLLECTION(List)
 
 }  // namespace libj
 
+#include <libj/impl/list.h>
+
 #define LIBJ_LIST(T) public libj::List { \
-    LIBJ_MUTABLE_DEFS(T, libj::List)
+    LIBJ_MUTABLE_DEFS(T, LIBJ_LIST)
 
 #endif  // LIBJ_LIST_H_

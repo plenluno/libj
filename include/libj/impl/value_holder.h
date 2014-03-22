@@ -1,7 +1,10 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_IMPL_VALUE_HOLDER_H_
 #define LIBJ_IMPL_VALUE_HOLDER_H_
+
+#define LIBJ_VALUE_HOLDER_INSTANCEOF(ID) \
+    (ID == libj::Type<libj::ValueHolder>::id() || LIBJ_MUTABLE_INSTANCEOF(ID))
 
 namespace libj {
 
