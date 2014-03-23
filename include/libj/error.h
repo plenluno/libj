@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_ERROR_H_
 #define LIBJ_ERROR_H_
@@ -40,7 +40,7 @@ class Error : LIBJ_STATUS(Error)
 #include <libj/impl/error.h>
 
 #define LIBJ_ERROR(T) public libj::Error { \
-    LIBJ_IMMUTABLE_DEFS(T, libj::Error)
+    LIBJ_IMMUTABLE_DEFS(T, LIBJ_ERROR)
 
 #ifndef LIBJ_USE_EXCEPTION
 #define LIBJ_THROW(code) assert(false);
