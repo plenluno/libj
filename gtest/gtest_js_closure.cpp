@@ -56,8 +56,9 @@ TEST(GTestJsClosure, TestClosure2) {
 
 TEST(GTestJsClosure, TestInstanceOf) {
     JsClosure::Ptr c = JsClosure::create(
-        [] (JsArray::Ptr args) { return UNDEFINED; }
-    );
+        [] (JsArray::Ptr args) {
+            return UNDEFINED;
+    });
 
     ASSERT_TRUE(c->instanceof(Type<JsClosure>::id()));
     ASSERT_TRUE(c->instanceof(Type<JsFunction>::id()));
