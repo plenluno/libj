@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/console.h>
@@ -8,6 +8,17 @@
 #include <libj/thread.h>
 
 namespace libj {
+
+TEST(GTestConcurrentLinkedQueue, TestInstanceOf) {
+    ConcurrentLinkedQueue::Ptr q = ConcurrentLinkedQueue::create();
+    ASSERT_TRUE(q->instanceof(Type<ConcurrentLinkedQueue>::id()));
+    ASSERT_TRUE(q->instanceof(Type<Queue>::id()));
+    ASSERT_TRUE(q->instanceof(Type<Collection>::id()));
+    ASSERT_TRUE(q->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(q->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(q->instanceof(Type<Immutable>::id()));
+}
 
 TEST(GTestConcurrentLinkedQueue, TestAddAndRemove) {
     const Size n = 1000;

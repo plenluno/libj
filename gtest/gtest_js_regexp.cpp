@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/js_regexp.h>
@@ -8,6 +8,17 @@ namespace libj {
 TEST(GTestJsRegExp, TestCreate) {
     JsRegExp::Ptr re = JsRegExp::create(String::create("a+"));
     ASSERT_TRUE(!!re);
+}
+
+TEST(GTestJsRegExp, TestInstanceOf) {
+    JsRegExp::Ptr re = JsRegExp::create(String::create("a+"));
+    ASSERT_TRUE(re->instanceof(Type<JsRegExp>::id()));
+    ASSERT_TRUE(re->instanceof(Type<JsObject>::id()));
+    ASSERT_TRUE(re->instanceof(Type<Map>::id()));
+    ASSERT_TRUE(re->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(re->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(re->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestJsRegExp, TestGlobal) {

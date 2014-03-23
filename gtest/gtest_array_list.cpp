@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/array_list.h>
@@ -19,6 +19,8 @@ TEST(GTestArrayList, TestInstanceOf) {
     ASSERT_TRUE(a->instanceof(Type<Collection>::id()));
     ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
     ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(a->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestArrayList, TestInstanceOf2) {
@@ -28,6 +30,8 @@ TEST(GTestArrayList, TestInstanceOf2) {
     ASSERT_TRUE(a->instanceof(Type<Collection>::id()));
     ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
     ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(a->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestArrayList, TestSize) {

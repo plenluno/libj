@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/error.h>
@@ -80,6 +80,16 @@ TEST(GTestFunction, TestCall) {
     ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7, 8).equals(36));
     ASSERT_TRUE(add->call(1, 2, 3, 4, 5, 6, 7, 8, 9).equals(45));
     ASSERT_TRUE(addx2->call(1, 2, 3, 4, 5, 6, 7, 8, 9).equals(90));
+}
+
+TEST(GTestFunction, TestInstanceOf) {
+    Function::Ptr add = GTestFunctionAdd::create();
+    ASSERT_TRUE(add->instanceof(Type<GTestFunctionAdd>::id()));
+    ASSERT_TRUE(add->instanceof(Type<Function>::id()));
+    ASSERT_TRUE(add->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(add->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(add->instanceof(Type<Immutable>::id()));
 }
 
 }  // namespace libj

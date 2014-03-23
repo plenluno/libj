@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/error.h>
@@ -52,6 +52,20 @@ TEST(GTestJsClosure, TestClosure2) {
     });
 
     ASSERT_TRUE(concat->call().equals(String::create("abcxyz")));
+}
+
+TEST(GTestJsClosure, TestInstanceOf) {
+    JsClosure::Ptr c = JsClosure::create(
+        [] (JsArray::Ptr args) { return UNDEFINED; }
+    );
+
+    ASSERT_TRUE(c->instanceof(Type<JsClosure>::id()));
+    ASSERT_TRUE(c->instanceof(Type<JsFunction>::id()));
+    ASSERT_TRUE(c->instanceof(Type<Function>::id()));
+    ASSERT_TRUE(c->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(c->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(c->instanceof(Type<Immutable>::id()));
 }
 
 }  // namespace libj

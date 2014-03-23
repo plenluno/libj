@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/console.h>
@@ -24,6 +24,16 @@ TEST(GTestExecutorService, TestCreateFixedThreadPool) {
 TEST(GTestExecutorService, TestCreateSingleThreadExecutor) {
     ExecutorService::Ptr es = executors::createSingleThreadExecutor();
     ASSERT_TRUE(!!es);
+}
+
+TEST(GTestExecutorService, TestInstanceOf) {
+    ExecutorService::Ptr es = executors::createSingleThreadExecutor();
+    ASSERT_TRUE(es->instanceof(Type<ExecutorService>::id()));
+    ASSERT_TRUE(es->instanceof(Type<Executor>::id()));
+    ASSERT_TRUE(es->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(es->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(es->instanceof(Type<Immutable>::id()));
 }
 
 class GTestESTask : LIBJ_JS_FUNCTION(GTestESTask)

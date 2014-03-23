@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/atomic_long.h>
@@ -13,6 +13,15 @@ TEST(GTestAtomicLong, TestCreate) {
     AtomicLong::Ptr a2 = AtomicLong::create(5);
     ASSERT_TRUE(!!a1);
     ASSERT_TRUE(!!a2);
+}
+
+TEST(GTestAtomicLong, TestInstanceOf) {
+    AtomicLong::Ptr a = AtomicLong::create();
+    ASSERT_TRUE(a->instanceof(Type<AtomicLong>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(a->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestAtomicLong, TestGet) {

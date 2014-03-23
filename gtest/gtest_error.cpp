@@ -1,7 +1,8 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/error.h>
+#include <libj/mutable.h>
 
 namespace libj {
 
@@ -34,6 +35,8 @@ TEST(GTestError, TestInstanceOf) {
     ASSERT_TRUE(e->instanceof(Type<Status>::id()));
     ASSERT_TRUE(e->instanceof(Type<Immutable>::id()));
     ASSERT_TRUE(e->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(e->instanceof(Type<Mutable>::id()));
 }
 
 }  // namespace libj

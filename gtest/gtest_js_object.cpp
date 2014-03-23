@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/js_object.h>
@@ -15,6 +15,16 @@ class GTestJsObjectImpl : public bridge::AbstractJsObject<GTestJsObject> {};
 
 GTestJsObject::Ptr GTestJsObject::create() {
     return Ptr(new GTestJsObjectImpl());
+}
+
+TEST(GTestJsObject, TestInstanceOf) {
+    JsObject::Ptr obj = JsObject::create();
+    ASSERT_TRUE(obj->instanceof(Type<JsObject>::id()));
+    ASSERT_TRUE(obj->instanceof(Type<Map>::id()));
+    ASSERT_TRUE(obj->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(obj->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(obj->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestJsObject, TestToString) {

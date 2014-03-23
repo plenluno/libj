@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/js_date.h>
@@ -22,6 +22,17 @@ TEST(GTestJsDate, TestCreate) {
     ASSERT_TRUE(!!d);
     ASSERT_EQ(1364685226134, d->getTime());
 #endif
+}
+
+TEST(GTestJsDate, TestInstanceOf) {
+    JsDate::Ptr d = JsDate::create();
+    ASSERT_TRUE(d->instanceof(Type<JsDate>::id()));
+    ASSERT_TRUE(d->instanceof(Type<JsObject>::id()));
+    ASSERT_TRUE(d->instanceof(Type<Map>::id()));
+    ASSERT_TRUE(d->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(d->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(d->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestJsDate, TestParse) {

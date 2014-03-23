@@ -1,6 +1,7 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
+#include <libj/immutable.h>
 #include <libj/js_array_buffer.h>
 #include <libj/js_data_view.h>
 
@@ -14,6 +15,15 @@ TEST(GTestJsArrayBuffer, TestCreate) {
     a = JsArrayBuffer::create(1);
     ASSERT_TRUE(!!a);
     ASSERT_TRUE(!!a->data());
+}
+
+TEST(GTestJsArrayBuffer, TestInstanceOf) {
+    JsArrayBuffer::Ptr a = JsArrayBuffer::create();
+    ASSERT_TRUE(a->instanceof(Type<JsArrayBuffer>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(a->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestJsArrayBuffer, TestByteLength) {

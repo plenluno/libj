@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/concurrent_map.h>
@@ -12,16 +12,22 @@ TEST(GTestConcurrentMap, TestCreate) {
 
 TEST(GTestConcurrentMap, TestInstanceOf) {
     ConcurrentMap::Ptr m = ConcurrentMap::create();
+    ASSERT_TRUE(m->instanceof(Type<ConcurrentMap>::id()));
     ASSERT_TRUE(m->instanceof(Type<Map>::id()));
     ASSERT_TRUE(m->instanceof(Type<Mutable>::id()));
     ASSERT_TRUE(m->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(m->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestConcurrentMap, TestInstanceOf2) {
     ConcurrentMap::CPtr m = ConcurrentMap::create();
+    ASSERT_TRUE(m->instanceof(Type<ConcurrentMap>::id()));
     ASSERT_TRUE(m->instanceof(Type<Map>::id()));
     ASSERT_TRUE(m->instanceof(Type<Mutable>::id()));
     ASSERT_TRUE(m->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(m->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestConcurrentMap, TestSize) {

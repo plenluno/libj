@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/atomic_integer.h>
@@ -13,6 +13,15 @@ TEST(GTestAtomicInteger, TestCreate) {
     AtomicInteger::Ptr a2 = AtomicInteger::create(5);
     ASSERT_TRUE(!!a1);
     ASSERT_TRUE(!!a2);
+}
+
+TEST(GTestAtomicInteger, TestInstanceOf) {
+    AtomicInteger::Ptr a = AtomicInteger::create();
+    ASSERT_TRUE(a->instanceof(Type<AtomicInteger>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(a->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestAtomicInteger, TestGet) {

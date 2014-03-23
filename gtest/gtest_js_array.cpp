@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/js_array.h>
@@ -38,6 +38,8 @@ TEST(GTestJsArray, TestInstanceOf) {
     ASSERT_TRUE(a->instanceof(Type<Collection>::id()));
     ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
     ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(a->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestJsArray, TestInstanceOf2) {
@@ -47,6 +49,8 @@ TEST(GTestJsArray, TestInstanceOf2) {
     ASSERT_TRUE(a->instanceof(Type<Collection>::id()));
     ASSERT_TRUE(a->instanceof(Type<Mutable>::id()));
     ASSERT_TRUE(a->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(a->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestJsArray, TestToString) {

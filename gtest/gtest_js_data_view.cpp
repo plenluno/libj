@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/js_data_view.h>
@@ -38,6 +38,16 @@ TEST(GTestJsDataView, TestCreate) {
 
     d = JsDataView::create(a, 4, 7);
     ASSERT_TRUE(!d);
+}
+
+TEST(GTestJsDataView, TestInstanceOf) {
+    JsDataView::Ptr d = JsDataView::create();
+    ASSERT_TRUE(d->instanceof(Type<JsDataView>::id()));
+    ASSERT_TRUE(d->instanceof(Type<JsArrayBufferView>::id()));
+    ASSERT_TRUE(d->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(d->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(d->instanceof(Type<Immutable>::id()));
 }
 
 TEST(GTestJsDataView, TestByteLength) {

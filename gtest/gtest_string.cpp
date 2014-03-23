@@ -254,6 +254,7 @@ TEST(GTestString, TestInstanceOf) {
     ASSERT_TRUE(s->instanceof(Type<String>::id()));
     ASSERT_TRUE(s->instanceof(Type<Immutable>::id()));
     ASSERT_TRUE(s->instanceof(Type<Object>::id()));
+
     ASSERT_FALSE(s->instanceof(Type<Mutable>::id()));
 }
 

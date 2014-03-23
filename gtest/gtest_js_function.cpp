@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/error.h>
@@ -86,6 +86,17 @@ TEST(GTestJsFunction, TestCompreTo) {
     GTestJsFunctionAdd::Ptr add2 = GTestJsFunctionAdd::create();
     ASSERT_EQ(0, add1->compareTo(add1));
     ASSERT_NE(0, add1->compareTo(add2));
+}
+
+TEST(GTestJsFunction, TestInstanceOf) {
+    JsFunction::Ptr add = GTestJsFunctionAdd::create();
+    ASSERT_TRUE(add->instanceof(Type<GTestJsFunctionAdd>::id()));
+    ASSERT_TRUE(add->instanceof(Type<JsFunction>::id()));
+    ASSERT_TRUE(add->instanceof(Type<Function>::id()));
+    ASSERT_TRUE(add->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(add->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(add->instanceof(Type<Immutable>::id()));
 }
 
 }  // namespace libj

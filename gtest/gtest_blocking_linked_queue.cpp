@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/console.h>
@@ -8,6 +8,18 @@
 #include <libj/thread.h>
 
 namespace libj {
+
+TEST(GTestBlockingLinkedQueue, TestInstanceOf) {
+    BlockingLinkedQueue::Ptr q = BlockingLinkedQueue::create();
+    ASSERT_TRUE(q->instanceof(Type<BlockingLinkedQueue>::id()));
+    ASSERT_TRUE(q->instanceof(Type<BlockingQueue>::id()));
+    ASSERT_TRUE(q->instanceof(Type<Queue>::id()));
+    ASSERT_TRUE(q->instanceof(Type<Collection>::id()));
+    ASSERT_TRUE(q->instanceof(Type<Mutable>::id()));
+    ASSERT_TRUE(q->instanceof(Type<Object>::id()));
+
+    ASSERT_FALSE(q->instanceof(Type<Immutable>::id()));
+}
 
 TEST(GTestBlockingLinkedQueue, TestAddAndRemove) {
     const Size n = 1000;
