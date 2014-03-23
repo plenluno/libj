@@ -299,7 +299,7 @@ TEST(GTestValue, TestTo8) {
     Value* vp = &v;
 
     int* ip;
-    ASSERT_TRUE(detail::_to<int>(vp, &ip));
+    ASSERT_TRUE(detail::_to<int>(vp, &ip, false));
     ASSERT_EQ(3, *ip);
 
     v = 5;
@@ -308,10 +308,10 @@ TEST(GTestValue, TestTo8) {
     ASSERT_EQ(5, *cip);
 
     // differ from boost::any!
-    ASSERT_FALSE(detail::_to<const int>(vp, &cip));
+    ASSERT_FALSE(detail::_to<const int>(vp, &cip, false));
 
     int64_t* lp;
-    ASSERT_FALSE(detail::_to<int64_t>(vp, &lp));
+    ASSERT_FALSE(detail::_to<int64_t>(vp, &lp, false));
 }
 
 TEST(GTestAny, TestCast8) {

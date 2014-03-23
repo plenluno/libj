@@ -338,10 +338,7 @@ class Value {
 
  private:
     template<typename T>
-    friend Boolean _to(
-        Value* operand,
-        T** out,
-        Boolean instanceof = false);
+    friend Boolean _to(Value* operand, T** out, Boolean instanceof);
 
     placeholder* content;
 };
