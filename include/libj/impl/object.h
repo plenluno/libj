@@ -4,7 +4,7 @@
 #define LIBJ_IMPL_OBJECT_H_
 
 #define LIBJ_OBJECT_INSTANCEOF(ID) \
-    ID == Type<libj::Object>::id()
+    ID == libj::Type<libj::Object>::id()
 
 namespace libj {
 
