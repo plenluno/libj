@@ -99,4 +99,27 @@ TEST(GTestJsFunction, TestInstanceOf) {
     ASSERT_FALSE(add->instanceof(Type<Immutable>::id()));
 }
 
+TEST(GTestJsFunction, TestType) {
+    JsFunction::Ptr add = GTestJsFunctionAdd::create();
+    ASSERT_EQ(Type<GTestJsFunctionAdd>::id(), add->type());
+    ASSERT_NE(Type<GTestJsFunctionAddx2>::id(), add->type());
+
+    Value v = add;
+    ASSERT_EQ(Type<JsFunction::Ptr>::id(), v.type());
+    ASSERT_NE(Type<GTestJsFunctionAdd>::id(), v.type());
+    ASSERT_NE(Type<GTestJsFunctionAdd::Ptr>::id(), v.type());
+}
+
+TEST(GTestJsFunction, TestIs) {
+    JsFunction::Ptr add = GTestJsFunctionAdd::create();
+    ASSERT_TRUE(add->is<JsFunction>());
+    ASSERT_TRUE(add->is<GTestJsFunctionAdd>());
+    ASSERT_FALSE(add->is<GTestJsFunctionAddx2>());
+
+    Value v = add;
+    ASSERT_TRUE(v.is<JsFunction>());
+    ASSERT_TRUE(v.is<GTestJsFunctionAdd>());
+    ASSERT_FALSE(v.is<GTestJsFunctionAddx2>());
+}
+
 }  // namespace libj
