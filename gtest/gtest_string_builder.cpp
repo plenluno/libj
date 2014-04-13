@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #include <gtest/gtest.h>
 #include <libj/string_builder.h>
@@ -167,6 +167,23 @@ TEST(GTestStringBuilder, TestClear) {
     sb->clear();
     ASSERT_EQ(0, sb->length());
     ASSERT_EQ(capacity, sb->capacity());
+}
+
+
+TEST(GTestStringBuilder, TestToStdString) {
+    const char u[] = {
+        0xe3, 0x81, 0x82,
+        0xe3, 0x81, 0x84,
+        0xe3, 0x81, 0x86,
+        0
+    };
+
+    String::CPtr s = String::create(u, String::UTF8);
+    StringBuilder::Ptr sb = StringBuilder::create(s);
+
+    ASSERT_EQ(s->toStdString(String::UTF8),  sb->toStdString());
+    ASSERT_EQ(s->toStdString(String::UTF16), sb->toStdString(String::UTF16));
+    ASSERT_EQ(s->toStdString(String::UTF32), sb->toStdString(String::UTF32));
 }
 
 }  // namespace libj

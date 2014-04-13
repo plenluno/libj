@@ -1,10 +1,11 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_STRING_BUILDER_H_
 #define LIBJ_DETAIL_STRING_BUILDER_H_
 
 #include <libj/this.h>
 #include <libj/symbol.h>
+#include <libj/detail/string.h>
 #include <libj/detail/to_string.h>
 
 #include <assert.h>
@@ -146,11 +147,19 @@ class StringBuilder : public I {
         return buf_.data();
     }
 
- private:
-#ifdef LIBJ_USE_UTF32
-    std::u32string buf_;
+    virtual std::string toStdString(libj::String::Encoding enc) const {
+#ifdef LIBJ_USE_UTF16
+        return glue::fromUtf16(buf_, convertStrEncoding(enc));
 #else
+        return glue::fromUtf32(buf_, convertStrEncoding(enc));
+#endif
+    }
+
+ private:
+#ifdef LIBJ_USE_UTF16
     std::u16string buf_;
+#else
+    std::u32string buf_;
 #endif
 };
 

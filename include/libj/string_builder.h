@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Plenluno All rights reserved.
+// Copyright (c) 2013-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_STRING_BUILDER_H_
 #define LIBJ_STRING_BUILDER_H_
@@ -39,6 +39,9 @@ class StringBuilder : LIBJ_MUTABLE(StringBuilder)
     virtual void clear() = 0;
 
     virtual const Char* data() const = 0;
+
+    virtual std::string toStdString(
+        String::Encoding enc = String::UTF8) const = 0;
 };
 
 }  // namespace libj

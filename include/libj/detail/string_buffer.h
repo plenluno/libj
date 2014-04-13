@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2014 Plenluno All rights reserved.
 
 #ifndef LIBJ_DETAIL_STRING_BUFFER_H_
 #define LIBJ_DETAIL_STRING_BUFFER_H_
@@ -79,6 +79,11 @@ class StringBuffer : public StringBuilder<libj::StringBuffer> {
     virtual const Char* data() const {
         ScopedLock lock(mutex_);
         return StringBuilder::data();
+    }
+
+    virtual std::string toStdString(libj::String::Encoding enc) const {
+        ScopedLock lock(mutex_);
+        return StringBuilder::toStdString(enc);
     }
 
  private:

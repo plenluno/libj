@@ -26,7 +26,7 @@
 namespace libj {
 namespace detail {
 
-glue::UnicodeEncoding convertStrEncoding(libj::String::Encoding enc) {
+inline glue::UnicodeEncoding convertStrEncoding(libj::String::Encoding enc) {
     static Endian e = endian();
 
     switch (enc) {
