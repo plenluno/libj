@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2013 Plenluno All rights reserved.
+// Copyright (c) 2012-2015 Plenluno All rights reserved.
 
 #include <libj/error.h>
 #include <libj/js_array.h>
@@ -117,67 +117,81 @@ class JsonHandler {
         }
     }
 
-    void Null()  {
+    bool Null()  {
         add(Object::null());
+        return true;
     }
 
-    void Bool(bool b)  {
+    bool Bool(bool b)  {
         add(b);
+        return true;
     }
 
-    void Int(int i) {
+    bool Int(int i) {
         add(static_cast<Long>(i));
+        return true;
     }
 
-    void Uint(unsigned ui)  {
+    bool Uint(unsigned ui)  {
         add(static_cast<Long>(ui));
+        return true;
     }
 
-    void Int64(int64_t l) {
+    bool Int64(int64_t l) {
         add(longToValue(l));
+        return true;
     }
 
-    void Uint64(uint64_t ul) {
+    bool Uint64(uint64_t ul) {
         add(ulongToValue(ul));
+        return true;
     }
 
-    void Double(double d) {
+    bool Double(double d) {
         add(doubleToValue(d));
+        return true;
     }
 
-    void String(const Char* s, rapidjson::SizeType len, bool copy) {
-        String::CPtr str = createString(s, len);
-        if (object_ && !name_) {
-            name_ = str;
-        } else {
-            add(str);
-        }
+    bool String(const Char* str, rapidjson::SizeType len, bool copy) {
+        assert(!object_ || name_);
+        add(createString(str, len));
+        return true;
     }
 
-    void StartObject() {
+    bool StartObject() {
         JsObject::Ptr obj = JsObject::create();
         add(obj);
         push();
         object_ = obj;
+        return true;
     }
 
-    void EndObject(rapidjson::SizeType size) {
+    bool Key(const Char* str, rapidjson::SizeType len, bool copy) {
+        assert(object_ && !name_);
+        name_ = createString(str, len);
+        return true;
+    }
+
+    bool EndObject(rapidjson::SizeType size) {
         assert(object_->size() == size);
         object_ = JsObject::null();
         pop();
+        return true;
     }
 
-    void StartArray() {
+    bool StartArray() {
         JsArray::Ptr ary = JsArray::create();
         add(ary);
         push();
         array_ = ary;
+        return true;
     }
 
-    void EndArray(rapidjson::SizeType len) {
+    bool EndArray(rapidjson::SizeType len) {
         assert(array_->length() == len);
         array_ = JsArray::null();
         pop();
+        return true;
     }
 
  private:
